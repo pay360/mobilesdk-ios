@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1514" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Kg6-9s-Dkw">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
+    </dependencies>
+    <scenes>
+        <!--Launch View Controller-->
+        <scene sceneID="ufC-wZ-h7g">
+            <objects>
+                <viewController id="vXZ-lx-hvc" customClass="LaunchViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
+                        <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Uys-Un-SlS">
+                                <rect key="frame" x="285" y="285" width="30" height="30"/>
+                                <state key="normal" title="Pay">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="payButtonPresseded:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="yHT-jm-5MD"/>
+                                </connections>
+                            </button>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="iOG-qy-eOz">
+                                <rect key="frame" x="290" y="323" width="20" height="20"/>
+                            </activityIndicatorView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="iOG-qy-eOz" firstAttribute="centerX" secondItem="Uys-Un-SlS" secondAttribute="centerX" id="6C3-ho-mGa"/>
+                            <constraint firstAttribute="centerY" secondItem="Uys-Un-SlS" secondAttribute="centerY" id="IcB-E5-8kv"/>
+                            <constraint firstAttribute="centerX" secondItem="Uys-Un-SlS" secondAttribute="centerX" id="WKf-A6-ows"/>
+                            <constraint firstItem="iOG-qy-eOz" firstAttribute="top" secondItem="Uys-Un-SlS" secondAttribute="bottom" constant="8" id="twG-4Y-Rbl"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="4gw-dL-seQ"/>
+                    <connections>
+                        <outlet property="payButton" destination="Uys-Un-SlS" id="fDT-XO-gEY"/>
+                        <outlet property="spinner" destination="iOG-qy-eOz" id="Ihl-xc-buD"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1127" y="267"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="aaz-KA-aFa">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Kg6-9s-Dkw" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Jb7-vn-Ma7">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="vXZ-lx-hvc" kind="relationship" relationship="rootViewController" id="BNm-hG-CRF"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wmz-gp-32V" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="308" y="-426"/>
+        </scene>
+    </scenes>
+</document>

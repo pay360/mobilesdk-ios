@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>6BFA09D3-EC32-41DE-82C8-7E4DEED560BB</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Paypoint</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>DFBBBB583722F253884A1105CAB9ADC27E01B013</key>
+		<string>ssh://stash.paypoint.net:7999/~robnash/paypoint-ios-sdk.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Paypoint.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>DFBBBB583722F253884A1105CAB9ADC27E01B013</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://stash.paypoint.net:7999/~robnash/paypoint-ios-sdk.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>DFBBBB583722F253884A1105CAB9ADC27E01B013</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>DFBBBB583722F253884A1105CAB9ADC27E01B013</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Paypoint</string>
+		</dict>
+	</array>
+</dict>
+</plist>
