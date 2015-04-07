@@ -37,7 +37,7 @@
 
 -(NSMutableURLRequest*)mutableJSONPostRequest:(NSURL*)url {
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:60.0];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
     [request setHTTPMethod:@"POST"];
     return request;
 }
@@ -64,6 +64,43 @@
         _payments.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
     }
     return _payments;
+}
+
+#pragma mark - NSURLSessionDataTaskProtocol
+
+-(void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler {
+    NSLog(@"%@ NSURLSession didReceiveChallenge: %@", [self class], challenge);
+    
+    //    if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
+    //    {
+    //        SecTrustResultType result;
+    //        //This takes the serverTrust object and checkes it against your keychain
+    //        SecTrustEvaluate(challenge.protectionSpace.serverTrust, &result);
+    //
+    //        //If allow invalid certs, end here
+    //        //completionHandler(NSURLSessionAuthChallengeUseCredential, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
+    //
+    //        //When testing this against a trusted server I got kSecTrustResultUnspecified every time. But the other two match the description of a trusted server
+    //        if(result == kSecTrustResultProceed ||  result == kSecTrustResultUnspecified){
+    //            completionHandler(NSURLSessionAuthChallengeUseCredential, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
+    //        }
+    //        else {
+    //            //Asks the user for trust
+    //            if (YES) {
+    //                //May need to add a method to add serverTrust to the keychain like Firefox's "Add Excpetion"
+    //                completionHandler(NSURLSessionAuthChallengeUseCredential, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
+    //            }
+    //            else {
+    //                [[challenge sender] cancelAuthenticationChallenge:challenge];
+    //            }
+    //        }
+    //    }
+    //    else if ([[challenge protectionSpace] authenticationMethod] == NSURLAuthenticationMethodDefault) {
+    //        NSURLCredential *newCredential = [NSURLCredential credentialWithUser:@"" password:@"" persistence:NSURLCredentialPersistenceNone];
+    //        completionHandler(NSURLSessionAuthChallengeUseCredential, newCredential);
+    //    }
+    
+    completionHandler(NSURLSessionAuthChallengeUseCredential, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
 }
 
 @end
