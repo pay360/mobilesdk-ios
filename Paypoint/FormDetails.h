@@ -7,7 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <PaypointSDK/PPOLuhn.h>
 
 @interface FormDetails : NSObject
+
+@property (nonatomic, strong) NSString *cardNumber;
+@property (nonatomic, strong) NSString *expiry;
+@property (nonatomic, strong) NSString *cvv;
+
+-(BOOL)isComplete;
 
 @end

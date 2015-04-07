@@ -9,5 +9,9 @@
 #import <Foundation/Foundation.h>
 
 @interface TimeManager : NSObject
+@property (nonatomic, strong) NSDateFormatter *cardExpiryDateFormatter;
+
++(NSArray*)expiryDatesFromDate:(NSDate*)now;
++(NSLocale*)locale;
 
 @end

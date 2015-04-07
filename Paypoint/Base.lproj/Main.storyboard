@@ -3,12 +3,14 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
-        <!--Launch View Controller-->
+        <!--Form View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="LaunchViewController" sceneMemberID="viewController">
+                <viewController id="vXZ-lx-hvc" customClass="FormViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
@@ -17,36 +19,103 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Uys-Un-SlS">
-                                <rect key="frame" x="285" y="285" width="30" height="30"/>
-                                <state key="normal" title="Pay">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="lhY-4Y-M7d">
+                                <rect key="frame" x="16" y="96" width="217.5" height="30"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="Hf9-Df-rYf"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="numberPad" keyboardAppearance="alert" returnKeyType="next"/>
+                                <connections>
+                                    <action selector="textFieldEditingChanged:" destination="vXZ-lx-hvc" eventType="editingDidEnd" id="Hw8-Ye-bxj"/>
+                                </connections>
+                            </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Card Number" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OJ8-Kn-ajT">
+                                <rect key="frame" x="16" y="72" width="103.5" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fAZ-Am-LBu">
+                                <rect key="frame" x="228" y="329" width="112" height="44"/>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="26"/>
+                                <state key="normal" title="Pay Now">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="payButtonPresseded:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="yHT-jm-5MD"/>
+                                    <action selector="payNowButtonPressed:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="muS-Kg-ZG3"/>
                                 </connections>
                             </button>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="iOG-qy-eOz">
-                                <rect key="frame" x="290" y="323" width="20" height="20"/>
-                            </activityIndicatorView>
+                            <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" placeholder="MM YYYY" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="a2A-o8-lvo">
+                                <rect key="frame" x="16" y="158.5" width="87" height="30"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="sS2-Mc-zhf"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="alphabet" keyboardAppearance="alert" returnKeyType="next"/>
+                            </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Expiry" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hep-J0-q8J">
+                                <rect key="frame" x="16" y="134" width="48" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="aJS-bh-zAP">
+                                <rect key="frame" x="126.5" y="158.5" width="65.5" height="30"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="sOp-3z-5XU"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="numberPad" keyboardAppearance="alert" returnKeyType="done" secureTextEntry="YES"/>
+                                <connections>
+                                    <action selector="textFieldEditingChanged:" destination="vXZ-lx-hvc" eventType="editingDidEnd" id="tWK-yI-BnZ"/>
+                                </connections>
+                            </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CVV" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9yk-al-nnW">
+                                <rect key="frame" x="126.5" y="134" width="33.5" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.98823529409999999" green="0.79607843140000001" blue="0.14901960780000001" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="iOG-qy-eOz" firstAttribute="centerX" secondItem="Uys-Un-SlS" secondAttribute="centerX" id="6C3-ho-mGa"/>
-                            <constraint firstAttribute="centerY" secondItem="Uys-Un-SlS" secondAttribute="centerY" id="IcB-E5-8kv"/>
-                            <constraint firstAttribute="centerX" secondItem="Uys-Un-SlS" secondAttribute="centerX" id="WKf-A6-ows"/>
-                            <constraint firstItem="iOG-qy-eOz" firstAttribute="top" secondItem="Uys-Un-SlS" secondAttribute="bottom" constant="8" id="twG-4Y-Rbl"/>
+                            <constraint firstItem="hep-J0-q8J" firstAttribute="leading" secondItem="a2A-o8-lvo" secondAttribute="leading" id="CL2-IU-ySH"/>
+                            <constraint firstItem="9yk-al-nnW" firstAttribute="leading" secondItem="aJS-bh-zAP" secondAttribute="leading" id="Eq0-rm-kIt"/>
+                            <constraint firstItem="OJ8-Kn-ajT" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="8" id="JUP-3l-mZd"/>
+                            <constraint firstItem="OJ8-Kn-ajT" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" id="Q2T-rV-Y0Q"/>
+                            <constraint firstItem="lhY-4Y-M7d" firstAttribute="leading" secondItem="hep-J0-q8J" secondAttribute="leading" id="QSg-Mw-UoP"/>
+                            <constraint firstItem="aJS-bh-zAP" firstAttribute="top" secondItem="9yk-al-nnW" secondAttribute="bottom" constant="4" id="SDy-6d-TTC"/>
+                            <constraint firstItem="hep-J0-q8J" firstAttribute="top" secondItem="lhY-4Y-M7d" secondAttribute="bottom" constant="8" id="UIq-PK-8mF"/>
+                            <constraint firstItem="OJ8-Kn-ajT" firstAttribute="leading" secondItem="lhY-4Y-M7d" secondAttribute="leading" id="XO4-Dg-PL7"/>
+                            <constraint firstAttribute="centerY" secondItem="fAZ-Am-LBu" secondAttribute="centerY" constant="-51.5" id="b4i-xn-PVD"/>
+                            <constraint firstItem="aJS-bh-zAP" firstAttribute="leading" secondItem="a2A-o8-lvo" secondAttribute="trailing" constant="23.5" id="eN1-M1-ERw"/>
+                            <constraint firstItem="a2A-o8-lvo" firstAttribute="top" secondItem="hep-J0-q8J" secondAttribute="bottom" constant="4" id="esg-ru-YSu"/>
+                            <constraint firstItem="aJS-bh-zAP" firstAttribute="width" secondItem="lhY-4Y-M7d" secondAttribute="width" multiplier="0.3" id="gPV-KM-zn7"/>
+                            <constraint firstItem="lhY-4Y-M7d" firstAttribute="top" secondItem="OJ8-Kn-ajT" secondAttribute="bottom" constant="4" id="goI-ZM-WRC"/>
+                            <constraint firstAttribute="centerX" secondItem="fAZ-Am-LBu" secondAttribute="centerX" constant="16" id="hP2-2O-BHi"/>
+                            <constraint firstItem="hep-J0-q8J" firstAttribute="top" secondItem="9yk-al-nnW" secondAttribute="top" id="lqQ-nS-p6s"/>
+                            <constraint firstItem="a2A-o8-lvo" firstAttribute="width" secondItem="lhY-4Y-M7d" secondAttribute="width" multiplier="0.4" id="z62-XQ-lJC"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="4gw-dL-seQ"/>
                     <connections>
-                        <outlet property="payButton" destination="Uys-Un-SlS" id="fDT-XO-gEY"/>
-                        <outlet property="spinner" destination="iOG-qy-eOz" id="Ihl-xc-buD"/>
+                        <outlet property="payNowButton" destination="fAZ-Am-LBu" id="1Ie-Al-VjM"/>
+                        <outletCollection property="titleLabels" destination="OJ8-Kn-ajT" id="AUN-dK-U7R"/>
+                        <outletCollection property="titleLabels" destination="hep-J0-q8J" id="YMz-72-pCx"/>
+                        <outletCollection property="titleLabels" destination="9yk-al-nnW" id="Qac-v5-VXX"/>
+                        <outletCollection property="textFields" destination="lhY-4Y-M7d" id="ScV-J6-VYp"/>
+                        <outletCollection property="textFields" destination="a2A-o8-lvo" id="LfZ-Ef-bAt"/>
+                        <outletCollection property="textFields" destination="aJS-bh-zAP" id="bMA-kD-el0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1127" y="267"/>
+            <point key="canvasLocation" x="991" y="-426"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="aaz-KA-aFa">
