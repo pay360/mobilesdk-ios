@@ -30,8 +30,6 @@
 		501B7CBF1AC40B3000F44193 /* PPOWebViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 501B7CBC1AC40B3000F44193 /* PPOWebViewController.h */; };
 		501B7CC01AC40B3000F44193 /* PPOWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 501B7CBD1AC40B3000F44193 /* PPOWebViewController.m */; };
 		501B7CC31AC40B5600F44193 /* PPOWebViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 501B7CBE1AC40B3000F44193 /* PPOWebViewController.xib */; };
-		501C8E621AC01CD200CBA25A /* PPOTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 501C8E601AC01CD200CBA25A /* PPOTableViewCell.h */; };
-		501C8E631AC01CD200CBA25A /* PPOTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 501C8E611AC01CD200CBA25A /* PPOTableViewCell.m */; };
 		501C8E871AC03F7000CBA25A /* PaypointSDKBundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 501C8E761AC03B9D00CBA25A /* PaypointSDKBundle.bundle */; };
 		5069F6581ABC7DA30077FB10 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5069F6571ABC7DA30077FB10 /* main.m */; };
 		5069F65B1ABC7DA30077FB10 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5069F65A1ABC7DA30077FB10 /* AppDelegate.m */; };
@@ -123,8 +121,6 @@
 		501B7CBC1AC40B3000F44193 /* PPOWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOWebViewController.h; sourceTree = "<group>"; };
 		501B7CBD1AC40B3000F44193 /* PPOWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOWebViewController.m; sourceTree = "<group>"; };
 		501B7CBE1AC40B3000F44193 /* PPOWebViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PPOWebViewController.xib; sourceTree = "<group>"; };
-		501C8E601AC01CD200CBA25A /* PPOTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOTableViewCell.h; sourceTree = "<group>"; };
-		501C8E611AC01CD200CBA25A /* PPOTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOTableViewCell.m; sourceTree = "<group>"; };
 		501C8E761AC03B9D00CBA25A /* PaypointSDKBundle.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PaypointSDKBundle.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		501C8E791AC03B9D00CBA25A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		501D5EFE1ACD49A000E61680 /* UniversalFramework.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = UniversalFramework.sh; path = ../Lipo/UniversalFramework.sh; sourceTree = "<group>"; };
@@ -242,31 +238,6 @@
 			name = ViewControllers;
 			sourceTree = "<group>";
 		};
-		501C8E641AC01CD500CBA25A /* PPOTableViewCell */ = {
-			isa = PBXGroup;
-			children = (
-				501C8E601AC01CD200CBA25A /* PPOTableViewCell.h */,
-				501C8E611AC01CD200CBA25A /* PPOTableViewCell.m */,
-			);
-			name = PPOTableViewCell;
-			sourceTree = "<group>";
-		};
-		501C8E651AC01CDB00CBA25A /* TableViewCells */ = {
-			isa = PBXGroup;
-			children = (
-				501C8E641AC01CD500CBA25A /* PPOTableViewCell */,
-			);
-			name = TableViewCells;
-			sourceTree = "<group>";
-		};
-		501C8E661AC01CE500CBA25A /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				501C8E651AC01CDB00CBA25A /* TableViewCells */,
-			);
-			name = Views;
-			sourceTree = "<group>";
-		};
 		501C8E671AC01D2700CBA25A /* Managers */ = {
 			isa = PBXGroup;
 			children = (
@@ -377,7 +348,6 @@
 				50AB96CA1AC17C9200323E05 /* ThirdParty */,
 				50AB96CD1AC1868C00323E05 /* Protocols */,
 				501C8E681AC01D3400CBA25A /* Model */,
-				501C8E661AC01CE500CBA25A /* Views */,
 				501C8E5F1AC0198B00CBA25A /* ViewControllers */,
 				501C8E671AC01D2700CBA25A /* Managers */,
 				5069F6821ABC7EBA0077FB10 /* Supporting Files */,
@@ -555,7 +525,6 @@
 				50CC9B0B1AD42CE800B97F2E /* PPOBillingAddress.h in Headers */,
 				50CC9B011AD4289300B97F2E /* PPOCredentials.h in Headers */,
 				5069F6851ABC7EBA0077FB10 /* PaypointSDK.h in Headers */,
-				501C8E621AC01CD200CBA25A /* PPOTableViewCell.h in Headers */,
 				50046ACE1AC2FB0400F23D05 /* PPOLuhn.h in Headers */,
 				50046AC81AC2FAB000F23D05 /* PPOReachability.h in Headers */,
 				50CC9B061AD42B7500B97F2E /* PPOTransaction.h in Headers */,
@@ -771,7 +740,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				50046ACF1AC2FB0400F23D05 /* PPOLuhn.m in Sources */,
-				501C8E631AC01CD200CBA25A /* PPOTableViewCell.m in Sources */,
 				50CC9AFD1AD4237F00B97F2E /* PPOCreditCard.m in Sources */,
 				50CC9B0C1AD42CE800B97F2E /* PPOBillingAddress.m in Sources */,
 				50CC9B071AD42B7500B97F2E /* PPOTransaction.m in Sources */,
