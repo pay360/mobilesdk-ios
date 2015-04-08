@@ -41,6 +41,7 @@
 		5069F6941ABC7EBA0077FB10 /* PaypointSDKTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5069F6931ABC7EBA0077FB10 /* PaypointSDKTests.m */; };
 		5069F6971ABC7EBA0077FB10 /* PaypointSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5069F6801ABC7EBA0077FB10 /* PaypointSDK.framework */; };
 		5069F6981ABC7EBA0077FB10 /* PaypointSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5069F6801ABC7EBA0077FB10 /* PaypointSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		50AB93B81AD551AD005944F5 /* SubmitFormViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50AB93B71AD551AD005944F5 /* SubmitFormViewController.m */; };
 		50AB96D81AC1D38E00323E05 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 50AB96D71AC1D38E00323E05 /* Reachability.m */; };
 		50CC9AF21AD41E0100B97F2E /* PPOEndpointManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 50CC9AF01AD41E0100B97F2E /* PPOEndpointManager.h */; };
 		50CC9AF31AD41E0100B97F2E /* PPOEndpointManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CC9AF11AD41E0100B97F2E /* PPOEndpointManager.m */; };
@@ -137,6 +138,8 @@
 		5069F68A1ABC7EBA0077FB10 /* PaypointSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PaypointSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5069F6921ABC7EBA0077FB10 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5069F6931ABC7EBA0077FB10 /* PaypointSDKTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PaypointSDKTests.m; sourceTree = "<group>"; };
+		50AB93B61AD551AD005944F5 /* SubmitFormViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubmitFormViewController.h; sourceTree = "<group>"; };
+		50AB93B71AD551AD005944F5 /* SubmitFormViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubmitFormViewController.m; sourceTree = "<group>"; };
 		50AB96D61AC1D38E00323E05 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		50AB96D71AC1D38E00323E05 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		50CC9AF01AD41E0100B97F2E /* PPOEndpointManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOEndpointManager.h; sourceTree = "<group>"; };
@@ -224,6 +227,7 @@
 			isa = PBXGroup;
 			children = (
 				50CC9B111AD43B7A00B97F2E /* FormViewController */,
+				50AB93B91AD551B0005944F5 /* SubmitFormViewController */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -375,6 +379,15 @@
 				5069F6921ABC7EBA0077FB10 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		50AB93B91AD551B0005944F5 /* SubmitFormViewController */ = {
+			isa = PBXGroup;
+			children = (
+				50AB93B61AD551AD005944F5 /* SubmitFormViewController.h */,
+				50AB93B71AD551AD005944F5 /* SubmitFormViewController.m */,
+			);
+			name = SubmitFormViewController;
 			sourceTree = "<group>";
 		};
 		50AB96CA1AC17C9200323E05 /* ThirdParty */ = {
@@ -718,6 +731,7 @@
 				5069F65B1ABC7DA30077FB10 /* AppDelegate.m in Sources */,
 				5069F6581ABC7DA30077FB10 /* main.m in Sources */,
 				50AB96D81AC1D38E00323E05 /* Reachability.m in Sources */,
+				50AB93B81AD551AD005944F5 /* SubmitFormViewController.m in Sources */,
 				50CC9B191AD43E2200B97F2E /* TimeManager.m in Sources */,
 				50CC9B101AD43B7600B97F2E /* FormViewController.m in Sources */,
 			);
