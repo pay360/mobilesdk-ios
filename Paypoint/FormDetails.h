@@ -6,8 +6,7 @@
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import <PaypointSDK/PPOLuhn.h>
+#import <UIKit/UIKit.h>
 
 @interface FormDetails : NSObject
 

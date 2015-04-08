@@ -7,13 +7,11 @@
 //
 
 #import "FormDetails.h"
+#import <PaypointSDK/PPOLuhn.h>
 
 @implementation FormDetails
 
 -(BOOL)isComplete {
-    if (self.cardNumber == nil || self.cardNumber.length == 0 || ![PPOLuhn validateString:self.cardNumber]) {
-        return NO;
-    }
     if (self.cardNumber.length < 16 || self.cardNumber.length > 19) {
         return NO;
     }
@@ -26,7 +24,7 @@
     if (self.cvv.length < 3 || self.cvv.length > 4) {
         return NO;
     }
-    return YES;
+    return [PPOLuhn validateString:self.cardNumber];
 }
 
 -(void)setExpiry:(NSString *)expiry {
