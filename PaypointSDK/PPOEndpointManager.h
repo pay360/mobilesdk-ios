@@ -1,5 +1,5 @@
 //
-//  PPOEndpoint.h
+//  PPOEndpointManager.h
 //  Paypoint
 //
 //  Created by Robert Nash on 07/04/2015.
@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface PPOEndpoint : NSObject
+@interface PPOEndpointManager : NSObject
 
 +(NSURL*)simplePayment:(NSString*)installationID;
 

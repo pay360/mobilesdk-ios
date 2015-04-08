@@ -7,7 +7,7 @@
 //
 
 #import "PPOPaymentManager.h"
-#import "PPOEndpoint.h"
+#import "PPOEndpointManager.h"
 
 @interface PPOPaymentManager () <NSURLSessionTaskDelegate>
 @property (nonatomic, strong, readwrite) NSOperationQueue *payments;
@@ -26,7 +26,7 @@
 
 -(void)startTransaction:(PPOTransaction*)transaction withCard:(PPOCreditCard*)card forAddress:(PPOBillingAddress*)address completionHandler:(void(^)(NSData *data, NSURLResponse *response, NSError *error))completion {
     
-    NSMutableURLRequest *request = [self mutableJSONPostRequest:[PPOEndpoint simplePayment:self.credentials.installationID]];
+    NSMutableURLRequest *request = [self mutableJSONPostRequest:[PPOEndpointManager simplePayment:self.credentials.installationID]];
     [request setValue:[self authorisation:self.credentials] forHTTPHeaderField:@"Authorization"];
     [request setHTTPBody:[self buildPostBodyWithTransaction:transaction withCard:card withAddress:address]];
     

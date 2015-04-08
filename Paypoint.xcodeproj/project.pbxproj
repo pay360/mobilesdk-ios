@@ -45,8 +45,8 @@
 		5069F6981ABC7EBA0077FB10 /* PaypointSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5069F6801ABC7EBA0077FB10 /* PaypointSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		50AB96C41AC16BE200323E05 /* PPOPaymentControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AB96C31AC16BE200323E05 /* PPOPaymentControllerProtocol.h */; };
 		50AB96D81AC1D38E00323E05 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 50AB96D71AC1D38E00323E05 /* Reachability.m */; };
-		50CC9AF21AD41E0100B97F2E /* PPOEndpoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 50CC9AF01AD41E0100B97F2E /* PPOEndpoint.h */; };
-		50CC9AF31AD41E0100B97F2E /* PPOEndpoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CC9AF11AD41E0100B97F2E /* PPOEndpoint.m */; };
+		50CC9AF21AD41E0100B97F2E /* PPOEndpointManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 50CC9AF01AD41E0100B97F2E /* PPOEndpointManager.h */; };
+		50CC9AF31AD41E0100B97F2E /* PPOEndpointManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CC9AF11AD41E0100B97F2E /* PPOEndpointManager.m */; };
 		50CC9AF71AD41ED300B97F2E /* PPOPaymentManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 50CC9AF51AD41ED300B97F2E /* PPOPaymentManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		50CC9AF81AD41ED300B97F2E /* PPOPaymentManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CC9AF61AD41ED300B97F2E /* PPOPaymentManager.m */; };
 		50CC9AFC1AD4237F00B97F2E /* PPOCreditCard.h in Headers */ = {isa = PBXBuildFile; fileRef = 50CC9AFA1AD4237F00B97F2E /* PPOCreditCard.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -145,8 +145,8 @@
 		50AB96C31AC16BE200323E05 /* PPOPaymentControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOPaymentControllerProtocol.h; sourceTree = "<group>"; };
 		50AB96D61AC1D38E00323E05 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		50AB96D71AC1D38E00323E05 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
-		50CC9AF01AD41E0100B97F2E /* PPOEndpoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOEndpoint.h; sourceTree = "<group>"; };
-		50CC9AF11AD41E0100B97F2E /* PPOEndpoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOEndpoint.m; sourceTree = "<group>"; };
+		50CC9AF01AD41E0100B97F2E /* PPOEndpointManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOEndpointManager.h; sourceTree = "<group>"; };
+		50CC9AF11AD41E0100B97F2E /* PPOEndpointManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOEndpointManager.m; sourceTree = "<group>"; };
 		50CC9AF51AD41ED300B97F2E /* PPOPaymentManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOPaymentManager.h; sourceTree = "<group>"; };
 		50CC9AF61AD41ED300B97F2E /* PPOPaymentManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOPaymentManager.m; sourceTree = "<group>"; };
 		50CC9AFA1AD4237F00B97F2E /* PPOCreditCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOCreditCard.h; sourceTree = "<group>"; };
@@ -449,8 +449,8 @@
 		50CC9AF41AD41E0500B97F2E /* PPOEndpoint */ = {
 			isa = PBXGroup;
 			children = (
-				50CC9AF01AD41E0100B97F2E /* PPOEndpoint.h */,
-				50CC9AF11AD41E0100B97F2E /* PPOEndpoint.m */,
+				50CC9AF01AD41E0100B97F2E /* PPOEndpointManager.h */,
+				50CC9AF11AD41E0100B97F2E /* PPOEndpointManager.m */,
 			);
 			name = PPOEndpoint;
 			sourceTree = "<group>";
@@ -560,7 +560,7 @@
 				50046AC81AC2FAB000F23D05 /* PPOReachability.h in Headers */,
 				50CC9B061AD42B7500B97F2E /* PPOTransaction.h in Headers */,
 				50CC9AFC1AD4237F00B97F2E /* PPOCreditCard.h in Headers */,
-				50CC9AF21AD41E0100B97F2E /* PPOEndpoint.h in Headers */,
+				50CC9AF21AD41E0100B97F2E /* PPOEndpointManager.h in Headers */,
 				50AB96C41AC16BE200323E05 /* PPOPaymentControllerProtocol.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -778,7 +778,7 @@
 				50046AC91AC2FAB000F23D05 /* PPOReachability.m in Sources */,
 				50CC9B021AD4289300B97F2E /* PPOCredentials.m in Sources */,
 				501B7CC01AC40B3000F44193 /* PPOWebViewController.m in Sources */,
-				50CC9AF31AD41E0100B97F2E /* PPOEndpoint.m in Sources */,
+				50CC9AF31AD41E0100B97F2E /* PPOEndpointManager.m in Sources */,
 				50CC9AF81AD41ED300B97F2E /* PPOPaymentManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -1,14 +1,14 @@
 //
-//  PPOEndpoint.m
+//  PPOEndpointManager.m
 //  Paypoint
 //
 //  Created by Robert Nash on 07/04/2015.
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#import "PPOEndpoint.h"
+#import "PPOEndpointManager.h"
 
-@implementation PPOEndpoint
+@implementation PPOEndpointManager
 
 +(NSURL*)simplePayment:(NSString*)installationID {
     return [NSURL URLWithString:[NSString stringWithFormat:@"http://localhost:5000/mobileapi/transactions/%@/payment", installationID]];
