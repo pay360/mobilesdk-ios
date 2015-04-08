@@ -270,7 +270,7 @@
 		501C8E671AC01D2700CBA25A /* Managers */ = {
 			isa = PBXGroup;
 			children = (
-				50CC9AF41AD41E0500B97F2E /* PPOEndpoint */,
+				50CC9AF41AD41E0500B97F2E /* PPOEndpointManager */,
 				50CC9AF91AD41ED800B97F2E /* PPOPaymentManager */,
 			);
 			name = Managers;
@@ -446,13 +446,13 @@
 			name = ThirdParty;
 			sourceTree = "<group>";
 		};
-		50CC9AF41AD41E0500B97F2E /* PPOEndpoint */ = {
+		50CC9AF41AD41E0500B97F2E /* PPOEndpointManager */ = {
 			isa = PBXGroup;
 			children = (
 				50CC9AF01AD41E0100B97F2E /* PPOEndpointManager.h */,
 				50CC9AF11AD41E0100B97F2E /* PPOEndpointManager.m */,
 			);
-			name = PPOEndpoint;
+			name = PPOEndpointManager;
 			sourceTree = "<group>";
 		};
 		50CC9AF91AD41ED800B97F2E /* PPOPaymentManager */ = {
