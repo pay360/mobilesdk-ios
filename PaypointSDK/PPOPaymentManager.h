@@ -6,17 +6,31 @@
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#import "PPOCreditCard.h"
-#import "PPOCredentials.h"
-#import "PPOTransaction.h"
-#import "PPOBillingAddress.h"
+#import <UIKit/UIKit.h>
+
+@class PPOCredentials;
+@class PPOTransaction;
+@class PPOCreditCard;
+@class PPOBillingAddress;
+
+@protocol PPOPaymentManagerDatasource <NSObject>
+-(PPOCreditCard*)creditCard;
+-(PPOBillingAddress*)billingAddress;
+@end
+
+@protocol PPOPaymentManagerDelegate <NSObject>
+-(void)paymentSucceeded:(NSString*)feedback;
+-(void)paymentFailed:(NSError*)error;
+@end
 
 @interface PPOPaymentManager : NSObject
-
 @property (nonatomic, strong, readonly) NSOperationQueue *payments;
+@property (nonatomic, strong) PPOCredentials *credentials;
+@property (nonatomic, weak) id <PPOPaymentManagerDelegate> delegate;
+@property (nonatomic, weak) id <PPOPaymentManagerDatasource> datasource;
 
--(instancetype)initWithCredentials:(PPOCredentials*)credentials; //Designated initialiser
+-(instancetype)initWithCredentials:(PPOCredentials*)credentials withDelegate:(id<PPOPaymentManagerDelegate>)delegate; //Designated initialiser
 
--(void)startTransaction:(PPOTransaction*)transaction withCard:(PPOCreditCard*)card forAddress:(PPOBillingAddress*)address completionHandler:(void(^)(NSData *data, NSURLResponse *response, NSError *error))completion;
+-(void)startTransaction:(PPOTransaction*)transaction;
 
 @end

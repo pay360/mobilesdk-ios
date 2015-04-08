@@ -42,6 +42,7 @@
 		5069F6971ABC7EBA0077FB10 /* PaypointSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5069F6801ABC7EBA0077FB10 /* PaypointSDK.framework */; };
 		5069F6981ABC7EBA0077FB10 /* PaypointSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5069F6801ABC7EBA0077FB10 /* PaypointSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		50AB93B81AD551AD005944F5 /* SubmitFormViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50AB93B71AD551AD005944F5 /* SubmitFormViewController.m */; };
+		50AB93BC1AD5564E005944F5 /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50AB93BB1AD5564E005944F5 /* NetworkManager.m */; };
 		50AB96D81AC1D38E00323E05 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 50AB96D71AC1D38E00323E05 /* Reachability.m */; };
 		50CC9AF21AD41E0100B97F2E /* PPOEndpointManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 50CC9AF01AD41E0100B97F2E /* PPOEndpointManager.h */; };
 		50CC9AF31AD41E0100B97F2E /* PPOEndpointManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CC9AF11AD41E0100B97F2E /* PPOEndpointManager.m */; };
@@ -140,6 +141,8 @@
 		5069F6931ABC7EBA0077FB10 /* PaypointSDKTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PaypointSDKTests.m; sourceTree = "<group>"; };
 		50AB93B61AD551AD005944F5 /* SubmitFormViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubmitFormViewController.h; sourceTree = "<group>"; };
 		50AB93B71AD551AD005944F5 /* SubmitFormViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubmitFormViewController.m; sourceTree = "<group>"; };
+		50AB93BA1AD5564E005944F5 /* NetworkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkManager.h; sourceTree = "<group>"; };
+		50AB93BB1AD5564E005944F5 /* NetworkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkManager.m; sourceTree = "<group>"; };
 		50AB96D61AC1D38E00323E05 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		50AB96D71AC1D38E00323E05 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		50CC9AF01AD41E0100B97F2E /* PPOEndpointManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOEndpointManager.h; sourceTree = "<group>"; };
@@ -390,6 +393,15 @@
 			name = SubmitFormViewController;
 			sourceTree = "<group>";
 		};
+		50AB93BD1AD55652005944F5 /* NetworkManager */ = {
+			isa = PBXGroup;
+			children = (
+				50AB93BA1AD5564E005944F5 /* NetworkManager.h */,
+				50AB93BB1AD5564E005944F5 /* NetworkManager.m */,
+			);
+			name = NetworkManager;
+			sourceTree = "<group>";
+		};
 		50AB96CA1AC17C9200323E05 /* ThirdParty */ = {
 			isa = PBXGroup;
 			children = (
@@ -511,6 +523,7 @@
 			isa = PBXGroup;
 			children = (
 				50CC9B1A1AD43E2500B97F2E /* TimeManager */,
+				50AB93BD1AD55652005944F5 /* NetworkManager */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -727,6 +740,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				50AB93BC1AD5564E005944F5 /* NetworkManager.m in Sources */,
 				50CC9B141AD43C3E00B97F2E /* FormDetails.m in Sources */,
 				5069F65B1ABC7DA30077FB10 /* AppDelegate.m in Sources */,
 				5069F6581ABC7DA30077FB10 /* main.m in Sources */,
