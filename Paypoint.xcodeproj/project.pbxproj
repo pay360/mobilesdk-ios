@@ -41,7 +41,6 @@
 		5069F6941ABC7EBA0077FB10 /* PaypointSDKTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5069F6931ABC7EBA0077FB10 /* PaypointSDKTests.m */; };
 		5069F6971ABC7EBA0077FB10 /* PaypointSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5069F6801ABC7EBA0077FB10 /* PaypointSDK.framework */; };
 		5069F6981ABC7EBA0077FB10 /* PaypointSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5069F6801ABC7EBA0077FB10 /* PaypointSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		50AB96C41AC16BE200323E05 /* PPOPaymentControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AB96C31AC16BE200323E05 /* PPOPaymentControllerProtocol.h */; };
 		50AB96D81AC1D38E00323E05 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 50AB96D71AC1D38E00323E05 /* Reachability.m */; };
 		50CC9AF21AD41E0100B97F2E /* PPOEndpointManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 50CC9AF01AD41E0100B97F2E /* PPOEndpointManager.h */; };
 		50CC9AF31AD41E0100B97F2E /* PPOEndpointManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CC9AF11AD41E0100B97F2E /* PPOEndpointManager.m */; };
@@ -138,7 +137,6 @@
 		5069F68A1ABC7EBA0077FB10 /* PaypointSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PaypointSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5069F6921ABC7EBA0077FB10 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5069F6931ABC7EBA0077FB10 /* PaypointSDKTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PaypointSDKTests.m; sourceTree = "<group>"; };
-		50AB96C31AC16BE200323E05 /* PPOPaymentControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOPaymentControllerProtocol.h; sourceTree = "<group>"; };
 		50AB96D61AC1D38E00323E05 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		50AB96D71AC1D38E00323E05 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		50CC9AF01AD41E0100B97F2E /* PPOEndpointManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOEndpointManager.h; sourceTree = "<group>"; };
@@ -346,7 +344,6 @@
 			children = (
 				5069F6841ABC7EBA0077FB10 /* PaypointSDK.h */,
 				50AB96CA1AC17C9200323E05 /* ThirdParty */,
-				50AB96CD1AC1868C00323E05 /* Protocols */,
 				501C8E681AC01D3400CBA25A /* Model */,
 				501C8E5F1AC0198B00CBA25A /* ViewControllers */,
 				501C8E671AC01D2700CBA25A /* Managers */,
@@ -389,14 +386,6 @@
 				50046ACA1AC2FAB500F23D05 /* PPOReachability */,
 			);
 			name = ThirdParty;
-			sourceTree = "<group>";
-		};
-		50AB96CD1AC1868C00323E05 /* Protocols */ = {
-			isa = PBXGroup;
-			children = (
-				50AB96C31AC16BE200323E05 /* PPOPaymentControllerProtocol.h */,
-			);
-			name = Protocols;
 			sourceTree = "<group>";
 		};
 		50AB96D91AC1D39400323E05 /* Reachability */ = {
@@ -530,7 +519,6 @@
 				50CC9B061AD42B7500B97F2E /* PPOTransaction.h in Headers */,
 				50CC9AFC1AD4237F00B97F2E /* PPOCreditCard.h in Headers */,
 				50CC9AF21AD41E0100B97F2E /* PPOEndpointManager.h in Headers */,
-				50AB96C41AC16BE200323E05 /* PPOPaymentControllerProtocol.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
