@@ -50,8 +50,10 @@
     
     id object = @{
                   @"transaction": [transaction jsonObjectRepresentation],
-                  @"paymentMethod": @{@"card": [card jsonObjectRepresentation]},
-                  @"billingAddress": [address jsonObjectRepresentation]
+                  @"paymentMethod": @{
+                                        @"card": [card jsonObjectRepresentation],
+                                        @"billingAddress": [address jsonObjectRepresentation]
+                                        }
                   };
     
     return [NSJSONSerialization dataWithJSONObject:object options:NSJSONWritingPrettyPrinted error:nil];
