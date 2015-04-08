@@ -145,23 +145,29 @@ typedef enum : NSUInteger {
     
     [self.paymentManager startTransaction:transaction withCard:card forAddress:address completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         
-        NSString *message = @"Unknown outcome";
-        
-        id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
-        
-        id outcome = [json objectForKey:@"outcome"];
-        if ([outcome isKindOfClass:[NSDictionary class]]) {
-            id m = [outcome objectForKey:@"reasonMessage"];
-            if ([m isKindOfClass:[NSString class]]) {
-                message = m;
-            }
-        }
+        NSString *message = [self parseOutcome:data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
+            [self showAlertWithMessage:message];
         });
         
     }];
     
+}
+
+- (NSString *)parseOutcome:(NSData *)data {
+    NSString *message = @"Unknown outcome";
+    
+    id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
+    
+    id outcome = [json objectForKey:@"outcome"];
+    if ([outcome isKindOfClass:[NSDictionary class]]) {
+        id m = [outcome objectForKey:@"reasonMessage"];
+        if ([m isKindOfClass:[NSString class]]) {
+            message = m;
+        }
+    }
+    return message;
 }
 
 -(void)showAlertWithMessage:(NSString*)message {

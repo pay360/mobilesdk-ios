@@ -67,7 +67,7 @@
     NSLog(@"Finished");
     
     NSCachedURLResponse *resp = [[NSURLCache sharedURLCache] cachedResponseForRequest:webView.request];
-    id json = [NSJSONSerialization JSONObjectWithData:resp.data options:NSJSONReadingAllowFragments error:nil];
+    //id json = [NSJSONSerialization JSONObjectWithData:resp.data options:NSJSONReadingAllowFragments error:nil];
     NSLog(@"%@",[(NSHTTPURLResponse*)resp.response allHeaderFields]);
 }
 

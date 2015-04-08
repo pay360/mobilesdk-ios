@@ -43,7 +43,7 @@
 		5069F6941ABC7EBA0077FB10 /* PaypointSDKTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5069F6931ABC7EBA0077FB10 /* PaypointSDKTests.m */; };
 		5069F6971ABC7EBA0077FB10 /* PaypointSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5069F6801ABC7EBA0077FB10 /* PaypointSDK.framework */; };
 		5069F6981ABC7EBA0077FB10 /* PaypointSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5069F6801ABC7EBA0077FB10 /* PaypointSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		50AB96C41AC16BE200323E05 /* PPOPaymentControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AB96C31AC16BE200323E05 /* PPOPaymentControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		50AB96C41AC16BE200323E05 /* PPOPaymentControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AB96C31AC16BE200323E05 /* PPOPaymentControllerProtocol.h */; };
 		50AB96D81AC1D38E00323E05 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 50AB96D71AC1D38E00323E05 /* Reachability.m */; };
 		50CC9AF21AD41E0100B97F2E /* PPOEndpoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 50CC9AF01AD41E0100B97F2E /* PPOEndpoint.h */; };
 		50CC9AF31AD41E0100B97F2E /* PPOEndpoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CC9AF11AD41E0100B97F2E /* PPOEndpoint.m */; };
