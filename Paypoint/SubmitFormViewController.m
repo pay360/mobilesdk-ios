@@ -121,6 +121,9 @@
             case PPOErrorTransactionProcessingFailed: /* */ break;
             case PPOErrorServerFailure: /* */ break;
             case PPOErrorLuhnCheckFailed: /* */ break;
+            case PPOErrorCardExpiryDateInvalid: /* */ break;
+            case PPOErrorCardPanLengthInvalid: /* */ break;
+            case PPOErrorCVVInvalid: /* */ break;
             case PPOErrorUnknown: /* */ break;
         }
 
