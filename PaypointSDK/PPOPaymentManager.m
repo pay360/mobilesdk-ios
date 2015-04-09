@@ -16,7 +16,7 @@
 #import "PPOLuhn.h"
 
 @interface PPOPaymentManager () <NSURLSessionTaskDelegate>
-@property (nonatomic, strong, readwrite) NSOperationQueue *payments;
+@property (nonatomic, strong) NSOperationQueue *payments;
 @end
 
 @implementation PPOPaymentManager

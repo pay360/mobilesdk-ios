@@ -19,7 +19,6 @@
 @end
 
 @interface PPOPaymentManager : NSObject
-@property (nonatomic, strong, readonly) NSOperationQueue *payments;
 @property (nonatomic, strong) PPOCredentials *credentials;
 @property (nonatomic, weak) id <PPOPaymentManagerDelegate> delegate;
 
