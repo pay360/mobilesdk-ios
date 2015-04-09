@@ -31,6 +31,7 @@
 		501B7CC01AC40B3000F44193 /* PPOWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 501B7CBD1AC40B3000F44193 /* PPOWebViewController.m */; };
 		501B7CC31AC40B5600F44193 /* PPOWebViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 501B7CBE1AC40B3000F44193 /* PPOWebViewController.xib */; };
 		501C8E871AC03F7000CBA25A /* PaypointSDKBundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 501C8E761AC03B9D00CBA25A /* PaypointSDKBundle.bundle */; };
+		5056A19F1AD6761D00AB1276 /* NSString+strip.m in Sources */ = {isa = PBXBuildFile; fileRef = 5056A19E1AD6761D00AB1276 /* NSString+strip.m */; };
 		5069F6581ABC7DA30077FB10 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5069F6571ABC7DA30077FB10 /* main.m */; };
 		5069F65B1ABC7DA30077FB10 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5069F65A1ABC7DA30077FB10 /* AppDelegate.m */; };
 		5069F6611ABC7DA30077FB10 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5069F65F1ABC7DA30077FB10 /* Main.storyboard */; };
@@ -125,6 +126,8 @@
 		501C8E761AC03B9D00CBA25A /* PaypointSDKBundle.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PaypointSDKBundle.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		501C8E791AC03B9D00CBA25A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		501D5EFE1ACD49A000E61680 /* UniversalFramework.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = UniversalFramework.sh; path = ../Lipo/UniversalFramework.sh; sourceTree = "<group>"; };
+		5056A19D1AD6761D00AB1276 /* NSString+strip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+strip.h"; sourceTree = "<group>"; };
+		5056A19E1AD6761D00AB1276 /* NSString+strip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+strip.m"; sourceTree = "<group>"; };
 		5069F6521ABC7DA30077FB10 /* Paypoint.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Paypoint.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5069F6561ABC7DA30077FB10 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5069F6571ABC7DA30077FB10 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -298,6 +301,15 @@
 			path = PaypointSDK;
 			sourceTree = "<group>";
 		};
+		5056A1A01AD6762100AB1276 /* NSString+strip */ = {
+			isa = PBXGroup;
+			children = (
+				5056A19D1AD6761D00AB1276 /* NSString+strip.h */,
+				5056A19E1AD6761D00AB1276 /* NSString+strip.m */,
+			);
+			name = "NSString+strip";
+			sourceTree = "<group>";
+		};
 		5069F6491ABC7DA30077FB10 = {
 			isa = PBXGroup;
 			children = (
@@ -331,6 +343,7 @@
 				501C8E581AC018F600CBA25A /* ViewControllers */,
 				5069F6551ABC7DA30077FB10 /* Supporting Files */,
 				50CC9B1B1AD43E2900B97F2E /* Managers */,
+				5056A1A01AD6762100AB1276 /* NSString+strip */,
 			);
 			path = Paypoint;
 			sourceTree = "<group>";
@@ -744,6 +757,7 @@
 				50CC9B141AD43C3E00B97F2E /* FormDetails.m in Sources */,
 				5069F65B1ABC7DA30077FB10 /* AppDelegate.m in Sources */,
 				5069F6581ABC7DA30077FB10 /* main.m in Sources */,
+				5056A19F1AD6761D00AB1276 /* NSString+strip.m in Sources */,
 				50AB96D81AC1D38E00323E05 /* Reachability.m in Sources */,
 				50AB93B81AD551AD005944F5 /* SubmitFormViewController.m in Sources */,
 				50CC9B191AD43E2200B97F2E /* TimeManager.m in Sources */,
