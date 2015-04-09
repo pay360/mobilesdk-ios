@@ -135,6 +135,10 @@
     return YES;
 }
 
+-(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    return ![string isEqualToString:@" "];
+}
+
 #pragma mark - UIPickerView Datasource
 
 -(NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
