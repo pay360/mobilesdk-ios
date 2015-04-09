@@ -81,7 +81,7 @@
                                                                       withCountryCode:nil];
             
             [weakSelf.paymentManager setCredentials:credentials];
-            [weakSelf.paymentManager makePaymentWithTransaction:transaction forCard:card withBillingAddress:address];
+            [weakSelf.paymentManager makePaymentWithTransaction:transaction forCard:card withBillingAddress:address withTimeOut:60.0f];
             
         }];
         

@@ -30,7 +30,7 @@
     return self;
 }
 
--(void)makePaymentWithTransaction:(PPOTransaction*)transaction forCard:(PPOCreditCard*)card withBillingAddress:(PPOBillingAddress*)billingAddress {
+-(void)makePaymentWithTransaction:(PPOTransaction*)transaction forCard:(PPOCreditCard*)card withBillingAddress:(PPOBillingAddress*)billingAddress withTimeOut:(CGFloat)timeout {
     
     if (![PPOLuhn validateString:card.pan]) {
         
@@ -46,7 +46,7 @@
         return;
     }
     
-    NSMutableURLRequest *request = [self mutableJSONPostRequest:[PPOEndpointManager simplePayment:self.credentials.installationID]];
+    NSMutableURLRequest *request = [self mutableJSONPostRequest:[PPOEndpointManager simplePayment:self.credentials.installationID] withTimeOut:timeout];
     [request setValue:[self authorisation:self.credentials] forHTTPHeaderField:@"Authorization"];
     [request setHTTPBody:[self buildPostBodyWithTransaction:transaction withCard:card withAddress:billingAddress]];
     
@@ -117,8 +117,8 @@
     });
 }
 
--(NSMutableURLRequest*)mutableJSONPostRequest:(NSURL*)url {
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:60.0];
+-(NSMutableURLRequest*)mutableJSONPostRequest:(NSURL*)url withTimeOut:(CGFloat)timeout {
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:timeout];
     [request setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
     [request setHTTPMethod:@"POST"];
     return request;
