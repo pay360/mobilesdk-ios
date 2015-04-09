@@ -100,17 +100,16 @@
 }
 
 -(BOOL)handleError:(NSError*)error {
-    BOOL errorHandled = NO;
     
     if ([self noNetwork:error]) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self showAlertWithMessage:@"Please check you are connected to the internet."];
         });
         
-        errorHandled = YES;
+        return YES;
     }
     
-    if (error && error.domain == PaypointSDKDomain) {
+    if (error && error.domain == PPOPaypointSDKErrorDomain) {
         
         PPOErrorCode code = error.code;
         
@@ -125,9 +124,10 @@
             case PPOErrorUnknown: /* */ break;
         }
 
+        return YES;
     }
     
-    return errorHandled;
+    return NO;
 }
 
 #pragma mark - Typical Response Error Handling

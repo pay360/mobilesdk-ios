@@ -30,7 +30,7 @@
     
     entry = [self.cardNumber stripWhitespace];
     
-    if (entry.length < 16 || entry.length > 19) {
+    if (entry.length < 15 || entry.length > 19) {
         return NO;
     }
     
