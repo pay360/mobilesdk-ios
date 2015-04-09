@@ -392,7 +392,6 @@
 			isa = PBXGroup;
 			children = (
 				5069F6841ABC7EBA0077FB10 /* PaypointSDK.h */,
-				5056A1A51AD68B1400AB1276 /* PPOSDKMacros.h */,
 				5056A1B01AD6A7C200AB1276 /* PPOError */,
 				50AB96CA1AC17C9200323E05 /* ThirdParty */,
 				501C8E681AC01D3400CBA25A /* Model */,
@@ -406,6 +405,7 @@
 		5069F6821ABC7EBA0077FB10 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				5056A1A51AD68B1400AB1276 /* PPOSDKMacros.h */,
 				5069F6831ABC7EBA0077FB10 /* Info.plist */,
 			);
 			name = "Supporting Files";
