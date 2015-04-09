@@ -32,23 +32,17 @@
 
 -(void)makePaymentWithTransaction:(PPOTransaction*)transaction forCard:(PPOCreditCard*)card withBillingAddress:(PPOBillingAddress*)billingAddress withTimeOut:(CGFloat)timeout {
     
-    if (![PPOLuhn validateString:card.pan]) {
-        
-        NSError *paypointError = [NSError errorWithDomain:PaypointSDKDomain
-                                                     code:PPOErrorLuhnCheckFailed
-                                                 userInfo:@{
-                                                            NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Luhn check failed", @"Failure message for a failed Luhn check")
-                                                            }
-                                  ];
-        
-        [self.delegate paymentFailed:paypointError];
-        
+    NSError *validationError = [self validationError:card];
+    if (validationError) {
+        [self.delegate paymentFailed:validationError];
         return;
     }
     
-    NSMutableURLRequest *request = [self mutableJSONPostRequest:[PPOEndpointManager simplePayment:self.credentials.installationID] withTimeOut:timeout];
+    NSURL *url = [PPOEndpointManager simplePayment:self.credentials.installationID];
+    NSMutableURLRequest *request = [self mutableJSONPostRequest:url withTimeOut:timeout];
     [request setValue:[self authorisation:self.credentials] forHTTPHeaderField:@"Authorization"];
-    [request setHTTPBody:[self buildPostBodyWithTransaction:transaction withCard:card withAddress:billingAddress]];
+    NSData *data = [self buildPostBodyWithTransaction:transaction withCard:card withAddress:billingAddress];
+    [request setHTTPBody:data];
     
     __weak typeof (self) weakSelf = self;
     
@@ -69,6 +63,62 @@
     }];
     
     [task resume];
+}
+
+-(NSError*)validationError:(PPOCreditCard*)card {
+    
+    NSString *strippedValue;
+    
+    strippedValue = [card.pan stringByReplacingOccurrencesOfString:@" " withString:@""];
+    
+    
+    if (strippedValue.length < 15 || strippedValue.length > 19) {
+        
+        return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                   code:PPOErrorCardPanLengthInvalid
+                               userInfo:@{
+                                          NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The supplied payment card Pan length is invalid", @"Failure message for a card validation check")
+                                          }
+                ];
+        
+    }
+    
+    if (![PPOLuhn validateString:strippedValue]) {
+        
+        return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                   code:PPOErrorLuhnCheckFailed
+                               userInfo:@{
+                                          NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The supplied payment card failed Luhn validation", @"Failure message for a card validation check")
+                                          }
+                ];
+    }
+    
+    strippedValue = [card.cvv stringByReplacingOccurrencesOfString:@" " withString:@""];
+    
+    if (strippedValue == nil || strippedValue.length < 3 || strippedValue.length > 4) {
+        
+        return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                   code:PPOErrorCVVInvalid
+                               userInfo:@{
+                                          NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The supplied payment card CVV is invalid", @"Failure message for a card validation check")
+                                          }
+                ];
+        
+    }
+    
+    strippedValue = [card.expiry stringByReplacingOccurrencesOfString:@" " withString:@""];
+    
+    if (strippedValue == nil || strippedValue.length != 4) {
+        
+        return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                   code:PPOErrorCardExpiryDateInvalid
+                               userInfo:@{
+                                          NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The supplied payment card expiry date is invalid", @"Failure message for a card validation check")
+                                          }
+                ];
+    }
+    
+    return nil;
 }
 
 - (void)parsePaypointData:(NSData *)data error:(NSError *)error httpStatusCode:(NSInteger)httpStatusCode {

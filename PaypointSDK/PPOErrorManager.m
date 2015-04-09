@@ -16,7 +16,7 @@
     
     switch (reasonCode) {
         default:
-            domain = PaypointSDKDomain;
+            domain = PPOPaypointSDKErrorDomain;
             break;
     }
     

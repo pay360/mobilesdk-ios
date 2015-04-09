@@ -11,7 +11,7 @@
 /*!
  The NSError domain of all errors returned by the Paypoint SDK.
  */
-PPOSDK_EXTERN NSString *const PaypointSDKDomain;
+PPOSDK_EXTERN NSString *const PPOPaypointSDKErrorDomain;
 
 /*!
  @typedef NS_ENUM (NSUInteger, PPOErrorCode)
@@ -42,6 +42,16 @@ typedef NS_ENUM(NSInteger, PPOErrorCode) {
     /* An internal server error occurred at paypoint */
     PPOErrorServerFailure,
     
-    /*  */
-    PPOErrorLuhnCheckFailed
+    /* Luhn check failed */
+    PPOErrorLuhnCheckFailed,
+    
+    /* Pan card length invalid */
+    PPOErrorCardPanLengthInvalid,
+    
+    /* CVV card security code invalid */
+    PPOErrorCVVInvalid,
+    
+    /* Card expiry date is invalid */
+    PPOErrorCardExpiryDateInvalid
+    
 };
