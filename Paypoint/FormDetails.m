@@ -8,27 +8,33 @@
 
 #import "FormDetails.h"
 #import <PaypointSDK/PPOLuhn.h>
+#import "NSString+strip.h"
 
 @implementation FormDetails
 
 -(BOOL)isComplete {
-    if (self.cardNumber.length < 16 || self.cardNumber.length > 19) {
+    
+    NSString *entry;
+    
+    entry = [self.expiry stripWhitespace];
+    
+    if (entry == nil || entry.length == 0) {
         return NO;
     }
-    if (self.expiry == nil) {
+    
+    entry = [self.cvv stripWhitespace];
+    
+    if (entry == nil || entry.length < 3 || entry.length > 4) {
         return NO;
     }
-    if (self.cvv == nil || self.cvv.length == 0) {
+    
+    entry = [self.cardNumber stripWhitespace];
+    
+    if (entry.length < 16 || entry.length > 19) {
         return NO;
     }
-    if (self.cvv.length < 3 || self.cvv.length > 4) {
-        return NO;
-    }
-    return [PPOLuhn validateString:self.cardNumber];
-}
-
--(void)setExpiry:(NSString *)expiry {
-    _expiry = [expiry stringByReplacingOccurrencesOfString:@" " withString:@""];
+    
+    return [PPOLuhn validateString:entry];
 }
 
 @end
