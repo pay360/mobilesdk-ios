@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <PaypointSDK/PPOCredentials.h>
+#import "Reachability.h"
 
 @interface NetworkManager : NSObject
 

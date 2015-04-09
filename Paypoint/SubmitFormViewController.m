@@ -7,12 +7,11 @@
 //
 
 #import "SubmitFormViewController.h"
-#import "Reachability.h"
 #import "NetworkManager.h"
 
 #import <PaypointSDK/PaypointSDK.h>
 
-@interface SubmitFormViewController () <PPOPaymentManagerDelegate, PPOPaymentManagerDatasource>
+@interface SubmitFormViewController () <PPOPaymentManagerDelegate>
 @property (nonatomic, strong) PPOPaymentManager *paymentManager;
 @end
 
@@ -24,7 +23,6 @@
     if (_paymentManager == nil) {
         _paymentManager = [PPOPaymentManager new];
         _paymentManager.delegate = self;
-        _paymentManager.datasource = self;
     }
     return _paymentManager;
 }
@@ -68,33 +66,27 @@
                                                              withMerchantReference:@"mer_txn_1234556"
                                                                         isDeferred:NO];
             
+            PPOCreditCard *card = [[PPOCreditCard alloc] initWithPan:self.details.cardNumber
+                                                            withCode:self.details.cvv
+                                                          withExpiry:self.details.expiry
+                                                            withName:@"John Smith"];
+            
+            PPOBillingAddress *address = [[PPOBillingAddress alloc] initWithFirstLine:nil
+                                                                       withSecondLine:nil
+                                                                        withThirdLine:nil
+                                                                       withFourthLine:nil
+                                                                             withCity:nil
+                                                                           withRegion:nil
+                                                                         withPostcode:nil
+                                                                      withCountryCode:nil];
+            
             [weakSelf.paymentManager setCredentials:credentials];
-            [weakSelf.paymentManager startTransaction:transaction];
+            [weakSelf.paymentManager makePaymentWithTransaction:transaction forCard:card withBillingAddress:address];
             
         }];
         
     }
     
-}
-
-#pragma mark - PPOPaymentManagerDatasource
-
--(PPOCreditCard *)creditCard {
-    return [[PPOCreditCard alloc] initWithPan:self.details.cardNumber
-                                     withCode:self.details.cvv
-                                   withExpiry:self.details.expiry
-                                     withName:@"John Smith"];
-}
-
--(PPOBillingAddress*)billingAddress {
-    return [[PPOBillingAddress alloc] initWithFirstLine:nil
-                                         withSecondLine:nil
-                                          withThirdLine:nil
-                                         withFourthLine:nil
-                                               withCity:nil
-                                             withRegion:nil
-                                           withPostcode:nil
-                                        withCountryCode:nil];
 }
 
 #pragma mark - PPOPaymentManagerDelegate

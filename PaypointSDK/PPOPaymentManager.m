@@ -28,10 +28,7 @@
     return self;
 }
 
--(void)startTransaction:(PPOTransaction*)transaction {
-    
-    PPOCreditCard *card = [self.datasource creditCard];
-    PPOBillingAddress *billingAddress = [self.datasource billingAddress];
+-(void)makePaymentWithTransaction:(PPOTransaction*)transaction forCard:(PPOCreditCard*)card withBillingAddress:(PPOBillingAddress*)billingAddress {
     
     NSMutableURLRequest *request = [self mutableJSONPostRequest:[PPOEndpointManager simplePayment:self.credentials.installationID]];
     [request setValue:[self authorisation:self.credentials] forHTTPHeaderField:@"Authorization"];

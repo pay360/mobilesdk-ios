@@ -13,11 +13,6 @@
 @class PPOCreditCard;
 @class PPOBillingAddress;
 
-@protocol PPOPaymentManagerDatasource <NSObject>
--(PPOCreditCard*)creditCard;
--(PPOBillingAddress*)billingAddress;
-@end
-
 @protocol PPOPaymentManagerDelegate <NSObject>
 -(void)paymentSucceeded:(NSString*)feedback;
 -(void)paymentFailed:(NSError*)error;
@@ -27,10 +22,9 @@
 @property (nonatomic, strong, readonly) NSOperationQueue *payments;
 @property (nonatomic, strong) PPOCredentials *credentials;
 @property (nonatomic, weak) id <PPOPaymentManagerDelegate> delegate;
-@property (nonatomic, weak) id <PPOPaymentManagerDatasource> datasource;
 
 -(instancetype)initWithCredentials:(PPOCredentials*)credentials withDelegate:(id<PPOPaymentManagerDelegate>)delegate; //Designated initialiser
 
--(void)startTransaction:(PPOTransaction*)transaction;
+-(void)makePaymentWithTransaction:(PPOTransaction*)transaction forCard:(PPOCreditCard*)card withBillingAddress:(PPOBillingAddress*)billingAddress;
 
 @end
