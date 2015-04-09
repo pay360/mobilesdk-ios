@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "PPOError.h"
 
 @class PPOCredentials;
 @class PPOTransaction;

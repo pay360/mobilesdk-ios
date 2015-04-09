@@ -12,6 +12,8 @@
 #import "PPOCredentials.h"
 #import "PPOTransaction.h"
 #import "PPOBillingAddress.h"
+#import "PPOErrorManager.h"
+#import "PPOLuhn.h"
 
 @interface PPOPaymentManager () <NSURLSessionTaskDelegate>
 @property (nonatomic, strong, readwrite) NSOperationQueue *payments;
@@ -30,6 +32,20 @@
 
 -(void)makePaymentWithTransaction:(PPOTransaction*)transaction forCard:(PPOCreditCard*)card withBillingAddress:(PPOBillingAddress*)billingAddress {
     
+    if (![PPOLuhn validateString:card.pan]) {
+        
+        NSError *paypointError = [NSError errorWithDomain:PaypointSDKDomain
+                                                     code:PPOErrorLuhnCheckFailed
+                                                 userInfo:@{
+                                                            NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Luhn check failed", @"Failure message for a failed Luhn check")
+                                                            }
+                                  ];
+        
+        [self.delegate paymentFailed:paypointError];
+        
+        return;
+    }
+    
     NSMutableURLRequest *request = [self mutableJSONPostRequest:[PPOEndpointManager simplePayment:self.credentials.installationID]];
     [request setValue:[self authorisation:self.credentials] forHTTPHeaderField:@"Authorization"];
     [request setHTTPBody:[self buildPostBodyWithTransaction:transaction withCard:card withAddress:billingAddress]];
@@ -40,6 +56,7 @@
     NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         
         if (error) {
+
             dispatch_async(dispatch_get_main_queue(), ^{
                 [weakSelf.delegate paymentFailed:error];
             });
@@ -47,25 +64,57 @@
             return;
         }
         
-        NSString *message;
-        
-        id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
-        
-        id outcome = [json objectForKey:@"outcome"];
-        if ([outcome isKindOfClass:[NSDictionary class]]) {
-            id m = [outcome objectForKey:@"reasonMessage"];
-            if ([m isKindOfClass:[NSString class]]) {
-                message = m;
-            }
-        }
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf.delegate paymentSucceeded:message];
-        });
+        [weakSelf parsePaypointData:data error:error httpStatusCode:((NSHTTPURLResponse*)response).statusCode];
         
     }];
     
     [task resume];
+}
+
+- (void)parsePaypointData:(NSData *)data error:(NSError *)error httpStatusCode:(NSInteger)httpStatusCode {
+    
+    NSString *reasonMessage;
+    NSNumber *reasonCode = @(PPOErrorUnknown);
+    NSError *paypointError;
+    
+    id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
+    
+    id outcome = [json objectForKey:@"outcome"];
+    if ([outcome isKindOfClass:[NSDictionary class]]) {
+        
+        id value;
+        
+        value = [outcome objectForKey:@"reasonCode"];
+        if ([value isKindOfClass:[NSNumber class]]) {
+            reasonCode = value;
+        }
+        value = [outcome objectForKey:@"reasonMessage"];
+        if ([value isKindOfClass:[NSNumber class]]) {
+            reasonMessage = value;
+        }
+        
+        if (reasonCode.integerValue > 0) {
+            
+            NSMutableDictionary *mutableUserInfo;
+            
+            if (reasonMessage) {
+                mutableUserInfo = [NSMutableDictionary new];
+                [mutableUserInfo setValue:reasonMessage forKey:NSLocalizedFailureReasonErrorKey];
+            }
+            
+            paypointError = [NSError errorWithDomain:[PPOErrorManager errorDomainForReasonCode:reasonCode.integerValue]
+                                                code:[PPOErrorManager errorCodeForReasonCode:reasonCode.integerValue]
+                                            userInfo:[mutableUserInfo copy]];
+        }
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (paypointError) {
+            [self.delegate paymentFailed:paypointError];
+        } else {
+            [self.delegate paymentSucceeded:reasonMessage];
+        }
+    });
 }
 
 -(NSMutableURLRequest*)mutableJSONPostRequest:(NSURL*)url {

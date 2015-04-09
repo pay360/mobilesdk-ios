@@ -58,7 +58,7 @@
         
         [NetworkManager getCredentialsUsingCacheIfAvailable:YES withCompletion:^(PPOCredentials *credentials, NSURLResponse *response, NSError *error) {
             
-            if ([weakSelf issuesFound:error withToken:credentials.token]) return;
+            if ([self handleError:error]) return;
             
             PPOTransaction *transaction = [[PPOTransaction alloc] initWithCurrency:@"GBP"
                                                                         withAmount:@100
@@ -96,34 +96,41 @@
 }
 
 -(void)paymentFailed:(NSError *)error {
-    [self showAlertWithMessage:error.localizedDescription];
+    [self handleError:error];
 }
 
-#pragma mark - Typical Response Error Handling
-
--(BOOL)issuesFound:(NSError*)error withToken:(NSString*)token {
-    
-    BOOL errorFound = NO;
+-(BOOL)handleError:(NSError*)error {
+    BOOL errorHandled = NO;
     
     if ([self noNetwork:error]) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self showAlertWithMessage:@"Unable to fetch credentials. Please check you are connected to the internet."];
+            [self showAlertWithMessage:@"Please check you are connected to the internet."];
         });
         
-        errorFound = YES;
+        errorHandled = YES;
     }
     
-    if (!token || token.length == 0) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self showAlertWithMessage:@"Invalid credentials"];
-        });
+    if (error && error.domain == PaypointSDKDomain) {
         
-        errorFound = YES;
+        PPOErrorCode code = error.code;
+        
+        switch (code) {
+            case PPOErrorBadRequest: /* */ break;
+            case PPOErrorAuthenticationFailed: /* */ break;
+            case PPOErrorClientTokenExpired: /* */ break;
+            case PPOErrorUnauthorisedRequest: /* */ break;
+            case PPOErrorTransactionProcessingFailed: /* */ break;
+            case PPOErrorServerFailure: /* */ break;
+            case PPOErrorLuhnCheckFailed: /* */ break;
+            case PPOErrorUnknown: /* */ break;
+        }
+
     }
     
-    return errorFound;
-    
+    return errorHandled;
 }
+
+#pragma mark - Typical Response Error Handling
 
 -(BOOL)noNetwork:(NSError*)error {
     return [[self noNetworkConnectionErrorCodes] containsObject:@(error.code)];
