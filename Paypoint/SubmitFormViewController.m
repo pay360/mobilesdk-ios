@@ -114,6 +114,7 @@
         PPOErrorCode code = error.code;
         
         switch (code) {
+            case PPOErrorNotInitialised: /* */ break;
             case PPOErrorBadRequest: /* */ break;
             case PPOErrorAuthenticationFailed: /* */ break;
             case PPOErrorClientTokenExpired: /* */ break;

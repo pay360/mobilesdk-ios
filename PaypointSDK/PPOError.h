@@ -21,6 +21,10 @@ PPOSDK_EXTERN NSString *const PPOPaypointSDKErrorDomain;
  These are valid only in the scope of PaypointSDKDomain.
  */
 typedef NS_ENUM(NSInteger, PPOErrorCode) {
+    
+    /*! Error not initialised yet. */
+    PPOErrorNotInitialised = -2,
+    
     /*! Represents an unknown error.*/
     PPOErrorUnknown = -1,
     
@@ -52,6 +56,12 @@ typedef NS_ENUM(NSInteger, PPOErrorCode) {
     PPOErrorCVVInvalid,
     
     /* Card expiry date is invalid */
-    PPOErrorCardExpiryDateInvalid
+    PPOErrorCardExpiryDateInvalid,
+    
+    /* Specified currency is invalid */
+    PPOErrorCurrencyInvalid,
+    
+    /* The specified amount is invalid */
+    PPOErrorPaymentAmountInvalid
     
 };

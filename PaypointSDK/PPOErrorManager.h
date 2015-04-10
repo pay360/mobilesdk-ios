@@ -7,10 +7,10 @@
 //
 
 #import "PPOError.h"
+#import "PPOOutcome.h"
 
 @interface PPOErrorManager : NSObject
 
-+(NSString*)errorDomainForReasonCode:(NSInteger)reasonCode;
-+(PPOErrorCode)errorCodeForReasonCode:(NSInteger)reasonCode;
++(PPOOutcome*)determineError:(NSError**)paypointError inResponse:(NSData*)responseData;
 
 @end

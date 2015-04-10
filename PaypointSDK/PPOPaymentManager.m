@@ -32,40 +32,49 @@
 
 -(void)makePaymentWithTransaction:(PPOTransaction*)transaction forCard:(PPOCreditCard*)card withBillingAddress:(PPOBillingAddress*)billingAddress withTimeOut:(CGFloat)timeout {
     
-    NSError *validationError = [self validationError:card];
-    if (validationError) {
-        [self.delegate paymentFailed:validationError];
-        return;
-    }
+    NSError *validationError = [self validateTransaction:transaction withCard:card];
+    
+    if (validationError) { [self.delegate paymentFailed:validationError]; return; }
     
     NSURL *url = [PPOEndpointManager simplePayment:self.credentials.installationID];
-    NSMutableURLRequest *request = [self mutableJSONPostRequest:url withTimeOut:timeout];
+    
+    NSMutableURLRequest *request = [self mutableJSONPostRequest:url
+                                                    withTimeOut:timeout];
+    
     [request setValue:[self authorisation:self.credentials] forHTTPHeaderField:@"Authorization"];
-    NSData *data = [self buildPostBodyWithTransaction:transaction withCard:card withAddress:billingAddress];
+    
+    NSData *data = [self buildPostBodyWithTransaction:transaction
+                                             withCard:card
+                                          withAddress:billingAddress];
+    
     [request setHTTPBody:data];
     
     __weak typeof (self) weakSelf = self;
     
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:self.payments];
-    NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        
-        if (error) {
-
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf.delegate paymentFailed:error];
-            });
-            
-            return;
-        }
-        
-        [weakSelf parsePaypointData:data error:error httpStatusCode:((NSHTTPURLResponse*)response).statusCode];
-        
-    }];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]
+                                                          delegate:self
+                                                     delegateQueue:self.payments];
+    
+    NSURLSessionDataTask *task = [session dataTaskWithRequest:request
+                                            completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                                                
+                                                if (error) {
+                                                    
+                                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                                        [weakSelf.delegate paymentFailed:error];
+                                                    });
+                                                    
+                                                    return;
+                                                }
+                                                
+                                                [weakSelf parsePaypointData:data];
+                                                
+                                            }];
     
     [task resume];
 }
 
--(NSError*)validationError:(PPOCreditCard*)card {
+-(NSError*)validateTransaction:(PPOTransaction*)transaction withCard:(PPOCreditCard*)card {
     
     NSString *strippedValue;
     
@@ -118,51 +127,42 @@
                 ];
     }
     
+    strippedValue = [transaction.currency stringByReplacingOccurrencesOfString:@" " withString:@""];
+    
+    if (strippedValue == nil || strippedValue.length == 0) {
+        
+        return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                   code:PPOErrorCurrencyInvalid
+                               userInfo:@{
+                                          NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The specified currency is invalid", @"Failure message for a transaction validation check")
+                                          }
+                ];
+    }
+    
+    if (transaction.amount == nil || transaction.amount.floatValue <= 0.0) {
+        
+        return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                   code:PPOErrorPaymentAmountInvalid
+                               userInfo:@{
+                                          NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The specified payment amount is invalid", @"Failure message for a transaction validation check")
+                                          }
+                ];
+        
+    }
+    
     return nil;
 }
 
-- (void)parsePaypointData:(NSData *)data error:(NSError *)error httpStatusCode:(NSInteger)httpStatusCode {
+-(void)parsePaypointData:(NSData *)data {
     
-    NSString *reasonMessage;
-    NSNumber *reasonCode = @(PPOErrorUnknown);
     NSError *paypointError;
-    
-    id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
-    
-    id outcome = [json objectForKey:@"outcome"];
-    if ([outcome isKindOfClass:[NSDictionary class]]) {
-        
-        id value;
-        
-        value = [outcome objectForKey:@"reasonCode"];
-        if ([value isKindOfClass:[NSNumber class]]) {
-            reasonCode = value;
-        }
-        value = [outcome objectForKey:@"reasonMessage"];
-        if ([value isKindOfClass:[NSNumber class]]) {
-            reasonMessage = value;
-        }
-        
-        if (reasonCode.integerValue > 0) {
-            
-            NSMutableDictionary *mutableUserInfo;
-            
-            if (reasonMessage) {
-                mutableUserInfo = [NSMutableDictionary new];
-                [mutableUserInfo setValue:reasonMessage forKey:NSLocalizedFailureReasonErrorKey];
-            }
-            
-            paypointError = [NSError errorWithDomain:[PPOErrorManager errorDomainForReasonCode:reasonCode.integerValue]
-                                                code:[PPOErrorManager errorCodeForReasonCode:reasonCode.integerValue]
-                                            userInfo:[mutableUserInfo copy]];
-        }
-    }
+    PPOOutcome *outcome = [PPOErrorManager determineError:&paypointError inResponse:data];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         if (paypointError) {
             [self.delegate paymentFailed:paypointError];
         } else {
-            [self.delegate paymentSucceeded:reasonMessage];
+            [self.delegate paymentSucceeded:outcome.reasonMessage];
         }
     });
 }
