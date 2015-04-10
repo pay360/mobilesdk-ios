@@ -14,7 +14,7 @@
 @class PPOBillingAddress;
 
 typedef NS_ENUM(NSInteger, PPOEnvironment) {
-    PPOStagingEnvironment
+    PPOEnvironmentStaging
 };
 
 @protocol PPOPaymentManagerDelegate <NSObject>
@@ -25,8 +25,9 @@ typedef NS_ENUM(NSInteger, PPOEnvironment) {
 @interface PPOPaymentManager : NSObject
 @property (nonatomic, strong) PPOCredentials *credentials;
 @property (nonatomic, weak) id <PPOPaymentManagerDelegate> delegate;
+@property (nonatomic, readonly) PPOEnvironment currentEnivonrment;
 
--(instancetype)initWithCredentials:(PPOCredentials*)credentials forEnvironment:(PPOEnvironment)environment withDelegate:(id<PPOPaymentManagerDelegate>)delegate; //Designated initialiser
+-(instancetype)initForEnvironment:(PPOEnvironment)environment withDelegate:(id<PPOPaymentManagerDelegate>)delegate; //Designated initialiser
 
 -(void)makePaymentWithTransaction:(PPOTransaction*)transaction forCard:(PPOCreditCard*)card withBillingAddress:(PPOBillingAddress*)billingAddress withTimeOut:(CGFloat)timeout;
 

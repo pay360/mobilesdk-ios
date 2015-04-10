@@ -15,20 +15,24 @@
 #import "PPOLuhn.h"
 
 @interface PPOPaymentManager () <NSURLSessionTaskDelegate>
+
 @property (nonatomic, strong) NSOperationQueue *payments;
-@property (nonatomic) PPOEnvironment currentEnivonrment;
+@property (nonatomic, readwrite) PPOEnvironment currentEnivonrment;
+
 @end
 
 @interface PPOEndpointManager : NSObject
+
 +(NSURL*)simplePayment:(NSString*)installationID forEnvironment:(PPOEnvironment)enviroment;
+
 @end
 
 @implementation PPOPaymentManager
 
--(instancetype)initWithCredentials:(PPOCredentials*)credentials forEnvironment:(PPOEnvironment)environment withDelegate:(id<PPOPaymentManagerDelegate>)delegate {
+-(instancetype)initForEnvironment:(PPOEnvironment)environment withDelegate:(id<PPOPaymentManagerDelegate>)delegate {
     self = [super init];
     if (self) {
-        _credentials = credentials;
+        _currentEnivonrment = environment;
         _delegate = delegate;
     }
     return self;
@@ -259,7 +263,7 @@
 +(NSURL*)baseURL:(PPOEnvironment)environment {
     
     switch (environment) {
-        case PPOStagingEnvironment:
+        case PPOEnvironmentStaging:
             return [NSURL URLWithString:@"http://localhost:5000/mobileapi"];
             break;
             

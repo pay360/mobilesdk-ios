@@ -21,8 +21,7 @@
 
 -(PPOPaymentManager *)paymentManager {
     if (_paymentManager == nil) {
-        _paymentManager = [PPOPaymentManager new];
-        _paymentManager.delegate = self;
+        _paymentManager = [[PPOPaymentManager alloc] initForEnvironment:PPOEnvironmentStaging withDelegate:self];
     }
     return _paymentManager;
 }
