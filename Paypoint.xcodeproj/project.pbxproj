@@ -52,8 +52,6 @@
 		50AB93B81AD551AD005944F5 /* SubmitFormViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50AB93B71AD551AD005944F5 /* SubmitFormViewController.m */; };
 		50AB93BC1AD5564E005944F5 /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50AB93BB1AD5564E005944F5 /* NetworkManager.m */; };
 		50AB96D81AC1D38E00323E05 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 50AB96D71AC1D38E00323E05 /* Reachability.m */; };
-		50CC9AF21AD41E0100B97F2E /* PPOEndpointManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 50CC9AF01AD41E0100B97F2E /* PPOEndpointManager.h */; };
-		50CC9AF31AD41E0100B97F2E /* PPOEndpointManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CC9AF11AD41E0100B97F2E /* PPOEndpointManager.m */; };
 		50CC9AF71AD41ED300B97F2E /* PPOPaymentManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 50CC9AF51AD41ED300B97F2E /* PPOPaymentManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		50CC9AF81AD41ED300B97F2E /* PPOPaymentManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CC9AF61AD41ED300B97F2E /* PPOPaymentManager.m */; };
 		50CC9AFC1AD4237F00B97F2E /* PPOCreditCard.h in Headers */ = {isa = PBXBuildFile; fileRef = 50CC9AFA1AD4237F00B97F2E /* PPOCreditCard.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -162,8 +160,6 @@
 		50AB93BB1AD5564E005944F5 /* NetworkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkManager.m; sourceTree = "<group>"; };
 		50AB96D61AC1D38E00323E05 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		50AB96D71AC1D38E00323E05 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
-		50CC9AF01AD41E0100B97F2E /* PPOEndpointManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOEndpointManager.h; sourceTree = "<group>"; };
-		50CC9AF11AD41E0100B97F2E /* PPOEndpointManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOEndpointManager.m; sourceTree = "<group>"; };
 		50CC9AF51AD41ED300B97F2E /* PPOPaymentManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOPaymentManager.h; sourceTree = "<group>"; };
 		50CC9AF61AD41ED300B97F2E /* PPOPaymentManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOPaymentManager.m; sourceTree = "<group>"; };
 		50CC9AFA1AD4237F00B97F2E /* PPOCreditCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOCreditCard.h; sourceTree = "<group>"; };
@@ -263,7 +259,6 @@
 		501C8E671AC01D2700CBA25A /* Managers */ = {
 			isa = PBXGroup;
 			children = (
-				50CC9AF41AD41E0500B97F2E /* PPOEndpointManager */,
 				50CC9AF91AD41ED800B97F2E /* PPOPaymentManager */,
 				5056A1AF1AD6A75600AB1276 /* PPOErrorManager */,
 			);
@@ -488,15 +483,6 @@
 			name = ThirdParty;
 			sourceTree = "<group>";
 		};
-		50CC9AF41AD41E0500B97F2E /* PPOEndpointManager */ = {
-			isa = PBXGroup;
-			children = (
-				50CC9AF01AD41E0100B97F2E /* PPOEndpointManager.h */,
-				50CC9AF11AD41E0100B97F2E /* PPOEndpointManager.m */,
-			);
-			name = PPOEndpointManager;
-			sourceTree = "<group>";
-		};
 		50CC9AF91AD41ED800B97F2E /* PPOPaymentManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -606,7 +592,6 @@
 				50CC9B061AD42B7500B97F2E /* PPOTransaction.h in Headers */,
 				50CC9AFC1AD4237F00B97F2E /* PPOCreditCard.h in Headers */,
 				5056A1A61AD68B1400AB1276 /* PPOSDKMacros.h in Headers */,
-				50CC9AF21AD41E0100B97F2E /* PPOEndpointManager.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -828,7 +813,6 @@
 				50046AC91AC2FAB000F23D05 /* PPOReachability.m in Sources */,
 				50CC9B021AD4289300B97F2E /* PPOCredentials.m in Sources */,
 				501B7CC01AC40B3000F44193 /* PPOWebViewController.m in Sources */,
-				50CC9AF31AD41E0100B97F2E /* PPOEndpointManager.m in Sources */,
 				50CC9AF81AD41ED300B97F2E /* PPOPaymentManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

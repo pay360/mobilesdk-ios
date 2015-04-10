@@ -7,7 +7,6 @@
 //
 
 #import "PPOPaymentManager.h"
-#import "PPOEndpointManager.h"
 #import "PPOCreditCard.h"
 #import "PPOCredentials.h"
 #import "PPOTransaction.h"
@@ -17,11 +16,16 @@
 
 @interface PPOPaymentManager () <NSURLSessionTaskDelegate>
 @property (nonatomic, strong) NSOperationQueue *payments;
+@property (nonatomic) PPOEnvironment currentEnivonrment;
+@end
+
+@interface PPOEndpointManager : NSObject
++(NSURL*)simplePayment:(NSString*)installationID forEnvironment:(PPOEnvironment)enviroment;
 @end
 
 @implementation PPOPaymentManager
 
--(instancetype)initWithCredentials:(PPOCredentials*)credentials withDelegate:(id<PPOPaymentManagerDelegate>)delegate {
+-(instancetype)initWithCredentials:(PPOCredentials*)credentials forEnvironment:(PPOEnvironment)environment withDelegate:(id<PPOPaymentManagerDelegate>)delegate {
     self = [super init];
     if (self) {
         _credentials = credentials;
@@ -36,7 +40,8 @@
     
     if (validationError) { [self.delegate paymentFailed:validationError]; return; }
     
-    NSURL *url = [PPOEndpointManager simplePayment:self.credentials.installationID];
+    NSURL *url = [PPOEndpointManager simplePayment:self.credentials.installationID
+                                    forEnvironment:self.currentEnivonrment];
     
     NSMutableURLRequest *request = [self mutableJSONPostRequest:url
                                                     withTimeOut:timeout];
@@ -212,8 +217,6 @@
     return _payments;
 }
 
-#pragma mark - NSURLSessionDataTaskProtocol
-
 -(void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler {
     NSLog(@"%@ NSURLSession didReceiveChallenge: %@", [self class], challenge);
     
@@ -247,6 +250,29 @@
     //    }
     
     completionHandler(NSURLSessionAuthChallengeUseCredential, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
+}
+
+@end
+
+@implementation PPOEndpointManager
+
++(NSURL*)baseURL:(PPOEnvironment)environment {
+    
+    switch (environment) {
+        case PPOStagingEnvironment:
+            return [NSURL URLWithString:@"http://localhost:5000/mobileapi"];
+            break;
+            
+        default:
+            return nil;
+            break;
+    }
+}
+
++(NSURL*)simplePayment:(NSString*)installationID forEnvironment:(PPOEnvironment)environment {
+    NSURL *baseURL = [PPOEndpointManager baseURL:environment];
+    return [baseURL URLByAppendingPathComponent:[NSString stringWithFormat:@"/transactions/%@/payment", installationID]];
+    
 }
 
 @end

@@ -13,6 +13,10 @@
 @class PPOCreditCard;
 @class PPOBillingAddress;
 
+typedef NS_ENUM(NSInteger, PPOEnvironment) {
+    PPOStagingEnvironment
+};
+
 @protocol PPOPaymentManagerDelegate <NSObject>
 -(void)paymentSucceeded:(NSString*)feedback;
 -(void)paymentFailed:(NSError*)error;
@@ -22,7 +26,7 @@
 @property (nonatomic, strong) PPOCredentials *credentials;
 @property (nonatomic, weak) id <PPOPaymentManagerDelegate> delegate;
 
--(instancetype)initWithCredentials:(PPOCredentials*)credentials withDelegate:(id<PPOPaymentManagerDelegate>)delegate; //Designated initialiser
+-(instancetype)initWithCredentials:(PPOCredentials*)credentials forEnvironment:(PPOEnvironment)environment withDelegate:(id<PPOPaymentManagerDelegate>)delegate; //Designated initialiser
 
 -(void)makePaymentWithTransaction:(PPOTransaction*)transaction forCard:(PPOCreditCard*)card withBillingAddress:(PPOBillingAddress*)billingAddress withTimeOut:(CGFloat)timeout;
 
