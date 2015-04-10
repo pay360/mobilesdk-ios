@@ -125,6 +125,8 @@
             case PPOErrorCardExpiryDateInvalid: /* */ break;
             case PPOErrorCardPanLengthInvalid: /* */ break;
             case PPOErrorCVVInvalid: /* */ break;
+            case PPOErrorCurrencyInvalid: /* */ break;
+            case PPOErrorPaymentAmountInvalid: /* */ break;
             case PPOErrorUnknown: /* */ break;
         }
 
