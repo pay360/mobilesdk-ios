@@ -42,7 +42,7 @@
             self.reasonCode = value;
         }
         value = [outcome objectForKey:@"reasonMessage"];
-        if ([value isKindOfClass:[NSNumber class]]) {
+        if ([value isKindOfClass:[NSString class]]) {
             self.reasonMessage = value;
         }
     }
