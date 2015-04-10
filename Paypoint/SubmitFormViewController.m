@@ -21,9 +21,16 @@
 
 -(PPOPaymentManager *)paymentManager {
     if (_paymentManager == nil) {
-        _paymentManager = [[PPOPaymentManager alloc] initForEnvironment:PPOEnvironmentStaging withDelegate:self];
+        _paymentManager = [[PPOPaymentManager alloc] initForEnvironment:[self currentEnvironment]
+                                                           withDelegate:self];
     }
     return _paymentManager;
+}
+
+-(PPOEnvironment)currentEnvironment {
+    NSDictionary *environment = [[NSProcessInfo processInfo] environment];
+    NSString *value = [environment objectForKey:@"ENVIRONMENT"];
+    return value.integerValue;
 }
 
 #pragma mark - Actions
