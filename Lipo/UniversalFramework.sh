@@ -27,4 +27,4 @@ lipo -create -output "${UNIVERSAL_OUTPUTFOLDER}/${RN_TARGET_NAME}.framework/${RN
 cp -R "${UNIVERSAL_OUTPUTFOLDER}/${RN_TARGET_NAME}.framework" "${CONVENIENCE_FOLDER}"
 
 # Step 6. Convenience step to open the project's directory in Finder
-open "${PROJECT_DIR}"
+#open "${PROJECT_DIR}"
