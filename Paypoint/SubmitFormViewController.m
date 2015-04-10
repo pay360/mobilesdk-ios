@@ -40,9 +40,6 @@
         default:
             break;
     }
-    
-    self.payNowButton.hidden = ![self.details isComplete];
-    
 }
 
 -(IBAction)payNowButtonPressed:(UIButton *)sender {

@@ -49,7 +49,7 @@
 -(void)viewDidLoad {
     
     [super viewDidLoad];
-    
+        
     self.title = @"Details";
     
     for (UITextField *textField in self.textFields) {
@@ -86,7 +86,6 @@
             textField.text = date;
             self.details.expiry = date;
         }
-        self.payNowButton.hidden = ![self.details isComplete];
     }
     
     return YES;
@@ -106,8 +105,6 @@
             self.details.cvv = nil;
             break;
     }
-    
-    self.payNowButton.hidden = ![self.details isComplete];
     
     return YES;
 }
@@ -163,8 +160,6 @@
     NSString *dateString = [self.timeController.cardExpiryDateFormatter stringFromDate:date];
     textField.text = dateString;
     self.details.expiry = dateString;
-    
-    self.payNowButton.hidden = ![self.details isComplete];
 }
 
 @end
