@@ -13,7 +13,6 @@
 @property (nonatomic, strong) NSString *cardNumber;
 @property (nonatomic, strong) NSString *expiry;
 @property (nonatomic, strong) NSString *cvv;
-@property (nonatomic, strong) NSString *currency;
 
 -(BOOL)isComplete;
 
