@@ -28,20 +28,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5069F66A1ABC7DA30077FB10"
-               BuildableName = "PaypointTests.xctest"
-               BlueprintName = "PaypointTests"
-               ReferencedContainer = "container:Paypoint.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "5069F6891ABC7EBA0077FB10"
                BuildableName = "PaypointSDKTests.xctest"
                BlueprintName = "PaypointSDKTests"
@@ -56,16 +42,6 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       buildConfiguration = "Debug">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5069F66A1ABC7DA30077FB10"
-               BuildableName = "PaypointTests.xctest"
-               BlueprintName = "PaypointTests"
-               ReferencedContainer = "container:Paypoint.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
          <TestableReference
             skipped = "NO">
             <BuildableReference
