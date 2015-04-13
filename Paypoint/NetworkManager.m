@@ -9,7 +9,6 @@
 #import "NetworkManager.h"
 
 #define CACHED_TOKEN_KEY @"key_cached_token"
-#define INSTALLATION_ID @"5300129"
 
 @implementation NetworkManager
 

@@ -10,6 +10,8 @@
 #import <PaypointSDK/PPOCredentials.h>
 #import "Reachability.h"
 
+#define INSTALLATION_ID @"5300129"
+
 @interface NetworkManager : NSObject
 
 +(void)getCredentialsUsingCacheIfAvailable:(BOOL)useCache withCompletion:(void(^)(PPOCredentials *credentials, NSURLResponse *response, NSError *error))completion;
