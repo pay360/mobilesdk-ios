@@ -64,28 +64,25 @@
                                                           delegate:self
                                                      delegateQueue:self.payments];
     
-    NSURLSessionDataTask *task = [session dataTaskWithRequest:request
-                                            completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                                                
-                                                if (error) {
-                                                    
-                                                    dispatch_async(dispatch_get_main_queue(), ^{
-                                                        completion(error, nil);
-                                                    });
-                                                    
-                                                    return;
-                                                }
-                                                
-                                                NSError *paypointError;
-                                                PPOOutcome *outcome = [PPOErrorManager determineError:&paypointError inResponse:data];
-                                                
-                                                dispatch_async(dispatch_get_main_queue(), ^{
-                                                    completion(paypointError, outcome.reasonMessage);
-                                                });
-                                                
-                                            }];
-    
-    [task resume];
+    [self resumeRequest:request forSession:session withCompletion:^(NSData *data, NSURLResponse *response, NSError *error) {
+        
+        if (error) {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(error, nil);
+            });
+            
+            return;
+        }
+        
+        NSError *paypointError;
+        PPOOutcome *outcome = [PPOErrorManager determineError:&paypointError inResponse:data];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completion(paypointError, outcome.reasonMessage);
+        });
+        
+    }];
 }
 
 -(NSError*)validateTransaction:(PPOTransaction*)transaction withCard:(PPOCreditCard*)card {
@@ -93,7 +90,6 @@
     NSString *strippedValue;
     
     strippedValue = [card.pan stringByReplacingOccurrencesOfString:@" " withString:@""];
-    
     
     if (strippedValue.length < 15 || strippedValue.length > 19) {
         
@@ -210,6 +206,25 @@
         _payments.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
     }
     return _payments;
+}
+
+-(void)resumeRequest:(NSURLRequest*)request forSession:(NSURLSession*)session withCompletion:(void(^)(NSData *data, NSURLResponse *response, NSError *error))completion {
+    
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    
+    NSURLSessionDataTask *task = [session dataTaskWithRequest:request
+                                            completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                                                
+                                                dispatch_async(dispatch_get_main_queue(), ^{
+                                                    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+                                                });
+                                                
+                                                completion(data, response, error);
+                                                
+                                            }];
+    
+    [task resume];
+    
 }
 
 -(void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler {
