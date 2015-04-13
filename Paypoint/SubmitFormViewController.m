@@ -60,7 +60,7 @@
         
         [NetworkManager getCredentialsUsingCacheIfAvailable:YES withCompletion:^(PPOCredentials *credentials, NSURLResponse *response, NSError *error) {
             
-            if ([self handleError:error]) return;
+            if ([weakSelf handleError:error]) return;
             
             PPOTransaction *transaction = [[PPOTransaction alloc] initWithCurrency:@"GBP"
                                                                         withAmount:@100
@@ -68,9 +68,9 @@
                                                              withMerchantReference:@"mer_txn_1234556"
                                                                         isDeferred:NO];
             
-            PPOCreditCard *card = [[PPOCreditCard alloc] initWithPan:self.details.cardNumber
-                                                            withCode:self.details.cvv
-                                                          withExpiry:self.details.expiry
+            PPOCreditCard *card = [[PPOCreditCard alloc] initWithPan:weakSelf.details.cardNumber
+                                                            withCode:weakSelf.details.cvv
+                                                          withExpiry:weakSelf.details.expiry
                                                             withName:@"John Smith"];
             
             PPOBillingAddress *address = [[PPOBillingAddress alloc] initWithFirstLine:nil
@@ -84,7 +84,6 @@
             
             [weakSelf.paymentManager setCredentials:credentials];
             
-            __weak typeof (self) weakSelf = self;
             [weakSelf.paymentManager makePaymentWithTransaction:transaction
                                                         forCard:card
                                              withBillingAddress:address
