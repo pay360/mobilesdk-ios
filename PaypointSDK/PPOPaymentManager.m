@@ -41,7 +41,10 @@
     
     NSError *validationError = [self validateTransaction:transaction withCard:card];
     
-    if (validationError) { completion(validationError, nil); return; }
+    if (validationError) {
+        completion(validationError, nil);
+        return;
+    }
     
     NSURL *url = [PPOEndpointManager simplePayment:self.credentials.installationID
                                     forEnvironment:self.currentEnivonrment];
