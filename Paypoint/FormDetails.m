@@ -34,11 +34,11 @@
         return NO;
     }
     
-    entry = [self.currency stripWhitespace];
-    
-    if (entry == nil || entry.length == 0) {
-        return NO;
-    }
+//    entry = [self.currency stripWhitespace];
+//    
+//    if (entry == nil || entry.length == 0) {
+//        return NO;
+//    }
     
     return [PPOLuhn validateString:entry];
 }
