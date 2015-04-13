@@ -17,18 +17,12 @@ typedef NS_ENUM(NSInteger, PPOEnvironment) {
     PPOEnvironmentStaging
 };
 
-@protocol PPOPaymentManagerDelegate <NSObject>
--(void)paymentSucceeded:(NSString*)feedback;
--(void)paymentFailed:(NSError*)error;
-@end
-
 @interface PPOPaymentManager : NSObject
 @property (nonatomic, strong) PPOCredentials *credentials;
-@property (nonatomic, weak) id <PPOPaymentManagerDelegate> delegate;
 @property (nonatomic, readonly) PPOEnvironment currentEnivonrment;
 
--(instancetype)initForEnvironment:(PPOEnvironment)environment withDelegate:(id<PPOPaymentManagerDelegate>)delegate; //Designated initialiser
+-(instancetype)initForEnvironment:(PPOEnvironment)environment; //Designated initialiser
 
--(void)makePaymentWithTransaction:(PPOTransaction*)transaction forCard:(PPOCreditCard*)card withBillingAddress:(PPOBillingAddress*)billingAddress withTimeOut:(CGFloat)timeout;
+-(void)makePaymentWithTransaction:(PPOTransaction*)transaction forCard:(PPOCreditCard*)card withBillingAddress:(PPOBillingAddress*)billingAddress withTimeOut:(CGFloat)timeout withCompletion:(void(^)(NSError *error, NSString *message))completion;
 
 @end

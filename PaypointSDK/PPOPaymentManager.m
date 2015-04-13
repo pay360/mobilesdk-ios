@@ -29,20 +29,19 @@
 
 @implementation PPOPaymentManager
 
--(instancetype)initForEnvironment:(PPOEnvironment)environment withDelegate:(id<PPOPaymentManagerDelegate>)delegate {
+-(instancetype)initForEnvironment:(PPOEnvironment)environment {
     self = [super init];
     if (self) {
         _currentEnivonrment = environment;
-        _delegate = delegate;
     }
     return self;
 }
 
--(void)makePaymentWithTransaction:(PPOTransaction*)transaction forCard:(PPOCreditCard*)card withBillingAddress:(PPOBillingAddress*)billingAddress withTimeOut:(CGFloat)timeout {
+-(void)makePaymentWithTransaction:(PPOTransaction*)transaction forCard:(PPOCreditCard*)card withBillingAddress:(PPOBillingAddress*)billingAddress withTimeOut:(CGFloat)timeout withCompletion:(void(^)(NSError *error, NSString *message))completion {
     
     NSError *validationError = [self validateTransaction:transaction withCard:card];
     
-    if (validationError) { [self.delegate paymentFailed:validationError]; return; }
+    if (validationError) { completion(validationError, nil); return; }
     
     NSURL *url = [PPOEndpointManager simplePayment:self.credentials.installationID
                                     forEnvironment:self.currentEnivonrment];
@@ -58,8 +57,6 @@
     
     [request setHTTPBody:data];
     
-    __weak typeof (self) weakSelf = self;
-    
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]
                                                           delegate:self
                                                      delegateQueue:self.payments];
@@ -70,13 +67,18 @@
                                                 if (error) {
                                                     
                                                     dispatch_async(dispatch_get_main_queue(), ^{
-                                                        [weakSelf.delegate paymentFailed:error];
+                                                        completion(error, nil);
                                                     });
                                                     
                                                     return;
                                                 }
                                                 
-                                                [weakSelf parsePaypointData:data];
+                                                NSError *paypointError;
+                                                PPOOutcome *outcome = [PPOErrorManager determineError:&paypointError inResponse:data];
+                                                
+                                                dispatch_async(dispatch_get_main_queue(), ^{
+                                                    completion(paypointError, outcome.reasonMessage);
+                                                });
                                                 
                                             }];
     
@@ -160,20 +162,6 @@
     }
     
     return nil;
-}
-
--(void)parsePaypointData:(NSData *)data {
-    
-    NSError *paypointError;
-    PPOOutcome *outcome = [PPOErrorManager determineError:&paypointError inResponse:data];
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if (paypointError) {
-            [self.delegate paymentFailed:paypointError];
-        } else {
-            [self.delegate paymentSucceeded:outcome.reasonMessage];
-        }
-    });
 }
 
 -(NSMutableURLRequest*)mutableJSONPostRequest:(NSURL*)url withTimeOut:(CGFloat)timeout {

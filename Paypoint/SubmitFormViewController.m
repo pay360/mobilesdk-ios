@@ -11,7 +11,7 @@
 
 #import <PaypointSDK/PaypointSDK.h>
 
-@interface SubmitFormViewController () <PPOPaymentManagerDelegate>
+@interface SubmitFormViewController ()
 @property (nonatomic, strong) PPOPaymentManager *paymentManager;
 @end
 
@@ -21,8 +21,7 @@
 
 -(PPOPaymentManager *)paymentManager {
     if (_paymentManager == nil) {
-        _paymentManager = [[PPOPaymentManager alloc] initForEnvironment:[self currentEnvironment]
-                                                           withDelegate:self];
+        _paymentManager = [[PPOPaymentManager alloc] initForEnvironment:[self currentEnvironment]];
     }
     return _paymentManager;
 }
@@ -84,22 +83,26 @@
                                                                       withCountryCode:nil];
             
             [weakSelf.paymentManager setCredentials:credentials];
-            [weakSelf.paymentManager makePaymentWithTransaction:transaction forCard:card withBillingAddress:address withTimeOut:60.0f];
+            
+            __weak typeof (self) weakSelf = self;
+            [weakSelf.paymentManager makePaymentWithTransaction:transaction
+                                                        forCard:card
+                                             withBillingAddress:address
+                                                    withTimeOut:60.0f
+                                                 withCompletion:^(NSError *error, NSString *message) {
+                                                     
+                                                     if (error) {
+                                                         [weakSelf handleError:error];
+                                                     } else {
+                                                         [weakSelf showAlertWithMessage:message];
+                                                     }
+                                                     
+                                                 }];
             
         }];
         
     }
     
-}
-
-#pragma mark - PPOPaymentManagerDelegate
-
--(void)paymentSucceeded:(NSString *)feedback {
-    [self showAlertWithMessage:feedback];
-}
-
--(void)paymentFailed:(NSError *)error {
-    [self handleError:error];
 }
 
 -(BOOL)handleError:(NSError*)error {
