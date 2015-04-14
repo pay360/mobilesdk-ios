@@ -166,10 +166,8 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Bearer token acquired"];
     
-    [NetworkManager getCredentialsUsingCacheIfAvailable:YES withCompletion:^(PPOCredentials *credentials, NSURLResponse *response, NSError *error) {
-        
+    [NetworkManager getCredentialsWithCompletion:^(PPOCredentials *credentials, NSURLResponse *response, NSError *error) {
         if (!error && credentials.token.length > 0) [expectation fulfill];
-        
     }];
     
     [self waitForExpectationsWithTimeout:60.0f handler:^(NSError *error) {
