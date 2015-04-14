@@ -11,7 +11,7 @@
 #import "PPOCredentials.h"
 #import "PPOTransaction.h"
 #import "PPOBillingAddress.h"
-#import "PPOErrorManager.h"
+#import "PPOOutcomeManager.h"
 #import "PPOLuhn.h"
 
 @interface PPOPaymentManager () <NSURLSessionTaskDelegate>
@@ -37,12 +37,18 @@
     return self;
 }
 
--(void)makePaymentWithTransaction:(PPOTransaction*)transaction forCard:(PPOCreditCard*)card withBillingAddress:(PPOBillingAddress*)billingAddress withTimeOut:(CGFloat)timeout withCompletion:(void(^)(NSError *error, NSString *message))completion {
+-(void)makePaymentWithTransaction:(PPOTransaction*)transaction forCard:(PPOCreditCard*)card withBillingAddress:(PPOBillingAddress*)billingAddress withTimeOut:(CGFloat)timeout withCompletion:(void(^)(PPOOutcome *outcome))completion {
     
-    NSError *validationError = [self validateTransaction:transaction withCard:card];
+    __block PPOOutcome *outcome;
     
-    if (validationError) {
-        completion(validationError, nil);
+    NSError *validation = [self validateTransaction:transaction withCard:card];
+    
+    if (validation) {
+        outcome = [PPOOutcomeManager handleResponse:nil withError:validation];
+    }
+    
+    if (outcome) {
+        completion(outcome);
         return;
     }
     
@@ -66,20 +72,10 @@
     
     [self resumeRequest:request forSession:session withCompletion:^(NSData *data, NSURLResponse *response, NSError *error) {
         
-        if (error) {
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completion(error, nil);
-            });
-            
-            return;
-        }
-        
-        NSError *paypointError;
-        PPOOutcome *outcome = [PPOErrorManager determineError:&paypointError inResponse:data];
+        outcome = [PPOOutcomeManager handleResponse:data withError:error];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            completion(paypointError, outcome.reasonMessage);
+            completion(outcome);
         });
         
     }];
@@ -273,10 +269,15 @@
             return [NSURL URLWithString:@"http://localhost:5000/mobileapi"];
             break;
             
+        case PPOEnvironmentProduction:
+            return nil;
+            break;
+            
         default:
             return nil;
             break;
     }
+    
 }
 
 +(NSURL*)simplePayment:(NSString*)installationID forEnvironment:(PPOEnvironment)environment {

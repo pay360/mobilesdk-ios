@@ -11,6 +11,7 @@
 
 @interface PPOErrorManager : NSObject
 
-+(PPOOutcome*)determineError:(NSError**)paypointError inResponse:(NSData*)responseData;
++(NSString*)errorDomainForReasonCode:(NSInteger)reasonCode;
++(PPOErrorCode)errorCodeForReasonCode:(NSInteger)reasonCode;
 
 @end

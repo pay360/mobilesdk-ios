@@ -8,30 +8,12 @@
 
 #import "NetworkManager.h"
 
-#define CACHED_TOKEN_KEY @"key_cached_token"
-
 @implementation NetworkManager
 
-+(void)getCredentialsUsingCacheIfAvailable:(BOOL)useCache withCompletion:(void(^)(PPOCredentials *credentials, NSURLResponse *response, NSError *error))completion {
++(void)getCredentialsWithCompletion:(void(^)(PPOCredentials *credentials, NSURLResponse *response, NSError *error))completion {
     
     __block NSString *token;
     __block PPOCredentials *c;
-    
-    if (useCache) {
-        id value = [[NSUserDefaults standardUserDefaults] valueForKey:CACHED_TOKEN_KEY];
-        
-        if (value && [value isKindOfClass:[NSString class]]) {
-            token = value;
-        }
-        if (token.length > 0) {
-            c = [[PPOCredentials alloc] initWithID:INSTALLATION_ID withToken:token];
-            completion(c, nil, nil);
-            return;
-        }
-    } else {
-        [[NSUserDefaults standardUserDefaults] setValue:nil forKey:CACHED_TOKEN_KEY];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
     
     NSURL *url = [NSURL URLWithString:@"http://localhost:5001/merchant/getToken"];
     
@@ -52,7 +34,6 @@
             id t = [json objectForKey:@"accessToken"];
             if ([t isKindOfClass:[NSString class]]) {
                 token = t;
-                [[NSUserDefaults standardUserDefaults] setValue:token forKey:CACHED_TOKEN_KEY];
             }
         }
         

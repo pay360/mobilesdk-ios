@@ -14,6 +14,6 @@
 
 @interface NetworkManager : NSObject
 
-+(void)getCredentialsUsingCacheIfAvailable:(BOOL)useCache withCompletion:(void(^)(PPOCredentials *credentials, NSURLResponse *response, NSError *error))completion;
++(void)getCredentialsWithCompletion:(void(^)(PPOCredentials *credentials, NSURLResponse *response, NSError *error))completion;
 
 @end

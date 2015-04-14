@@ -10,41 +10,6 @@
 
 @implementation PPOErrorManager
 
-+(PPOOutcome*)determineError:(NSError**)paypointError inResponse:(NSData*)responseData {
-    
-    NSError *jsonError;
-    
-    id json = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingAllowFragments error:&jsonError];
-    
-    if (jsonError && paypointError) {
-        
-        NSString *errorDomain = PPOPaypointSDKErrorDomain;
-        PPOErrorCode code = PPOErrorServerFailure;
-        NSDictionary *userInfo = @{
-                                   NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"JSON received from Paypoint is Invalid", @"Parsing error message")
-                                   };
-        
-        *paypointError = [NSError errorWithDomain:errorDomain code:code userInfo:userInfo];
-    }
-    
-    PPOOutcome *outcome = [[PPOOutcome alloc] initWithData:json];
-    
-    if (paypointError && outcome.reasonCode.integerValue > 0) {
-        
-        NSDictionary *userInfo;
-        if (outcome.reasonMessage && outcome.reasonMessage.length > 0) {
-            userInfo = @{NSLocalizedFailureReasonErrorKey: outcome.reasonMessage};
-        }
-        
-        NSString *errorDomain = [PPOErrorManager errorDomainForReasonCode:outcome.reasonCode.integerValue];
-        PPOErrorCode code = [PPOErrorManager errorCodeForReasonCode:outcome.reasonCode.integerValue];
-        
-        *paypointError = [NSError errorWithDomain:errorDomain code:code userInfo:userInfo];
-    }
-    
-    return outcome;
-}
-
 +(NSString*)errorDomainForReasonCode:(NSInteger)reasonCode {
     
     NSString *domain;

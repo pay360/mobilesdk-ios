@@ -56,45 +56,41 @@
         
     } else {
         
+        PPOTransaction *transaction = [[PPOTransaction alloc] initWithCurrency:@"GBP"
+                                                                    withAmount:@100
+                                                               withDescription:@"A description"
+                                                         withMerchantReference:@"mer_txn_1234556"
+                                                                    isDeferred:NO];
+        
+        PPOCreditCard *card = [[PPOCreditCard alloc] initWithPan:self.details.cardNumber
+                                                        withCode:self.details.cvv
+                                                      withExpiry:self.details.expiry
+                                                        withName:@"John Smith"];
+        
+        PPOBillingAddress *address = [[PPOBillingAddress alloc] initWithFirstLine:nil
+                                                                   withSecondLine:nil
+                                                                    withThirdLine:nil
+                                                                   withFourthLine:nil
+                                                                         withCity:nil
+                                                                       withRegion:nil
+                                                                     withPostcode:nil
+                                                                  withCountryCode:nil];
+        
         __weak typeof (self) weakSelf = self;
         
-        [NetworkManager getCredentialsUsingCacheIfAvailable:YES withCompletion:^(PPOCredentials *credentials, NSURLResponse *response, NSError *error) {
+        [NetworkManager getCredentialsWithCompletion:^(PPOCredentials *credentials, NSURLResponse *response, NSError *error) {
             
             if ([weakSelf handleError:error]) return;
-            
-            PPOTransaction *transaction = [[PPOTransaction alloc] initWithCurrency:@"GBP"
-                                                                        withAmount:@100
-                                                                   withDescription:@"A description"
-                                                             withMerchantReference:@"mer_txn_1234556"
-                                                                        isDeferred:NO];
-            
-            PPOCreditCard *card = [[PPOCreditCard alloc] initWithPan:weakSelf.details.cardNumber
-                                                            withCode:weakSelf.details.cvv
-                                                          withExpiry:weakSelf.details.expiry
-                                                            withName:@"John Smith"];
-            
-            PPOBillingAddress *address = [[PPOBillingAddress alloc] initWithFirstLine:nil
-                                                                       withSecondLine:nil
-                                                                        withThirdLine:nil
-                                                                       withFourthLine:nil
-                                                                             withCity:nil
-                                                                           withRegion:nil
-                                                                         withPostcode:nil
-                                                                      withCountryCode:nil];
             
             [weakSelf.paymentManager setCredentials:credentials];
             
             [weakSelf.paymentManager makePaymentWithTransaction:transaction
                                                         forCard:card
                                              withBillingAddress:address
-                                                    withTimeOut:60.0f
-                                                 withCompletion:^(NSError *error, NSString *message) {
+                                                    withTimeOut:5.0f
+                                                 withCompletion:^(PPOOutcome *outcome) {
                                                      
-                                                     if (error) {
-                                                         [weakSelf handleError:error];
-                                                     } else {
-                                                         [weakSelf showAlertWithMessage:message];
-                                                     }
+                                                     [weakSelf handleOutcome:outcome];
                                                      
                                                  }];
             
@@ -104,37 +100,47 @@
     
 }
 
+-(void)handleOutcome:(PPOOutcome*)outcome {
+    if (outcome.error) {
+        [self handleError:outcome.error];
+    } else {
+        [self showAlertWithMessage:@"Payment Authorised"];
+    }
+}
+
 -(BOOL)handleError:(NSError*)error {
     
-    if ([self noNetwork:error]) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self showAlertWithMessage:@"Please check you are connected to the internet."];
-        });
-        
-        return YES;
-    }
+    NSString *message;
     
     if (error && error.domain == PPOPaypointSDKErrorDomain) {
         
         PPOErrorCode code = error.code;
         
         switch (code) {
-            case PPOErrorNotInitialised: /* */ break;
-            case PPOErrorBadRequest: /* */ break;
-            case PPOErrorAuthenticationFailed: /* */ break;
-            case PPOErrorClientTokenExpired: /* */ break;
-            case PPOErrorUnauthorisedRequest: /* */ break;
-            case PPOErrorTransactionProcessingFailed: /* */ break;
-            case PPOErrorServerFailure: /* */ break;
-            case PPOErrorLuhnCheckFailed: /* */ break;
-            case PPOErrorCardExpiryDateInvalid: /* */ break;
-            case PPOErrorCardPanLengthInvalid: /* */ break;
-            case PPOErrorCVVInvalid: /* */ break;
-            case PPOErrorCurrencyInvalid: /* */ break;
-            case PPOErrorPaymentAmountInvalid: /* */ break;
-            case PPOErrorUnknown: /* */ break;
+            case PPOErrorNotInitialised: message = @"Error Code: PPOErrorNotInitialised"; break;
+            case PPOErrorBadRequest: message = @"Error Code: PPOErrorBadRequest"; break;
+            case PPOErrorAuthenticationFailed: message = @"Error Code: PPOErrorAuthenticationFailed"; break;
+            case PPOErrorClientTokenExpired: message = @"Error Code: PPOErrorClientTokenExpired"; break;
+            case PPOErrorUnauthorisedRequest: message = @"Error Code: PPOErrorUnauthorisedRequest"; break;
+            case PPOErrorTransactionProcessingFailed: message = @"Error Code: PPOErrorTransactionProcessingFailed"; break;
+            case PPOErrorServerFailure: message = @"Error Code: PPOErrorServerFailure"; break;
+            case PPOErrorLuhnCheckFailed: message = @"Error Code: PPOErrorLuhnCheckFailed"; break;
+            case PPOErrorCardExpiryDateInvalid: message = @"Error Code: PPOErrorCardExpiryDateInvalid"; break;
+            case PPOErrorCardPanLengthInvalid: message = @"Error Code: PPOErrorCardPanLengthInvalid"; break;
+            case PPOErrorCVVInvalid: message = @"Error Code: PPOErrorCVVInvalid"; break;
+            case PPOErrorCurrencyInvalid: message = @"Error Code: PPOErrorCurrencyInvalid"; break;
+            case PPOErrorPaymentAmountInvalid: message = @"Error Code: PPOErrorPaymentAmountInvalid"; break;
+            case PPOErrorUnknown: message = @"Error Code: PPOErrorUnknown"; break;
         }
-
+        
+    } else if ([self noNetwork:error]) {
+        message = @"Something went wrong with the Network. There may have been a response timeout. Please check you are connected to the internet.";
+    } else {
+        message = [error.userInfo objectForKey:NSLocalizedFailureReasonErrorKey];
+    }
+    
+    if (message) {
+        [self showAlertWithMessage:message];
         return YES;
     }
     
@@ -149,6 +155,7 @@
 
 -(NSArray*)noNetworkConnectionErrorCodes {
     int codes[] = {
+        kCFURLErrorTimedOut,
         kCFURLErrorCannotConnectToHost,
         kCFURLErrorNetworkConnectionLost,
         kCFURLErrorDNSLookupFailed,
