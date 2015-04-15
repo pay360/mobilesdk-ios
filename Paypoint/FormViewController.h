@@ -17,8 +17,15 @@ typedef enum : NSUInteger {
 @interface FormViewController : UIViewController <UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
 @property (strong, nonatomic) IBOutletCollection(UILabel) NSArray *titleLabels;
 @property (strong, nonatomic) IBOutletCollection(UITextField) NSArray *textFields;
-@property (nonatomic, strong) UIPickerView *pickerView;
+@property (weak, nonatomic) IBOutlet UILabel *amountLabel;
+@property (weak, nonatomic) IBOutlet UIView *blockerView;
+@property (weak, nonatomic) IBOutlet UILabel *blockerLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *paypointLogoImageView;
 @property (weak, nonatomic) IBOutlet UIButton *payNowButton;
+@property (nonatomic, strong) UIPickerView *pickerView;
 @property (nonatomic, strong) NSArray *pickerViewSelections;
 @property (nonatomic, strong) FormDetails *details;
+
+-(void)blockerTapGestureRecognised:(UITapGestureRecognizer*)gesture;
+
 @end

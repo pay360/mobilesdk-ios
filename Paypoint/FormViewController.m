@@ -67,9 +67,28 @@
     
     [self stylePayNowButton:self.payNowButton];
     
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backgroundTapped:)];
+    UITapGestureRecognizer *tap;
+    
+    tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backgroundTapped:)];
     [self.view addGestureRecognizer:tap];
+    
+    UIColor *blue = [ColourManager ppBlue];
+    
+    self.amountLabel.textColor = blue;
+    
+    for (UILabel *titleLabel in self.titleLabels) {
+        titleLabel.textColor = blue;
+    }
+    
+    tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(blockerTapGestureRecognised:)];
+    [self.blockerView addGestureRecognizer:tap];
+    
+//    self.view.backgroundColor = [ColourManager ppLightGrey:1];
 
+}
+
+-(void)blockerTapGestureRecognised:(UITapGestureRecognizer*)gesture {
+    
 }
 
 -(void)stylePayNowButton:(UIButton*)button {

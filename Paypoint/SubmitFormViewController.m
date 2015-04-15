@@ -19,16 +19,12 @@ typedef enum : NSUInteger {
 
 @interface SubmitFormViewController ()
 @property (nonatomic, strong) PPOPaymentManager *paymentManager;
-@property (weak, nonatomic) IBOutlet UILabel *amountLabel;
-@property (weak, nonatomic) IBOutlet UIImageView *paypointLogoImageView;
-@property (weak, nonatomic) IBOutlet UIView *blockerView;
-@property (weak, nonatomic) IBOutlet UILabel *blockerLabel;
-@property (nonatomic, copy) void(^completionBlock)(void);
+@property (nonatomic, copy) void(^endAnimationCompletion)(void);
 @end
 
 @implementation SubmitFormViewController {
     LOADING_ANIMATION_STATE _animationState;
-    BOOL _animationShouldEnd;
+    BOOL _animationShouldEndAsSoonHasItHasFinishedStarting;
 }
 
 #pragma mark - Lazy Instantiation
@@ -63,35 +59,23 @@ typedef enum : NSUInteger {
     self.payment = [[PPOPayment alloc] initWithTransaction:transaction withCard:nil withBillingAddress:address];
     
     self.amountLabel.text = [@"£ " stringByAppendingString:self.payment.transaction.amount.stringValue];
-    
-    UIColor *blue = [ColourManager ppBlue];
-    
-    self.amountLabel.textColor = blue;
-    
-    for (UILabel *titleLabel in self.titleLabels) {
-        titleLabel.textColor = blue;
-    }
-    
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(blockerTapGestureRecognised:)];
-    [self.blockerView addGestureRecognizer:tap];
+}
+
+-(void)blockerTapGestureRecognised:(UITapGestureRecognizer *)gesture {
+    [self.paymentManager.payments cancelAllOperations];
+    [self endAnimationWithCompletion:nil];
 }
 
 #pragma mark - Actions
 
 -(IBAction)payNowButtonPressed:(UIButton *)sender {
     
-    [self pay:self.payment];
-    
-}
-
--(void)pay:(PPOPayment*)payment {
-    
     PPOCreditCard *card = [[PPOCreditCard alloc] initWithPan:self.details.cardNumber
                                                     withCode:self.details.cvv
                                                   withExpiry:self.details.expiry
                                                     withName:@"John Smith"];
     
-    payment.creditCard = card;
+    self.payment.creditCard = card;
     
     if ([[Reachability reachabilityForInternetConnection] currentReachabilityStatus] == NotReachable) {
         
@@ -111,7 +95,7 @@ typedef enum : NSUInteger {
                 
                 [weakSelf.paymentManager setCredentials:credentials];
                 
-                [weakSelf.paymentManager makePayment:payment
+                [weakSelf.paymentManager makePayment:weakSelf.payment
                                          withTimeOut:60.0f
                                       withCompletion:^(PPOOutcome *outcome) {
                                           [weakSelf handleOutcome:outcome];
@@ -122,6 +106,7 @@ typedef enum : NSUInteger {
         }
         
     }
+    
 }
 
 -(void)beginAnimation {
@@ -162,23 +147,20 @@ typedef enum : NSUInteger {
         } completion:^(BOOL finished) {
         }];
         
-        if (_animationShouldEnd) {
-            [self endAnimationWithCompletion:self.completionBlock];
-            return;
+        if (_animationShouldEndAsSoonHasItHasFinishedStarting) {
+            [self endAnimationWithCompletion:self.endAnimationCompletion];
         }
         
     }];
     
 }
 
--(void)blockerTapGestureRecognised:(UITapGestureRecognizer*)gesture {
-    [self endAnimationWithCompletion:nil];
-}
-
 -(void)endAnimationWithCompletion:(void(^)(void))completion {
     
+    self.endAnimationCompletion = completion;
+    
     if (_animationState == LOADING_ANIMATION_STATE_ENDED) {
-        if (completion) completion();
+        if (self.endAnimationCompletion) self.endAnimationCompletion();
         return;
     }
     
@@ -206,15 +188,14 @@ typedef enum : NSUInteger {
             
             _animationState = LOADING_ANIMATION_STATE_ENDED;
             
-            _animationShouldEnd = NO;
+            _animationShouldEndAsSoonHasItHasFinishedStarting = NO;
             
             if (completion) completion();
             
         }];
         
     } else {
-        self.completionBlock = completion;
-        _animationShouldEnd = YES;
+        _animationShouldEndAsSoonHasItHasFinishedStarting = YES;
     }
     
 }
