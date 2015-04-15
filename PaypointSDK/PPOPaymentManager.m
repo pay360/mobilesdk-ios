@@ -13,6 +13,7 @@
 #import "PPOBillingAddress.h"
 #import "PPOOutcomeManager.h"
 #import "PPOLuhn.h"
+#import "PPOPayment.h"
 
 @interface PPOPaymentManager () <NSURLSessionTaskDelegate>
 
@@ -37,11 +38,11 @@
     return self;
 }
 
--(void)makePaymentWithTransaction:(PPOTransaction*)transaction forCard:(PPOCreditCard*)card withBillingAddress:(PPOBillingAddress*)billingAddress withTimeOut:(CGFloat)timeout withCompletion:(void(^)(PPOOutcome *outcome))completion {
+-(void)makePayment:(PPOPayment*)payment withTimeOut:(CGFloat)timeout withCompletion:(void(^)(PPOOutcome *outcome))completion {
     
     __block PPOOutcome *outcome;
     
-    NSError *validation = [self validateTransaction:transaction withCard:card];
+    NSError *validation = [self validateTransaction:payment.transaction withCard:payment.creditCard];
     
     if (validation) {
         outcome = [PPOOutcomeManager handleResponse:nil withError:validation];
@@ -60,9 +61,9 @@
     
     [request setValue:[self authorisation:self.credentials] forHTTPHeaderField:@"Authorization"];
     
-    NSData *data = [self buildPostBodyWithTransaction:transaction
-                                             withCard:card
-                                          withAddress:billingAddress];
+    NSData *data = [self buildPostBodyWithTransaction:payment.transaction
+                                             withCard:payment.creditCard
+                                          withAddress:payment.billingAddress];
     
     [request setHTTPBody:data];
     

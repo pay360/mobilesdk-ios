@@ -13,6 +13,7 @@
 @class PPOTransaction;
 @class PPOCreditCard;
 @class PPOBillingAddress;
+@class PPOPayment;
 
 typedef NS_ENUM(NSInteger, PPOEnvironment) {
     PPOEnvironmentStaging,
@@ -25,6 +26,6 @@ typedef NS_ENUM(NSInteger, PPOEnvironment) {
 
 -(instancetype)initForEnvironment:(PPOEnvironment)environment; //Designated initialiser
 
--(void)makePaymentWithTransaction:(PPOTransaction*)transaction forCard:(PPOCreditCard*)card withBillingAddress:(PPOBillingAddress*)billingAddress withTimeOut:(CGFloat)timeout withCompletion:(void(^)(PPOOutcome *outcome))completion;
+-(void)makePayment:(PPOPayment*)payment withTimeOut:(CGFloat)timeout withCompletion:(void(^)(PPOOutcome *outcome))completion;
 
 @end

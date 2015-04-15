@@ -100,9 +100,8 @@
 }
 
 
-#pragma mark - UITextField Delegate
+#pragma mark - UITextField Four Digit Spacing
 
-// Version 1.2
 // Source and explanation: http://stackoverflow.com/a/19161529/1709587
 -(void)reformatAsCardNumber:(UITextField *)textField
 {
@@ -218,6 +217,8 @@ replacementString:(NSString *)string
     return stringWithAddedSpaces;
 }
 
+#pragma mark - UITextField Delegate
+
 -(BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     
     if (textField.tag == TEXT_FIELD_TYPE_EXPIRY) {
@@ -274,10 +275,6 @@ replacementString:(NSString *)string
     
     return YES;
 }
-
-//-(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-//    return ![string isEqualToString:@" "];
-//}
 
 #pragma mark - UIPickerView Datasource
 

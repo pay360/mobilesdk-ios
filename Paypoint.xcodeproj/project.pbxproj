@@ -48,6 +48,8 @@
 		507331E11ADE5FF100BBDFC2 /* PaypointSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 50D48F0A1ADC140C006BE4E8 /* PaypointSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		507331E41ADE696900BBDFC2 /* ColourManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 507331E31ADE696900BBDFC2 /* ColourManager.m */; };
 		507331E81ADE6A7600BBDFC2 /* NavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 507331E71ADE6A7600BBDFC2 /* NavigationViewController.m */; };
+		507331EC1ADE72E700BBDFC2 /* PPOPayment.h in Headers */ = {isa = PBXBuildFile; fileRef = 507331EA1ADE72E700BBDFC2 /* PPOPayment.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		507331ED1ADE72E700BBDFC2 /* PPOPayment.m in Sources */ = {isa = PBXBuildFile; fileRef = 507331EB1ADE72E700BBDFC2 /* PPOPayment.m */; };
 		507AA72F1AD7D78F00420DF7 /* PPOOutcome.h in Headers */ = {isa = PBXBuildFile; fileRef = 507AA72D1AD7D78F00420DF7 /* PPOOutcome.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		507AA7301AD7D78F00420DF7 /* PPOOutcome.m in Sources */ = {isa = PBXBuildFile; fileRef = 507AA72E1AD7D78F00420DF7 /* PPOOutcome.m */; };
 		507F54D01ADBBDBB004BF798 /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50AB93BB1AD5564E005944F5 /* NetworkManager.m */; };
@@ -155,6 +157,8 @@
 		507331E31ADE696900BBDFC2 /* ColourManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColourManager.m; sourceTree = "<group>"; };
 		507331E61ADE6A7600BBDFC2 /* NavigationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationViewController.h; sourceTree = "<group>"; };
 		507331E71ADE6A7600BBDFC2 /* NavigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationViewController.m; sourceTree = "<group>"; };
+		507331EA1ADE72E700BBDFC2 /* PPOPayment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOPayment.h; sourceTree = "<group>"; };
+		507331EB1ADE72E700BBDFC2 /* PPOPayment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOPayment.m; sourceTree = "<group>"; };
 		507AA72D1AD7D78F00420DF7 /* PPOOutcome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOOutcome.h; sourceTree = "<group>"; };
 		507AA72E1AD7D78F00420DF7 /* PPOOutcome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOOutcome.m; sourceTree = "<group>"; };
 		509B58891ADD477A001236CD /* PPOTimeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOTimeManager.h; sourceTree = "<group>"; };
@@ -283,6 +287,7 @@
 				50CC9B081AD42B7900B97F2E /* PPOTransaction */,
 				50CC9B0D1AD42CEB00B97F2E /* PPOBillingAddress */,
 				507AA7311AD7D79300420DF7 /* PPOOutcome */,
+				507331EE1ADE72EA00BBDFC2 /* PPOPayment */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -455,6 +460,15 @@
 				507331E71ADE6A7600BBDFC2 /* NavigationViewController.m */,
 			);
 			name = NavigationViewController;
+			sourceTree = "<group>";
+		};
+		507331EE1ADE72EA00BBDFC2 /* PPOPayment */ = {
+			isa = PBXGroup;
+			children = (
+				507331EA1ADE72E700BBDFC2 /* PPOPayment.h */,
+				507331EB1ADE72E700BBDFC2 /* PPOPayment.m */,
+			);
+			name = PPOPayment;
 			sourceTree = "<group>";
 		};
 		507AA7311AD7D79300420DF7 /* PPOOutcome */ = {
@@ -642,6 +656,7 @@
 				50CC9AFC1AD4237F00B97F2E /* PPOCreditCard.h in Headers */,
 				5056A1A61AD68B1400AB1276 /* PPOSDKMacros.h in Headers */,
 				509B588B1ADD477A001236CD /* PPOTimeManager.h in Headers */,
+				507331EC1ADE72E700BBDFC2 /* PPOPayment.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -855,6 +870,7 @@
 			files = (
 				50046ACF1AC2FB0400F23D05 /* PPOLuhn.m in Sources */,
 				50CC9AFD1AD4237F00B97F2E /* PPOCreditCard.m in Sources */,
+				507331ED1ADE72E700BBDFC2 /* PPOPayment.m in Sources */,
 				50CC9B0C1AD42CE800B97F2E /* PPOBillingAddress.m in Sources */,
 				50CC9B071AD42B7500B97F2E /* PPOTransaction.m in Sources */,
 				509B588C1ADD477A001236CD /* PPOTimeManager.m in Sources */,

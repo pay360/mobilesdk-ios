@@ -62,6 +62,8 @@
                                                                      withPostcode:nil
                                                                   withCountryCode:nil];
         
+        PPOPayment *payment = [[PPOPayment alloc] initWithTransaction:transaction withCard:card withBillingAddress:address];
+        
         __weak typeof (self) weakSelf = self;
         
         [NetworkManager getCredentialsWithCompletion:^(PPOCredentials *credentials, NSURLResponse *response, NSError *error) {
@@ -70,15 +72,9 @@
             
             [weakSelf.paymentManager setCredentials:credentials];
             
-            [weakSelf.paymentManager makePaymentWithTransaction:transaction
-                                                        forCard:card
-                                             withBillingAddress:address
-                                                    withTimeOut:5.0f
-                                                 withCompletion:^(PPOOutcome *outcome) {
-                                                     
-                                                     [weakSelf handleOutcome:outcome];
-                                                     
-                                                 }];
+            [weakSelf.paymentManager makePayment:payment withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome) {
+                [weakSelf handleOutcome:outcome];
+            }];
             
         }];
         
