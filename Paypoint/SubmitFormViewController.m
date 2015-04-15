@@ -34,20 +34,6 @@
 
 #pragma mark - Actions
 
--(IBAction)textFieldEditingChanged:(UITextField *)textField {
-    
-    switch (textField.tag) {
-        case TEXT_FIELD_TYPE_CARD_NUMBER:
-            self.details.cardNumber = textField.text;
-            break;
-        case TEXT_FIELD_TYPE_CVV:
-            self.details.cvv = textField.text;
-            break;
-        default:
-            break;
-    }
-}
-
 -(IBAction)payNowButtonPressed:(UIButton *)sender {
     
     if ([[Reachability reachabilityForInternetConnection] currentReachabilityStatus] == NotReachable) {
