@@ -6,13 +6,12 @@
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import <PaypointSDK/PPOCredentials.h>
+#import "EndpointManager.h"
 #import "Reachability.h"
 
-#define INSTALLATION_ID @"5300129"
+#define INSTALLATION_ID @"5300065"
 
-@interface NetworkManager : NSObject
+@interface NetworkManager : EndpointManager
 
 +(void)getCredentialsWithCompletion:(void(^)(PPOCredentials *credentials, NSURLResponse *response, NSError *error))completion;
 

@@ -16,8 +16,8 @@
 @class PPOPayment;
 
 typedef NS_ENUM(NSInteger, PPOEnvironment) {
-    PPOEnvironmentStaging,
-    PPOEnvironmentProduction
+    PPOEnvironmentSimulatorStaging,
+    PPOEnvironmentDeviceStaging
 };
 
 @interface PPOPaymentManager : NSObject

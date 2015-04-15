@@ -266,12 +266,12 @@
 +(NSURL*)baseURL:(PPOEnvironment)environment {
     
     switch (environment) {
-        case PPOEnvironmentStaging:
+        case PPOEnvironmentSimulatorStaging:
             return [NSURL URLWithString:@"http://localhost:5000/mobileapi"];
             break;
             
-        case PPOEnvironmentProduction:
-            return nil;
+        case PPOEnvironmentDeviceStaging:
+            return [NSURL URLWithString:@"http://192.168.3.178:5000/mobileapi"];
             break;
             
         default:

@@ -7,8 +7,8 @@
 //
 
 #import "SubmitFormViewController.h"
-#import "NetworkManager.h"
 #import "ColourManager.h"
+#import "EnvironmentManager.h"
 
 typedef enum : NSUInteger {
     LOADING_ANIMATION_STATE_STARTING,
@@ -35,15 +35,9 @@ typedef enum : NSUInteger {
 
 -(PPOPaymentManager *)paymentManager {
     if (_paymentManager == nil) {
-        _paymentManager = [[PPOPaymentManager alloc] initForEnvironment:[self currentEnvironment]];
+        _paymentManager = [[PPOPaymentManager alloc] initForEnvironment:[EnvironmentManager currentEnvironment]];
     }
     return _paymentManager;
-}
-
--(PPOEnvironment)currentEnvironment {
-    NSDictionary *environment = [[NSProcessInfo processInfo] environment];
-    NSString *value = [environment objectForKey:@"ENVIRONMENT"];
-    return value.integerValue;
 }
 
 -(void)viewDidLoad {

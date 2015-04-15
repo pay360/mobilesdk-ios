@@ -10,4 +10,6 @@
 
 @interface EnvironmentManager : NSObject
 
++(NSUInteger)currentEnvironment;
+
 @end

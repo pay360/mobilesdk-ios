@@ -7,6 +7,7 @@
 //
 
 #import "NetworkManager.h"
+#import "EnvironmentManager.h"
 
 @implementation NetworkManager
 
@@ -15,8 +16,11 @@
     __block NSString *token;
     __block PPOCredentials *c;
     
-    NSURL *url = [NSURL URLWithString:@"http://localhost:5001/merchant/getToken"];
+    PPOEnvironment environment = [EnvironmentManager currentEnvironment];
     
+    NSURL *baseURL = [self baseURL:environment];
+    NSURL *url = [baseURL URLByAppendingPathComponent:@"/merchant/getToken"];
+        
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
                                                            cachePolicy:NSURLRequestUseProtocolCachePolicy
                                                        timeoutInterval:60.0f];

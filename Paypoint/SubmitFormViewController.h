@@ -7,8 +7,7 @@
 //
 
 #import "FormViewController.h"
-
-#import <PaypointSDK/PaypointSDK.h>
+#import "NetworkManager.h"
 
 @interface SubmitFormViewController : FormViewController
 
