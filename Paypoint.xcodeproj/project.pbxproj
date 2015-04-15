@@ -44,6 +44,10 @@
 		5069F6661ABC7DA30077FB10 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5069F6641ABC7DA30077FB10 /* LaunchScreen.xib */; };
 		5069F6851ABC7EBA0077FB10 /* PaypointSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 5069F6841ABC7EBA0077FB10 /* PaypointSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5069F6941ABC7EBA0077FB10 /* PaypointSDKTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5069F6931ABC7EBA0077FB10 /* PaypointSDKTests.m */; };
+		507331E01ADE5FF100BBDFC2 /* PaypointSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50D48F0A1ADC140C006BE4E8 /* PaypointSDK.framework */; };
+		507331E11ADE5FF100BBDFC2 /* PaypointSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 50D48F0A1ADC140C006BE4E8 /* PaypointSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		507331E41ADE696900BBDFC2 /* ColourManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 507331E31ADE696900BBDFC2 /* ColourManager.m */; };
+		507331E81ADE6A7600BBDFC2 /* NavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 507331E71ADE6A7600BBDFC2 /* NavigationViewController.m */; };
 		507AA72F1AD7D78F00420DF7 /* PPOOutcome.h in Headers */ = {isa = PBXBuildFile; fileRef = 507AA72D1AD7D78F00420DF7 /* PPOOutcome.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		507AA7301AD7D78F00420DF7 /* PPOOutcome.m in Sources */ = {isa = PBXBuildFile; fileRef = 507AA72E1AD7D78F00420DF7 /* PPOOutcome.m */; };
 		507F54D01ADBBDBB004BF798 /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50AB93BB1AD5564E005944F5 /* NetworkManager.m */; };
@@ -107,6 +111,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				507331E11ADE5FF100BBDFC2 /* PaypointSDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -146,6 +151,10 @@
 		5069F68A1ABC7EBA0077FB10 /* PaypointSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PaypointSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5069F6921ABC7EBA0077FB10 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5069F6931ABC7EBA0077FB10 /* PaypointSDKTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PaypointSDKTests.m; sourceTree = "<group>"; };
+		507331E21ADE696900BBDFC2 /* ColourManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColourManager.h; sourceTree = "<group>"; };
+		507331E31ADE696900BBDFC2 /* ColourManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColourManager.m; sourceTree = "<group>"; };
+		507331E61ADE6A7600BBDFC2 /* NavigationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationViewController.h; sourceTree = "<group>"; };
+		507331E71ADE6A7600BBDFC2 /* NavigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationViewController.m; sourceTree = "<group>"; };
 		507AA72D1AD7D78F00420DF7 /* PPOOutcome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOOutcome.h; sourceTree = "<group>"; };
 		507AA72E1AD7D78F00420DF7 /* PPOOutcome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOOutcome.m; sourceTree = "<group>"; };
 		509B58891ADD477A001236CD /* PPOTimeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOTimeManager.h; sourceTree = "<group>"; };
@@ -189,6 +198,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				507331E01ADE5FF100BBDFC2 /* PaypointSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -239,6 +249,7 @@
 		501C8E581AC018F600CBA25A /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				507331E91ADE6A7900BBDFC2 /* NavigationViewController */,
 				50CC9B111AD43B7A00B97F2E /* FormViewController */,
 				50AB93B91AD551B0005944F5 /* SubmitFormViewController */,
 			);
@@ -428,6 +439,24 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		507331E51ADE697000BBDFC2 /* ColourManager */ = {
+			isa = PBXGroup;
+			children = (
+				507331E21ADE696900BBDFC2 /* ColourManager.h */,
+				507331E31ADE696900BBDFC2 /* ColourManager.m */,
+			);
+			name = ColourManager;
+			sourceTree = "<group>";
+		};
+		507331E91ADE6A7900BBDFC2 /* NavigationViewController */ = {
+			isa = PBXGroup;
+			children = (
+				507331E61ADE6A7600BBDFC2 /* NavigationViewController.h */,
+				507331E71ADE6A7600BBDFC2 /* NavigationViewController.m */,
+			);
+			name = NavigationViewController;
+			sourceTree = "<group>";
+		};
 		507AA7311AD7D79300420DF7 /* PPOOutcome */ = {
 			isa = PBXGroup;
 			children = (
@@ -586,6 +615,7 @@
 			children = (
 				50CC9B1A1AD43E2500B97F2E /* TimeManager */,
 				50AB93BD1AD55652005944F5 /* NetworkManager */,
+				507331E51ADE697000BBDFC2 /* ColourManager */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -812,8 +842,10 @@
 				5056A19F1AD6761D00AB1276 /* NSString+strip.m in Sources */,
 				50AB96D81AC1D38E00323E05 /* Reachability.m in Sources */,
 				50AB93B81AD551AD005944F5 /* SubmitFormViewController.m in Sources */,
+				507331E41ADE696900BBDFC2 /* ColourManager.m in Sources */,
 				50CC9B191AD43E2200B97F2E /* TimeManager.m in Sources */,
 				50CC9B101AD43B7600B97F2E /* FormViewController.m in Sources */,
+				507331E81ADE6A7600BBDFC2 /* NavigationViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1025,6 +1057,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Paypoint-gifbtkqozancshggkwopxjdhfqrw/Build/Products/Debug-universal",
+					"$(PROJECT_DIR)/Lipo",
 				);
 				INFOPLIST_FILE = Paypoint/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
@@ -1040,6 +1073,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Paypoint-gifbtkqozancshggkwopxjdhfqrw/Build/Products/Debug-universal",
+					"$(PROJECT_DIR)/Lipo",
 				);
 				INFOPLIST_FILE = Paypoint/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
