@@ -57,11 +57,6 @@ typedef enum : NSUInteger {
                                                      withMerchantReference:@"mer_txn_1234556"
                                                                 isDeferred:NO];
     
-    PPOCreditCard *card = [[PPOCreditCard alloc] initWithPan:self.details.cardNumber
-                                                    withCode:self.details.cvv
-                                                  withExpiry:self.details.expiry
-                                                    withName:@"John Smith"];
-    
     PPOBillingAddress *address = [[PPOBillingAddress alloc] initWithFirstLine:nil
                                                                withSecondLine:nil
                                                                 withThirdLine:nil
@@ -71,7 +66,7 @@ typedef enum : NSUInteger {
                                                                  withPostcode:nil
                                                               withCountryCode:nil];
     
-    self.payment = [[PPOPayment alloc] initWithTransaction:transaction withCard:card withBillingAddress:address];
+    self.payment = [[PPOPayment alloc] initWithTransaction:transaction withCard:nil withBillingAddress:address];
     
     self.amountLabel.text = [@"£ " stringByAppendingString:self.payment.transaction.amount.stringValue];
     
@@ -96,6 +91,13 @@ typedef enum : NSUInteger {
 }
 
 -(void)pay:(PPOPayment*)payment {
+    
+    PPOCreditCard *card = [[PPOCreditCard alloc] initWithPan:self.details.cardNumber
+                                                    withCode:self.details.cvv
+                                                  withExpiry:self.details.expiry
+                                                    withName:@"John Smith"];
+    
+    payment.creditCard = card;
     
     if ([[Reachability reachabilityForInternetConnection] currentReachabilityStatus] == NotReachable) {
         
