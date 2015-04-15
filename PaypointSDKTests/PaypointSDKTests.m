@@ -319,41 +319,41 @@
     
 }
 
-//-(void)testSimplePaymentWithDelayedAuthorisedPan {
-//    
-//    XCTestExpectation *expectation = [self expectationWithDescription:@"Simple payment timedout"];
-//    
-//    self.transaction = [[PPOTransaction alloc] initWithCurrency:@"GBP"
-//                                                     withAmount:@100
-//                                                withDescription:@"A description"
-//                                          withMerchantReference:@"mer_txn_1234556"
-//                                                     isDeferred:NO];
-//    
-//    self.card = [[PPOCreditCard alloc] initWithPan:self.delayAuthorisedPan
-//                                          withCode:@"123"
-//                                        withExpiry:@"0116"
-//                                          withName:@"John Smith"];
-//    
-//    PPOCredentials *credentials = [[PPOCredentials alloc] initWithID:INSTALLATION_ID withToken:self.validBearerToken];
-//    [self.paymentManager setCredentials:credentials];
-//    
-//    PPOPayment *payment = [[PPOPayment alloc] initWithTransaction:self.transaction withCard:self.card withBillingAddress:self.address];
-//    
-//    [self.paymentManager makePayment:payment withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome) {
-//        if ([outcome.error.domain isEqualToString:@"NSURLErrorDomain"] && outcome.error.code == kCFURLErrorTimedOut) {
-//            [expectation fulfill];
-//        }
-//    }];
-//    
-//    [self waitForExpectationsWithTimeout:61.5 handler:^(NSError *error) {
-//        
-//        if(error) {
-//            XCTFail(@"Simple payment failed with error: %@", error);
-//        }
-//        
-//    }];
-//    
-//}
+-(void)testSimplePaymentWithDelayedAuthorisedPan {
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Simple payment timedout"];
+    
+    self.transaction = [[PPOTransaction alloc] initWithCurrency:@"GBP"
+                                                     withAmount:@100
+                                                withDescription:@"A description"
+                                          withMerchantReference:@"mer_txn_1234556"
+                                                     isDeferred:NO];
+    
+    self.card = [[PPOCreditCard alloc] initWithPan:self.delayAuthorisedPan
+                                          withCode:@"123"
+                                        withExpiry:@"0116"
+                                          withName:@"John Smith"];
+    
+    PPOCredentials *credentials = [[PPOCredentials alloc] initWithID:INSTALLATION_ID withToken:self.validBearerToken];
+    [self.paymentManager setCredentials:credentials];
+    
+    PPOPayment *payment = [[PPOPayment alloc] initWithTransaction:self.transaction withCard:self.card withBillingAddress:self.address];
+    
+    [self.paymentManager makePayment:payment withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome) {
+        if ([outcome.error.domain isEqualToString:@"NSURLErrorDomain"] && outcome.error.code == kCFURLErrorTimedOut) {
+            [expectation fulfill];
+        }
+    }];
+    
+    [self waitForExpectationsWithTimeout:61.5 handler:^(NSError *error) {
+        
+        if(error) {
+            XCTFail(@"Simple payment failed with error: %@", error);
+        }
+        
+    }];
+    
+}
 
 -(void)testSimplePaymentWithServerErrorPan {
     
