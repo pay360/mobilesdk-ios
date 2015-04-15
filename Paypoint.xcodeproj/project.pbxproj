@@ -50,6 +50,7 @@
 		507331E81ADE6A7600BBDFC2 /* NavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 507331E71ADE6A7600BBDFC2 /* NavigationViewController.m */; };
 		507331EC1ADE72E700BBDFC2 /* PPOPayment.h in Headers */ = {isa = PBXBuildFile; fileRef = 507331EA1ADE72E700BBDFC2 /* PPOPayment.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		507331ED1ADE72E700BBDFC2 /* PPOPayment.m in Sources */ = {isa = PBXBuildFile; fileRef = 507331EB1ADE72E700BBDFC2 /* PPOPayment.m */; };
+		507331F61ADE7B1400BBDFC2 /* ImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 507331F51ADE7B1400BBDFC2 /* ImageManager.m */; };
 		507AA72F1AD7D78F00420DF7 /* PPOOutcome.h in Headers */ = {isa = PBXBuildFile; fileRef = 507AA72D1AD7D78F00420DF7 /* PPOOutcome.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		507AA7301AD7D78F00420DF7 /* PPOOutcome.m in Sources */ = {isa = PBXBuildFile; fileRef = 507AA72E1AD7D78F00420DF7 /* PPOOutcome.m */; };
 		507F54D01ADBBDBB004BF798 /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50AB93BB1AD5564E005944F5 /* NetworkManager.m */; };
@@ -159,6 +160,8 @@
 		507331E71ADE6A7600BBDFC2 /* NavigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationViewController.m; sourceTree = "<group>"; };
 		507331EA1ADE72E700BBDFC2 /* PPOPayment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOPayment.h; sourceTree = "<group>"; };
 		507331EB1ADE72E700BBDFC2 /* PPOPayment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOPayment.m; sourceTree = "<group>"; };
+		507331F41ADE7B1400BBDFC2 /* ImageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageManager.h; sourceTree = "<group>"; };
+		507331F51ADE7B1400BBDFC2 /* ImageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageManager.m; sourceTree = "<group>"; };
 		507AA72D1AD7D78F00420DF7 /* PPOOutcome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOOutcome.h; sourceTree = "<group>"; };
 		507AA72E1AD7D78F00420DF7 /* PPOOutcome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOOutcome.m; sourceTree = "<group>"; };
 		509B58891ADD477A001236CD /* PPOTimeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOTimeManager.h; sourceTree = "<group>"; };
@@ -388,7 +391,7 @@
 				501C8E581AC018F600CBA25A /* ViewControllers */,
 				5069F6551ABC7DA30077FB10 /* Supporting Files */,
 				50CC9B1B1AD43E2900B97F2E /* Managers */,
-				5056A1A01AD6762100AB1276 /* NSString+strip */,
+				507331EF1ADE7A8D00BBDFC2 /* UIKit Extensions */,
 			);
 			path = Paypoint;
 			sourceTree = "<group>";
@@ -469,6 +472,23 @@
 				507331EB1ADE72E700BBDFC2 /* PPOPayment.m */,
 			);
 			name = PPOPayment;
+			sourceTree = "<group>";
+		};
+		507331EF1ADE7A8D00BBDFC2 /* UIKit Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				5056A1A01AD6762100AB1276 /* NSString+strip */,
+			);
+			name = "UIKit Extensions";
+			sourceTree = "<group>";
+		};
+		507331F71ADE7B2900BBDFC2 /* ImageManager */ = {
+			isa = PBXGroup;
+			children = (
+				507331F41ADE7B1400BBDFC2 /* ImageManager.h */,
+				507331F51ADE7B1400BBDFC2 /* ImageManager.m */,
+			);
+			name = ImageManager;
 			sourceTree = "<group>";
 		};
 		507AA7311AD7D79300420DF7 /* PPOOutcome */ = {
@@ -630,6 +650,7 @@
 				50CC9B1A1AD43E2500B97F2E /* TimeManager */,
 				50AB93BD1AD55652005944F5 /* NetworkManager */,
 				507331E51ADE697000BBDFC2 /* ColourManager */,
+				507331F71ADE7B2900BBDFC2 /* ImageManager */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -853,6 +874,7 @@
 				50AB93BC1AD5564E005944F5 /* NetworkManager.m in Sources */,
 				50CC9B141AD43C3E00B97F2E /* FormDetails.m in Sources */,
 				5069F65B1ABC7DA30077FB10 /* AppDelegate.m in Sources */,
+				507331F61ADE7B1400BBDFC2 /* ImageManager.m in Sources */,
 				5069F6581ABC7DA30077FB10 /* main.m in Sources */,
 				5056A19F1AD6761D00AB1276 /* NSString+strip.m in Sources */,
 				50AB96D81AC1D38E00323E05 /* Reachability.m in Sources */,

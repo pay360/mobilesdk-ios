@@ -8,12 +8,28 @@
 
 #import "SubmitFormViewController.h"
 #import "NetworkManager.h"
+#import "ColourManager.h"
+
+typedef enum : NSUInteger {
+    LOADING_ANIMATION_STATE_STARTING,
+    LOADING_ANIMATION_STATE_IN_PROGRESS,
+    LOADING_ANIMATION_STATE_ENDING,
+    LOADING_ANIMATION_STATE_ENDED
+} LOADING_ANIMATION_STATE;
 
 @interface SubmitFormViewController ()
 @property (nonatomic, strong) PPOPaymentManager *paymentManager;
+@property (weak, nonatomic) IBOutlet UILabel *amountLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *paypointLogoImageView;
+@property (weak, nonatomic) IBOutlet UIView *blockerView;
+@property (weak, nonatomic) IBOutlet UILabel *blockerLabel;
+@property (nonatomic, copy) void(^completionBlock)(void);
 @end
 
-@implementation SubmitFormViewController
+@implementation SubmitFormViewController {
+    LOADING_ANIMATION_STATE _animationState;
+    BOOL _animationShouldEnd;
+}
 
 #pragma mark - Lazy Instantiation
 
@@ -32,6 +48,8 @@
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+    
+    _animationState = LOADING_ANIMATION_STATE_ENDED;
     
     PPOTransaction *transaction = [[PPOTransaction alloc] initWithCurrency:@"GBP"
                                                                 withAmount:@100
@@ -54,11 +72,30 @@
                                                               withCountryCode:nil];
     
     self.payment = [[PPOPayment alloc] initWithTransaction:transaction withCard:card withBillingAddress:address];
+    
+    self.amountLabel.text = [@"£ " stringByAppendingString:self.payment.transaction.amount.stringValue];
+    
+    UIColor *blue = [ColourManager ppBlue];
+    
+    self.amountLabel.textColor = blue;
+    
+    for (UILabel *titleLabel in self.titleLabels) {
+        titleLabel.textColor = blue;
+    }
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(blockerTapGestureRecognised:)];
+    [self.blockerView addGestureRecognizer:tap];
 }
 
 #pragma mark - Actions
 
 -(IBAction)payNowButtonPressed:(UIButton *)sender {
+    
+    [self pay:self.payment];
+    
+}
+
+-(void)pay:(PPOPayment*)payment {
     
     if ([[Reachability reachabilityForInternetConnection] currentReachabilityStatus] == NotReachable) {
         
@@ -66,20 +103,122 @@
         
     } else {
         
-        __weak typeof (self) weakSelf = self;
-        
-        [NetworkManager getCredentialsWithCompletion:^(PPOCredentials *credentials, NSURLResponse *response, NSError *error) {
+        if (_animationState == LOADING_ANIMATION_STATE_ENDED) {
             
-            if ([weakSelf handleError:error]) return;
+            [self beginAnimation];
             
-            [weakSelf.paymentManager setCredentials:credentials];
+            __weak typeof (self) weakSelf = self;
             
-            [weakSelf.paymentManager makePayment:weakSelf.payment withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome) {
-                [weakSelf handleOutcome:outcome];
+            [NetworkManager getCredentialsWithCompletion:^(PPOCredentials *credentials, NSURLResponse *response, NSError *error) {
+                
+                if ([weakSelf handleError:error]) return;
+                
+                [weakSelf.paymentManager setCredentials:credentials];
+                
+                [weakSelf.paymentManager makePayment:payment
+                                         withTimeOut:60.0f
+                                      withCompletion:^(PPOOutcome *outcome) {
+                                          [weakSelf handleOutcome:outcome];
+                                      }];
+                
             }];
+            
+        }
+        
+    }
+}
+
+-(void)beginAnimation {
+    
+    _animationState = LOADING_ANIMATION_STATE_STARTING;
+    
+    NSTimeInterval duration = 1.0;
+    
+    self.blockerView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0];
+    self.blockerView.hidden = NO;
+    
+    [UIView animateWithDuration:duration/6 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+        
+        self.blockerView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.4];
+        
+        self.paypointLogoImageView.transform = CGAffineTransformMakeScale(1.9, 1.9);
+        
+    } completion:^(BOOL finished) {
+        
+        _animationState = LOADING_ANIMATION_STATE_IN_PROGRESS;
+        
+        self.blockerLabel.hidden = NO;
+        
+        [UIView animateWithDuration:duration/2 animations:^{
+            self.blockerLabel.alpha = 1;
+        }];
+        
+        [UIView animateKeyframesWithDuration:duration/2 delay:0.0 options:UIViewKeyframeAnimationOptionRepeat animations:^{
+            
+            [UIView addKeyframeWithRelativeStartTime:0 relativeDuration:0.5 animations:^{
+                self.paypointLogoImageView.transform = CGAffineTransformMakeScale(2.2, 2.2);
+            }];
+            
+            [UIView addKeyframeWithRelativeStartTime:0.5 relativeDuration:0.5 animations:^{
+                self.paypointLogoImageView.transform = CGAffineTransformMakeScale(1.9, 1.9);
+            }];
+            
+        } completion:^(BOOL finished) {
+        }];
+        
+        if (_animationShouldEnd) {
+            [self endAnimationWithCompletion:self.completionBlock];
+            return;
+        }
+        
+    }];
+    
+}
+
+-(void)blockerTapGestureRecognised:(UITapGestureRecognizer*)gesture {
+    [self endAnimationWithCompletion:nil];
+}
+
+-(void)endAnimationWithCompletion:(void(^)(void))completion {
+    
+    if (_animationState == LOADING_ANIMATION_STATE_ENDED) {
+        if (completion) completion();
+        return;
+    }
+    
+    if (_animationState == LOADING_ANIMATION_STATE_IN_PROGRESS) {
+        
+        _animationState = LOADING_ANIMATION_STATE_ENDING;
+        
+        [self.paypointLogoImageView.layer removeAllAnimations];
+        
+        CALayer *currentLayer = self.paypointLogoImageView.layer.presentationLayer;
+        
+        self.paypointLogoImageView.layer.transform = currentLayer.transform;
+        
+        [UIView animateWithDuration:.6 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+            
+            self.blockerView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0];
+            self.blockerLabel.alpha = 0;
+            
+            self.paypointLogoImageView.transform = CGAffineTransformIdentity;
+            
+        } completion:^(BOOL finished) {
+            
+            self.blockerView.hidden = YES;
+            self.blockerLabel.hidden = YES;
+            
+            _animationState = LOADING_ANIMATION_STATE_ENDED;
+            
+            _animationShouldEnd = NO;
+            
+            if (completion) completion();
             
         }];
         
+    } else {
+        self.completionBlock = completion;
+        _animationShouldEnd = YES;
     }
     
 }
@@ -88,7 +227,9 @@
     if (outcome.error) {
         [self handleError:outcome.error];
     } else {
-        [self showAlertWithMessage:@"Payment Authorised"];
+        [self endAnimationWithCompletion:^{
+            [self showAlertWithMessage:@"Payment Authorised"];
+        }];
     }
 }
 
@@ -124,7 +265,11 @@
     }
     
     if (message) {
-        [self showAlertWithMessage:message];
+        
+        [self endAnimationWithCompletion:^{
+            [self showAlertWithMessage:message];
+        }];
+        
         return YES;
     }
     

@@ -9,6 +9,7 @@
 #import "FormViewController.h"
 #import "TimeManager.h"
 #import "ColourManager.h"
+#import "ImageManager.h"
 
 @interface FormViewController ()
 @property (nonatomic, strong) TimeManager *timeController;
@@ -62,12 +63,44 @@
         UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 12, 20)];
         textField.leftView = paddingView;
         textField.leftViewMode = UITextFieldViewModeAlways;
-        
     }
+    
+    [self stylePayNowButton:self.payNowButton];
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backgroundTapped:)];
     [self.view addGestureRecognizer:tap];
 
+}
+
+-(void)stylePayNowButton:(UIButton*)button {
+    
+    button.titleLabel.font = [UIFont systemFontOfSize:16.0f];
+    
+    UIColor *yellow = [ColourManager ppYellow];
+    UIColor *blue = [ColourManager ppBlue];
+    
+    CGSize size = button.bounds.size;
+    
+    UIImage *image;
+    
+    image = [ImageManager fillImgOfSize:size
+                              withColor:yellow];
+    
+    [button setBackgroundImage:image
+                      forState:UIControlStateNormal];
+    
+    [button setTitleColor:yellow
+                 forState:UIControlStateHighlighted];
+    
+    image = [ImageManager fillImgOfSize:size
+                              withColor:blue];
+    
+    [button setBackgroundImage:image
+                      forState:UIControlStateHighlighted];
+    
+    [button setTitleColor:blue
+                 forState:UIControlStateNormal];
+    
 }
 
 #pragma mark - Actions
@@ -82,7 +115,8 @@
     self.navigationItem.rightBarButtonItem = nil;
 }
 
-- (IBAction)textFieldEditingChanged:(UITextField *)sender forEvent:(UIEvent *)event {
+- (IBAction)textFieldEditingChanged:(UITextField *)sender
+                           forEvent:(UIEvent *)event {
     
     switch (sender.tag) {
         case TEXT_FIELD_TYPE_CARD_NUMBER: {
@@ -98,7 +132,6 @@
     }
     
 }
-
 
 #pragma mark - UITextField Four Digit Spacing
 
