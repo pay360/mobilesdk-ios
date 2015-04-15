@@ -9,8 +9,6 @@
 #import "SubmitFormViewController.h"
 #import "NetworkManager.h"
 
-#import <PaypointSDK/PaypointSDK.h>
-
 @interface SubmitFormViewController ()
 @property (nonatomic, strong) PPOPaymentManager *paymentManager;
 @end
@@ -32,6 +30,32 @@
     return value.integerValue;
 }
 
+-(void)viewDidLoad {
+    [super viewDidLoad];
+    
+    PPOTransaction *transaction = [[PPOTransaction alloc] initWithCurrency:@"GBP"
+                                                                withAmount:@100
+                                                           withDescription:@"A description"
+                                                     withMerchantReference:@"mer_txn_1234556"
+                                                                isDeferred:NO];
+    
+    PPOCreditCard *card = [[PPOCreditCard alloc] initWithPan:self.details.cardNumber
+                                                    withCode:self.details.cvv
+                                                  withExpiry:self.details.expiry
+                                                    withName:@"John Smith"];
+    
+    PPOBillingAddress *address = [[PPOBillingAddress alloc] initWithFirstLine:nil
+                                                               withSecondLine:nil
+                                                                withThirdLine:nil
+                                                               withFourthLine:nil
+                                                                     withCity:nil
+                                                                   withRegion:nil
+                                                                 withPostcode:nil
+                                                              withCountryCode:nil];
+    
+    self.payment = [[PPOPayment alloc] initWithTransaction:transaction withCard:card withBillingAddress:address];
+}
+
 #pragma mark - Actions
 
 -(IBAction)payNowButtonPressed:(UIButton *)sender {
@@ -42,28 +66,6 @@
         
     } else {
         
-        PPOTransaction *transaction = [[PPOTransaction alloc] initWithCurrency:@"GBP"
-                                                                    withAmount:@100
-                                                               withDescription:@"A description"
-                                                         withMerchantReference:@"mer_txn_1234556"
-                                                                    isDeferred:NO];
-        
-        PPOCreditCard *card = [[PPOCreditCard alloc] initWithPan:self.details.cardNumber
-                                                        withCode:self.details.cvv
-                                                      withExpiry:self.details.expiry
-                                                        withName:@"John Smith"];
-        
-        PPOBillingAddress *address = [[PPOBillingAddress alloc] initWithFirstLine:nil
-                                                                   withSecondLine:nil
-                                                                    withThirdLine:nil
-                                                                   withFourthLine:nil
-                                                                         withCity:nil
-                                                                       withRegion:nil
-                                                                     withPostcode:nil
-                                                                  withCountryCode:nil];
-        
-        PPOPayment *payment = [[PPOPayment alloc] initWithTransaction:transaction withCard:card withBillingAddress:address];
-        
         __weak typeof (self) weakSelf = self;
         
         [NetworkManager getCredentialsWithCompletion:^(PPOCredentials *credentials, NSURLResponse *response, NSError *error) {
@@ -72,7 +74,7 @@
             
             [weakSelf.paymentManager setCredentials:credentials];
             
-            [weakSelf.paymentManager makePayment:payment withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome) {
+            [weakSelf.paymentManager makePayment:weakSelf.payment withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome) {
                 [weakSelf handleOutcome:outcome];
             }];
             

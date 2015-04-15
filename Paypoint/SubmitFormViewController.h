@@ -8,6 +8,10 @@
 
 #import "FormViewController.h"
 
+#import <PaypointSDK/PaypointSDK.h>
+
 @interface SubmitFormViewController : FormViewController
+
+@property (nonatomic, strong) PPOPayment *payment;
 
 @end
