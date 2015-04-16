@@ -16,10 +16,7 @@
 #import "PPOPayment.h"
 
 @interface PPOPaymentManager () <NSURLSessionTaskDelegate>
-
-@property (nonatomic, strong) NSOperationQueue *payments;
 @property (nonatomic, readwrite) PPOEnvironment currentEnivonrment;
-
 @end
 
 @interface PPOEndpointManager : NSObject
@@ -38,15 +35,26 @@
     return self;
 }
 
+-(PPOOutcome*)validatePayment:(PPOPayment*)payment {
+    
+    PPOOutcome *outcome;
+    
+    NSError *validation = [self validateTransaction:payment.transaction
+                                           withCard:payment.creditCard];
+    
+    if (validation) {
+        outcome = [PPOOutcomeManager handleResponse:nil
+                                          withError:validation];
+    }
+    
+    return outcome;
+}
+
 -(void)makePayment:(PPOPayment*)payment withTimeOut:(CGFloat)timeout withCompletion:(void(^)(PPOOutcome *outcome))completion {
     
     __block PPOOutcome *outcome;
     
-    NSError *validation = [self validateTransaction:payment.transaction withCard:payment.creditCard];
-    
-    if (validation) {
-        outcome = [PPOOutcomeManager handleResponse:nil withError:validation];
-    }
+    outcome = [self validatePayment:payment];
     
     if (outcome) {
         completion(outcome);
@@ -266,11 +274,11 @@
 +(NSURL*)baseURL:(PPOEnvironment)environment {
     
     switch (environment) {
-        case PPOEnvironmentSimulatorStaging:
+        case PPOEnvironmentStaging:
             return [NSURL URLWithString:@"http://localhost:5000/mobileapi"];
             break;
             
-        case PPOEnvironmentDeviceStaging:
+        case PPOEnvironmentProduction:
             return [NSURL URLWithString:@"http://192.168.3.192:5000/mobileapi"];
             break;
             

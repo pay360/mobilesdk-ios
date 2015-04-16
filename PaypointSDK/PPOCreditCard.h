@@ -14,7 +14,7 @@
 @property (nonatomic, strong, readonly) NSString *expiry;
 @property (nonatomic, strong, readonly) NSString *cardHolderName;
 
--(instancetype)initWithPan:(NSString*)pan withCode:(NSString*)cvv withExpiry:(NSString*)date withName:(NSString*)cardholder; //Designated Initialiser
+-(instancetype)initWithPan:(NSString*)pan withSecurityCodeCode:(NSString*)cvv withExpiry:(NSString*)date withCardholderName:(NSString*)cardholder; //Designated Initialiser
 
 -(NSDictionary*)jsonObjectRepresentation;
 

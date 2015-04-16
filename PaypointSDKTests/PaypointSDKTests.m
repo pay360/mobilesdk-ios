@@ -380,9 +380,11 @@
     
     [self.paymentManager makePayment:payment withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome) {
         
-        if ([outcome.error.domain isEqualToString:PPOPaypointSDKErrorDomain] && outcome.error.code == PPOErrorServerFailure) {
+        if ([outcome.error.domain isEqualToString:PPOPaypointSDKErrorDomain] &&
+            outcome.error.code == PPOErrorServerFailure) {
             [expectation fulfill];
         }
+        
     }];
     
     [self waitForExpectationsWithTimeout:60.0f handler:^(NSError *error) {

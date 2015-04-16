@@ -17,21 +17,21 @@
 
 @implementation PPOCreditCard
 
--(instancetype)initWithPan:(NSString*)pan withCode:(NSString*)cvv withExpiry:(NSString*)expiry withName:(NSString*)cardholder {
+-(instancetype)initWithPan:(NSString*)pan withSecurityCodeCode:(NSString*)cvv withExpiry:(NSString*)date withCardholderName:(NSString*)cardholder {
     self = [super init];
     if (self) {
         _pan = pan;
         _cvv = cvv;
-        _expiry = expiry;
+        _expiry = date;
         _cardHolderName = cardholder;
     }
     return self;
 }
 
 -(NSDictionary*)jsonObjectRepresentation {
-    id pan = (self.pan) ?: [NSNull null];
-    id cvv = (self.cvv) ?: [NSNull null];
-    id expiry = (self.expiry) ? [self cleanExpiry:self.expiry] : [NSNull null];
+    id pan = ([self cleanString:self.pan]) ?: [NSNull null];
+    id cvv = ([self cleanString:self.cvv]) ?: [NSNull null];
+    id expiry = (self.expiry) ? [self cleanString:self.expiry] : [NSNull null];
     id cardholder = (self.cardHolderName) ?: [NSNull null];
     
     return @{
@@ -42,8 +42,8 @@
              };
 }
 
--(NSString*)cleanExpiry:(NSString*)expiry {
-    return [expiry stringByReplacingOccurrencesOfString:@" " withString:@""];
+-(NSString*)cleanString:(NSString*)string {
+    return [string stringByReplacingOccurrencesOfString:@" " withString:@""];
 }
 
 @end

@@ -70,12 +70,30 @@ typedef enum : NSUInteger {
 
 -(IBAction)payNowButtonPressed:(UIButton *)sender {
     
-    PPOCreditCard *card = [[PPOCreditCard alloc] initWithPan:self.details.cardNumber
-                                                    withCode:self.details.cvv
-                                                  withExpiry:self.details.expiry
-                                                    withName:@"John Smith"];
+    FormDetails *form = self.details;
+    
+    PPOCreditCard *card = [[PPOCreditCard alloc] initWithPan:form.cardNumber
+                                        withSecurityCodeCode:form.cvv
+                                                  withExpiry:form.expiry
+                                          withCardholderName:@"Dai Jones"];
     
     self.payment.creditCard = card;
+    
+    PPOOutcome *outcome = [self.paymentManager validatePayment:self.payment];
+    
+    if (outcome) {
+        
+        [self handleOutcome:outcome];
+        
+    } else {
+        
+        [self attemptPayment];
+        
+    }
+    
+}
+
+-(void)attemptPayment {
     
     if ([[Reachability reachabilityForInternetConnection] currentReachabilityStatus] == NotReachable) {
         
@@ -109,7 +127,7 @@ typedef enum : NSUInteger {
     
 }
 
--(void)beginAnimation {
+-(void)beginAnimation{
     
     _animationState = LOADING_ANIMATION_STATE_STARTING;
     

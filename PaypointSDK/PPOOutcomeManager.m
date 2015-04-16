@@ -16,7 +16,7 @@
     NSError *parsingError;
     id json;
     
-    if (responseData) {
+    if (responseData.length > 0) {
         json = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingAllowFragments error:&parsingError];
     }
     

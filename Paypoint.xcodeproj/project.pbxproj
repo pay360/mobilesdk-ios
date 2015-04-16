@@ -31,6 +31,17 @@
 		501B7CC01AC40B3000F44193 /* PPOWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 501B7CBD1AC40B3000F44193 /* PPOWebViewController.m */; };
 		501B7CC31AC40B5600F44193 /* PPOWebViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 501B7CBE1AC40B3000F44193 /* PPOWebViewController.xib */; };
 		501C8E871AC03F7000CBA25A /* PaypointSDKBundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 501C8E761AC03B9D00CBA25A /* PaypointSDKBundle.bundle */; };
+		501DFBF11ADFF048004C4AE3 /* Clouds.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 501DFBF01ADFF048004C4AE3 /* Clouds.mp4 */; };
+		501DFBF31ADFF0B1004C4AE3 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 501DFBF21ADFF0B1004C4AE3 /* AVFoundation.framework */; };
+		501DFBF61ADFF0CF004C4AE3 /* AVPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 501DFBF51ADFF0CF004C4AE3 /* AVPlayerView.m */; };
+		501DFBFB1ADFF156004C4AE3 /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 501DFBFA1ADFF156004C4AE3 /* WelcomeViewController.m */; };
+		501DFC041AE00A79004C4AE3 /* FOUCONBD.otf in Resources */ = {isa = PBXBuildFile; fileRef = 501DFBFD1AE00A79004C4AE3 /* FOUCONBD.otf */; };
+		501DFC051AE00A79004C4AE3 /* FOUCONDM.otf in Resources */ = {isa = PBXBuildFile; fileRef = 501DFBFE1AE00A79004C4AE3 /* FOUCONDM.otf */; };
+		501DFC061AE00A79004C4AE3 /* FOUCONEB.otf in Resources */ = {isa = PBXBuildFile; fileRef = 501DFBFF1AE00A79004C4AE3 /* FOUCONEB.otf */; };
+		501DFC071AE00A79004C4AE3 /* FOUCONMD.otf in Resources */ = {isa = PBXBuildFile; fileRef = 501DFC001AE00A79004C4AE3 /* FOUCONMD.otf */; };
+		501DFC081AE00A79004C4AE3 /* FOUCONRG.otf in Resources */ = {isa = PBXBuildFile; fileRef = 501DFC011AE00A79004C4AE3 /* FOUCONRG.otf */; };
+		501DFC091AE00A79004C4AE3 /* FOUCONRI.otf in Resources */ = {isa = PBXBuildFile; fileRef = 501DFC021AE00A79004C4AE3 /* FOUCONRI.otf */; };
+		501DFC0A1AE00A79004C4AE3 /* FoundConExtBol.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 501DFC031AE00A79004C4AE3 /* FoundConExtBol.ttf */; };
 		5056A19F1AD6761D00AB1276 /* NSString+strip.m in Sources */ = {isa = PBXBuildFile; fileRef = 5056A19E1AD6761D00AB1276 /* NSString+strip.m */; };
 		5056A1A61AD68B1400AB1276 /* PPOSDKMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 5056A1A51AD68B1400AB1276 /* PPOSDKMacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5056A1A81AD68B2B00AB1276 /* PPOError.h in Headers */ = {isa = PBXBuildFile; fileRef = 5056A1A71AD68B2B00AB1276 /* PPOError.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -44,8 +55,6 @@
 		5069F6661ABC7DA30077FB10 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5069F6641ABC7DA30077FB10 /* LaunchScreen.xib */; };
 		5069F6851ABC7EBA0077FB10 /* PaypointSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 5069F6841ABC7EBA0077FB10 /* PaypointSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5069F6941ABC7EBA0077FB10 /* PaypointSDKTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5069F6931ABC7EBA0077FB10 /* PaypointSDKTests.m */; };
-		507331E01ADE5FF100BBDFC2 /* PaypointSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50D48F0A1ADC140C006BE4E8 /* PaypointSDK.framework */; };
-		507331E11ADE5FF100BBDFC2 /* PaypointSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 50D48F0A1ADC140C006BE4E8 /* PaypointSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		507331E41ADE696900BBDFC2 /* ColourManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 507331E31ADE696900BBDFC2 /* ColourManager.m */; };
 		507331E81ADE6A7600BBDFC2 /* NavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 507331E71ADE6A7600BBDFC2 /* NavigationViewController.m */; };
 		507331EC1ADE72E700BBDFC2 /* PPOPayment.h in Headers */ = {isa = PBXBuildFile; fileRef = 507331EA1ADE72E700BBDFC2 /* PPOPayment.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -65,6 +74,7 @@
 		50AB93B81AD551AD005944F5 /* SubmitFormViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50AB93B71AD551AD005944F5 /* SubmitFormViewController.m */; };
 		50AB93BC1AD5564E005944F5 /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50AB93BB1AD5564E005944F5 /* NetworkManager.m */; };
 		50AB96D81AC1D38E00323E05 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 50AB96D71AC1D38E00323E05 /* Reachability.m */; };
+		50B10BBC1AE0220C000B8C26 /* PaypointSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50D48F0A1ADC140C006BE4E8 /* PaypointSDK.framework */; };
 		50CC9AF71AD41ED300B97F2E /* PPOPaymentManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 50CC9AF51AD41ED300B97F2E /* PPOPaymentManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		50CC9AF81AD41ED300B97F2E /* PPOPaymentManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CC9AF61AD41ED300B97F2E /* PPOPaymentManager.m */; };
 		50CC9AFC1AD4237F00B97F2E /* PPOCreditCard.h in Headers */ = {isa = PBXBuildFile; fileRef = 50CC9AFA1AD4237F00B97F2E /* PPOCreditCard.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -111,20 +121,6 @@
 		};
 /* End PBXContainerItemProxy section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		505754971AD80339007D7970 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				507331E11ADE5FF100BBDFC2 /* PaypointSDK.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
 		50046AC61AC2FAB000F23D05 /* PPOReachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOReachability.h; sourceTree = "<group>"; };
 		50046AC71AC2FAB000F23D05 /* PPOReachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOReachability.m; sourceTree = "<group>"; };
@@ -137,6 +133,19 @@
 		501C8E761AC03B9D00CBA25A /* PaypointSDKBundle.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PaypointSDKBundle.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		501C8E791AC03B9D00CBA25A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		501D5EFE1ACD49A000E61680 /* UniversalFramework.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = UniversalFramework.sh; path = ../Lipo/UniversalFramework.sh; sourceTree = "<group>"; };
+		501DFBF01ADFF048004C4AE3 /* Clouds.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Clouds.mp4; sourceTree = "<group>"; };
+		501DFBF21ADFF0B1004C4AE3 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		501DFBF41ADFF0CF004C4AE3 /* AVPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVPlayerView.h; sourceTree = "<group>"; };
+		501DFBF51ADFF0CF004C4AE3 /* AVPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AVPlayerView.m; sourceTree = "<group>"; };
+		501DFBF91ADFF156004C4AE3 /* WelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomeViewController.h; sourceTree = "<group>"; };
+		501DFBFA1ADFF156004C4AE3 /* WelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WelcomeViewController.m; sourceTree = "<group>"; };
+		501DFBFD1AE00A79004C4AE3 /* FOUCONBD.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FOUCONBD.otf; sourceTree = "<group>"; };
+		501DFBFE1AE00A79004C4AE3 /* FOUCONDM.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FOUCONDM.otf; sourceTree = "<group>"; };
+		501DFBFF1AE00A79004C4AE3 /* FOUCONEB.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FOUCONEB.otf; sourceTree = "<group>"; };
+		501DFC001AE00A79004C4AE3 /* FOUCONMD.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FOUCONMD.otf; sourceTree = "<group>"; };
+		501DFC011AE00A79004C4AE3 /* FOUCONRG.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FOUCONRG.otf; sourceTree = "<group>"; };
+		501DFC021AE00A79004C4AE3 /* FOUCONRI.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FOUCONRI.otf; sourceTree = "<group>"; };
+		501DFC031AE00A79004C4AE3 /* FoundConExtBol.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FoundConExtBol.ttf; sourceTree = "<group>"; };
 		5056A19D1AD6761D00AB1276 /* NSString+strip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+strip.h"; sourceTree = "<group>"; };
 		5056A19E1AD6761D00AB1276 /* NSString+strip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+strip.m"; sourceTree = "<group>"; };
 		5056A1A51AD68B1400AB1276 /* PPOSDKMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOSDKMacros.h; sourceTree = "<group>"; };
@@ -213,7 +222,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				507331E01ADE5FF100BBDFC2 /* PaypointSDK.framework in Frameworks */,
+				501DFBF31ADFF0B1004C4AE3 /* AVFoundation.framework in Frameworks */,
+				50B10BBC1AE0220C000B8C26 /* PaypointSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -265,6 +275,7 @@
 			isa = PBXGroup;
 			children = (
 				507331E91ADE6A7900BBDFC2 /* NavigationViewController */,
+				501DFBFC1ADFF159004C4AE3 /* WelcomeViewController */,
 				50CC9B111AD43B7A00B97F2E /* FormViewController */,
 				50AB93B91AD551B0005944F5 /* SubmitFormViewController */,
 			);
@@ -339,6 +350,32 @@
 			path = PaypointSDK;
 			sourceTree = "<group>";
 		};
+		501DFBF71ADFF0D4004C4AE3 /* AVPlayerView */ = {
+			isa = PBXGroup;
+			children = (
+				501DFBF41ADFF0CF004C4AE3 /* AVPlayerView.h */,
+				501DFBF51ADFF0CF004C4AE3 /* AVPlayerView.m */,
+			);
+			name = AVPlayerView;
+			sourceTree = "<group>";
+		};
+		501DFBF81ADFF0D9004C4AE3 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				501DFBF71ADFF0D4004C4AE3 /* AVPlayerView */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		501DFBFC1ADFF159004C4AE3 /* WelcomeViewController */ = {
+			isa = PBXGroup;
+			children = (
+				501DFBF91ADFF156004C4AE3 /* WelcomeViewController.h */,
+				501DFBFA1ADFF156004C4AE3 /* WelcomeViewController.m */,
+			);
+			name = WelcomeViewController;
+			sourceTree = "<group>";
+		};
 		5056A1A01AD6762100AB1276 /* NSString+strip */ = {
 			isa = PBXGroup;
 			children = (
@@ -369,6 +406,7 @@
 		5069F6491ABC7DA30077FB10 = {
 			isa = PBXGroup;
 			children = (
+				501DFBF21ADFF0B1004C4AE3 /* AVFoundation.framework */,
 				5069F6541ABC7DA30077FB10 /* Paypoint */,
 				5069F6811ABC7EBA0077FB10 /* PaypointSDK */,
 				5069F6901ABC7EBA0077FB10 /* PaypointSDKTests */,
@@ -396,6 +434,7 @@
 				501C8E531AC0185F00CBA25A /* AppDelegate */,
 				50AB96DA1AC1D3A200323E05 /* ThirdParty */,
 				50CC9B161AD43C4700B97F2E /* Model */,
+				501DFBF81ADFF0D9004C4AE3 /* Views */,
 				501C8E581AC018F600CBA25A /* ViewControllers */,
 				5069F6551ABC7DA30077FB10 /* Supporting Files */,
 				50CC9B1B1AD43E2900B97F2E /* Managers */,
@@ -407,6 +446,14 @@
 		5069F6551ABC7DA30077FB10 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				501DFBFD1AE00A79004C4AE3 /* FOUCONBD.otf */,
+				501DFBFE1AE00A79004C4AE3 /* FOUCONDM.otf */,
+				501DFBFF1AE00A79004C4AE3 /* FOUCONEB.otf */,
+				501DFC001AE00A79004C4AE3 /* FOUCONMD.otf */,
+				501DFC011AE00A79004C4AE3 /* FOUCONRG.otf */,
+				501DFC021AE00A79004C4AE3 /* FOUCONRI.otf */,
+				501DFC031AE00A79004C4AE3 /* FoundConExtBol.ttf */,
+				501DFBF01ADFF048004C4AE3 /* Clouds.mp4 */,
 				5069F6621ABC7DA30077FB10 /* Images.xcassets */,
 				5069F6641ABC7DA30077FB10 /* LaunchScreen.xib */,
 				5069F6561ABC7DA30077FB10 /* Info.plist */,
@@ -736,7 +783,6 @@
 				5069F64E1ABC7DA30077FB10 /* Sources */,
 				5069F64F1ABC7DA30077FB10 /* Frameworks */,
 				5069F6501ABC7DA30077FB10 /* Resources */,
-				505754971AD80339007D7970 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -848,8 +894,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				5069F6611ABC7DA30077FB10 /* Main.storyboard in Resources */,
+				501DFC061AE00A79004C4AE3 /* FOUCONEB.otf in Resources */,
+				501DFC0A1AE00A79004C4AE3 /* FoundConExtBol.ttf in Resources */,
+				501DFC041AE00A79004C4AE3 /* FOUCONBD.otf in Resources */,
 				5069F6661ABC7DA30077FB10 /* LaunchScreen.xib in Resources */,
+				501DFC081AE00A79004C4AE3 /* FOUCONRG.otf in Resources */,
 				5069F6631ABC7DA30077FB10 /* Images.xcassets in Resources */,
+				501DFC091AE00A79004C4AE3 /* FOUCONRI.otf in Resources */,
+				501DFC051AE00A79004C4AE3 /* FOUCONDM.otf in Resources */,
+				501DFC071AE00A79004C4AE3 /* FOUCONMD.otf in Resources */,
+				501DFBF11ADFF048004C4AE3 /* Clouds.mp4 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -903,6 +957,7 @@
 				50CC9B141AD43C3E00B97F2E /* FormDetails.m in Sources */,
 				5069F65B1ABC7DA30077FB10 /* AppDelegate.m in Sources */,
 				507331F61ADE7B1400BBDFC2 /* ImageManager.m in Sources */,
+				501DFBF61ADFF0CF004C4AE3 /* AVPlayerView.m in Sources */,
 				507331FA1ADEB67100BBDFC2 /* EnvironmentManager.m in Sources */,
 				5069F6581ABC7DA30077FB10 /* main.m in Sources */,
 				5056A19F1AD6761D00AB1276 /* NSString+strip.m in Sources */,
@@ -911,6 +966,7 @@
 				507331E41ADE696900BBDFC2 /* ColourManager.m in Sources */,
 				50CC9B191AD43E2200B97F2E /* TimeManager.m in Sources */,
 				50CC9B101AD43B7600B97F2E /* FormViewController.m in Sources */,
+				501DFBFB1ADFF156004C4AE3 /* WelcomeViewController.m in Sources */,
 				507331FE1ADEB7EF00BBDFC2 /* EndpointManager.m in Sources */,
 				507331E81ADE6A7600BBDFC2 /* NavigationViewController.m in Sources */,
 			);

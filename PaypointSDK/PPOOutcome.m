@@ -47,41 +47,43 @@
     
     if (self) {
         
-        _error = error;
-        
-        id value;
-        
-        value = [data objectForKey:@"outcome"];
-        
-        [self parseOutcome:value];
-        
-        value = [data objectForKey:@"transaction"];
-        
-        [self parseTransaction:value];
-        
-        value = [data objectForKey:@"paymentMethod"];
-        
-        if ([value isKindOfClass:[NSDictionary class]]) {
+        if (!error && (!data || data.allKeys.count == 0)) {
             
-            value = [value objectForKey:@"card"];
+            _error = [NSError errorWithDomain:[PPOErrorManager errorDomainForReasonCode:_reasonCode.integerValue]
+                                         code:[PPOErrorManager errorCodeForReasonCode:_reasonCode.integerValue]
+                                     userInfo:nil];
             
-            [self parseCard:value];
-        }
-        
-        if (_localisedReason && _reasonCode.integerValue > 0) {
+        } else if (data) {
             
-            NSDictionary *userInfo;
-            NSString *errorDomain;
-            PPOErrorCode code;
+            id value;
             
-            userInfo = @{NSLocalizedFailureReasonErrorKey: _localisedReason};
+            value = [data objectForKey:@"outcome"];
             
-            errorDomain = [PPOErrorManager errorDomainForReasonCode:_reasonCode.integerValue];
+            [self parseOutcome:value];
             
-            code = [PPOErrorManager errorCodeForReasonCode:_reasonCode.integerValue];
+            value = [data objectForKey:@"transaction"];
             
-            // This error supercedes any error passed into this method
-            _error = [NSError errorWithDomain:errorDomain code:code userInfo:userInfo];
+            [self parseTransaction:value];
+            
+            value = [data objectForKey:@"paymentMethod"];
+            
+            if ([value isKindOfClass:[NSDictionary class]]) {
+                
+                value = [value objectForKey:@"card"];
+                
+                [self parseCard:value];
+            }
+            
+            if (_reasonCode && _reasonCode.integerValue > 0) {
+                _error = [NSError errorWithDomain:[PPOErrorManager errorDomainForReasonCode:_reasonCode.integerValue]
+                                             code:[PPOErrorManager errorCodeForReasonCode:_reasonCode.integerValue]
+                                         userInfo:nil];
+            }
+            
+        } else {
+            
+            _error = error;
+            
         }
         
     }
@@ -107,7 +109,7 @@
     id value;
     if ([transaction isKindOfClass:[NSDictionary class]]) {
         value = [transaction objectForKey:@"amount"];
-        if ([value isKindOfClass:[NSString class]]) {
+        if ([value isKindOfClass:[NSNumber class]]) {
             self.amount = value;
         }
         value = [transaction objectForKey:@"currency"];

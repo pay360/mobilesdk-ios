@@ -7,6 +7,18 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <mutableArray key="FOUCONDM.otf">
+            <string>FoundryContext-Demi</string>
+        </mutableArray>
+        <mutableArray key="FOUCONRG.otf">
+            <string>FoundryContext-Regular</string>
+            <string>FoundryContext-Regular</string>
+            <string>FoundryContext-Regular</string>
+            <string>FoundryContext-Regular</string>
+            <string>FoundryContext-Regular</string>
+        </mutableArray>
+    </customFonts>
     <scenes>
         <!--Navigation View Controller-->
         <scene sceneID="aaz-KA-aFa">
@@ -19,7 +31,7 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="Hvy-su-ZqX" kind="relationship" relationship="rootViewController" id="kBx-Jx-Gqx"/>
+                        <segue destination="Fv3-mh-BaG" kind="relationship" relationship="rootViewController" id="f2I-JS-Cw0"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wmz-gp-32V" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -41,9 +53,9 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="stx-RV-E4F" userLabel="Container">
                                 <rect key="frame" x="16" y="84" width="568" height="166"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Card Number" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xnc-dm-aZD" userLabel="Card Number">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Card Number" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xnc-dm-aZD" userLabel="Card Number">
                                         <rect key="frame" x="0.0" y="0.0" width="104" height="21"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <fontDescription key="fontDescription" name="FoundryContext-Regular" family="Foundry Context" pointSize="17"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -61,7 +73,7 @@
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Expiry" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fWw-0D-Zu5" userLabel="Expiry">
                                         <rect key="frame" x="0.0" y="93" width="48" height="21"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <fontDescription key="fontDescription" name="FoundryContext-Regular" family="Foundry Context" pointSize="17"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -74,9 +86,9 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="numberPad" keyboardAppearance="alert" returnKeyType="done"/>
                                     </textField>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CVV" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jfd-IT-Zbp" userLabel="CVV">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="CVV" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jfd-IT-Zbp" userLabel="CVV">
                                         <rect key="frame" x="178" y="93" width="34" height="21"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <fontDescription key="fontDescription" name="FoundryContext-Regular" family="Foundry Context" pointSize="17"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -117,6 +129,7 @@
                                     <constraint firstAttribute="width" constant="132" id="6oy-ov-Mp4"/>
                                     <constraint firstAttribute="height" constant="44" id="KCW-BC-6rD"/>
                                 </constraints>
+                                <fontDescription key="fontDescription" name="FoundryContext-Regular" family="Foundry Context" pointSize="18"/>
                                 <state key="normal" title="PAY NOW">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -124,13 +137,13 @@
                                     <action selector="payNowButtonPressed:" destination="Hvy-su-ZqX" eventType="touchUpInside" id="ZXE-oP-4aK"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="£ 0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KAs-Dh-phl">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="£ 0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KAs-Dh-phl">
                                 <rect key="frame" x="560" y="495" width="24" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <fontDescription key="fontDescription" name="FoundryContext-Regular" family="Foundry Context" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dt5-p4-akc">
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dt5-p4-akc" userLabel="LoadingContainer">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <subviews>
                                     <label hidden="YES" opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Processing" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="36q-9B-nvh">
@@ -188,7 +201,94 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0n4-LU-R0x" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="990" y="-426"/>
+            <point key="canvasLocation" x="1710" y="-426"/>
+        </scene>
+        <!--Welcome View Controller-->
+        <scene sceneID="Uga-xf-V1z">
+            <objects>
+                <viewController id="Fv3-mh-BaG" customClass="WelcomeViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="NH2-Mu-Aad"/>
+                        <viewControllerLayoutGuide type="bottom" id="OCo-RS-oti"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="nBK-M3-bdp">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fj5-aO-IwY" customClass="AVPlayerView">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Sr6-Wy-XeS" userLabel="Container">
+                                        <rect key="frame" x="175" y="104" width="250" height="150"/>
+                                        <subviews>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Paypoint_logo" translatesAutoresizingMaskIntoConstraints="NO" id="cFW-3y-6r3">
+                                                <rect key="frame" x="0.0" y="0.0" width="105" height="150"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="150" id="APt-CJ-gMc"/>
+                                                    <constraint firstAttribute="width" secondItem="cFW-3y-6r3" secondAttribute="height" multiplier="7:10" id="PML-C1-GOO"/>
+                                                </constraints>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="PayPoint" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oAu-8w-IWe">
+                                                <rect key="frame" x="113" y="33" width="137" height="36"/>
+                                                <fontDescription key="fontDescription" name="FoundryContext-Demi" family="Foundry Context" pointSize="32"/>
+                                                <color key="textColor" red="0.1333333333" green="0.22195129080000001" blue="0.52703445474999999" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstItem="oAu-8w-IWe" firstAttribute="leading" secondItem="cFW-3y-6r3" secondAttribute="trailing" constant="8" id="Gf8-0H-CaT"/>
+                                            <constraint firstItem="oAu-8w-IWe" firstAttribute="centerY" secondItem="cFW-3y-6r3" secondAttribute="centerY" constant="-24" id="K3g-6V-3RT"/>
+                                            <constraint firstAttribute="bottom" secondItem="cFW-3y-6r3" secondAttribute="bottom" id="YJm-zY-9ag"/>
+                                            <constraint firstItem="cFW-3y-6r3" firstAttribute="top" secondItem="Sr6-Wy-XeS" secondAttribute="top" id="egH-zP-3rQ"/>
+                                            <constraint firstAttribute="trailing" secondItem="oAu-8w-IWe" secondAttribute="trailing" id="fVF-Sj-Wui"/>
+                                            <constraint firstItem="cFW-3y-6r3" firstAttribute="leading" secondItem="Sr6-Wy-XeS" secondAttribute="leading" id="jLr-xi-XLz"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Sr6-Wy-XeS" secondAttribute="trailing" constant="12" id="Rnx-cI-xdB"/>
+                                    <constraint firstItem="Sr6-Wy-XeS" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="fj5-aO-IwY" secondAttribute="leading" constant="12" id="h2e-sk-R3q"/>
+                                    <constraint firstAttribute="centerX" secondItem="Sr6-Wy-XeS" secondAttribute="centerX" priority="750" id="hDc-Tl-kNC"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bzD-IG-BM2" userLabel="Splash">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" red="0.18039215689999999" green="0.1450980392" blue="0.33725490200000002" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="bzD-IG-BM2" firstAttribute="top" secondItem="nBK-M3-bdp" secondAttribute="top" id="DcO-Wy-EiU"/>
+                            <constraint firstItem="fj5-aO-IwY" firstAttribute="leading" secondItem="nBK-M3-bdp" secondAttribute="leading" id="Fdv-l9-RDK"/>
+                            <constraint firstItem="OCo-RS-oti" firstAttribute="top" secondItem="bzD-IG-BM2" secondAttribute="bottom" id="PYf-ta-Dod"/>
+                            <constraint firstAttribute="trailing" secondItem="fj5-aO-IwY" secondAttribute="trailing" id="bll-D8-HY7"/>
+                            <constraint firstItem="Sr6-Wy-XeS" firstAttribute="top" secondItem="NH2-Mu-Aad" secondAttribute="bottom" constant="40" id="brJ-bW-KwR"/>
+                            <constraint firstItem="OCo-RS-oti" firstAttribute="top" secondItem="fj5-aO-IwY" secondAttribute="bottom" id="tc5-3f-UTm"/>
+                            <constraint firstItem="fj5-aO-IwY" firstAttribute="top" secondItem="nBK-M3-bdp" secondAttribute="top" id="vq4-C6-T0o"/>
+                            <constraint firstItem="bzD-IG-BM2" firstAttribute="leading" secondItem="nBK-M3-bdp" secondAttribute="leading" id="yOp-5H-Jnw"/>
+                            <constraint firstAttribute="trailing" secondItem="bzD-IG-BM2" secondAttribute="trailing" id="zvC-AR-Qx5"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="ovh-yy-ZcZ">
+                        <barButtonItem key="rightBarButtonItem" title="Demo" id="eEZ-OA-Rec">
+                            <connections>
+                                <segue destination="Hvy-su-ZqX" kind="show" id="WIn-AC-HwW"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="logoContainer" destination="Sr6-Wy-XeS" id="xLh-mM-V9a"/>
+                        <outlet property="paypointLabel" destination="oAu-8w-IWe" id="DMg-gY-kgC"/>
+                        <outlet property="paypointLogo" destination="cFW-3y-6r3" id="OSC-sT-gwM"/>
+                        <outlet property="playerView" destination="fj5-aO-IwY" id="I4x-0Z-TCl"/>
+                        <outlet property="splashView" destination="bzD-IG-BM2" id="cK4-Kk-mRz"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="yMV-Fz-3aY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1009" y="-426"/>
         </scene>
     </scenes>
     <resources>
