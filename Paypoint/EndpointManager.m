@@ -18,7 +18,7 @@
             break;
             
         case PPOEnvironmentDeviceStaging:
-            return [NSURL URLWithString:@"http://192.168.3.178:5001"];
+            return [NSURL URLWithString:@"http://192.168.3.192:5001"];
             break;
             
         default:

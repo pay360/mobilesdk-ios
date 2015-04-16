@@ -271,7 +271,7 @@
             break;
             
         case PPOEnvironmentDeviceStaging:
-            return [NSURL URLWithString:@"http://192.168.3.178:5000/mobileapi"];
+            return [NSURL URLWithString:@"http://192.168.3.192:5000/mobileapi"];
             break;
             
         default:
