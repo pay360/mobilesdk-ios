@@ -230,6 +230,7 @@
     PPOPayment *payment = [[PPOPayment alloc] initWithTransaction:self.transaction withCard:self.card withBillingAddress:self.address];
     
     [self.paymentManager makePayment:payment withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome) {
+        
         if ([outcome.error.domain isEqualToString:PPOPaypointSDKErrorDomain] && outcome.error.code == PPOErrorClientTokenExpired) {
             [expectation fulfill];
         }
@@ -266,6 +267,7 @@
     PPOPayment *payment = [[PPOPayment alloc] initWithTransaction:self.transaction withCard:self.card withBillingAddress:self.address];
     
     [self.paymentManager makePayment:payment withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome) {
+        
         if ([outcome.error.domain isEqualToString:PPOPaypointSDKErrorDomain] && outcome.error.code == PPOErrorUnauthorisedRequest) {
             [expectation fulfill];
         }
@@ -304,6 +306,7 @@
     PPOPayment *payment = [[PPOPayment alloc] initWithTransaction:self.transaction withCard:self.card withBillingAddress:self.address];
     
     [self.paymentManager makePayment:payment withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome) {
+        
         if ([outcome.error.domain isEqualToString:PPOPaypointSDKErrorDomain] && outcome.error.code == PPOErrorTransactionProcessingFailed) {
             [expectation fulfill];
         }
@@ -339,13 +342,13 @@
     
     PPOPayment *payment = [[PPOPayment alloc] initWithTransaction:self.transaction withCard:self.card withBillingAddress:self.address];
     
-    [self.paymentManager makePayment:payment withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome) {
+    [self.paymentManager makePayment:payment withTimeOut:1.0 withCompletion:^(PPOOutcome *outcome) {
         if ([outcome.error.domain isEqualToString:@"NSURLErrorDomain"] && outcome.error.code == kCFURLErrorTimedOut) {
             [expectation fulfill];
         }
     }];
     
-    [self waitForExpectationsWithTimeout:61.5 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:2.0 handler:^(NSError *error) {
         
         if(error) {
             XCTFail(@"Simple payment failed with error: %@", error);
@@ -376,6 +379,7 @@
     PPOPayment *payment = [[PPOPayment alloc] initWithTransaction:self.transaction withCard:self.card withBillingAddress:self.address];
     
     [self.paymentManager makePayment:payment withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome) {
+        
         if ([outcome.error.domain isEqualToString:PPOPaypointSDKErrorDomain] && outcome.error.code == PPOErrorServerFailure) {
             [expectation fulfill];
         }
