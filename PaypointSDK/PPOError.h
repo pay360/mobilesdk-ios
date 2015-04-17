@@ -68,6 +68,9 @@ typedef NS_ENUM(NSInteger, PPOErrorCode) {
     PPOErrorInstallationIDInvalid,
     
     /* The base URL configured within the payment manager, is invalid*/
-    PPOErrorSuppliedBaseURLInvalid
+    PPOErrorSuppliedBaseURLInvalid,
+    
+    /* Credentials have not been set in the payment manager*/
+    PPOErrorCredentialsNotFound
     
 };

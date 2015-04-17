@@ -107,6 +107,11 @@
 
 -(PPOOutcome*)validateCredentials:(PPOCredentials*)credentials {
     
+    if (!credentials) {
+        return [PPOOutcomeManager handleResponse:nil
+                                       withError:[PPOErrorManager errorForCode:PPOErrorCredentialsNotFound]];
+    }
+    
     if (!credentials.installationID || credentials.installationID.length == 0) {
         
         return [PPOOutcomeManager handleResponse:nil

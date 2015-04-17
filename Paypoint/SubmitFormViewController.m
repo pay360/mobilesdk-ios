@@ -266,6 +266,7 @@ typedef enum : NSUInteger {
             case PPOErrorPaymentAmountInvalid: message = @"Error Code: PPOErrorPaymentAmountInvalid"; break;
             case PPOErrorInstallationIDInvalid: message = @"Error Code: PPOErrorInstallationIDInvalid"; break;
             case PPOErrorSuppliedBaseURLInvalid: message = @"Error Code: PPOErrorSuppliedBaseURLInvalid"; break;
+            case PPOErrorCredentialsNotFound: message = @"Error Code: PPOErrorCredentialsNotFound"; break;
             case PPOErrorUnknown: message = @"Error Code: PPOErrorUnknown"; break;
         }
         

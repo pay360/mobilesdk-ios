@@ -122,6 +122,15 @@
                     ];
             break;
             
+        case PPOErrorCredentialsNotFound:
+            return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                       code:PPOErrorCredentialsNotFound
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Credentials not supplied.", @"Failure message for payment parameters integrity check")
+                                              }
+                    ];
+            break;
+            
         default:
             return nil;
             break;
