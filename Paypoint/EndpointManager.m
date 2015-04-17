@@ -18,7 +18,7 @@
             break;
             
         case PPOEnvironmentDevice:
-            return [NSURL URLWithString:[NSString stringWithFormat:@"http://%@:5001/mobileapi", [EndpointManager laptopIP]]];
+            return [NSURL URLWithString:[NSString stringWithFormat:@"http://%@:5001", [EndpointManager laptopIP]]];
             break;
             
         default:
