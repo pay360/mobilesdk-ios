@@ -88,6 +88,8 @@
 		50CC9B101AD43B7600B97F2E /* FormViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CC9B0F1AD43B7600B97F2E /* FormViewController.m */; };
 		50CC9B141AD43C3E00B97F2E /* FormDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CC9B131AD43C3E00B97F2E /* FormDetails.m */; };
 		50CC9B191AD43E2200B97F2E /* TimeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CC9B181AD43E2200B97F2E /* TimeManager.m */; };
+		50E3E6641AE1127700DA61E8 /* PPOBaseURLManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 50E3E6621AE1127700DA61E8 /* PPOBaseURLManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		50E3E6651AE1127700DA61E8 /* PPOBaseURLManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50E3E6631AE1127700DA61E8 /* PPOBaseURLManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -208,6 +210,8 @@
 		50CC9B171AD43E2200B97F2E /* TimeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeManager.h; sourceTree = "<group>"; };
 		50CC9B181AD43E2200B97F2E /* TimeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimeManager.m; sourceTree = "<group>"; };
 		50D48F0A1ADC140C006BE4E8 /* PaypointSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PaypointSDK.framework; path = Lipo/PaypointSDK.framework; sourceTree = SOURCE_ROOT; };
+		50E3E6621AE1127700DA61E8 /* PPOBaseURLManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOBaseURLManager.h; sourceTree = "<group>"; };
+		50E3E6631AE1127700DA61E8 /* PPOBaseURLManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOBaseURLManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -297,6 +301,7 @@
 				5056A1AF1AD6A75600AB1276 /* PPOErrorManager */,
 				509B588D1ADD477D001236CD /* PPOTimeManager */,
 				509B58921ADD4D1B001236CD /* PPOOutcomeManager */,
+				50E3E6661AE1127A00DA61E8 /* PPOBaseURLManager */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -730,6 +735,15 @@
 			name = Managers;
 			sourceTree = "<group>";
 		};
+		50E3E6661AE1127A00DA61E8 /* PPOBaseURLManager */ = {
+			isa = PBXGroup;
+			children = (
+				50E3E6621AE1127700DA61E8 /* PPOBaseURLManager.h */,
+				50E3E6631AE1127700DA61E8 /* PPOBaseURLManager.m */,
+			);
+			name = PPOBaseURLManager;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -741,6 +755,7 @@
 				5056A1AD1AD6A75200AB1276 /* PPOErrorManager.h in Headers */,
 				501B7CBF1AC40B3000F44193 /* PPOWebViewController.h in Headers */,
 				50CC9AF71AD41ED300B97F2E /* PPOPaymentManager.h in Headers */,
+				50E3E6641AE1127700DA61E8 /* PPOBaseURLManager.h in Headers */,
 				507AA72F1AD7D78F00420DF7 /* PPOOutcome.h in Headers */,
 				50CC9B0B1AD42CE800B97F2E /* PPOBillingAddress.h in Headers */,
 				50CC9B011AD4289300B97F2E /* PPOCredentials.h in Headers */,
@@ -986,6 +1001,7 @@
 				5056A1AA1AD6A65900AB1276 /* PPOError.m in Sources */,
 				507AA7301AD7D78F00420DF7 /* PPOOutcome.m in Sources */,
 				50046AC91AC2FAB000F23D05 /* PPOReachability.m in Sources */,
+				50E3E6651AE1127700DA61E8 /* PPOBaseURLManager.m in Sources */,
 				50CC9B021AD4289300B97F2E /* PPOCredentials.m in Sources */,
 				501B7CC01AC40B3000F44193 /* PPOWebViewController.m in Sources */,
 				509B58911ADD4D18001236CD /* PPOOutcomeManager.m in Sources */,
