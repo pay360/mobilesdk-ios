@@ -28,7 +28,7 @@
     
     self.paypointLabel.textColor = [ColourManager ppBlue];
     
-    [self playVideo];
+    //[self playVideo];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(playerItemDidReachEnd:)
