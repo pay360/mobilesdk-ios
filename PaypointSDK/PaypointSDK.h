@@ -25,3 +25,4 @@ FOUNDATION_EXPORT const unsigned char PaypointSDKVersionString[];
 #import <PaypointSDK/PPOBillingAddress.h>
 #import <PaypointSDK/PPOError.h>
 #import <PaypointSDK/PPOOutcome.h>
+#import <PaypointSDK/PPOBaseURLManager.h>
