@@ -31,7 +31,7 @@ typedef enum : NSUInteger {
 
 -(PPOPaymentManager *)paymentManager {
     if (_paymentManager == nil) {
-        NSURL *baseURL = [PPOBaseURLManager baseURL:PPOEnvironmentStaging];
+        NSURL *baseURL = [PPOBaseURLManager baseURLForEnvironment:[EnvironmentManager currentEnvironment]];
         _paymentManager = [[PPOPaymentManager alloc] initWithBaseURL:baseURL];
     }
     return _paymentManager;
@@ -265,6 +265,7 @@ typedef enum : NSUInteger {
             case PPOErrorCurrencyInvalid: message = @"Error Code: PPOErrorCurrencyInvalid"; break;
             case PPOErrorPaymentAmountInvalid: message = @"Error Code: PPOErrorPaymentAmountInvalid"; break;
             case PPOErrorInstallationIDInvalid: message = @"Error Code: PPOErrorInstallationIDInvalid"; break;
+            case PPOErrorSuppliedBaseURLInvalid: message = @"Error Code: PPOErrorSuppliedBaseURLInvalid"; break;
             case PPOErrorUnknown: message = @"Error Code: PPOErrorUnknown"; break;
         }
         

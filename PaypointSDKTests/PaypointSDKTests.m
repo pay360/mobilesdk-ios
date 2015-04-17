@@ -14,6 +14,7 @@
 
 //Demo App
 #import "NetworkManager.h"
+#import "EnvironmentManager.h"
 
 @interface PaypointSDKTests : XCTestCase
 @property (nonatomic, strong) NSArray *pans;
@@ -61,11 +62,9 @@
                                                    withPostcode:nil
                                                 withCountryCode:nil];
     
-    NSDictionary *environment = [[NSProcessInfo processInfo] environment];
-    NSString *value = [environment objectForKey:@"ENVIRONMENT"];
-    self.currentEnvironment = value.integerValue;
+    self.currentEnvironment = [EnvironmentManager currentEnvironment];
     
-    NSURL *baseURL = [PPOBaseURLManager baseURL:PPOEnvironmentStaging];
+    NSURL *baseURL = [PPOBaseURLManager baseURLForEnvironment:self.currentEnvironment];
     self.paymentManager = [[PPOPaymentManager alloc] initWithBaseURL:baseURL];
 }
 
