@@ -47,4 +47,86 @@
     
 }
 
++(NSError*)errorForCode:(PPOErrorCode)code {
+    
+    switch (code) {
+        case PPOErrorSuppliedBaseURLInvalid:
+            return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                       code:PPOErrorSuppliedBaseURLInvalid
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"PPOPaymentManager is missing a base URL.", @"Failure message for BaseURL check")
+                                              }
+                    ];
+            break;
+            
+        case PPOErrorInstallationIDInvalid:
+            return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                       code:PPOErrorInstallationIDInvalid
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The installation ID is missing", @"Failure message for credentials check")
+                                              }
+                    ];
+            break;
+            
+        case PPOErrorCardPanLengthInvalid:
+            return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                       code:PPOErrorCardPanLengthInvalid
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The supplied payment card Pan length is invalid", @"Failure message for a card validation check")
+                                              }
+                    ];
+            break;
+            
+        case PPOErrorLuhnCheckFailed:
+            return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                       code:PPOErrorLuhnCheckFailed
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The supplied payment card failed Luhn validation", @"Failure message for a card validation check")
+                                              }
+                    ];
+            break;
+            
+        case PPOErrorCVVInvalid:
+            return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                       code:PPOErrorCVVInvalid
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The supplied payment card CVV is invalid", @"Failure message for a card validation check")
+                                              }
+                    ];
+            break;
+            
+        case PPOErrorCardExpiryDateInvalid:
+            return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                       code:PPOErrorCardExpiryDateInvalid
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The supplied payment card expiry date is invalid", @"Failure message for a card validation check")
+                                              }
+                    ];
+            break;
+            
+        case PPOErrorCurrencyInvalid:
+            return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                       code:PPOErrorCurrencyInvalid
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The specified currency is invalid", @"Failure message for a transaction validation check")
+                                              }
+                    ];
+            break;
+            
+        case PPOErrorPaymentAmountInvalid:
+            return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                       code:PPOErrorPaymentAmountInvalid
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The specified payment amount is invalid", @"Failure message for a transaction validation check")
+                                              }
+                    ];
+            break;
+            
+        default:
+            return nil;
+            break;
+    }
+    
+}
+
 @end

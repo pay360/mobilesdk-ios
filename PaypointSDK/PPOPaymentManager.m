@@ -15,6 +15,7 @@
 #import "PPOLuhn.h"
 #import "PPOPayment.h"
 #import "PPOBaseURLManager.h"
+#import "PPOErrorManager.h"
 
 @interface PPOPaymentManager () <NSURLSessionTaskDelegate>
 @property (nonatomic, strong, readwrite) NSURL *baseURL;
@@ -34,21 +35,6 @@
     return self;
 }
 
--(PPOOutcome*)validatePayment:(PPOPayment*)payment {
-    
-    PPOOutcome *outcome;
-    
-    NSError *validation = [self validateTransaction:payment.transaction
-                                           withCard:payment.creditCard];
-    
-    if (validation) {
-        outcome = [PPOOutcomeManager handleResponse:nil
-                                          withError:validation];
-    }
-    
-    return outcome;
-}
-
 -(void)makePayment:(PPOPayment*)payment withCredentials:(PPOCredentials*)credentials withTimeOut:(CGFloat)timeout withCompletion:(void(^)(PPOOutcome *outcome))completion {
     
     __block PPOOutcome *outcome;
@@ -61,6 +47,13 @@
     }
     
     outcome = [self validatePayment:payment];
+    
+    if (outcome) {
+        completion(outcome);
+        return;
+    }
+    
+    outcome = [self validateBaseURL:self.baseURL];
     
     if (outcome) {
         completion(outcome);
@@ -87,7 +80,8 @@
     
     [self resumeRequest:request forSession:session withCompletion:^(NSData *data, NSURLResponse *response, NSError *error) {
         
-        outcome = [PPOOutcomeManager handleResponse:data withError:error];
+        outcome = [PPOOutcomeManager handleResponse:data
+                                          withError:error];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             completion(outcome);
@@ -96,88 +90,76 @@
     }];
 }
 
--(PPOOutcome*)validateCredentials:(PPOCredentials*)credentials {
-    if (!credentials.installationID || credentials.installationID.length == 0) {
-        NSError *error = [NSError errorWithDomain:PPOPaypointSDKErrorDomain
-                                             code:PPOErrorInstallationIDInvalid
-                                         userInfo:nil];
-        return [[PPOOutcome alloc] initWithData:nil withError:error];
+-(PPOOutcome*)validatePayment:(PPOPayment*)payment {
+
+    return [self validateTransaction:payment.transaction
+                            withCard:payment.creditCard];
+    
+}
+
+-(PPOOutcome*)validateBaseURL:(NSURL*)baseURL {
+    if (!baseURL) {
+        return [PPOOutcomeManager handleResponse:nil
+                                       withError:[PPOErrorManager errorForCode:PPOErrorSuppliedBaseURLInvalid]];
     }
     return nil;
 }
 
--(NSError*)validateTransaction:(PPOTransaction*)transaction withCard:(PPOCreditCard*)card {
+-(PPOOutcome*)validateCredentials:(PPOCredentials*)credentials {
     
-    NSString *strippedValue;
+    if (!credentials.installationID || credentials.installationID.length == 0) {
+        
+        return [PPOOutcomeManager handleResponse:nil
+                                       withError:[PPOErrorManager errorForCode:PPOErrorInstallationIDInvalid]];
+    }
+    return nil;
+}
+
+-(PPOOutcome*)validateTransaction:(PPOTransaction*)transaction withCard:(PPOCreditCard*)card {
     
-    strippedValue = [card.pan stringByReplacingOccurrencesOfString:@" " withString:@""];
+    NSString *strippedValue = [card.pan stringByReplacingOccurrencesOfString:@" " withString:@""];
     
     if (strippedValue.length < 13 || strippedValue.length > 19) {
         
-        return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
-                                   code:PPOErrorCardPanLengthInvalid
-                               userInfo:@{
-                                          NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The supplied payment card Pan length is invalid", @"Failure message for a card validation check")
-                                          }
-                ];
+        return [PPOOutcomeManager handleResponse:nil
+                                       withError:[PPOErrorManager errorForCode:PPOErrorCardPanLengthInvalid]];
         
     }
     
     if (![PPOLuhn validateString:strippedValue]) {
         
-        return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
-                                   code:PPOErrorLuhnCheckFailed
-                               userInfo:@{
-                                          NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The supplied payment card failed Luhn validation", @"Failure message for a card validation check")
-                                          }
-                ];
+        return [PPOOutcomeManager handleResponse:nil
+                                       withError:[PPOErrorManager errorForCode:PPOErrorLuhnCheckFailed]];
     }
     
     strippedValue = [card.cvv stringByReplacingOccurrencesOfString:@" " withString:@""];
     
     if (strippedValue == nil || strippedValue.length < 3 || strippedValue.length > 4) {
         
-        return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
-                                   code:PPOErrorCVVInvalid
-                               userInfo:@{
-                                          NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The supplied payment card CVV is invalid", @"Failure message for a card validation check")
-                                          }
-                ];
-        
+        return [PPOOutcomeManager handleResponse:nil
+                                       withError:[PPOErrorManager errorForCode:PPOErrorCVVInvalid]];
     }
     
     strippedValue = [card.expiry stringByReplacingOccurrencesOfString:@" " withString:@""];
     
     if (strippedValue == nil || strippedValue.length != 4) {
         
-        return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
-                                   code:PPOErrorCardExpiryDateInvalid
-                               userInfo:@{
-                                          NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The supplied payment card expiry date is invalid", @"Failure message for a card validation check")
-                                          }
-                ];
+        return [PPOOutcomeManager handleResponse:nil
+                                       withError:[PPOErrorManager errorForCode:PPOErrorCardExpiryDateInvalid]];
     }
     
     strippedValue = [transaction.currency stringByReplacingOccurrencesOfString:@" " withString:@""];
     
     if (strippedValue == nil || strippedValue.length == 0) {
         
-        return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
-                                   code:PPOErrorCurrencyInvalid
-                               userInfo:@{
-                                          NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The specified currency is invalid", @"Failure message for a transaction validation check")
-                                          }
-                ];
+        return [PPOOutcomeManager handleResponse:nil
+                                       withError:[PPOErrorManager errorForCode:PPOErrorCurrencyInvalid]];
     }
     
     if (transaction.amount == nil || transaction.amount.floatValue <= 0.0) {
         
-        return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
-                                   code:PPOErrorPaymentAmountInvalid
-                               userInfo:@{
-                                          NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The specified payment amount is invalid", @"Failure message for a transaction validation check")
-                                          }
-                ];
+        return [PPOOutcomeManager handleResponse:nil
+                                       withError:[PPOErrorManager errorForCode:PPOErrorPaymentAmountInvalid]];
         
     }
     
@@ -251,7 +233,6 @@
 }
 
 -(void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler {
-    NSLog(@"%@ NSURLSession didReceiveChallenge: %@", [self class], challenge);
     
     //    if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
     //    {

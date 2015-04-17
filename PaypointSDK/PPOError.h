@@ -65,6 +65,9 @@ typedef NS_ENUM(NSInteger, PPOErrorCode) {
     PPOErrorPaymentAmountInvalid,
     
     /* The provided installation ID is invalid*/
-    PPOErrorInstallationIDInvalid
+    PPOErrorInstallationIDInvalid,
+    
+    /* The base URL configured within the payment manager, is invalid*/
+    PPOErrorSuppliedBaseURLInvalid
     
 };
