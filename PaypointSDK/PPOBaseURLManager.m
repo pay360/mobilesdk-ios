@@ -10,15 +10,16 @@
 
 @implementation PPOBaseURLManager
 
-+(NSURL*)baseURL:(PPOEnvironment)environment {
++(NSURL*)baseURLForEnvironment:(PPOEnvironment)environment {
+    
     
     switch (environment) {
-        case PPOEnvironmentStaging:
+        case PPOEnvironmentSimulator:
             return [NSURL URLWithString:@"http://localhost:5000/mobileapi"];
             break;
             
-        case PPOEnvironmentProduction:
-            return [NSURL URLWithString:@"http://192.168.3.192:5000/mobileapi"];
+        case PPOEnvironmentDevice:
+            return [NSURL URLWithString:[NSString stringWithFormat:@"http://%@:5000/mobileapi", [PPOBaseURLManager laptopIP]]];
             break;
             
         default:

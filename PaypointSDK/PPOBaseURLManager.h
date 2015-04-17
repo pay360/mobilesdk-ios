@@ -9,12 +9,12 @@
 #import <UIKit/UIKit.h>
 
 typedef NS_ENUM(NSInteger, PPOEnvironment) {
-    PPOEnvironmentStaging,
-    PPOEnvironmentProduction
+    PPOEnvironmentSimulator,
+    PPOEnvironmentDevice
 };
 
 @interface PPOBaseURLManager : NSObject
 
-+(NSURL*)baseURL:(PPOEnvironment)environment;
++(NSURL*)baseURLForEnvironment:(PPOEnvironment)environment;
 
 @end

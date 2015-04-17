@@ -13,12 +13,12 @@
 +(NSURL*)baseURL:(PPOEnvironment)environment {
     
     switch (environment) {
-        case PPOEnvironmentStaging:
+        case PPOEnvironmentSimulator:
             return [NSURL URLWithString:@"http://localhost:5001"];
             break;
             
-        case PPOEnvironmentProduction:
-            return [NSURL URLWithString:@"http://192.168.3.192:5001"];
+        case PPOEnvironmentDevice:
+            return [NSURL URLWithString:[NSString stringWithFormat:@"http://%@:5001/mobileapi", [EndpointManager laptopIP]]];
             break;
             
         default:
