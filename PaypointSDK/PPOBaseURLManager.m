@@ -29,4 +29,10 @@
     
 }
 
++(NSString*)laptopIP {
+    NSDictionary *environment = [[NSProcessInfo processInfo] environment];
+    NSString *value = [environment objectForKey:@"LAPTOP_IP"];
+    return value;
+}
+
 @end
