@@ -65,8 +65,8 @@
     NSString *value = [environment objectForKey:@"ENVIRONMENT"];
     self.currentEnvironment = value.integerValue;
     
-    
-    self.paymentManager = [[PPOPaymentManager alloc] initForEnvironment:self.currentEnvironment];
+    NSURL *baseURL = [PPOBaseURLManager baseURL:PPOEnvironmentStaging];
+    self.paymentManager = [[PPOPaymentManager alloc] initWithBaseURL:baseURL];
 }
 
 - (void)tearDown {
@@ -91,16 +91,15 @@
                                                      isDeferred:NO];
     
     self.card = [[PPOCreditCard alloc] initWithPan:self.authorisedPan
-                                          withCode:@"123"
+                              withSecurityCodeCode:@"123"
                                         withExpiry:@"0116"
-                                          withName:@"John Smith"];
+                                withCardholderName:@"John Smith"];
     
     PPOCredentials *credentials = [[PPOCredentials alloc] initWithID:INSTALLATION_ID withToken:self.validBearerToken];
-    [self.paymentManager setCredentials:credentials];
     
     PPOPayment *payment = [[PPOPayment alloc] initWithTransaction:self.transaction withCard:self.card withBillingAddress:self.address];
     
-    [self.paymentManager makePayment:payment withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome) {
+    [self.paymentManager makePayment:payment withCredentials:credentials withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome) {
         if ([outcome.error.domain isEqualToString:PPOPaypointSDKErrorDomain] && outcome.error.code == PPOErrorPaymentAmountInvalid) {
             [expectation fulfill];
         }
@@ -127,16 +126,15 @@
                                                      isDeferred:NO];
     
     self.card = [[PPOCreditCard alloc] initWithPan:self.authorisedPan
-                                          withCode:nil // < ---
+                              withSecurityCodeCode:nil // < ---
                                         withExpiry:@"0116"
-                                          withName:@"John Smith"];
+                                withCardholderName:@"John Smith"];
     
     PPOCredentials *credentials = [[PPOCredentials alloc] initWithID:INSTALLATION_ID withToken:self.validBearerToken];
-    [self.paymentManager setCredentials:credentials];
     
     PPOPayment *payment = [[PPOPayment alloc] initWithTransaction:self.transaction withCard:self.card withBillingAddress:self.address];
     
-    [self.paymentManager makePayment:payment withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome) {
+    [self.paymentManager makePayment:payment withCredentials:credentials withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome) {
         if ([outcome.error.domain isEqualToString:PPOPaypointSDKErrorDomain] && outcome.error.code == PPOErrorCVVInvalid) {
             [expectation fulfill];
         }
@@ -184,16 +182,15 @@
                                                      isDeferred:NO];
     
     self.card = [[PPOCreditCard alloc] initWithPan:self.authorisedPan
-                                          withCode:@"123"
+                              withSecurityCodeCode:@"123"
                                         withExpiry:@"0116"
-                                          withName:@"John Smith"];
+                                withCardholderName:@"John Smith"];
     
     PPOCredentials *credentials = [[PPOCredentials alloc] initWithID:INSTALLATION_ID withToken:self.validBearerToken];
-    [self.paymentManager setCredentials:credentials];
     
     PPOPayment *payment = [[PPOPayment alloc] initWithTransaction:self.transaction withCard:self.card withBillingAddress:self.address];
     
-    [self.paymentManager makePayment:payment withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome) {
+    [self.paymentManager makePayment:payment withCredentials:credentials withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome) {
         if (!outcome.error) [expectation fulfill];
     }];
     
@@ -220,16 +217,15 @@
                                                      isDeferred:NO];
     
     self.card = [[PPOCreditCard alloc] initWithPan:self.authorisedPan
-                                          withCode:@"123"
+                              withSecurityCodeCode:@"123"
                                         withExpiry:@"0116"
-                                          withName:@"John Smith"];
+                                withCardholderName:@"John Smith"];
     
     PPOCredentials *credentials = [[PPOCredentials alloc] initWithID:INSTALLATION_ID withToken:self.expiredBearerToken];
-    [self.paymentManager setCredentials:credentials];
     
     PPOPayment *payment = [[PPOPayment alloc] initWithTransaction:self.transaction withCard:self.card withBillingAddress:self.address];
     
-    [self.paymentManager makePayment:payment withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome) {
+    [self.paymentManager makePayment:payment withCredentials:credentials withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome) {
         
         if ([outcome.error.domain isEqualToString:PPOPaypointSDKErrorDomain] && outcome.error.code == PPOErrorClientTokenExpired) {
             [expectation fulfill];
@@ -257,16 +253,15 @@
                                                      isDeferred:NO];
     
     self.card = [[PPOCreditCard alloc] initWithPan:self.authorisedPan
-                                          withCode:@"123"
+                              withSecurityCodeCode:@"123"
                                         withExpiry:@"0116"
-                                          withName:@"John Smith"];
+                                withCardholderName:@"John Smith"];
     
     PPOCredentials *credentials = [[PPOCredentials alloc] initWithID:INSTALLATION_ID withToken:self.unauthorisedBearerToken];
-    [self.paymentManager setCredentials:credentials];
     
     PPOPayment *payment = [[PPOPayment alloc] initWithTransaction:self.transaction withCard:self.card withBillingAddress:self.address];
     
-    [self.paymentManager makePayment:payment withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome) {
+    [self.paymentManager makePayment:payment withCredentials:credentials withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome) {
         
         if ([outcome.error.domain isEqualToString:PPOPaypointSDKErrorDomain] && outcome.error.code == PPOErrorUnauthorisedRequest) {
             [expectation fulfill];
@@ -295,17 +290,16 @@
                                           withMerchantReference:@"mer_txn_1234556"
                                                      isDeferred:NO];
     
-    self.card = [[PPOCreditCard alloc] initWithPan:self.declinePan
-                                          withCode:@"123"
-                                        withExpiry:@"0116"
-                                          withName:@"John Smith"];
+    self.card =     [[PPOCreditCard alloc] initWithPan:self.declinePan
+                                  withSecurityCodeCode:@"123"
+                                            withExpiry:@"0116"
+                                    withCardholderName:@"John Smith"];
     
     PPOCredentials *credentials = [[PPOCredentials alloc] initWithID:INSTALLATION_ID withToken:self.validBearerToken];
-    [self.paymentManager setCredentials:credentials];
     
     PPOPayment *payment = [[PPOPayment alloc] initWithTransaction:self.transaction withCard:self.card withBillingAddress:self.address];
     
-    [self.paymentManager makePayment:payment withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome) {
+    [self.paymentManager makePayment:payment withCredentials:credentials withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome) {
         
         if ([outcome.error.domain isEqualToString:PPOPaypointSDKErrorDomain] && outcome.error.code == PPOErrorTransactionProcessingFailed) {
             [expectation fulfill];
@@ -333,16 +327,15 @@
                                                      isDeferred:NO];
     
     self.card = [[PPOCreditCard alloc] initWithPan:self.delayAuthorisedPan
-                                          withCode:@"123"
-                                        withExpiry:@"0116"
-                                          withName:@"John Smith"];
+                              withSecurityCodeCode:@"123"
+                                        withExpiry:@"0106"
+                                withCardholderName:@"Dai Jones"];
     
     PPOCredentials *credentials = [[PPOCredentials alloc] initWithID:INSTALLATION_ID withToken:self.validBearerToken];
-    [self.paymentManager setCredentials:credentials];
     
     PPOPayment *payment = [[PPOPayment alloc] initWithTransaction:self.transaction withCard:self.card withBillingAddress:self.address];
     
-    [self.paymentManager makePayment:payment withTimeOut:1.0 withCompletion:^(PPOOutcome *outcome) {
+    [self.paymentManager makePayment:payment withCredentials:credentials withTimeOut:1.0 withCompletion:^(PPOOutcome *outcome) {
         if ([outcome.error.domain isEqualToString:@"NSURLErrorDomain"] && outcome.error.code == kCFURLErrorTimedOut) {
             [expectation fulfill];
         }
@@ -369,16 +362,15 @@
                                                      isDeferred:NO];
     
     self.card = [[PPOCreditCard alloc] initWithPan:self.serverErrorPan
-                                          withCode:@"123"
+                              withSecurityCodeCode:@"123"
                                         withExpiry:@"0116"
-                                          withName:@"John Smith"];
+                                withCardholderName:@"Dai Jones"];
     
     PPOCredentials *credentials = [[PPOCredentials alloc] initWithID:INSTALLATION_ID withToken:self.validBearerToken];
-    [self.paymentManager setCredentials:credentials];
     
     PPOPayment *payment = [[PPOPayment alloc] initWithTransaction:self.transaction withCard:self.card withBillingAddress:self.address];
     
-    [self.paymentManager makePayment:payment withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome) {
+    [self.paymentManager makePayment:payment withCredentials:credentials withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome) {
         
         if ([outcome.error.domain isEqualToString:PPOPaypointSDKErrorDomain] &&
             outcome.error.code == PPOErrorServerFailure) {

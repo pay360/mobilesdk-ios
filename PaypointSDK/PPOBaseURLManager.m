@@ -10,4 +10,22 @@
 
 @implementation PPOBaseURLManager
 
++(NSURL*)baseURL:(PPOEnvironment)environment {
+    
+    switch (environment) {
+        case PPOEnvironmentStaging:
+            return [NSURL URLWithString:@"http://localhost:5000/mobileapi"];
+            break;
+            
+        case PPOEnvironmentProduction:
+            return [NSURL URLWithString:@"http://192.168.3.192:5000/mobileapi"];
+            break;
+            
+        default:
+            return nil;
+            break;
+    }
+    
+}
+
 @end

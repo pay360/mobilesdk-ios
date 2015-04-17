@@ -8,6 +8,7 @@
 
 #import "PPOError.h"
 #import "PPOOutcome.h"
+#import "PPOBaseURLManager.h"
 
 @class PPOCredentials;
 @class PPOTransaction;
@@ -15,19 +16,18 @@
 @class PPOBillingAddress;
 @class PPOPayment;
 
-typedef NS_ENUM(NSInteger, PPOEnvironment) {
-    PPOEnvironmentStaging,
-    PPOEnvironmentProduction
-};
+@interface PPOPaymentManager : PPOBaseURLManager
 
-@interface PPOPaymentManager : NSObject
 @property (nonatomic, strong) NSOperationQueue *payments;
-@property (nonatomic, strong) PPOCredentials *credentials;
-@property (nonatomic, readonly) PPOEnvironment currentEnivonrment;
+@property (nonatomic, strong, readonly) NSURL *baseURL;
 
--(instancetype)initForEnvironment:(PPOEnvironment)environment; //Designated initialiser
-
+-(instancetype)initWithBaseURL:(NSURL*)baseURL; //Designated initialiser
 -(PPOOutcome*)validatePayment:(PPOPayment*)payment;
--(void)makePayment:(PPOPayment*)payment withTimeOut:(CGFloat)timeout withCompletion:(void(^)(PPOOutcome *outcome))completion;
+-(PPOOutcome*)validateCredentials:(PPOCredentials*)credentials;
+
+-(void)makePayment:(PPOPayment*)payment
+   withCredentials:(PPOCredentials*)credentials
+       withTimeOut:(CGFloat)timeout
+    withCompletion:(void(^)(PPOOutcome *outcome))completion;
 
 @end

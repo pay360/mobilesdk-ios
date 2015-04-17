@@ -14,23 +14,22 @@
 #import "PPOOutcomeManager.h"
 #import "PPOLuhn.h"
 #import "PPOPayment.h"
+#import "PPOBaseURLManager.h"
 
 @interface PPOPaymentManager () <NSURLSessionTaskDelegate>
-@property (nonatomic, readwrite) PPOEnvironment currentEnivonrment;
+@property (nonatomic, strong, readwrite) NSURL *baseURL;
 @end
 
 @interface PPOEndpointManager : NSObject
-
-+(NSURL*)simplePayment:(NSString*)installationID forEnvironment:(PPOEnvironment)enviroment;
-
++(NSURL*)simplePayment:(NSString*)installationID withBaseURL:(NSURL*)baseURL;
 @end
 
 @implementation PPOPaymentManager
 
--(instancetype)initForEnvironment:(PPOEnvironment)environment {
+-(instancetype)initWithBaseURL:(NSURL*)baseURL {
     self = [super init];
     if (self) {
-        _currentEnivonrment = environment;
+        _baseURL = baseURL;
     }
     return self;
 }
@@ -50,9 +49,16 @@
     return outcome;
 }
 
--(void)makePayment:(PPOPayment*)payment withTimeOut:(CGFloat)timeout withCompletion:(void(^)(PPOOutcome *outcome))completion {
+-(void)makePayment:(PPOPayment*)payment withCredentials:(PPOCredentials*)credentials withTimeOut:(CGFloat)timeout withCompletion:(void(^)(PPOOutcome *outcome))completion {
     
     __block PPOOutcome *outcome;
+    
+    outcome = [self validateCredentials:credentials];
+    
+    if (outcome) {
+        completion(outcome);
+        return;
+    }
     
     outcome = [self validatePayment:payment];
     
@@ -61,13 +67,13 @@
         return;
     }
     
-    NSURL *url = [PPOEndpointManager simplePayment:self.credentials.installationID
-                                    forEnvironment:self.currentEnivonrment];
+    NSURL *url = [PPOEndpointManager simplePayment:credentials.installationID
+                                       withBaseURL:self.baseURL];
     
     NSMutableURLRequest *request = [self mutableJSONPostRequest:url
                                                     withTimeOut:timeout];
     
-    [request setValue:[self authorisation:self.credentials] forHTTPHeaderField:@"Authorization"];
+    [request setValue:[self authorisation:credentials] forHTTPHeaderField:@"Authorization"];
     
     NSData *data = [self buildPostBodyWithTransaction:payment.transaction
                                              withCard:payment.creditCard
@@ -90,13 +96,23 @@
     }];
 }
 
+-(PPOOutcome*)validateCredentials:(PPOCredentials*)credentials {
+    if (!credentials.installationID || credentials.installationID.length == 0) {
+        NSError *error = [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                             code:PPOErrorInstallationIDInvalid
+                                         userInfo:nil];
+        return [[PPOOutcome alloc] initWithData:nil withError:error];
+    }
+    return nil;
+}
+
 -(NSError*)validateTransaction:(PPOTransaction*)transaction withCard:(PPOCreditCard*)card {
     
     NSString *strippedValue;
     
     strippedValue = [card.pan stringByReplacingOccurrencesOfString:@" " withString:@""];
     
-    if (strippedValue.length < 15 || strippedValue.length > 19) {
+    if (strippedValue.length < 13 || strippedValue.length > 19) {
         
         return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                    code:PPOErrorCardPanLengthInvalid
@@ -179,7 +195,9 @@
     return [NSString stringWithFormat:@"Bearer %@", credentials.token];
 }
 
--(NSData*)buildPostBodyWithTransaction:(PPOTransaction*)transaction withCard:(PPOCreditCard*)card withAddress:(PPOBillingAddress*)address {
+-(NSData*)buildPostBodyWithTransaction:(PPOTransaction*)transaction
+                              withCard:(PPOCreditCard*)card
+                           withAddress:(PPOBillingAddress*)address {
     
     id value;
     id t;
@@ -271,26 +289,7 @@
 
 @implementation PPOEndpointManager
 
-+(NSURL*)baseURL:(PPOEnvironment)environment {
-    
-    switch (environment) {
-        case PPOEnvironmentStaging:
-            return [NSURL URLWithString:@"http://localhost:5000/mobileapi"];
-            break;
-            
-        case PPOEnvironmentProduction:
-            return [NSURL URLWithString:@"http://192.168.3.192:5000/mobileapi"];
-            break;
-            
-        default:
-            return nil;
-            break;
-    }
-    
-}
-
-+(NSURL*)simplePayment:(NSString*)installationID forEnvironment:(PPOEnvironment)environment {
-    NSURL *baseURL = [PPOEndpointManager baseURL:environment];
++(NSURL*)simplePayment:(NSString*)installationID withBaseURL:(NSURL*)baseURL {
     return [baseURL URLByAppendingPathComponent:[NSString stringWithFormat:@"/transactions/%@/payment", installationID]];
     
 }

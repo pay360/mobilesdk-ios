@@ -31,7 +31,8 @@ typedef enum : NSUInteger {
 
 -(PPOPaymentManager *)paymentManager {
     if (_paymentManager == nil) {
-        _paymentManager = [[PPOPaymentManager alloc] initForEnvironment:[EnvironmentManager currentEnvironment]];
+        NSURL *baseURL = [PPOBaseURLManager baseURL:PPOEnvironmentStaging];
+        _paymentManager = [[PPOPaymentManager alloc] initWithBaseURL:baseURL];
     }
     return _paymentManager;
 }
@@ -79,7 +80,9 @@ typedef enum : NSUInteger {
     
     self.payment.creditCard = card;
     
-    PPOOutcome *outcome = [self.paymentManager validatePayment:self.payment];
+    PPOOutcome *outcome;
+    
+    outcome = [self.paymentManager validatePayment:self.payment];
     
     if (outcome) {
         
@@ -87,13 +90,13 @@ typedef enum : NSUInteger {
         
     } else {
         
-        [self attemptPayment];
+        [self attemptPayment:self.payment];
         
     }
     
 }
 
--(void)attemptPayment {
+-(void)attemptPayment:(PPOPayment*)payment {
     
     if ([[Reachability reachabilityForInternetConnection] currentReachabilityStatus] == NotReachable) {
         
@@ -109,14 +112,25 @@ typedef enum : NSUInteger {
             
             [NetworkManager getCredentialsWithCompletion:^(PPOCredentials *credentials, NSURLResponse *response, NSError *error) {
                 
-                if ([weakSelf handleError:error]) return;
+                PPOOutcome *outc = [weakSelf.paymentManager validateCredentials:credentials];
                 
-                [weakSelf.paymentManager setCredentials:credentials];
+                if (outc) {
+                    [weakSelf handleOutcome:outc];
+                    return;
+                }
                 
-                [weakSelf.paymentManager makePayment:weakSelf.payment
+                if (error) {
+                    [weakSelf handleError:error];
+                    return;
+                }
+                
+                [weakSelf.paymentManager makePayment:payment
+                                     withCredentials:credentials
                                          withTimeOut:60.0f
                                       withCompletion:^(PPOOutcome *outcome) {
+                                          
                                           [weakSelf handleOutcome:outcome];
+                                          
                                       }];
                 
             }];
@@ -228,7 +242,7 @@ typedef enum : NSUInteger {
     }
 }
 
--(BOOL)handleError:(NSError*)error {
+-(void)handleError:(NSError*)error {
     
     NSString *message;
     
@@ -250,6 +264,7 @@ typedef enum : NSUInteger {
             case PPOErrorCVVInvalid: message = @"Error Code: PPOErrorCVVInvalid"; break;
             case PPOErrorCurrencyInvalid: message = @"Error Code: PPOErrorCurrencyInvalid"; break;
             case PPOErrorPaymentAmountInvalid: message = @"Error Code: PPOErrorPaymentAmountInvalid"; break;
+            case PPOErrorInstallationIDInvalid: message = @"Error Code: PPOErrorInstallationIDInvalid"; break;
             case PPOErrorUnknown: message = @"Error Code: PPOErrorUnknown"; break;
         }
         
@@ -265,10 +280,8 @@ typedef enum : NSUInteger {
             [self showAlertWithMessage:message];
         }];
         
-        return YES;
     }
     
-    return NO;
 }
 
 #pragma mark - Typical Response Error Handling
