@@ -17,6 +17,17 @@
             <string>FoundryContext-Regular</string>
             <string>FoundryContext-Regular</string>
             <string>FoundryContext-Regular</string>
+            <string>FoundryContext-Regular</string>
+            <string>FoundryContext-Regular</string>
+            <string>FoundryContext-Regular</string>
+            <string>FoundryContext-Regular</string>
+            <string>FoundryContext-Regular</string>
+            <string>FoundryContext-Regular</string>
+            <string>FoundryContext-Regular</string>
+            <string>FoundryContext-Regular</string>
+        </mutableArray>
+        <mutableArray key="FontAwesome.otf">
+            <string>FontAwesome</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -215,8 +226,110 @@
                     <view key="view" contentMode="scaleToFill" id="yru-QC-5J3">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3z9-Yi-qjn">
+                                <rect key="frame" x="171" y="246" width="258" height="108"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Card Number:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y2U-ku-ZzU">
+                                        <rect key="frame" x="0.0" y="0.0" width="105" height="21"/>
+                                        <fontDescription key="fontDescription" name="FoundryContext-Regular" family="Foundry Context" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Merchant Ref:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F4V-DS-ZOs">
+                                        <rect key="frame" x="0.0" y="29" width="107" height="21"/>
+                                        <fontDescription key="fontDescription" name="FoundryContext-Regular" family="Foundry Context" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Transaction ID:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zwd-4Q-ojk">
+                                        <rect key="frame" x="0.0" y="58" width="112" height="21"/>
+                                        <fontDescription key="fontDescription" name="FoundryContext-Regular" family="Foundry Context" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Amount:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eOL-JB-s2O">
+                                        <rect key="frame" x="0.0" y="87" width="66" height="21"/>
+                                        <fontDescription key="fontDescription" name="FoundryContext-Regular" family="Foundry Context" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="**** **** **** 4938" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rkM-T0-3go">
+                                        <rect key="frame" x="122" y="0.0" width="136" height="21"/>
+                                        <fontDescription key="fontDescription" name="FoundryContext-Regular" family="Foundry Context" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="A7KpS" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="If3-lU-KyP">
+                                        <rect key="frame" x="122" y="29" width="54" height="21"/>
+                                        <fontDescription key="fontDescription" name="FoundryContext-Regular" family="Foundry Context" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="109293" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mfK-f4-Dgp">
+                                        <rect key="frame" x="122" y="58" width="61" height="21"/>
+                                        <fontDescription key="fontDescription" name="FoundryContext-Regular" family="Foundry Context" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="£100" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y0N-UG-caf">
+                                        <rect key="frame" x="122" y="87" width="41" height="21"/>
+                                        <fontDescription key="fontDescription" name="FoundryContext-Regular" family="Foundry Context" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="If3-lU-KyP" firstAttribute="centerY" secondItem="F4V-DS-ZOs" secondAttribute="centerY" id="0ZH-rx-p2d"/>
+                                    <constraint firstItem="F4V-DS-ZOs" firstAttribute="top" secondItem="y2U-ku-ZzU" secondAttribute="bottom" constant="8" id="2RV-0r-u85"/>
+                                    <constraint firstItem="eOL-JB-s2O" firstAttribute="leading" secondItem="3z9-Yi-qjn" secondAttribute="leading" id="4nF-oa-mWQ"/>
+                                    <constraint firstItem="F4V-DS-ZOs" firstAttribute="leading" secondItem="y2U-ku-ZzU" secondAttribute="leading" id="5Aa-B2-dg8"/>
+                                    <constraint firstAttribute="trailing" secondItem="Y0N-UG-caf" secondAttribute="trailing" priority="250" id="5Nv-iO-DFL"/>
+                                    <constraint firstAttribute="bottom" secondItem="eOL-JB-s2O" secondAttribute="bottom" id="Eij-g4-TE2"/>
+                                    <constraint firstAttribute="trailing" secondItem="mfK-f4-Dgp" secondAttribute="trailing" priority="250" id="FaP-TF-3ph"/>
+                                    <constraint firstItem="If3-lU-KyP" firstAttribute="leading" secondItem="rkM-T0-3go" secondAttribute="leading" id="GkM-i2-hch"/>
+                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Y0N-UG-caf" secondAttribute="trailing" id="JM8-Os-AtZ"/>
+                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="If3-lU-KyP" secondAttribute="trailing" id="LWe-sn-UBu"/>
+                                    <constraint firstItem="mfK-f4-Dgp" firstAttribute="leading" secondItem="Y0N-UG-caf" secondAttribute="leading" id="MXU-qS-vie"/>
+                                    <constraint firstAttribute="trailing" secondItem="rkM-T0-3go" secondAttribute="trailing" priority="250" id="NHM-5a-3Ms"/>
+                                    <constraint firstItem="mfK-f4-Dgp" firstAttribute="centerY" secondItem="zwd-4Q-ojk" secondAttribute="centerY" id="Z19-A4-k3T"/>
+                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="mfK-f4-Dgp" secondAttribute="trailing" id="ahD-WY-DwF"/>
+                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="rkM-T0-3go" secondAttribute="trailing" id="cBo-XX-Wj5"/>
+                                    <constraint firstItem="y2U-ku-ZzU" firstAttribute="centerY" secondItem="rkM-T0-3go" secondAttribute="centerY" id="dSr-lF-8dA"/>
+                                    <constraint firstItem="y2U-ku-ZzU" firstAttribute="top" secondItem="3z9-Yi-qjn" secondAttribute="top" id="ftw-rQ-hC9"/>
+                                    <constraint firstItem="eOL-JB-s2O" firstAttribute="top" secondItem="zwd-4Q-ojk" secondAttribute="bottom" constant="8" id="lbQ-yH-W6z"/>
+                                    <constraint firstItem="zwd-4Q-ojk" firstAttribute="top" secondItem="F4V-DS-ZOs" secondAttribute="bottom" constant="8" id="nEL-Wg-RK1"/>
+                                    <constraint firstAttribute="trailing" secondItem="If3-lU-KyP" secondAttribute="trailing" priority="250" id="nz9-tw-9RG"/>
+                                    <constraint firstItem="rkM-T0-3go" firstAttribute="leading" secondItem="y2U-ku-ZzU" secondAttribute="trailing" constant="17" id="phX-bq-lcC"/>
+                                    <constraint firstItem="If3-lU-KyP" firstAttribute="leading" secondItem="mfK-f4-Dgp" secondAttribute="leading" id="rXJ-N0-HC0"/>
+                                    <constraint firstItem="y2U-ku-ZzU" firstAttribute="leading" secondItem="3z9-Yi-qjn" secondAttribute="leading" id="uQg-98-sF9"/>
+                                    <constraint firstItem="eOL-JB-s2O" firstAttribute="centerY" secondItem="Y0N-UG-caf" secondAttribute="centerY" id="vMX-Vh-DK5"/>
+                                    <constraint firstItem="zwd-4Q-ojk" firstAttribute="leading" secondItem="F4V-DS-ZOs" secondAttribute="leading" id="wQn-Ed-eUV"/>
+                                </constraints>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hyh-eZ-fhV">
+                                <rect key="frame" x="153" y="84" width="294" height="120"/>
+                                <fontDescription key="fontDescription" name="FontAwesome" family="FontAwesome" pointSize="120"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="centerX" secondItem="3z9-Yi-qjn" secondAttribute="centerX" id="5t5-g8-JuM"/>
+                            <constraint firstItem="3z9-Yi-qjn" firstAttribute="top" secondItem="Hyh-eZ-fhV" secondAttribute="bottom" constant="42" id="NdD-iN-OtY"/>
+                            <constraint firstItem="Hyh-eZ-fhV" firstAttribute="centerX" secondItem="3z9-Yi-qjn" secondAttribute="centerX" id="nyL-dT-j0T"/>
+                            <constraint firstAttribute="centerY" secondItem="3z9-Yi-qjn" secondAttribute="centerY" id="vjX-jo-2dA"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="amountLabel" destination="Y0N-UG-caf" id="BIZ-DG-2gm"/>
+                        <outlet property="cardNumberLabel" destination="rkM-T0-3go" id="jM3-s9-kQZ"/>
+                        <outlet property="merchantRefLabel" destination="If3-lU-KyP" id="ZzT-u4-6Jl"/>
+                        <outlet property="tickLabel" destination="Hyh-eZ-fhV" id="mJj-cE-eS3"/>
+                        <outlet property="transactionIDLabel" destination="mfK-f4-Dgp" id="4GH-uB-wuX"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="79K-zd-gVb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

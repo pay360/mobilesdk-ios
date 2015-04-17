@@ -85,6 +85,8 @@
 		50CC9B141AD43C3E00B97F2E /* FormDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CC9B131AD43C3E00B97F2E /* FormDetails.m */; };
 		50CC9B191AD43E2200B97F2E /* TimeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CC9B181AD43E2200B97F2E /* TimeManager.m */; };
 		50E257ED1AE148E20024D179 /* OutcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50E257EC1AE148E20024D179 /* OutcomeViewController.m */; };
+		50E257F01AE150CA0024D179 /* FontAwesome.otf in Resources */ = {isa = PBXBuildFile; fileRef = 50E257EF1AE150CA0024D179 /* FontAwesome.otf */; };
+		50E257F31AE153310024D179 /* ButtonStyler.m in Sources */ = {isa = PBXBuildFile; fileRef = 50E257F21AE153310024D179 /* ButtonStyler.m */; };
 		50E3E6641AE1127700DA61E8 /* PPOBaseURLManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 50E3E6621AE1127700DA61E8 /* PPOBaseURLManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		50E3E6651AE1127700DA61E8 /* PPOBaseURLManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50E3E6631AE1127700DA61E8 /* PPOBaseURLManager.m */; };
 		50E3E6691AE1332700DA61E8 /* PaypointSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50D48F0A1ADC140C006BE4E8 /* PaypointSDK.framework */; };
@@ -221,6 +223,9 @@
 		50D48F0A1ADC140C006BE4E8 /* PaypointSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PaypointSDK.framework; path = Lipo/PaypointSDK.framework; sourceTree = SOURCE_ROOT; };
 		50E257EB1AE148E20024D179 /* OutcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OutcomeViewController.h; sourceTree = "<group>"; };
 		50E257EC1AE148E20024D179 /* OutcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OutcomeViewController.m; sourceTree = "<group>"; };
+		50E257EF1AE150CA0024D179 /* FontAwesome.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.otf; sourceTree = "<group>"; };
+		50E257F11AE153310024D179 /* ButtonStyler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonStyler.h; sourceTree = "<group>"; };
+		50E257F21AE153310024D179 /* ButtonStyler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ButtonStyler.m; sourceTree = "<group>"; };
 		50E3E6621AE1127700DA61E8 /* PPOBaseURLManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOBaseURLManager.h; sourceTree = "<group>"; };
 		50E3E6631AE1127700DA61E8 /* PPOBaseURLManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOBaseURLManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -443,6 +448,7 @@
 		5069F6551ABC7DA30077FB10 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				50E257EF1AE150CA0024D179 /* FontAwesome.otf */,
 				501DFBFD1AE00A79004C4AE3 /* FOUCONBD.otf */,
 				501DFBFE1AE00A79004C4AE3 /* FOUCONDM.otf */,
 				501DFBFF1AE00A79004C4AE3 /* FOUCONEB.otf */,
@@ -722,6 +728,7 @@
 				507331E51ADE697000BBDFC2 /* ColourManager */,
 				507331F71ADE7B2900BBDFC2 /* ImageManager */,
 				507331FB1ADEB67500BBDFC2 /* EnvironmentManager */,
+				50E257F41AE153510024D179 /* ButtonStyler */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -733,6 +740,15 @@
 				50E257EC1AE148E20024D179 /* OutcomeViewController.m */,
 			);
 			name = OutcomeViewController;
+			sourceTree = "<group>";
+		};
+		50E257F41AE153510024D179 /* ButtonStyler */ = {
+			isa = PBXGroup;
+			children = (
+				50E257F11AE153310024D179 /* ButtonStyler.h */,
+				50E257F21AE153310024D179 /* ButtonStyler.m */,
+			);
+			name = ButtonStyler;
 			sourceTree = "<group>";
 		};
 		50E3E6661AE1127A00DA61E8 /* PPOBaseURLManager */ = {
@@ -910,6 +926,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5069F6611ABC7DA30077FB10 /* Main.storyboard in Resources */,
+				50E257F01AE150CA0024D179 /* FontAwesome.otf in Resources */,
 				501DFC061AE00A79004C4AE3 /* FOUCONEB.otf in Resources */,
 				501DFC0A1AE00A79004C4AE3 /* FoundConExtBol.ttf in Resources */,
 				501DFC041AE00A79004C4AE3 /* FOUCONBD.otf in Resources */,
@@ -975,6 +992,7 @@
 				507331FA1ADEB67100BBDFC2 /* EnvironmentManager.m in Sources */,
 				5069F6581ABC7DA30077FB10 /* main.m in Sources */,
 				5056A19F1AD6761D00AB1276 /* NSString+strip.m in Sources */,
+				50E257F31AE153310024D179 /* ButtonStyler.m in Sources */,
 				50AB96D81AC1D38E00323E05 /* Reachability.m in Sources */,
 				50AB93B81AD551AD005944F5 /* SubmitFormViewController.m in Sources */,
 				507331E41ADE696900BBDFC2 /* ColourManager.m in Sources */,
