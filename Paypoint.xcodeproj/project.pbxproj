@@ -84,6 +84,7 @@
 		50CC9B101AD43B7600B97F2E /* FormViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CC9B0F1AD43B7600B97F2E /* FormViewController.m */; };
 		50CC9B141AD43C3E00B97F2E /* FormDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CC9B131AD43C3E00B97F2E /* FormDetails.m */; };
 		50CC9B191AD43E2200B97F2E /* TimeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CC9B181AD43E2200B97F2E /* TimeManager.m */; };
+		50E257ED1AE148E20024D179 /* OutcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50E257EC1AE148E20024D179 /* OutcomeViewController.m */; };
 		50E3E6641AE1127700DA61E8 /* PPOBaseURLManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 50E3E6621AE1127700DA61E8 /* PPOBaseURLManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		50E3E6651AE1127700DA61E8 /* PPOBaseURLManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50E3E6631AE1127700DA61E8 /* PPOBaseURLManager.m */; };
 		50E3E6691AE1332700DA61E8 /* PaypointSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50D48F0A1ADC140C006BE4E8 /* PaypointSDK.framework */; };
@@ -218,6 +219,8 @@
 		50CC9B171AD43E2200B97F2E /* TimeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeManager.h; sourceTree = "<group>"; };
 		50CC9B181AD43E2200B97F2E /* TimeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimeManager.m; sourceTree = "<group>"; };
 		50D48F0A1ADC140C006BE4E8 /* PaypointSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PaypointSDK.framework; path = Lipo/PaypointSDK.framework; sourceTree = SOURCE_ROOT; };
+		50E257EB1AE148E20024D179 /* OutcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OutcomeViewController.h; sourceTree = "<group>"; };
+		50E257EC1AE148E20024D179 /* OutcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OutcomeViewController.m; sourceTree = "<group>"; };
 		50E3E6621AE1127700DA61E8 /* PPOBaseURLManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOBaseURLManager.h; sourceTree = "<group>"; };
 		50E3E6631AE1127700DA61E8 /* PPOBaseURLManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOBaseURLManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -289,6 +292,7 @@
 				501DFBFC1ADFF159004C4AE3 /* WelcomeViewController */,
 				50CC9B111AD43B7A00B97F2E /* FormViewController */,
 				50AB93B91AD551B0005944F5 /* SubmitFormViewController */,
+				50E257EE1AE1491E0024D179 /* OutcomeViewController */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -722,6 +726,15 @@
 			name = Managers;
 			sourceTree = "<group>";
 		};
+		50E257EE1AE1491E0024D179 /* OutcomeViewController */ = {
+			isa = PBXGroup;
+			children = (
+				50E257EB1AE148E20024D179 /* OutcomeViewController.h */,
+				50E257EC1AE148E20024D179 /* OutcomeViewController.m */,
+			);
+			name = OutcomeViewController;
+			sourceTree = "<group>";
+		};
 		50E3E6661AE1127A00DA61E8 /* PPOBaseURLManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -968,6 +981,7 @@
 				50CC9B191AD43E2200B97F2E /* TimeManager.m in Sources */,
 				50CC9B101AD43B7600B97F2E /* FormViewController.m in Sources */,
 				501DFBFB1ADFF156004C4AE3 /* WelcomeViewController.m in Sources */,
+				50E257ED1AE148E20024D179 /* OutcomeViewController.m in Sources */,
 				507331FE1ADEB7EF00BBDFC2 /* EndpointManager.m in Sources */,
 				507331E81ADE6A7600BBDFC2 /* NavigationViewController.m in Sources */,
 			);

@@ -9,6 +9,7 @@
 #import "SubmitFormViewController.h"
 #import "ColourManager.h"
 #import "EnvironmentManager.h"
+#import "OutcomeViewController.h"
 
 typedef enum : NSUInteger {
     LOADING_ANIMATION_STATE_STARTING,
@@ -237,7 +238,7 @@ typedef enum : NSUInteger {
         [self handleError:outcome.error];
     } else {
         [self endAnimationWithCompletion:^{
-            [self showAlertWithMessage:@"Payment Authorised"];
+            [self performSegueWithIdentifier:@"OutcomeViewControllerSegueID" sender:outcome];
         }];
     }
 }
@@ -284,6 +285,14 @@ typedef enum : NSUInteger {
         
     }
     
+}
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"OutcomeViewControllerSegueID"] && [sender isKindOfClass:[PPOOutcome class]]) {
+        PPOOutcome *outcome = (PPOOutcome*)sender;
+        OutcomeViewController *controller = segue.destinationViewController;
+        controller.outcome = outcome;
+    }
 }
 
 #pragma mark - Typical Response Error Handling
