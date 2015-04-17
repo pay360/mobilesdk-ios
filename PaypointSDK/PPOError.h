@@ -62,6 +62,9 @@ typedef NS_ENUM(NSInteger, PPOErrorCode) {
     PPOErrorCurrencyInvalid,
     
     /* The specified amount is invalid */
-    PPOErrorPaymentAmountInvalid
+    PPOErrorPaymentAmountInvalid,
+    
+    /* The provided installation ID is invalid*/
+    PPOErrorInstallationIDInvalid
     
 };
