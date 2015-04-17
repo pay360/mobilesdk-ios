@@ -31,7 +31,6 @@
 		501B7CC01AC40B3000F44193 /* PPOWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 501B7CBD1AC40B3000F44193 /* PPOWebViewController.m */; };
 		501B7CC31AC40B5600F44193 /* PPOWebViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 501B7CBE1AC40B3000F44193 /* PPOWebViewController.xib */; };
 		501C8E871AC03F7000CBA25A /* PaypointSDKBundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 501C8E761AC03B9D00CBA25A /* PaypointSDKBundle.bundle */; };
-		501DFBF11ADFF048004C4AE3 /* Clouds.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 501DFBF01ADFF048004C4AE3 /* Clouds.mp4 */; };
 		501DFBF31ADFF0B1004C4AE3 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 501DFBF21ADFF0B1004C4AE3 /* AVFoundation.framework */; };
 		501DFBF61ADFF0CF004C4AE3 /* AVPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 501DFBF51ADFF0CF004C4AE3 /* AVPlayerView.m */; };
 		501DFBFB1ADFF156004C4AE3 /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 501DFBFA1ADFF156004C4AE3 /* WelcomeViewController.m */; };
@@ -135,7 +134,6 @@
 		501C8E761AC03B9D00CBA25A /* PaypointSDKBundle.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PaypointSDKBundle.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		501C8E791AC03B9D00CBA25A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		501D5EFE1ACD49A000E61680 /* UniversalFramework.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = UniversalFramework.sh; path = ../Lipo/UniversalFramework.sh; sourceTree = "<group>"; };
-		501DFBF01ADFF048004C4AE3 /* Clouds.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Clouds.mp4; sourceTree = "<group>"; };
 		501DFBF21ADFF0B1004C4AE3 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		501DFBF41ADFF0CF004C4AE3 /* AVPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVPlayerView.h; sourceTree = "<group>"; };
 		501DFBF51ADFF0CF004C4AE3 /* AVPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AVPlayerView.m; sourceTree = "<group>"; };
@@ -458,7 +456,6 @@
 				501DFC011AE00A79004C4AE3 /* FOUCONRG.otf */,
 				501DFC021AE00A79004C4AE3 /* FOUCONRI.otf */,
 				501DFC031AE00A79004C4AE3 /* FoundConExtBol.ttf */,
-				501DFBF01ADFF048004C4AE3 /* Clouds.mp4 */,
 				5069F6621ABC7DA30077FB10 /* Images.xcassets */,
 				5069F6641ABC7DA30077FB10 /* LaunchScreen.xib */,
 				5069F6561ABC7DA30077FB10 /* Info.plist */,
@@ -918,7 +915,6 @@
 				501DFC091AE00A79004C4AE3 /* FOUCONRI.otf in Resources */,
 				501DFC051AE00A79004C4AE3 /* FOUCONDM.otf in Resources */,
 				501DFC071AE00A79004C4AE3 /* FOUCONMD.otf in Resources */,
-				501DFBF11ADFF048004C4AE3 /* Clouds.mp4 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
