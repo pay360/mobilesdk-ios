@@ -58,8 +58,8 @@
 		507331ED1ADE72E700BBDFC2 /* PPOPayment.m in Sources */ = {isa = PBXBuildFile; fileRef = 507331EB1ADE72E700BBDFC2 /* PPOPayment.m */; };
 		507331F61ADE7B1400BBDFC2 /* ImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 507331F51ADE7B1400BBDFC2 /* ImageManager.m */; };
 		507331FA1ADEB67100BBDFC2 /* EnvironmentManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 507331F91ADEB67100BBDFC2 /* EnvironmentManager.m */; };
-		507331FE1ADEB7EF00BBDFC2 /* EndpointManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 507331FD1ADEB7EF00BBDFC2 /* EndpointManager.m */; };
-		507332001ADEB9B100BBDFC2 /* EndpointManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 507331FD1ADEB7EF00BBDFC2 /* EndpointManager.m */; };
+		507331FE1ADEB7EF00BBDFC2 /* MerchantEndpointManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 507331FD1ADEB7EF00BBDFC2 /* MerchantEndpointManager.m */; };
+		507332001ADEB9B100BBDFC2 /* MerchantEndpointManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 507331FD1ADEB7EF00BBDFC2 /* MerchantEndpointManager.m */; };
 		507332011ADEB9C700BBDFC2 /* EnvironmentManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 507331F91ADEB67100BBDFC2 /* EnvironmentManager.m */; };
 		507AA72F1AD7D78F00420DF7 /* PPOOutcome.h in Headers */ = {isa = PBXBuildFile; fileRef = 507AA72D1AD7D78F00420DF7 /* PPOOutcome.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		507AA7301AD7D78F00420DF7 /* PPOOutcome.m in Sources */ = {isa = PBXBuildFile; fileRef = 507AA72E1AD7D78F00420DF7 /* PPOOutcome.m */; };
@@ -190,8 +190,8 @@
 		507331F51ADE7B1400BBDFC2 /* ImageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageManager.m; sourceTree = "<group>"; };
 		507331F81ADEB67100BBDFC2 /* EnvironmentManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EnvironmentManager.h; sourceTree = "<group>"; };
 		507331F91ADEB67100BBDFC2 /* EnvironmentManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EnvironmentManager.m; sourceTree = "<group>"; };
-		507331FC1ADEB7EF00BBDFC2 /* EndpointManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EndpointManager.h; sourceTree = "<group>"; };
-		507331FD1ADEB7EF00BBDFC2 /* EndpointManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EndpointManager.m; sourceTree = "<group>"; };
+		507331FC1ADEB7EF00BBDFC2 /* MerchantEndpointManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MerchantEndpointManager.h; sourceTree = "<group>"; };
+		507331FD1ADEB7EF00BBDFC2 /* MerchantEndpointManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MerchantEndpointManager.m; sourceTree = "<group>"; };
 		507AA72D1AD7D78F00420DF7 /* PPOOutcome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOOutcome.h; sourceTree = "<group>"; };
 		507AA72E1AD7D78F00420DF7 /* PPOOutcome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOOutcome.m; sourceTree = "<group>"; };
 		509B58891ADD477A001236CD /* PPOTimeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOTimeManager.h; sourceTree = "<group>"; };
@@ -557,13 +557,13 @@
 			name = EnvironmentManager;
 			sourceTree = "<group>";
 		};
-		507331FF1ADEB7F300BBDFC2 /* EndpointManager */ = {
+		507331FF1ADEB7F300BBDFC2 /* MerchantEndpointManager */ = {
 			isa = PBXGroup;
 			children = (
-				507331FC1ADEB7EF00BBDFC2 /* EndpointManager.h */,
-				507331FD1ADEB7EF00BBDFC2 /* EndpointManager.m */,
+				507331FC1ADEB7EF00BBDFC2 /* MerchantEndpointManager.h */,
+				507331FD1ADEB7EF00BBDFC2 /* MerchantEndpointManager.m */,
 			);
-			name = EndpointManager;
+			name = MerchantEndpointManager;
 			sourceTree = "<group>";
 		};
 		507AA7311AD7D79300420DF7 /* PPOOutcome */ = {
@@ -723,7 +723,7 @@
 			isa = PBXGroup;
 			children = (
 				50CC9B1A1AD43E2500B97F2E /* TimeManager */,
-				507331FF1ADEB7F300BBDFC2 /* EndpointManager */,
+				507331FF1ADEB7F300BBDFC2 /* MerchantEndpointManager */,
 				50AB93BD1AD55652005944F5 /* NetworkManager */,
 				507331E51ADE697000BBDFC2 /* ColourManager */,
 				507331F71ADE7B2900BBDFC2 /* ImageManager */,
@@ -1000,7 +1000,7 @@
 				50CC9B101AD43B7600B97F2E /* FormViewController.m in Sources */,
 				501DFBFB1ADFF156004C4AE3 /* WelcomeViewController.m in Sources */,
 				50E257ED1AE148E20024D179 /* OutcomeViewController.m in Sources */,
-				507331FE1ADEB7EF00BBDFC2 /* EndpointManager.m in Sources */,
+				507331FE1ADEB7EF00BBDFC2 /* MerchantEndpointManager.m in Sources */,
 				507331E81ADE6A7600BBDFC2 /* NavigationViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1033,7 +1033,7 @@
 			files = (
 				507F54D01ADBBDBB004BF798 /* NetworkManager.m in Sources */,
 				5069F6941ABC7EBA0077FB10 /* PaypointSDKTests.m in Sources */,
-				507332001ADEB9B100BBDFC2 /* EndpointManager.m in Sources */,
+				507332001ADEB9B100BBDFC2 /* MerchantEndpointManager.m in Sources */,
 				507332011ADEB9C700BBDFC2 /* EnvironmentManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

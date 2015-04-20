@@ -11,9 +11,7 @@
 @implementation EnvironmentManager
 
 +(NSUInteger)currentEnvironment {
-    NSDictionary *environment = [[NSProcessInfo processInfo] environment];
-    NSString *value = [environment objectForKey:@"ENVIRONMENT"];
-    return value.integerValue;
+    return 0;
 }
 
 @end

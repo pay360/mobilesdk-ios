@@ -6,12 +6,12 @@
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#import "EndpointManager.h"
+#import "MerchantEndpointManager.h"
 #import "Reachability.h"
 
 #define INSTALLATION_ID @"5300065"
 
-@interface NetworkManager : EndpointManager
+@interface NetworkManager : MerchantEndpointManager
 
 +(void)getCredentialsWithCompletion:(void(^)(PPOCredentials *credentials, NSURLResponse *response, NSError *error))completion;
 

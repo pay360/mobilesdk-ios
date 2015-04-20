@@ -12,14 +12,9 @@
 
 +(NSURL*)baseURLForEnvironment:(PPOEnvironment)environment {
     
-    
     switch (environment) {
-        case PPOEnvironmentSimulator:
-            return [NSURL URLWithString:@"http://localhost:5000/mobileapi"];
-            break;
-            
-        case PPOEnvironmentDevice:
-            return [NSURL URLWithString:[NSString stringWithFormat:@"http://%@:5000/mobileapi", [PPOBaseURLManager laptopIP]]];
+        case PPOEnvironmentStaging:
+            return [NSURL URLWithString:[NSString stringWithFormat:@"http://192.168.3.243:5000/mobileapi"]];
             break;
             
         default:
@@ -27,12 +22,6 @@
             break;
     }
     
-}
-
-+(NSString*)laptopIP {
-    NSDictionary *environment = [[NSProcessInfo processInfo] environment];
-    NSString *value = [environment objectForKey:@"LAPTOP_IP"];
-    return value;
 }
 
 @end

@@ -8,7 +8,7 @@
 
 #import <PaypointSDK/PaypointSDK.h>
 
-@interface EndpointManager : NSObject
+@interface MerchantEndpointManager : NSObject
 
 +(NSURL*)baseURL:(PPOEnvironment)environment;
 
