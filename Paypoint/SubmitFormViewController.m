@@ -7,41 +7,48 @@
 //
 
 #import "SubmitFormViewController.h"
-#import "ColourManager.h"
+#import "MerchantServer.h"
 #import "EnvironmentManager.h"
 #import "OutcomeViewController.h"
 
-typedef enum : NSUInteger {
-    LOADING_ANIMATION_STATE_STARTING,
-    LOADING_ANIMATION_STATE_IN_PROGRESS,
-    LOADING_ANIMATION_STATE_ENDING,
-    LOADING_ANIMATION_STATE_ENDED
-} LOADING_ANIMATION_STATE;
-
 @interface SubmitFormViewController ()
 @property (nonatomic, strong) PPOPaymentManager *paymentManager;
-@property (nonatomic, copy) void(^endAnimationCompletion)(void);
 @end
 
-@implementation SubmitFormViewController {
-    LOADING_ANIMATION_STATE _animationState;
-    BOOL _animationShouldEndAsSoonHasItHasFinishedStarting;
-}
-
-#pragma mark - Lazy Instantiation
-
--(PPOPaymentManager *)paymentManager {
-    if (_paymentManager == nil) {
-        NSURL *baseURL = [PPOBaseURLManager baseURLForEnvironment:[EnvironmentManager currentEnvironment]];
-        _paymentManager = [[PPOPaymentManager alloc] initWithBaseURL:baseURL];
-    }
-    return _paymentManager;
-}
+@implementation SubmitFormViewController
 
 -(void)viewDidLoad {
+    
     [super viewDidLoad];
     
-    _animationState = LOADING_ANIMATION_STATE_ENDED;
+    self.amountLabel.text = @"£100";
+    
+    PPOEnvironment currentEnvironment = [EnvironmentManager currentEnvironment];
+    
+    NSURL *baseURL = [PPOPaymentBaseURLManager baseURLForEnvironment:currentEnvironment];
+    
+    self.paymentManager = [[PPOPaymentManager alloc] initWithBaseURL:baseURL];
+}
+
+#pragma mark - Actions
+
+-(IBAction)payNowButtonPressed:(UIButton *)sender {
+    
+    BOOL noNetwork = [[Reachability reachabilityForInternetConnection] currentReachabilityStatus] == NotReachable;
+    
+    if (noNetwork) {
+        
+        [self showAlertWithMessage:@"There is no internet connection"];
+        
+    } else if (self.animationState == LOADING_ANIMATION_STATE_ENDED) {
+        
+        [self attemptPayment:[self buildPaymentExample]];
+        
+    }
+    
+}
+
+-(PPOPayment*)buildPaymentExample {
     
     PPOBillingAddress *address = [[PPOBillingAddress alloc] initWithFirstLine:nil
                                                                withSecondLine:nil
@@ -52,196 +59,82 @@ typedef enum : NSUInteger {
                                                                  withPostcode:nil
                                                               withCountryCode:nil];
     
-    NSTimeInterval time = [[NSDate date] timeIntervalSince1970];
-    
     PPOTransaction *transaction = [[PPOTransaction alloc] initWithCurrency:@"GBP"
                                                                 withAmount:@100
                                                            withDescription:@"A description"
-                                                     withMerchantReference:[NSString stringWithFormat:@"mer_%.0f", time]
+                                                     withMerchantReference:[NSString stringWithFormat:@"mer_%.0f", [[NSDate date] timeIntervalSince1970]]
                                                                 isDeferred:NO];
     
-    self.payment = [[PPOPayment alloc] initWithTransaction:transaction withCard:nil withBillingAddress:address];
     
-    self.amountLabel.text = [@"£ " stringByAppendingString:self.payment.transaction.amount.stringValue];
-}
-
--(void)blockerTapGestureRecognised:(UITapGestureRecognizer *)gesture {
-    [self.paymentManager.payments cancelAllOperations];
-    [self endAnimationWithCompletion:nil];
-}
-
-#pragma mark - Actions
-
--(IBAction)payNowButtonPressed:(UIButton *)sender {
-    
-    FormDetails *form = self.details;
-    
-    PPOCreditCard *card = [[PPOCreditCard alloc] initWithPan:form.cardNumber
-                                        withSecurityCodeCode:form.cvv
-                                                  withExpiry:form.expiry
+    PPOCreditCard *card = [[PPOCreditCard alloc] initWithPan:self.form.cardNumber
+                                        withSecurityCodeCode:self.form.cvv
+                                                  withExpiry:self.form.expiry
                                           withCardholderName:@"Dai Jones"];
     
-    self.payment.creditCard = card;
+    PPOPayment *payment = [[PPOPayment alloc] initWithTransaction:transaction
+                                                         withCard:card
+                                               withBillingAddress:address];
     
-    PPOOutcome *outcome;
-    
-    outcome = [self.paymentManager validatePayment:self.payment];
-    
-    if (outcome) {
-        
-        [self handleOutcome:outcome];
-        
-    } else {
-        
-        [self attemptPayment:self.payment];
-        
-    }
-    
+    return payment;
 }
 
 -(void)attemptPayment:(PPOPayment*)payment {
     
-    if ([[Reachability reachabilityForInternetConnection] currentReachabilityStatus] == NotReachable) {
-        
-        [self showAlertWithMessage:@"There is no internet connection"];
-        
-    } else {
-        
-        if (_animationState == LOADING_ANIMATION_STATE_ENDED) {
-            
-            [self beginAnimation];
-            
-            __weak typeof (self) weakSelf = self;
-            
-            [NetworkManager getCredentialsWithCompletion:^(PPOCredentials *credentials, NSURLResponse *response, NSError *error) {
-                
-                PPOOutcome *outc = [weakSelf.paymentManager validateCredentials:credentials];
-                
-                if (outc) {
-                    [weakSelf handleOutcome:outc];
-                    return;
-                }
-                
-                if (error) {
-                    [weakSelf handleError:error];
-                    return;
-                }
-                
-                [weakSelf.paymentManager makePayment:payment
-                                     withCredentials:credentials
-                                         withTimeOut:60.0f
-                                      withCompletion:^(PPOOutcome *outcome) {
-                                          
-                                          [weakSelf handleOutcome:outcome];
-                                          
-                                      }];
-                
-            }];
-            
-        }
-        
+    NSError *invalid = [self.paymentManager validatePayment:payment];
+    
+    if (invalid) {
+        [self handleError:invalid];
+        return;
     }
     
-}
-
--(void)beginAnimation{
+    [self beginAnimation];
     
-    _animationState = LOADING_ANIMATION_STATE_STARTING;
+    __weak typeof (self) weakSelf = self;
     
-    NSTimeInterval duration = 1.0;
-    
-    self.blockerView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0];
-    self.blockerView.hidden = NO;
-    
-    [UIView animateWithDuration:duration/6 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+    [MerchantServer getCredentialsWithCompletion:^(PPOCredentials *credentials, NSError *retrievalError) {
         
-        self.blockerView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.4];
-        
-        self.paypointLogoImageView.transform = CGAffineTransformMakeScale(1.9, 1.9);
-        
-    } completion:^(BOOL finished) {
-        
-        _animationState = LOADING_ANIMATION_STATE_IN_PROGRESS;
-        
-        self.blockerLabel.hidden = NO;
-        
-        [UIView animateWithDuration:duration/2 animations:^{
-            self.blockerLabel.alpha = 1;
-        }];
-        
-        [UIView animateKeyframesWithDuration:duration/2 delay:0.0 options:UIViewKeyframeAnimationOptionRepeat animations:^{
-            
-            [UIView addKeyframeWithRelativeStartTime:0 relativeDuration:0.5 animations:^{
-                self.paypointLogoImageView.transform = CGAffineTransformMakeScale(2.2, 2.2);
-            }];
-            
-            [UIView addKeyframeWithRelativeStartTime:0.5 relativeDuration:0.5 animations:^{
-                self.paypointLogoImageView.transform = CGAffineTransformMakeScale(1.9, 1.9);
-            }];
-            
-        } completion:^(BOOL finished) {
-        }];
-        
-        if (_animationShouldEndAsSoonHasItHasFinishedStarting) {
-            [self endAnimationWithCompletion:self.endAnimationCompletion];
+        if (retrievalError) {
+            [self handleError:retrievalError];
+            return;
         }
+        
+        [weakSelf attemptPayment:payment withCredentials:credentials];
         
     }];
     
 }
 
--(void)endAnimationWithCompletion:(void(^)(void))completion {
+-(void)attemptPayment:(PPOPayment*)payment withCredentials:(PPOCredentials*)credentials {
     
-    self.endAnimationCompletion = completion;
+    NSError *invalidCredentials = [self.paymentManager validateCredentials:credentials];
     
-    if (_animationState == LOADING_ANIMATION_STATE_ENDED) {
-        if (self.endAnimationCompletion) self.endAnimationCompletion();
+    if (invalidCredentials) {
+        [self handleError:invalidCredentials];
         return;
     }
     
-    if (_animationState == LOADING_ANIMATION_STATE_IN_PROGRESS) {
-        
-        _animationState = LOADING_ANIMATION_STATE_ENDING;
-        
-        [self.paypointLogoImageView.layer removeAllAnimations];
-        
-        CALayer *currentLayer = self.paypointLogoImageView.layer.presentationLayer;
-        
-        self.paypointLogoImageView.layer.transform = currentLayer.transform;
-        
-        [UIView animateWithDuration:.6 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-            
-            self.blockerView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0];
-            self.blockerLabel.alpha = 0;
-            
-            self.paypointLogoImageView.transform = CGAffineTransformIdentity;
-            
-        } completion:^(BOOL finished) {
-            
-            self.blockerView.hidden = YES;
-            self.blockerLabel.hidden = YES;
-            
-            _animationState = LOADING_ANIMATION_STATE_ENDED;
-            
-            _animationShouldEndAsSoonHasItHasFinishedStarting = NO;
-            
-            if (completion) completion();
-            
-        }];
-        
-    } else {
-        _animationShouldEndAsSoonHasItHasFinishedStarting = YES;
-    }
+    __weak typeof (self) weakSelf = self;
     
+    [self.paymentManager makePayment:payment
+                     withCredentials:credentials
+                         withTimeOut:60.0f
+                      withCompletion:^(PPOOutcome *outcome, NSError *paymentFailure) {
+                          
+                          if (paymentFailure) {
+                              [weakSelf handleError:paymentFailure];
+                          } else {
+                              [weakSelf endAnimationWithCompletion:^{
+                                  [weakSelf performSegueWithIdentifier:@"OutcomeViewControllerSegueID" sender:outcome];
+                              }];
+                          }
+                      }];
 }
 
--(void)handleOutcome:(PPOOutcome*)outcome {
-    if (outcome.error) {
-        [self handleError:outcome.error];
-    } else {
-        [self endAnimationWithCompletion:^{
-            [self performSegueWithIdentifier:@"OutcomeViewControllerSegueID" sender:outcome];
-        }];
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"OutcomeViewControllerSegueID"] && [sender isKindOfClass:[PPOOutcome class]]) {
+        PPOOutcome *outcome = (PPOOutcome*)sender;
+        OutcomeViewController *controller = segue.destinationViewController;
+        controller.outcome = outcome;
     }
 }
 
@@ -287,48 +180,6 @@ typedef enum : NSUInteger {
         
     }
     
-}
-
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"OutcomeViewControllerSegueID"] && [sender isKindOfClass:[PPOOutcome class]]) {
-        PPOOutcome *outcome = (PPOOutcome*)sender;
-        OutcomeViewController *controller = segue.destinationViewController;
-        controller.outcome = outcome;
-    }
-}
-
-#pragma mark - Typical Response Error Handling
-
--(BOOL)noNetwork:(NSError*)error {
-    return [[self noNetworkConnectionErrorCodes] containsObject:@(error.code)];
-}
-
--(NSArray*)noNetworkConnectionErrorCodes {
-    int codes[] = {
-        kCFURLErrorTimedOut,
-        kCFURLErrorCannotConnectToHost,
-        kCFURLErrorNetworkConnectionLost,
-        kCFURLErrorDNSLookupFailed,
-        kCFURLErrorResourceUnavailable,
-        kCFURLErrorNotConnectedToInternet,
-        kCFURLErrorInternationalRoamingOff,
-        kCFURLErrorCallIsActive,
-        kCFURLErrorFileDoesNotExist,
-        kCFURLErrorNoPermissionsToReadFile,
-    };
-    int size = sizeof(codes)/sizeof(int);
-    NSMutableArray *array = [[NSMutableArray alloc] init];
-    for (int i=0;i<size;++i){
-        [array addObject:[NSNumber numberWithInt:codes[i]]];
-    }
-    return [array copy];
-}
-
-#pragma mark - Helpers
-
--(void)showAlertWithMessage:(NSString*)message {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Outcome" message:message delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil, nil];
-    [alertView show];
 }
 
 @end

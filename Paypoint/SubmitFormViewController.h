@@ -7,10 +7,7 @@
 //
 
 #import "FormViewController.h"
-#import "NetworkManager.h"
 
 @interface SubmitFormViewController : FormViewController
-
-@property (nonatomic, strong) PPOPayment *payment;
 
 @end

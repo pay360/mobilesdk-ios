@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#import "PPOBaseURLManager.h"
+#import "PPOPaymentBaseURLManager.h"
 
-@implementation PPOBaseURLManager
+@implementation PPOPaymentBaseURLManager
 
 +(NSURL*)baseURLForEnvironment:(PPOEnvironment)environment {
     

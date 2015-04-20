@@ -6,8 +6,12 @@
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "PPOOutcome.h"
 
 @interface PPOPaymentsDispatchManager : NSObject
+
+@property (nonatomic, strong, readonly) NSOperationQueue *payments;
+
+-(void)dispatchRequest:(NSURLRequest*)request withCompletion:(void (^)(PPOOutcome *outcome, NSError *error))completion;
 
 @end

@@ -7,7 +7,7 @@
 //
 
 #import "PPOOutcome.h"
-#import "PPOErrorManager.h"
+#import "PPOError.h"
 #import "PPOTimeManager.h"
 
 @interface PPOOutcome ()
@@ -22,7 +22,7 @@
 @property (nonatomic, strong, readwrite) NSString *lastFour;
 @property (nonatomic, strong, readwrite) NSString *cardUsageType;
 @property (nonatomic, strong, readwrite) NSString *cardScheme;
-@property (nonatomic, strong, readwrite) NSError *error;
+@property (nonatomic, readwrite) BOOL isSuccessful;
 @property (nonatomic, strong) PPOTimeManager *timeManager;
 @end
 
@@ -35,6 +35,10 @@
     return _reasonCode;
 }
 
+-(BOOL)isSuccessful {
+    return (self.reasonCode) ? self.reasonCode.integerValue == 0 : NO;
+}
+
 -(PPOTimeManager *)timeManager {
     if (_timeManager == nil) {
         _timeManager = [PPOTimeManager new];
@@ -42,18 +46,12 @@
     return _timeManager;
 }
 
--(instancetype)initWithData:(NSDictionary*)data withError:(NSError*)error {
+-(instancetype)initWithData:(NSDictionary*)data {
     self = [super init];
     
     if (self) {
         
-        if (!error && (!data || data.allKeys.count == 0)) {
-            
-            _error = [NSError errorWithDomain:[PPOErrorManager errorDomainForReasonCode:_reasonCode.integerValue]
-                                         code:[PPOErrorManager errorCodeForReasonCode:_reasonCode.integerValue]
-                                     userInfo:nil];
-            
-        } else if (data) {
+        if (data) {
             
             id value;
             
@@ -73,16 +71,6 @@
                 
                 [self parseCard:value];
             }
-            
-            if (_reasonCode && _reasonCode.integerValue > 0) {
-                _error = [NSError errorWithDomain:[PPOErrorManager errorDomainForReasonCode:_reasonCode.integerValue]
-                                             code:[PPOErrorManager errorCodeForReasonCode:_reasonCode.integerValue]
-                                         userInfo:nil];
-            }
-            
-        } else {
-            
-            _error = error;
             
         }
         

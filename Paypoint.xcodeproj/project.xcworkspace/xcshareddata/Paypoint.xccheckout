@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>6BFA09D3-EC32-41DE-82C8-7E4DEED560BB</string>
 	<key>IDESourceControlProjectName</key>
-	<string>Paypoint</string>
+	<string>project</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>5DBC982ED60A1B320CEDBB4BE53BD0241510E6F3</key>
 		<string>ssh://stash.paypoint.net:7999/blu/mobilesdk-ios.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>Paypoint.xcodeproj</string>
+	<string>Paypoint.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>5DBC982ED60A1B320CEDBB4BE53BD0241510E6F3</key>

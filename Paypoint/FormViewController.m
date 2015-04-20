@@ -87,15 +87,8 @@
         titleLabel.textColor = blue;
     }
     
-    tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(blockerTapGestureRecognised:)];
-    [self.blockerView addGestureRecognizer:tap];
-    
 //    self.view.backgroundColor = [ColourManager ppLightGrey:1];
 
-}
-
--(void)blockerTapGestureRecognised:(UITapGestureRecognizer*)gesture {
-    
 }
 
 #pragma mark - Actions

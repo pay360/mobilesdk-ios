@@ -6,8 +6,20 @@
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "PPOOutcome.h"
+#import "PPOPaymentEndpointManager.h"
+#import "PPOTransaction.h"
+#import "PPOCredentials.h"
+#import "PPOCreditCard.h"
 
-@interface PPOPaymentValidator : NSObject
+@class PPOPayment;
+
+@interface PPOPaymentValidator : PPOPaymentEndpointManager
+
+-(NSError*)validateBaseURL:(NSURL*)baseURL;
+-(NSError*)validatePayment:(PPOPayment*)payment;
+-(NSError*)validateCredentials:(PPOCredentials*)credentials;
+-(NSError*)validateTransaction:(PPOTransaction*)transaction withCard:(PPOCreditCard*)card;
+-(NSError*)validateCredentials:(PPOCredentials*)credentials validateBaseURL:(NSURL*)baseURL validatePayment:(PPOPayment*)payment;
 
 @end

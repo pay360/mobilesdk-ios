@@ -6,8 +6,13 @@
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#import "PPOEndpointManager.h"
+#import "PPOPaymentEndpointManager.h"
 
-@implementation PPOEndpointManager
+@implementation PPOPaymentEndpointManager
+
+-(NSURL*)simplePayment:(NSString*)installationID withBaseURL:(NSURL*)baseURL {
+    return [baseURL URLByAppendingPathComponent:[NSString stringWithFormat:@"/transactions/%@/payment", installationID]];
+    
+}
 
 @end

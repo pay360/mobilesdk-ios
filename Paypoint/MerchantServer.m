@@ -6,20 +6,16 @@
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#import "NetworkManager.h"
-#import "EnvironmentManager.h"
+#import "MerchantServer.h"
 
-@implementation NetworkManager
+@implementation MerchantServer
 
-+(void)getCredentialsWithCompletion:(void(^)(PPOCredentials *credentials, NSURLResponse *response, NSError *error))completion {
++(void)getCredentialsWithCompletion:(void(^)(PPOCredentials *credentials, NSError *retrievalError))completion {
     
     __block NSString *token;
     __block PPOCredentials *c;
     
-    PPOEnvironment environment = [EnvironmentManager currentEnvironment];
-    
-    NSURL *baseURL = [self baseURL:environment];
-    NSURL *url = [baseURL URLByAppendingPathComponent:@"/merchant/getToken"];
+    NSURL *url = [NSURL URLWithString:@"http://192.168.3.243:5001/merchant/getToken"];
         
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
                                                            cachePolicy:NSURLRequestUseProtocolCachePolicy
@@ -45,7 +41,7 @@
             c = [[PPOCredentials alloc] initWithID:INSTALLATION_ID withToken:token];
         }
         
-        completion(c, response, error);
+        completion(c, error);
         
     }];
     

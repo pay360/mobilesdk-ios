@@ -6,13 +6,13 @@
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#import "MerchantEndpointManager.h"
 #import "Reachability.h"
+#import <PaypointSDK/PaypointSDK.h>
 
 #define INSTALLATION_ID @"5300065"
 
-@interface NetworkManager : MerchantEndpointManager
+@interface MerchantServer : NSObject
 
-+(void)getCredentialsWithCompletion:(void(^)(PPOCredentials *credentials, NSURLResponse *response, NSError *error))completion;
++(void)getCredentialsWithCompletion:(void(^)(PPOCredentials *credentials, NSError *retrievalError))completion;
 
 @end

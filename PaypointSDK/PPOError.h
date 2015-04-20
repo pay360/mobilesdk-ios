@@ -37,7 +37,7 @@ typedef NS_ENUM(NSInteger, PPOErrorCode) {
     /* Token Expired */
     PPOErrorClientTokenExpired,
     
-    /* The token was valid, but does not grant you access to use the specified feature */
+    /* The supplied token does not have sufficient permissions to you access the specified feature */
     PPOErrorUnauthorisedRequest,
     
     /* The transaction was successfully submitted but failed to be processed correctly. */

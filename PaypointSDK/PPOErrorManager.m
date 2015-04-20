@@ -54,7 +54,7 @@
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorSuppliedBaseURLInvalid
                                    userInfo:@{
-                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"PPOPaymentManager is missing a base URL.", @"Failure message for BaseURL check")
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"PPOPaymentManager is missing a base URL", @"Failure message for BaseURL check")
                                               }
                     ];
             break;
@@ -126,7 +126,43 @@
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorCredentialsNotFound
                                    userInfo:@{
-                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Credentials not supplied.", @"Failure message for payment parameters integrity check")
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Credentials not supplied", @"Failure message for payment parameters integrity check")
+                                              }
+                    ];
+            break;
+            
+        case PPOErrorServerFailure:
+            return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                       code:PPOErrorServerFailure
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"There was an error from the server at Paypoint", @"Generic paypoint server error failure message")
+                                              }
+                    ];
+            break;
+            
+        case PPOErrorClientTokenExpired:
+            return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                       code:PPOErrorClientTokenExpired
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The supplied bearer token has expired", @"Failure message for payment error")
+                                              }
+                    ];
+            break;
+            
+        case PPOErrorUnauthorisedRequest:
+            return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                       code:PPOErrorUnauthorisedRequest
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The supplied token does not have sufficient permissions to you access the specified feature", @"Failure message for account restriction")
+                                              }
+                    ];
+            break;
+            
+        case PPOErrorTransactionProcessingFailed:
+            return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                       code:PPOErrorTransactionProcessingFailed
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The transaction was successfully submitted but failed to be processed correctly", @"Failure message for payment failure")
                                               }
                     ];
             break;

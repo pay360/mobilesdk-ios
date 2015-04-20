@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @interface PPOOutcome : NSObject
 
@@ -20,8 +20,8 @@
 @property (nonatomic, strong, readonly) NSString *lastFour;
 @property (nonatomic, strong, readonly) NSString *cardUsageType;
 @property (nonatomic, strong, readonly) NSString *cardScheme;
-@property (nonatomic, strong, readonly) NSError *error;
+@property (nonatomic, readonly) BOOL isSuccessful;
 
--(instancetype)initWithData:(NSDictionary*)data withError:(NSError*)error;
+-(instancetype)initWithData:(NSDictionary*)data;
 
 @end

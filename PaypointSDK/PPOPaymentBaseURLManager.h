@@ -12,7 +12,7 @@ typedef NS_ENUM(NSInteger, PPOEnvironment) {
     PPOEnvironmentStaging
 };
 
-@interface PPOBaseURLManager : NSObject
+@interface PPOPaymentBaseURLManager : NSObject
 
 +(NSURL*)baseURLForEnvironment:(PPOEnvironment)environment;
 
