@@ -11,9 +11,13 @@
 @implementation ImageManager
 
 +(UIImage*)fillImgOfSize:(CGSize)img_size withColor:(UIColor*)img_color {
+
+    if (CGSizeEqualToSize(img_size, CGSizeZero)) {
+        img_size = CGSizeMake(1, 1);
+    }
     
     /* begin the graphic context */
-    UIGraphicsBeginImageContext(img_size);
+    UIGraphicsBeginImageContextWithOptions(img_size, YES, 0);
     
     /* set the color */
     [img_color set];
