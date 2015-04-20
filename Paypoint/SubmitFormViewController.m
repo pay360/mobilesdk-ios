@@ -43,12 +43,6 @@ typedef enum : NSUInteger {
     
     _animationState = LOADING_ANIMATION_STATE_ENDED;
     
-    PPOTransaction *transaction = [[PPOTransaction alloc] initWithCurrency:@"GBP"
-                                                                withAmount:@100
-                                                           withDescription:@"A description"
-                                                     withMerchantReference:@"mer_txn_1234556"
-                                                                isDeferred:NO];
-    
     PPOBillingAddress *address = [[PPOBillingAddress alloc] initWithFirstLine:nil
                                                                withSecondLine:nil
                                                                 withThirdLine:nil
@@ -57,6 +51,14 @@ typedef enum : NSUInteger {
                                                                    withRegion:nil
                                                                  withPostcode:nil
                                                               withCountryCode:nil];
+    
+    NSTimeInterval time = [[NSDate date] timeIntervalSince1970];
+    
+    PPOTransaction *transaction = [[PPOTransaction alloc] initWithCurrency:@"GBP"
+                                                                withAmount:@100
+                                                           withDescription:@"A description"
+                                                     withMerchantReference:[NSString stringWithFormat:@"mer_%.0f", time]
+                                                                isDeferred:NO];
     
     self.payment = [[PPOPayment alloc] initWithTransaction:transaction withCard:nil withBillingAddress:address];
     
