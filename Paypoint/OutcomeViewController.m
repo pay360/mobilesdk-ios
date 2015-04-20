@@ -41,6 +41,12 @@
     self.transactionIDLabel.text = (self.outcome.identifier) ?: @"";
     self.amountLabel.text = (self.outcome.amount.stringValue) ? [NSString stringWithFormat:@"£%@.00", self.outcome.amount.stringValue] : @"";
     
+    
+}
+
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
     [ButtonStyler styleButton:self.finishButton];
 }
 
