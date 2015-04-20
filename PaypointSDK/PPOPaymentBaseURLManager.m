@@ -14,7 +14,7 @@
     
     switch (environment) {
         case PPOEnvironmentStaging:
-            return [NSURL URLWithString:[NSString stringWithFormat:@"http://192.168.3.243:5000/mobileapi"]];
+            return [NSURL URLWithString:@"http://192.168.3.243:5000/mobileapi"];
             break;
             
         default:

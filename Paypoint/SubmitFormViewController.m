@@ -42,13 +42,13 @@
         
     } else if (self.animationState == LOADING_ANIMATION_STATE_ENDED) {
         
-        [self attemptPayment:[self buildPaymentExample]];
+        [self attemptPayment:[self buildPaymentExampleWithDetails:self.form]];
         
     }
     
 }
 
--(PPOPayment*)buildPaymentExample {
+-(PPOPayment*)buildPaymentExampleWithDetails:(FormDetails*)form {
     
     PPOBillingAddress *address = [[PPOBillingAddress alloc] initWithFirstLine:nil
                                                                withSecondLine:nil
@@ -59,23 +59,23 @@
                                                                  withPostcode:nil
                                                               withCountryCode:nil];
     
+    NSString *genericRef = [NSString stringWithFormat:@"mer_%.0f", [[NSDate date] timeIntervalSince1970]];
+    
     PPOTransaction *transaction = [[PPOTransaction alloc] initWithCurrency:@"GBP"
                                                                 withAmount:@100
                                                            withDescription:@"A description"
-                                                     withMerchantReference:[NSString stringWithFormat:@"mer_%.0f", [[NSDate date] timeIntervalSince1970]]
+                                                     withMerchantReference:genericRef
                                                                 isDeferred:NO];
     
     
-    PPOCreditCard *card = [[PPOCreditCard alloc] initWithPan:self.form.cardNumber
-                                        withSecurityCodeCode:self.form.cvv
-                                                  withExpiry:self.form.expiry
+    PPOCreditCard *card = [[PPOCreditCard alloc] initWithPan:form.cardNumber
+                                        withSecurityCodeCode:form.cvv
+                                                  withExpiry:form.expiry
                                           withCardholderName:@"Dai Jones"];
     
-    PPOPayment *payment = [[PPOPayment alloc] initWithTransaction:transaction
-                                                         withCard:card
-                                               withBillingAddress:address];
-    
-    return payment;
+    return [[PPOPayment alloc] initWithTransaction:transaction
+                                          withCard:card
+                                withBillingAddress:address];
 }
 
 -(void)attemptPayment:(PPOPayment*)payment {
