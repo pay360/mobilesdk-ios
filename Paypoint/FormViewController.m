@@ -16,9 +16,13 @@
 @property (nonatomic, strong) TimeManager *timeController;
 @property (nonatomic, strong) NSString *previousTextFieldContent;
 @property (nonatomic, strong) UITextRange *previousSelection;
+@property (nonatomic, readwrite) LOADING_ANIMATION_STATE animationState;
+@property (nonatomic, copy) void(^endAnimationCompletion)(void);
 @end
 
-@implementation FormViewController
+@implementation FormViewController {
+    BOOL _animationShouldEndAsSoonHasItHasFinishedStarting;
+}
 
 -(TimeManager *)timeController {
     if (_timeController == nil) {
@@ -27,11 +31,11 @@
     return _timeController;
 }
 
--(FormDetails *)details {
-    if (_details == nil) {
-        _details = [FormDetails new];
+-(FormDetails *)form {
+    if (_form == nil) {
+        _form = [FormDetails new];
     }
-    return _details;
+    return _form;
 }
 
 -(NSArray *)pickerViewSelections {
@@ -54,7 +58,9 @@
 -(void)viewDidLoad {
     
     [super viewDidLoad];
-        
+    
+    self.animationState = LOADING_ANIMATION_STATE_ENDED;
+    
     self.title = @"Details";
     
     for (UITextField *textField in self.textFields) {
@@ -109,12 +115,12 @@
     
     switch (sender.tag) {
         case TEXT_FIELD_TYPE_CARD_NUMBER: {
-            self.details.cardNumber = sender.text;
+            self.form.cardNumber = sender.text;
             [self reformatAsCardNumber:sender];
         }
             break;
         case TEXT_FIELD_TYPE_CVV:
-            self.details.cvv = sender.text;
+            self.form.cvv = sender.text;
             break;
         default:
             break;
@@ -250,7 +256,7 @@ replacementString:(NSString *)string
             NSDate *selection = self.pickerViewSelections[selected];
             NSString *date = [self.timeController.cardExpiryDateFormatter stringFromDate:selection];
             textField.text = date;
-            self.details.expiry = date;
+            self.form.expiry = date;
         }
     }
     
@@ -262,13 +268,13 @@ replacementString:(NSString *)string
     
     switch (textField.tag) {
         case TEXT_FIELD_TYPE_CARD_NUMBER:
-            self.details.cardNumber = nil;
+            self.form.cardNumber = nil;
             break;
         case TEXT_FIELD_TYPE_EXPIRY:
-            self.details.expiry = nil;
+            self.form.expiry = nil;
             break;
         case TEXT_FIELD_TYPE_CVV:
-            self.details.cvv = nil;
+            self.form.cvv = nil;
             break;
     }
     
@@ -321,7 +327,135 @@ replacementString:(NSString *)string
     UITextField *textField = self.textFields[TEXT_FIELD_TYPE_EXPIRY];
     NSString *dateString = [self.timeController.cardExpiryDateFormatter stringFromDate:date];
     textField.text = dateString;
-    self.details.expiry = dateString;
+    self.form.expiry = dateString;
+}
+
+#pragma mark - Animation
+
+-(void)beginAnimation {
+    
+    _animationState = LOADING_ANIMATION_STATE_STARTING;
+    
+    NSTimeInterval duration = 1.0;
+    
+    self.blockerView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0];
+    self.blockerView.hidden = NO;
+    
+    [UIView animateWithDuration:duration/6 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+        
+        self.blockerView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.4];
+        
+        self.paypointLogoImageView.transform = CGAffineTransformMakeScale(1.9, 1.9);
+        
+    } completion:^(BOOL finished) {
+        
+        _animationState = LOADING_ANIMATION_STATE_IN_PROGRESS;
+        
+        self.blockerLabel.hidden = NO;
+        
+        [UIView animateWithDuration:duration/2 animations:^{
+            self.blockerLabel.alpha = 1;
+        }];
+        
+        [UIView animateKeyframesWithDuration:duration/2 delay:0.0 options:UIViewKeyframeAnimationOptionRepeat animations:^{
+            
+            [UIView addKeyframeWithRelativeStartTime:0 relativeDuration:0.5 animations:^{
+                self.paypointLogoImageView.transform = CGAffineTransformMakeScale(2.2, 2.2);
+            }];
+            
+            [UIView addKeyframeWithRelativeStartTime:0.5 relativeDuration:0.5 animations:^{
+                self.paypointLogoImageView.transform = CGAffineTransformMakeScale(1.9, 1.9);
+            }];
+            
+        } completion:^(BOOL finished) {
+        }];
+        
+        if (_animationShouldEndAsSoonHasItHasFinishedStarting) {
+            [self endAnimationWithCompletion:self.endAnimationCompletion];
+        }
+        
+    }];
+    
+}
+
+-(void)endAnimationWithCompletion:(void(^)(void))completion {
+    
+    self.endAnimationCompletion = completion;
+    
+    if (_animationState == LOADING_ANIMATION_STATE_ENDED) {
+        if (self.endAnimationCompletion) self.endAnimationCompletion();
+        return;
+    }
+    
+    if (_animationState == LOADING_ANIMATION_STATE_IN_PROGRESS) {
+        
+        _animationState = LOADING_ANIMATION_STATE_ENDING;
+        
+        [self.paypointLogoImageView.layer removeAllAnimations];
+        
+        CALayer *currentLayer = self.paypointLogoImageView.layer.presentationLayer;
+        
+        self.paypointLogoImageView.layer.transform = currentLayer.transform;
+        
+        [UIView animateWithDuration:.6 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+            
+            self.blockerView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0];
+            self.blockerLabel.alpha = 0;
+            
+            self.paypointLogoImageView.transform = CGAffineTransformIdentity;
+            
+        } completion:^(BOOL finished) {
+            
+            self.blockerView.hidden = YES;
+            self.blockerLabel.hidden = YES;
+            
+            _animationState = LOADING_ANIMATION_STATE_ENDED;
+            
+            _animationShouldEndAsSoonHasItHasFinishedStarting = NO;
+            
+            if (completion) completion();
+            
+        }];
+        
+    } else {
+        _animationShouldEndAsSoonHasItHasFinishedStarting = YES;
+    }
+    
+}
+
+
+#pragma mark - Typical Response Error Handling
+
+-(BOOL)noNetwork:(NSError*)error {
+    return [[self noNetworkConnectionErrorCodes] containsObject:@(error.code)];
+}
+
+-(NSArray*)noNetworkConnectionErrorCodes {
+    int codes[] = {
+        kCFURLErrorTimedOut,
+        kCFURLErrorCannotConnectToHost,
+        kCFURLErrorNetworkConnectionLost,
+        kCFURLErrorDNSLookupFailed,
+        kCFURLErrorResourceUnavailable,
+        kCFURLErrorNotConnectedToInternet,
+        kCFURLErrorInternationalRoamingOff,
+        kCFURLErrorCallIsActive,
+        kCFURLErrorFileDoesNotExist,
+        kCFURLErrorNoPermissionsToReadFile,
+    };
+    int size = sizeof(codes)/sizeof(int);
+    NSMutableArray *array = [[NSMutableArray alloc] init];
+    for (int i=0;i<size;++i){
+        [array addObject:[NSNumber numberWithInt:codes[i]]];
+    }
+    return [array copy];
+}
+
+#pragma mark - Helpers
+
+-(void)showAlertWithMessage:(NSString*)message {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Outcome" message:message delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil, nil];
+    [alertView show];
 }
 
 @end

@@ -14,6 +14,13 @@ typedef enum : NSUInteger {
     TEXT_FIELD_TYPE_CVV
 } TEXT_FIELD_TYPE;
 
+typedef enum : NSUInteger {
+    LOADING_ANIMATION_STATE_STARTING,
+    LOADING_ANIMATION_STATE_IN_PROGRESS,
+    LOADING_ANIMATION_STATE_ENDING,
+    LOADING_ANIMATION_STATE_ENDED
+} LOADING_ANIMATION_STATE;
+
 @interface FormViewController : UIViewController <UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
 @property (strong, nonatomic) IBOutletCollection(UILabel) NSArray *titleLabels;
 @property (strong, nonatomic) IBOutletCollection(UITextField) NSArray *textFields;
@@ -24,8 +31,12 @@ typedef enum : NSUInteger {
 @property (weak, nonatomic) IBOutlet UIButton *payNowButton;
 @property (nonatomic, strong) UIPickerView *pickerView;
 @property (nonatomic, strong) NSArray *pickerViewSelections;
-@property (nonatomic, strong) FormDetails *details;
+@property (nonatomic, strong) FormDetails *form;
+@property (nonatomic, readonly) LOADING_ANIMATION_STATE animationState;
 
--(void)blockerTapGestureRecognised:(UITapGestureRecognizer*)gesture;
+-(void)beginAnimation;
+-(void)endAnimationWithCompletion:(void(^)(void))completion;
+-(BOOL)noNetwork:(NSError*)error;
+-(void)showAlertWithMessage:(NSString*)message;
 
 @end
