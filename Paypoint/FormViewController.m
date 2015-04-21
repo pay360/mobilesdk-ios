@@ -40,7 +40,9 @@
 
 -(NSArray *)pickerViewSelections {
     if (_pickerViewSelections == nil) {
-        _pickerViewSelections = [TimeManager expiryDatesFromDate:[NSDate date]];
+        NSMutableArray *selections = [[TimeManager expiryDatesFromDate:[NSDate date]] mutableCopy];
+        [selections insertObject:[NSNull null] atIndex:0];
+        _pickerViewSelections = [selections copy];
     }
     return _pickerViewSelections;
 }
@@ -308,19 +310,30 @@ replacementString:(NSString *)string
 }
 
 -(NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
-    NSDate *date = self.pickerViewSelections[row];
-    return [self.timeController.cardExpiryDateFormatter stringFromDate:date];
+    id selection = self.pickerViewSelections[row];
+    if ([selection isKindOfClass:[NSNull class]]) {
+        return @"--/--";
+    } else if ([selection isKindOfClass:[NSDate class]]) {
+        return [self.timeController.cardExpiryDateFormatter stringFromDate:selection];
+    }
+    return nil;
 }
 
 #pragma mark - UIPickerView Delegate
 
 -(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
-    NSDate *date = self.pickerViewSelections[row];
     
     UITextField *textField = self.textFields[TEXT_FIELD_TYPE_EXPIRY];
-    NSString *dateString = [self.timeController.cardExpiryDateFormatter stringFromDate:date];
-    textField.text = dateString;
-    self.form.expiry = dateString;
+    
+    id selection = self.pickerViewSelections[row];
+    if ([selection isKindOfClass:[NSNull class]]) {
+        textField.text = nil;
+        self.form.expiry = nil;
+    } else if ([selection isKindOfClass:[NSDate class]]) {
+        NSString *dateString = [self.timeController.cardExpiryDateFormatter stringFromDate:selection];
+        textField.text = dateString;
+        self.form.expiry = dateString;
+    }
 }
 
 #pragma mark - Animation
