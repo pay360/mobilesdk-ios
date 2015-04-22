@@ -27,6 +27,8 @@
 		50046ACE1AC2FB0400F23D05 /* PPOLuhn.h in Headers */ = {isa = PBXBuildFile; fileRef = 50046ACB1AC2FB0400F23D05 /* PPOLuhn.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		50046ACF1AC2FB0400F23D05 /* PPOLuhn.m in Sources */ = {isa = PBXBuildFile; fileRef = 50046ACC1AC2FB0400F23D05 /* PPOLuhn.m */; };
 		50046AD01AC2FB0400F23D05 /* PPOLuhnReadMe in Resources */ = {isa = PBXBuildFile; fileRef = 50046ACD1AC2FB0400F23D05 /* PPOLuhnReadMe */; };
+		500E4F241AE69C84006C8E79 /* StyleKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 500E4F221AE69C84006C8E79 /* StyleKit.m */; };
+		500E4F281AE69CD3006C8E79 /* FeedbackBubble.m in Sources */ = {isa = PBXBuildFile; fileRef = 500E4F271AE69CD3006C8E79 /* FeedbackBubble.m */; };
 		501B7CBF1AC40B3000F44193 /* PPOWebViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 501B7CBC1AC40B3000F44193 /* PPOWebViewController.h */; };
 		501B7CC01AC40B3000F44193 /* PPOWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 501B7CBD1AC40B3000F44193 /* PPOWebViewController.m */; };
 		501B7CC31AC40B5600F44193 /* PPOWebViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 501B7CBE1AC40B3000F44193 /* PPOWebViewController.xib */; };
@@ -149,6 +151,10 @@
 		50046ACB1AC2FB0400F23D05 /* PPOLuhn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOLuhn.h; sourceTree = "<group>"; };
 		50046ACC1AC2FB0400F23D05 /* PPOLuhn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOLuhn.m; sourceTree = "<group>"; };
 		50046ACD1AC2FB0400F23D05 /* PPOLuhnReadMe */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PPOLuhnReadMe; sourceTree = "<group>"; };
+		500E4F221AE69C84006C8E79 /* StyleKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StyleKit.m; sourceTree = "<group>"; };
+		500E4F231AE69C84006C8E79 /* StyleKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StyleKit.h; sourceTree = "<group>"; };
+		500E4F261AE69CD3006C8E79 /* FeedbackBubble.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedbackBubble.h; sourceTree = "<group>"; };
+		500E4F271AE69CD3006C8E79 /* FeedbackBubble.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedbackBubble.m; sourceTree = "<group>"; };
 		501B7CBC1AC40B3000F44193 /* PPOWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOWebViewController.h; sourceTree = "<group>"; };
 		501B7CBD1AC40B3000F44193 /* PPOWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOWebViewController.m; sourceTree = "<group>"; };
 		501B7CBE1AC40B3000F44193 /* PPOWebViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PPOWebViewController.xib; sourceTree = "<group>"; };
@@ -284,6 +290,32 @@
 				50046AC71AC2FAB000F23D05 /* PPOReachability.m */,
 			);
 			name = PPOReachability;
+			sourceTree = "<group>";
+		};
+		500E4F251AE69C8B006C8E79 /* StyleKit */ = {
+			isa = PBXGroup;
+			children = (
+				500E4F231AE69C84006C8E79 /* StyleKit.h */,
+				500E4F221AE69C84006C8E79 /* StyleKit.m */,
+			);
+			name = StyleKit;
+			sourceTree = "<group>";
+		};
+		500E4F291AE69CD7006C8E79 /* FeedbackBubble */ = {
+			isa = PBXGroup;
+			children = (
+				500E4F261AE69CD3006C8E79 /* FeedbackBubble.h */,
+				500E4F271AE69CD3006C8E79 /* FeedbackBubble.m */,
+			);
+			name = FeedbackBubble;
+			sourceTree = "<group>";
+		};
+		500E4F2A1AE69CDA006C8E79 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				500E4F291AE69CD7006C8E79 /* FeedbackBubble */,
+			);
+			name = View;
 			sourceTree = "<group>";
 		};
 		501B7CC21AC40B3300F44193 /* PPOWebViewController */ = {
@@ -446,9 +478,11 @@
 			isa = PBXGroup;
 			children = (
 				5069F65F1ABC7DA30077FB10 /* Main.storyboard */,
+				500E4F251AE69C8B006C8E79 /* StyleKit */,
 				501C8E531AC0185F00CBA25A /* AppDelegate */,
 				50AB96DA1AC1D3A200323E05 /* ThirdParty */,
 				50CC9B161AD43C4700B97F2E /* Model */,
+				500E4F2A1AE69CDA006C8E79 /* View */,
 				50CC9B1B1AD43E2900B97F2E /* Managers */,
 				507331EF1ADE7A8D00BBDFC2 /* UIKit Extensions */,
 				501C8E581AC018F600CBA25A /* ViewControllers */,
@@ -1044,7 +1078,9 @@
 				50AB93B81AD551AD005944F5 /* SubmitFormViewController.m in Sources */,
 				507331E41ADE696900BBDFC2 /* ColourManager.m in Sources */,
 				50CC9B191AD43E2200B97F2E /* TimeManager.m in Sources */,
+				500E4F281AE69CD3006C8E79 /* FeedbackBubble.m in Sources */,
 				50CC9B101AD43B7600B97F2E /* FormViewController.m in Sources */,
+				500E4F241AE69C84006C8E79 /* StyleKit.m in Sources */,
 				501DFBFB1ADFF156004C4AE3 /* WelcomeViewController.m in Sources */,
 				50E257ED1AE148E20024D179 /* OutcomeViewController.m in Sources */,
 				507331E81ADE6A7600BBDFC2 /* NavigationViewController.m in Sources */,
@@ -1262,13 +1298,20 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_MODULES_AUTOLINK = NO;
+				CLANG_WARN_ASSIGN_ENUM = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_OBJC_EXPLICIT_OWNERSHIP_TYPE = NO;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_RECEIVER_WEAK = NO;
+				CLANG_WARN_OBJC_REPEATED_USE_OF_WEAK = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Paypoint-gifbtkqozancshggkwopxjdhfqrw/Build/Products/Debug-universal",
 					"$(PROJECT_DIR)/Lipo",
 				);
+				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
 				INFOPLIST_FILE = Paypoint/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1279,13 +1322,20 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_MODULES_AUTOLINK = NO;
+				CLANG_WARN_ASSIGN_ENUM = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_OBJC_EXPLICIT_OWNERSHIP_TYPE = NO;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_RECEIVER_WEAK = NO;
+				CLANG_WARN_OBJC_REPEATED_USE_OF_WEAK = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Paypoint-gifbtkqozancshggkwopxjdhfqrw/Build/Products/Debug-universal",
 					"$(PROJECT_DIR)/Lipo",
 				);
+				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
 				INFOPLIST_FILE = Paypoint/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1305,7 +1355,7 @@
 				);
 				INFOPLIST_FILE = PaypointSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1325,7 +1375,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = PaypointSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;

@@ -11,6 +11,7 @@
 #import "ColourManager.h"
 #import "ImageManager.h"
 #import "ButtonStyler.h"
+#import "FeedbackBubble.h"
 
 @interface FormViewController ()
 @property (nonatomic, strong) TimeManager *timeController;
@@ -18,11 +19,11 @@
 @property (nonatomic, strong) UITextRange *previousSelection;
 @property (nonatomic, readwrite) LOADING_ANIMATION_STATE animationState;
 @property (nonatomic, copy) void(^endAnimationCompletion)(void);
+@property (nonatomic, strong) NSLayoutConstraint *constraint;
+@property (nonatomic) BOOL animationShouldEndAsSoonHasItHasFinishedStarting;
 @end
 
-@implementation FormViewController {
-    BOOL _animationShouldEndAsSoonHasItHasFinishedStarting;
-}
+@implementation FormViewController
 
 -(TimeManager *)timeController {
     if (_timeController == nil) {
@@ -119,6 +120,14 @@
             break;
         default:
             break;
+    }
+    
+    if (self.constraint.constant < 0) {
+        self.constraint.constant = 200;
+        [UIView animateWithDuration:.3 animations:^{
+            [self.view layoutIfNeeded];
+        } completion:^(BOOL finished) {
+        }];
     }
     
 }
@@ -340,44 +349,48 @@ replacementString:(NSString *)string
 
 -(void)beginAnimation {
     
-    _animationState = LOADING_ANIMATION_STATE_STARTING;
+    self.animationState = LOADING_ANIMATION_STATE_STARTING;
     
     NSTimeInterval duration = 1.0;
     
     self.blockerView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0];
     self.blockerView.hidden = NO;
     
+    __weak typeof(self) weakSelf = self;
+    
     [UIView animateWithDuration:duration/6 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
         
-        self.blockerView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.4];
+        weakSelf.blockerView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.4];
         
-        self.paypointLogoImageView.transform = CGAffineTransformMakeScale(1.9, 1.9);
+        weakSelf.paypointLogoImageView.transform = CGAffineTransformMakeScale(1.9, 1.9);
         
     } completion:^(BOOL finished) {
         
-        _animationState = LOADING_ANIMATION_STATE_IN_PROGRESS;
+        weakSelf.animationState = LOADING_ANIMATION_STATE_IN_PROGRESS;
         
-        self.blockerLabel.hidden = NO;
+        weakSelf.blockerLabel.hidden = NO;
+        
+        __strong typeof(weakSelf) strongSelf = weakSelf;
         
         [UIView animateWithDuration:duration/2 animations:^{
-            self.blockerLabel.alpha = 1;
+            strongSelf.blockerLabel.alpha = 1;
         }];
         
         [UIView animateKeyframesWithDuration:duration/2 delay:0.0 options:UIViewKeyframeAnimationOptionRepeat animations:^{
             
             [UIView addKeyframeWithRelativeStartTime:0 relativeDuration:0.5 animations:^{
-                self.paypointLogoImageView.transform = CGAffineTransformMakeScale(2.2, 2.2);
+                strongSelf.paypointLogoImageView.transform = CGAffineTransformMakeScale(2.2, 2.2);
             }];
             
             [UIView addKeyframeWithRelativeStartTime:0.5 relativeDuration:0.5 animations:^{
-                self.paypointLogoImageView.transform = CGAffineTransformMakeScale(1.9, 1.9);
+                strongSelf.paypointLogoImageView.transform = CGAffineTransformMakeScale(1.9, 1.9);
             }];
             
         } completion:^(BOOL finished) {
         }];
         
-        if (_animationShouldEndAsSoonHasItHasFinishedStarting) {
-            [self endAnimationWithCompletion:self.endAnimationCompletion];
+        if (weakSelf.animationShouldEndAsSoonHasItHasFinishedStarting) {
+            [weakSelf endAnimationWithCompletion:weakSelf.endAnimationCompletion];
         }
         
     }];
@@ -388,14 +401,14 @@ replacementString:(NSString *)string
     
     self.endAnimationCompletion = completion;
     
-    if (_animationState == LOADING_ANIMATION_STATE_ENDED) {
+    if (self.animationState == LOADING_ANIMATION_STATE_ENDED) {
         if (self.endAnimationCompletion) self.endAnimationCompletion();
         return;
     }
     
-    if (_animationState == LOADING_ANIMATION_STATE_IN_PROGRESS) {
+    if (self.animationState == LOADING_ANIMATION_STATE_IN_PROGRESS) {
         
-        _animationState = LOADING_ANIMATION_STATE_ENDING;
+        self.animationState = LOADING_ANIMATION_STATE_ENDING;
         
         [self.paypointLogoImageView.layer removeAllAnimations];
         
@@ -403,28 +416,27 @@ replacementString:(NSString *)string
         
         self.paypointLogoImageView.layer.transform = currentLayer.transform;
         
+        __weak typeof(self) weakSelf = self;
+        
         [UIView animateWithDuration:.6 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
             
-            self.blockerView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0];
-            self.blockerLabel.alpha = 0;
-            
-            self.paypointLogoImageView.transform = CGAffineTransformIdentity;
+            weakSelf.blockerView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0];
+            weakSelf.blockerLabel.alpha = 0;
+            weakSelf.paypointLogoImageView.transform = CGAffineTransformIdentity;
             
         } completion:^(BOOL finished) {
             
-            self.blockerView.hidden = YES;
-            self.blockerLabel.hidden = YES;
-            
-            _animationState = LOADING_ANIMATION_STATE_ENDED;
-            
-            _animationShouldEndAsSoonHasItHasFinishedStarting = NO;
+            weakSelf.blockerView.hidden = YES;
+            weakSelf.blockerLabel.hidden = YES;
+            weakSelf.animationState = LOADING_ANIMATION_STATE_ENDED;
+            weakSelf.animationShouldEndAsSoonHasItHasFinishedStarting = NO;
             
             if (completion) completion();
             
         }];
         
     } else {
-        _animationShouldEndAsSoonHasItHasFinishedStarting = YES;
+        self.animationShouldEndAsSoonHasItHasFinishedStarting = YES;
     }
     
 }
@@ -460,8 +472,73 @@ replacementString:(NSString *)string
 #pragma mark - Helpers
 
 -(void)showAlertWithMessage:(NSString*)message {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Outcome" message:message delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil, nil];
-    [alertView show];
+    
+    CGRect frame = CGRectMake(0, 309, 190, 163);
+    FeedbackBubble *bubble = [[FeedbackBubble alloc] initWithFrame:frame withMessage:message];
+    bubble.backgroundColor = [UIColor clearColor];
+    bubble.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.view addSubview:bubble];
+    [self.view addConstraints:[self constraintsForView:bubble]];
+    [self.view layoutIfNeeded];
+    
+    self.constraint.constant = -12.0f;
+    
+    [UIView animateWithDuration:.3 animations:^{
+        [self.view layoutIfNeeded];
+    } completion:^(BOOL finished) {
+    }];
+    
+    //UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Outcome" message:message delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil, nil];
+    //[alertView show];
+}
+
+-(NSArray*)constraintsForView:(FeedbackBubble*)view {
+    NSMutableSet *collector = [NSMutableSet new];
+    NSDictionary *views = NSDictionaryOfVariableBindings(view);
+    
+    NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:view
+                                                                  attribute:NSLayoutAttributeLeading
+                                                                  relatedBy:NSLayoutRelationEqual
+                                                                     toItem:self.paypointLogoImageView
+                                                                  attribute:NSLayoutAttributeTrailing
+                                                                 multiplier:1
+                                                                   constant:200];
+    
+    self.constraint = constraint;
+    
+    [collector addObject:constraint];
+    
+    [collector addObject:[NSLayoutConstraint constraintWithItem:view
+                                                      attribute:NSLayoutAttributeWidth
+                                                      relatedBy:NSLayoutRelationEqual
+                                                         toItem:view
+                                                      attribute:NSLayoutAttributeHeight
+                                                     multiplier:(231.0/199.0)
+                                                       constant:0]];
+    
+    [collector addObject:[NSLayoutConstraint constraintWithItem:view
+                                                      attribute:NSLayoutAttributeHeight
+                                                      relatedBy:NSLayoutRelationEqual
+                                                         toItem:view
+                                                      attribute:NSLayoutAttributeWidth
+                                                     multiplier:(199.0/231.0)
+                                                       constant:0]];
+    
+    [collector addObject:[NSLayoutConstraint constraintWithItem:view
+                                                      attribute:NSLayoutAttributeCenterY
+                                                      relatedBy:NSLayoutRelationEqual
+                                                         toItem:self.paypointLogoImageView
+                                                      attribute:NSLayoutAttributeCenterY
+                                                     multiplier:1
+                                                       constant:-115.0]];
+    
+    [collector addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[view(==190)]"
+                                                                           options:0
+                                                                           metrics:nil
+                                                                             views:views]];
+    
+    
+    return [collector allObjects];
 }
 
 @end
