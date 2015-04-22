@@ -13,8 +13,8 @@
 +(NSURL*)baseURLForEnvironment:(PPOEnvironment)environment {
     
     switch (environment) {
-        case PPOEnvironmentStaging:
-            return [NSURL URLWithString:@"http://192.168.3.14:5000/mobileapi"];
+        case PPOMerchantIntegrationTestingEnvironment:
+            return [NSURL URLWithString:@"http://10.104.113.14:5000/mobileapi"];
             break;
             
         default:

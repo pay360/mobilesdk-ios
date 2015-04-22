@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 typedef NS_ENUM(NSInteger, PPOEnvironment) {
-    PPOEnvironmentStaging
+    PPOMerchantIntegrationTestingEnvironment
 };
 
 @interface PPOPaymentBaseURLManager : NSObject
