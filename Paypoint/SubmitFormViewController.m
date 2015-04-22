@@ -148,44 +148,74 @@
     
     NSString *message;
     
+    __weak typeof(self) weakSelf = self;
+    
     if (error && error.domain == PPOPaypointSDKErrorDomain) {
         
-        PPOErrorCode code = error.code;
-        
-        switch (code) {
-            case PPOErrorNotInitialised: message = @"Error Code: PPOErrorNotInitialised"; break;
-            case PPOErrorBadRequest: message = @"Error Code: PPOErrorBadRequest"; break;
-            case PPOErrorAuthenticationFailed: message = @"Error Code: PPOErrorAuthenticationFailed"; break;
-            case PPOErrorClientTokenExpired: message = @"Error Code: PPOErrorClientTokenExpired"; break;
-            case PPOErrorUnauthorisedRequest: message = @"Error Code: PPOErrorUnauthorisedRequest"; break;
-            case PPOErrorTransactionProcessingFailed: message = @"Error Code: PPOErrorTransactionProcessingFailed"; break;
-            case PPOErrorServerFailure: message = @"Error Code: PPOErrorServerFailure"; break;
-            case PPOErrorLuhnCheckFailed: message = @"The card is invalid. Did you make a typo?"; break;
-            case PPOErrorCardExpiryDateInvalid: message = @"Error Code: PPOErrorCardExpiryDateInvalid"; break;
-            case PPOErrorCardPanLengthInvalid: message = @"Error Code: PPOErrorCardPanLengthInvalid"; break;
-            case PPOErrorCVVInvalid: message = @"Error Code: PPOErrorCVVInvalid"; break;
-            case PPOErrorCurrencyInvalid: message = @"Error Code: PPOErrorCurrencyInvalid"; break;
-            case PPOErrorPaymentAmountInvalid: message = @"Error Code: PPOErrorPaymentAmountInvalid"; break;
-            case PPOErrorInstallationIDInvalid: message = @"Error Code: PPOErrorInstallationIDInvalid"; break;
-            case PPOErrorSuppliedBaseURLInvalid: message = @"Error Code: PPOErrorSuppliedBaseURLInvalid"; break;
-            case PPOErrorCredentialsNotFound: message = @"Error Code: PPOErrorCredentialsNotFound"; break;
-            case PPOErrorUnknown: message = @"Error Code: PPOErrorUnknown"; break;
-        }
-        
-    } else if ([self noNetwork:error]) {
-        message = @"Something went wrong with the Network. There may have been a response timeout. Please check you are connected to the internet.";
-    } else {
         message = [error.userInfo objectForKey:NSLocalizedFailureReasonErrorKey];
-    }
-    
-    if (message) {
         
         [self endAnimationWithCompletion:^{
-            [self showAlertWithMessage:message];
+            
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            
+            [weakSelf showAlertWithMessage:message
+                            withCompletion:^(BOOL isFinished) {
+                                
+                                PPOErrorCode code = error.code;
+                                
+                                UITextField *textField;
+                                
+                                switch (code) {
+                                    case PPOErrorNotInitialised: break;
+                                    case PPOErrorBadRequest: break;
+                                    case PPOErrorAuthenticationFailed: break;
+                                    case PPOErrorClientTokenExpired: break;
+                                    case PPOErrorUnauthorisedRequest: break;
+                                    case PPOErrorTransactionProcessingFailed: break;
+                                    case PPOErrorServerFailure: break;
+                                    case PPOErrorLuhnCheckFailed: textField = strongSelf.textFields[TEXT_FIELD_TYPE_CARD_NUMBER]; break;
+                                    case PPOErrorCardExpiryDateInvalid: textField = strongSelf.textFields[TEXT_FIELD_TYPE_EXPIRY]; break;
+                                    case PPOErrorClientTokenInvalid: break;
+                                    case PPOErrorCardPanLengthInvalid: textField = strongSelf.textFields[TEXT_FIELD_TYPE_CARD_NUMBER]; break;
+                                    case PPOErrorCVVInvalid: textField = strongSelf.textFields[TEXT_FIELD_TYPE_CVV]; break;
+                                    case PPOErrorCurrencyInvalid: break;
+                                    case PPOErrorPaymentAmountInvalid: break;
+                                    case PPOErrorInstallationIDInvalid: break;
+                                    case PPOErrorSuppliedBaseURLInvalid: break;
+                                    case PPOErrorCredentialsNotFound: break;
+                                    case PPOErrorUnknown: break;
+                                }
+                                
+                                if (textField) {
+                                    [textField.layer addAnimation:[strongSelf shakeAnimation] forKey:@"transform"];
+                                }
+                                
+                            }];
         }];
         
     }
+    else if ([self noNetwork:error]) {
+        message = @"Something went wrong with the Network. There may have been a response timeout. Please check you are connected to the internet.";
+        
+        [self endAnimationWithCompletion:^{
+            
+            [weakSelf showAlertWithMessage:message
+                            withCompletion:^(BOOL isFinished) {
+                                
+                            }];
+        }];
+    }
     
+}
+
+-(CAKeyframeAnimation*)shakeAnimation {
+    CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
+    animation.values = @[[NSValue valueWithCATransform3D:CATransform3DMakeTranslation(-10.0, 0.0, 0.0)],
+                         [NSValue valueWithCATransform3D:CATransform3DMakeTranslation(10.0, 0.0, 0.0)]];
+    animation.autoreverses = YES;
+    animation.repeatCount = 2;
+    animation.duration = 0.07;
+    return animation;
 }
 
 @end
