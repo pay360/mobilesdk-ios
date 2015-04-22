@@ -73,6 +73,7 @@
 		507AA72F1AD7D78F00420DF7 /* PPOOutcome.h in Headers */ = {isa = PBXBuildFile; fileRef = 507AA72D1AD7D78F00420DF7 /* PPOOutcome.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		507AA7301AD7D78F00420DF7 /* PPOOutcome.m in Sources */ = {isa = PBXBuildFile; fileRef = 507AA72E1AD7D78F00420DF7 /* PPOOutcome.m */; };
 		507F54D01ADBBDBB004BF798 /* MerchantServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 50AB93BB1AD5564E005944F5 /* MerchantServer.m */; };
+		509A5F2A1AE7A6DF00D3B5AA /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 506F99861AE502120077ECC0 /* QuartzCore.framework */; };
 		509B588B1ADD477A001236CD /* PPOTimeManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 509B58891ADD477A001236CD /* PPOTimeManager.h */; };
 		509B588C1ADD477A001236CD /* PPOTimeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 509B588A1ADD477A001236CD /* PPOTimeManager.m */; };
 		50AB93B81AD551AD005944F5 /* SubmitFormViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50AB93B71AD551AD005944F5 /* SubmitFormViewController.m */; };
@@ -259,6 +260,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				509A5F2A1AE7A6DF00D3B5AA /* QuartzCore.framework in Frameworks */,
 				506F998D1AE5027D0077ECC0 /* SystemConfiguration.framework in Frameworks */,
 				506F998B1AE502610077ECC0 /* CoreGraphics.framework in Frameworks */,
 				506F99891AE5023A0077ECC0 /* UIKit.framework in Frameworks */,
