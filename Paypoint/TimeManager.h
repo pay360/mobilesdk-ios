@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @interface TimeManager : NSObject
 @property (nonatomic, strong) NSDateFormatter *cardExpiryDateFormatter;

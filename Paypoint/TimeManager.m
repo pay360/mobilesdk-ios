@@ -20,14 +20,13 @@
 }
 
 +(NSArray*)expiryDatesFromDate:(NSDate*)now {
-    
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
     NSDateComponents *offsetComponents = [[NSDateComponents alloc] init];
     [offsetComponents setYear:5];
-    NSDate *endDate = [gregorian dateByAddingComponents:offsetComponents toDate:now options:0];
+    NSDate *endDate = [gregorian dateByAddingComponents:offsetComponents toDate:now options:NSCalendarWrapComponents];
     
     NSUInteger unitFlags = NSMonthCalendarUnit | NSDayCalendarUnit;
-    NSDateComponents *comps = [gregorian components:unitFlags fromDate:now  toDate:endDate  options:0];
+    NSDateComponents *comps = [gregorian components:unitFlags fromDate:now  toDate:endDate  options:NSCalendarWrapComponents];
     NSUInteger months = [comps month];
     
     NSMutableArray *dateCollector = [NSMutableArray new];
@@ -36,8 +35,8 @@
     
     for (NSInteger i = 0; i < months; i++) {
         NSCalendar *currentCalendar = [NSCalendar currentCalendar];
-        NSDateComponents *dateComponents = [currentCalendar
-                                            components:NSCalendarUnitHour |
+        NSDateComponents *dateComponents = [currentCalendar components:
+                                            NSCalendarUnitHour |
                                             NSCalendarUnitMinute |
                                             NSCalendarUnitYear |
                                             NSCalendarUnitMonth |
