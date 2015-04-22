@@ -62,7 +62,7 @@
 
 
     //// Text Drawing
-    CGRect textRect = CGRectMake(CGRectGetMinX(frame) + floor(CGRectGetWidth(frame) * 0.23810 + 0.5), CGRectGetMinY(frame) + 37, floor(CGRectGetWidth(frame) * 0.83550 + 0.5) - floor(CGRectGetWidth(frame) * 0.23810 + 0.5), floor((CGRectGetHeight(frame) - 37) * 0.58025 + 0.5));
+    CGRect textRect = CGRectMake(CGRectGetMinX(frame) + floor(CGRectGetWidth(frame) * 0.23810 + 0.5), CGRectGetMinY(frame) + 37, floor(CGRectGetWidth(frame) * 0.87879 + 0.5) - floor(CGRectGetWidth(frame) * 0.23810 + 0.5), floor((CGRectGetHeight(frame) - 37) * 0.58025 + 0.5));
     NSMutableParagraphStyle* textStyle = NSMutableParagraphStyle.defaultParagraphStyle.mutableCopy;
     textStyle.alignment = NSTextAlignmentLeft;
 

@@ -37,6 +37,6 @@ typedef enum : NSUInteger {
 -(void)beginAnimation;
 -(void)endAnimationWithCompletion:(void(^)(void))completion;
 -(BOOL)noNetwork:(NSError*)error;
--(void)showAlertWithMessage:(NSString*)message;
+-(void)showAlertWithMessage:(NSString*)message withCompletion:(void(^)(BOOL isFinished))completion;
 
 @end

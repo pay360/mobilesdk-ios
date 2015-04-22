@@ -13,6 +13,8 @@
 #import "ButtonStyler.h"
 #import "FeedbackBubble.h"
 
+#define SHIFT_RIGHT 300.0
+
 @interface FormViewController ()
 @property (nonatomic, strong) TimeManager *timeController;
 @property (nonatomic, strong) NSString *previousTextFieldContent;
@@ -21,6 +23,7 @@
 @property (nonatomic, copy) void(^endAnimationCompletion)(void);
 @property (nonatomic, strong) NSLayoutConstraint *constraint;
 @property (nonatomic) BOOL animationShouldEndAsSoonHasItHasFinishedStarting;
+@property (nonatomic, strong) FeedbackBubble *bubble;
 @end
 
 @implementation FormViewController
@@ -122,11 +125,15 @@
             break;
     }
     
-    if (self.constraint.constant < 0) {
-        self.constraint.constant = 200;
+    BOOL isShowing = (self.constraint.constant < 0);
+    
+    if (isShowing) {
+        self.constraint.constant = SHIFT_RIGHT;
         [UIView animateWithDuration:.3 animations:^{
             [self.view layoutIfNeeded];
         } completion:^(BOOL finished) {
+            [self.bubble removeFromSuperview];
+            self.bubble = nil;
         }];
     }
     
@@ -441,7 +448,6 @@ replacementString:(NSString *)string
     
 }
 
-
 #pragma mark - Typical Response Error Handling
 
 -(BOOL)noNetwork:(NSError*)error {
@@ -471,25 +477,30 @@ replacementString:(NSString *)string
 
 #pragma mark - Helpers
 
--(void)showAlertWithMessage:(NSString*)message {
+-(void)showAlertWithMessage:(NSString*)message withCompletion:(void(^)(BOOL isFinished))completion {
+    
+    BOOL isShowing = (self.constraint.constant < 0);
+    
+    if (self.bubble && isShowing) {
+        self.bubble.message = message;
+        if (completion) completion(YES);
+        return;
+    }
     
     CGRect frame = CGRectMake(0, 309, 190, 163);
-    FeedbackBubble *bubble = [[FeedbackBubble alloc] initWithFrame:frame withMessage:message];
-    bubble.backgroundColor = [UIColor clearColor];
-    bubble.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.view addSubview:bubble];
-    [self.view addConstraints:[self constraintsForView:bubble]];
+    self.bubble = [[FeedbackBubble alloc] initWithFrame:frame withMessage:message];
+    self.bubble.backgroundColor = [UIColor clearColor];
+    self.bubble.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.view addSubview:self.bubble];
+    [self.view addConstraints:[self constraintsForView:self.bubble]];
     [self.view layoutIfNeeded];
     
     self.constraint.constant = -12.0f;
     
     [UIView animateWithDuration:.3 animations:^{
         [self.view layoutIfNeeded];
-    } completion:^(BOOL finished) {
-    }];
+    } completion:completion];
     
-    //UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Outcome" message:message delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil, nil];
-    //[alertView show];
 }
 
 -(NSArray*)constraintsForView:(FeedbackBubble*)view {
@@ -502,7 +513,7 @@ replacementString:(NSString *)string
                                                                      toItem:self.paypointLogoImageView
                                                                   attribute:NSLayoutAttributeTrailing
                                                                  multiplier:1
-                                                                   constant:200];
+                                                                   constant:SHIFT_RIGHT];
     
     self.constraint = constraint;
     

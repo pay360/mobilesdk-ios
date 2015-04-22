@@ -38,7 +38,9 @@
     
     if (noNetwork) {
         
-        [self showAlertWithMessage:@"There is no internet connection"];
+        [self showAlertWithMessage:@"There is no internet connection" withCompletion:^(BOOL isFinished) {
+            
+        }];
         
     } else if (self.animationState == LOADING_ANIMATION_STATE_ENDED) {
         
