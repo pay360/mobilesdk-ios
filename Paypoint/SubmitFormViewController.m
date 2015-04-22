@@ -158,7 +158,7 @@
             case PPOErrorUnauthorisedRequest: message = @"Error Code: PPOErrorUnauthorisedRequest"; break;
             case PPOErrorTransactionProcessingFailed: message = @"Error Code: PPOErrorTransactionProcessingFailed"; break;
             case PPOErrorServerFailure: message = @"Error Code: PPOErrorServerFailure"; break;
-            case PPOErrorLuhnCheckFailed: message = @"Error Code: PPOErrorLuhnCheckFailed"; break;
+            case PPOErrorLuhnCheckFailed: message = @"The card is invalid. Did you make a typo?"; break;
             case PPOErrorCardExpiryDateInvalid: message = @"Error Code: PPOErrorCardExpiryDateInvalid"; break;
             case PPOErrorCardPanLengthInvalid: message = @"Error Code: PPOErrorCardPanLengthInvalid"; break;
             case PPOErrorCVVInvalid: message = @"Error Code: PPOErrorCVVInvalid"; break;
