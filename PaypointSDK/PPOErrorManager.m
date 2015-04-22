@@ -72,7 +72,7 @@
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorCardPanLengthInvalid
                                    userInfo:@{
-                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The supplied payment card Pan length is invalid", @"Failure message for a card validation check")
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Pan number length is invalid", @"Failure message for a card validation check")
                                               }
                     ];
             break;
@@ -81,7 +81,7 @@
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorLuhnCheckFailed
                                    userInfo:@{
-                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The supplied payment card failed Luhn validation", @"Failure message for a card validation check")
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Pan number failed Luhn validation", @"Failure message for a card validation check")
                                               }
                     ];
             break;
@@ -90,7 +90,7 @@
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorCVVInvalid
                                    userInfo:@{
-                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The supplied payment card CVV is invalid", @"Failure message for a card validation check")
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Card CVV is invalid", @"Failure message for a card validation check")
                                               }
                     ];
             break;
@@ -99,7 +99,7 @@
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorCardExpiryDateInvalid
                                    userInfo:@{
-                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The supplied payment card expiry date is invalid", @"Failure message for a card validation check")
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Expiry date is invalid", @"Failure message for a card validation check")
                                               }
                     ];
             break;
@@ -117,7 +117,7 @@
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorPaymentAmountInvalid
                                    userInfo:@{
-                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The specified payment amount is invalid", @"Failure message for a transaction validation check")
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Payment amount is invalid", @"Failure message for a transaction validation check")
                                               }
                     ];
             break;
@@ -149,11 +149,20 @@
                     ];
             break;
             
+        case PPOErrorClientTokenInvalid:
+            return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                       code:PPOErrorUnauthorisedRequest
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The supplied token is invalid", @"Failure message for a transaction validation check")
+                                              }
+                    ];
+            break;
+            
         case PPOErrorUnauthorisedRequest:
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorUnauthorisedRequest
                                    userInfo:@{
-                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The supplied token does not have sufficient permissions to you access the specified feature", @"Failure message for account restriction")
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The supplied token does not have sufficient permissions", @"Failure message for account restriction")
                                               }
                     ];
             break;
@@ -162,7 +171,16 @@
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorTransactionProcessingFailed
                                    userInfo:@{
-                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The transaction was successfully submitted but failed to be processed correctly", @"Failure message for payment failure")
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The transaction failed to be processed correctly", @"Failure message for payment failure")
+                                              }
+                    ];
+            break;
+            
+        case PPOErrorUnknown:
+            return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                       code:PPOErrorUnknown
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"There has been an unknown error.", @"Failure message for payment failure")
                                               }
                     ];
             break;
