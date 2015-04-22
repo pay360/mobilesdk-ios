@@ -15,7 +15,7 @@
     __block NSString *token;
     __block PPOCredentials *c;
     
-    NSURL *url = [NSURL URLWithString:@"http://10.104.113.14:5001/merchant/getToken"];
+    NSURL *url = [NSURL URLWithString:@"http://192.168.3.31:5001/merchant/getToken"];
         
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
                                                            cachePolicy:NSURLRequestUseProtocolCachePolicy
