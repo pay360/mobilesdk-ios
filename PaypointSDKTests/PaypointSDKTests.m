@@ -12,9 +12,7 @@
 //SDK
 #import <PaypointSDK/PaypointSDK.h>
 
-//Demo App
-#import "MerchantServer.h"
-#import "EnvironmentManager.h"
+#define INSTALLATION_ID @"5300065"
 
 @interface PaypointSDKTests : XCTestCase
 @property (nonatomic, strong) NSArray *pans;
@@ -62,9 +60,7 @@
                                                    withPostcode:nil
                                                 withCountryCode:nil];
     
-    self.currentEnvironment = [EnvironmentManager currentEnvironment];
-    
-    NSURL *baseURL = [PPOPaymentBaseURLManager baseURLForEnvironment:self.currentEnvironment];
+    NSURL *baseURL = [PPOPaymentBaseURLManager baseURLForEnvironment:0];
     self.paymentManager = [[PPOPaymentManager alloc] initWithBaseURL:baseURL];
 }
 
@@ -147,25 +143,6 @@
         
     }];
     
-}
-
-#pragma mark - Merchant Token Acquisition
-
--(void)testBearerTokenAcquisition {
-    
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Bearer token acquired"];
-    
-    [MerchantServer getCredentialsWithCompletion:^(PPOCredentials *credentials, NSError *error) {
-        if (!error && credentials.token.length > 0) [expectation fulfill];
-    }];
-    
-    [self waitForExpectationsWithTimeout:60.0f handler:^(NSError *error) {
-        
-        if(error) {
-            XCTFail(@"Bearer token acquisition failed with error: %@", error);
-        }
-        
-    }];
 }
 
 #pragma mark - Good Pan & Good Token

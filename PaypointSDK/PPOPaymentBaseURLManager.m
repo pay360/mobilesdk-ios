@@ -1,5 +1,5 @@
 //
-//  PPOBaseURLManager.m
+//  PPOPaymentBaseURLManager.m
 //  Paypoint
 //
 //  Created by Robert Nash on 17/04/2015.
