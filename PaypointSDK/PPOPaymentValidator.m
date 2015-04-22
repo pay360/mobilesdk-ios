@@ -58,6 +58,10 @@
         return [PPOErrorManager errorForCode:PPOErrorCredentialsNotFound];
     }
     
+    if (!credentials.token || credentials.token.length == 0) {
+        return [PPOErrorManager errorForCode:PPOErrorClientTokenInvalid];
+    }
+    
     if (!credentials.installationID || credentials.installationID.length == 0) {
         return [PPOErrorManager errorForCode:PPOErrorInstallationIDInvalid];
     }
