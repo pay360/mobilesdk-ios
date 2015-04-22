@@ -123,9 +123,13 @@
                           if (paymentFailure) {
                               [weakSelf handleError:paymentFailure];
                           } else {
+                              
+                              __strong typeof(weakSelf) strongSelf = weakSelf;
+                              
                               [weakSelf endAnimationWithCompletion:^{
-                                  [weakSelf performSegueWithIdentifier:@"OutcomeViewControllerSegueID" sender:outcome];
+                                  [strongSelf performSegueWithIdentifier:@"OutcomeViewControllerSegueID" sender:outcome];
                               }];
+                              
                           }
                       }];
 }
