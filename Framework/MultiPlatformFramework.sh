@@ -6,9 +6,9 @@ exit 0
 fi
 export RW_MULTIPLATFORM_BUILD_IN_PROGRESS=1
 
-RW_FRAMEWORK_NAME=${PROJECT_NAME}Library
-RW_INPUT_STATIC_LIB="lib${PROJECT_NAME}Library.a"
-RW_FRAMEWORK_LOCATION="${BUILT_PRODUCTS_DIR}/PaypointLibrary.framework"
+RW_FRAMEWORK_NAME=${PROJECT_NAME}
+RW_INPUT_STATIC_LIB="lib${PROJECT_NAME}.a"
+RW_FRAMEWORK_LOCATION="${BUILT_PRODUCTS_DIR}/Paypoint.framework"
 #RW_FRAMEWORK_LOCATION="${BUILT_PRODUCTS_DIR}/${RW_FRAMEWORK_NAME}.framework"
 
 function build_static_library {
@@ -80,7 +80,7 @@ make_fat_library "${BUILT_PRODUCTS_DIR}/${RW_INPUT_STATIC_LIB}" \
 
 # Ensure that the framework is present in both platform's build directories
 cp -a "${RW_FRAMEWORK_LOCATION}/Versions/A/${RW_FRAMEWORK_NAME}" \
-"${RW_OTHER_BUILT_PRODUCTS_DIR}/PaypointLibrary.framework/Versions/A/${RW_FRAMEWORK_NAME}"
+"${RW_OTHER_BUILT_PRODUCTS_DIR}/Paypoint.framework/Versions/A/${RW_FRAMEWORK_NAME}"
 
 # Copy the framework to the user's desktop
-ditto "${BUILT_PRODUCTS_DIR}/PaypointLibrary.framework" "${HOME}/Desktop/${RW_FRAMEWORK_NAME}.framework"
+ditto "${BUILT_PRODUCTS_DIR}/Paypoint.framework" "${HOME}/Desktop/${RW_FRAMEWORK_NAME}.framework"

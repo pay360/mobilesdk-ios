@@ -9,17 +9,17 @@
 			<key>orderHint</key>
 			<integer>4</integer>
 		</dict>
-		<key>PaypointLibrary.xcscheme_^#shared#^_</key>
+		<key>Paypoint.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>1</integer>
 		</dict>
-		<key>PaypointLibraryBundle.xcscheme_^#shared#^_</key>
+		<key>PaypointBundle.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>3</integer>
 		</dict>
-		<key>PaypointLibraryTests.xcscheme_^#shared#^_</key>
+		<key>PaypointTests.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>2</integer>

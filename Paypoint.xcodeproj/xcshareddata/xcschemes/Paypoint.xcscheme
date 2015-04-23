@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "50DCC1A91AE7CAAA00D0FE26"
-               BuildableName = "libPaypointLibrary.a"
-               BlueprintName = "PaypointLibrary"
+               BuildableName = "libPaypoint.a"
+               BlueprintName = "Paypoint"
                ReferencedContainer = "container:Paypoint.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -29,8 +29,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "50DCC1B31AE7CAAA00D0FE26"
-               BuildableName = "PaypointLibraryTests.xctest"
-               BlueprintName = "PaypointLibraryTests"
+               BuildableName = "PaypointTests.xctest"
+               BlueprintName = "PaypointTests"
                ReferencedContainer = "container:Paypoint.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -47,8 +47,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "50DCC1B31AE7CAAA00D0FE26"
-               BuildableName = "PaypointLibraryTests.xctest"
-               BlueprintName = "PaypointLibraryTests"
+               BuildableName = "PaypointTests.xctest"
+               BlueprintName = "PaypointTests"
                ReferencedContainer = "container:Paypoint.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -57,8 +57,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "50DCC1A91AE7CAAA00D0FE26"
-            BuildableName = "libPaypointLibrary.a"
-            BlueprintName = "PaypointLibrary"
+            BuildableName = "libPaypoint.a"
+            BlueprintName = "Paypoint"
             ReferencedContainer = "container:Paypoint.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -76,8 +76,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "50DCC1A91AE7CAAA00D0FE26"
-            BuildableName = "libPaypointLibrary.a"
-            BlueprintName = "PaypointLibrary"
+            BuildableName = "libPaypoint.a"
+            BlueprintName = "Paypoint"
             ReferencedContainer = "container:Paypoint.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -94,8 +94,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "50DCC1A91AE7CAAA00D0FE26"
-            BuildableName = "libPaypointLibrary.a"
-            BlueprintName = "PaypointLibrary"
+            BuildableName = "libPaypoint.a"
+            BlueprintName = "Paypoint"
             ReferencedContainer = "container:Paypoint.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
