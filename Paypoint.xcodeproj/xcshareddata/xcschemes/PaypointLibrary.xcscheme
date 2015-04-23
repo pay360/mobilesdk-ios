@@ -9,14 +9,28 @@
          <BuildActionEntry
             buildForTesting = "YES"
             buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "50DCC1A91AE7CAAA00D0FE26"
+               BuildableName = "libPaypointLibrary.a"
+               BlueprintName = "PaypointLibrary"
+               ReferencedContainer = "container:Paypoint.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
             buildForProfiling = "NO"
             buildForArchiving = "NO"
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5069F6891ABC7EBA0077FB10"
-               BuildableName = "PaypointSDKTests.xctest"
-               BlueprintName = "PaypointSDKTests"
+               BlueprintIdentifier = "50DCC1B31AE7CAAA00D0FE26"
+               BuildableName = "PaypointLibraryTests.xctest"
+               BlueprintName = "PaypointLibraryTests"
                ReferencedContainer = "container:Paypoint.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -32,9 +46,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5069F6891ABC7EBA0077FB10"
-               BuildableName = "PaypointSDKTests.xctest"
-               BlueprintName = "PaypointSDKTests"
+               BlueprintIdentifier = "50DCC1B31AE7CAAA00D0FE26"
+               BuildableName = "PaypointLibraryTests.xctest"
+               BlueprintName = "PaypointLibraryTests"
                ReferencedContainer = "container:Paypoint.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -42,9 +56,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "5069F6891ABC7EBA0077FB10"
-            BuildableName = "PaypointSDKTests.xctest"
-            BlueprintName = "PaypointSDKTests"
+            BlueprintIdentifier = "50DCC1A91AE7CAAA00D0FE26"
+            BuildableName = "libPaypointLibrary.a"
+            BlueprintName = "PaypointLibrary"
             ReferencedContainer = "container:Paypoint.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -61,19 +75,12 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "5069F6891ABC7EBA0077FB10"
-            BuildableName = "PaypointSDKTests.xctest"
-            BlueprintName = "PaypointSDKTests"
+            BlueprintIdentifier = "50DCC1A91AE7CAAA00D0FE26"
+            BuildableName = "libPaypointLibrary.a"
+            BlueprintName = "PaypointLibrary"
             ReferencedContainer = "container:Paypoint.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
-      <EnvironmentVariables>
-         <EnvironmentVariable
-            key = "ENVIRONMENT"
-            value = "0"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-      </EnvironmentVariables>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -86,9 +93,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "5069F6891ABC7EBA0077FB10"
-            BuildableName = "PaypointSDKTests.xctest"
-            BlueprintName = "PaypointSDKTests"
+            BlueprintIdentifier = "50DCC1A91AE7CAAA00D0FE26"
+            BuildableName = "libPaypointLibrary.a"
+            BlueprintName = "PaypointLibrary"
             ReferencedContainer = "container:Paypoint.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

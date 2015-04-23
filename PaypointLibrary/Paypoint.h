@@ -8,13 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-#import <PaypointSDK/PPOPaymentManager.h>
-#import <PaypointSDK/PPOLuhn.h>
-#import <PaypointSDK/PPOPayment.h>
-#import <PaypointSDK/PPOCreditCard.h>
-#import <PaypointSDK/PPOCredentials.h>
-#import <PaypointSDK/PPOTransaction.h>
-#import <PaypointSDK/PPOBillingAddress.h>
-#import <PaypointSDK/PPOError.h>
-#import <PaypointSDK/PPOOutcome.h>
-#import <PaypointSDK/PPOPaymentBaseURLManager.h>
+#import <PaypointLibrary/PPOPaymentManager.h>
+#import <PaypointLibrary/PPOLuhn.h>
+#import <PaypointLibrary/PPOPayment.h>
+#import <PaypointLibrary/PPOCreditCard.h>
+#import <PaypointLibrary/PPOCredentials.h>
+#import <PaypointLibrary/PPOTransaction.h>
+#import <PaypointLibrary/PPOBillingAddress.h>
+#import <PaypointLibrary/PPOError.h>
+#import <PaypointLibrary/PPOOutcome.h>
+#import <PaypointLibrary/PPOPaymentBaseURLManager.h>
