@@ -114,7 +114,6 @@
 		501B7CBD1AC40B3000F44193 /* PPOWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOWebViewController.m; sourceTree = "<group>"; };
 		503E19A11AE8E3D800CB4784 /* PaypointLibraryTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PaypointLibraryTests.m; sourceTree = "<group>"; };
 		503E19A81AE8EFEB00CB4784 /* PPOWebViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PPOWebViewController.xib; sourceTree = "<group>"; };
-		503E19E81AE9254800CB4784 /* Paypoint.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Paypoint.framework; path = "../../../../Library/Developer/Xcode/DerivedData/Paypoint-gifbtkqozancshggkwopxjdhfqrw/Build/Products/Debug-iphoneos/Paypoint.framework"; sourceTree = "<group>"; };
 		5056A1A51AD68B1400AB1276 /* PPOSDKMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPOSDKMacros.h; path = ../PaypointSDK/PPOSDKMacros.h; sourceTree = "<group>"; };
 		5056A1A71AD68B2B00AB1276 /* PPOError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOError.h; sourceTree = "<group>"; };
 		5056A1A91AD6A65900AB1276 /* PPOError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOError.m; sourceTree = "<group>"; };
@@ -130,6 +129,7 @@
 		507331EB1ADE72E700BBDFC2 /* PPOPayment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOPayment.m; sourceTree = "<group>"; };
 		507AA72D1AD7D78F00420DF7 /* PPOOutcome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOOutcome.h; sourceTree = "<group>"; };
 		507AA72E1AD7D78F00420DF7 /* PPOOutcome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOOutcome.m; sourceTree = "<group>"; };
+		508014121AEE51D300E12F0D /* Paypoint.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Paypoint.framework; path = "../../../../Library/Developer/Xcode/DerivedData/Development-ghzvlbfqtyylivhdrukhheoxbeyw/Build/Products/Debug-iphoneos/Paypoint.framework"; sourceTree = "<group>"; };
 		5081F3AE1AE7D28000D41911 /* Framework.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = Framework.sh; sourceTree = "<group>"; };
 		5081F3B81AE7D45600D41911 /* MultiPlatformFramework.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = MultiPlatformFramework.sh; path = Framework/MultiPlatformFramework.sh; sourceTree = SOURCE_ROOT; };
 		5081F3BD1AE7E56300D41911 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -366,7 +366,7 @@
 		5081F3B71AE7D43500D41911 /* Framework */ = {
 			isa = PBXGroup;
 			children = (
-				503E19E81AE9254800CB4784 /* Paypoint.framework */,
+				508014121AEE51D300E12F0D /* Paypoint.framework */,
 				5081F3B81AE7D45600D41911 /* MultiPlatformFramework.sh */,
 			);
 			name = Framework;
