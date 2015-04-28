@@ -69,6 +69,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		1A170A851AEFCB7A00851BFA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5069F64A1ABC7DA30077FB10 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5081F3B01AE7D38300D41911;
+			remoteInfo = Framework;
+		};
 		503E19A61AE8EF2900CB4784 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5069F64A1ABC7DA30077FB10 /* Project object */;
@@ -564,6 +571,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				1A170A861AEFCB7A00851BFA /* PBXTargetDependency */,
 				50DCC1B71AE7CAAA00D0FE26 /* PBXTargetDependency */,
 			);
 			name = PaypointTests;
@@ -734,6 +742,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		1A170A861AEFCB7A00851BFA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5081F3B01AE7D38300D41911 /* Framework */;
+			targetProxy = 1A170A851AEFCB7A00851BFA /* PBXContainerItemProxy */;
+		};
 		503E19A71AE8EF2900CB4784 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 50DCC1C91AE7CB3200D0FE26 /* PaypointBundle */;
