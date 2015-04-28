@@ -83,6 +83,8 @@ cp -a "${RW_FRAMEWORK_LOCATION}/Versions/A/${RW_FRAMEWORK_NAME}" \
 "${RW_OTHER_BUILT_PRODUCTS_DIR}/Paypoint.framework/Versions/A/${RW_FRAMEWORK_NAME}"
 
 # Copy the framework to the user's desktop
+rm -rf  "build/${RW_FRAMEWORK_NAME}.framework"
+
 ditto "${BUILT_PRODUCTS_DIR}/Paypoint.framework" "build/${RW_FRAMEWORK_NAME}.framework"
 
 #cp -a "${RW_FRAMEWORK_LOCATION}/Versions/A/${RW_FRAMEWORK_NAME}" \
