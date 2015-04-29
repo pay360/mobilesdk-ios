@@ -75,6 +75,27 @@
     for (NSString *pan in self.pans) NSAssert([PPOLuhn validateString:pan], @"Luhn check failed");
 }
 
+-(void)testBaseURLManager {
+    
+    NSURL *baseURL;
+    
+    for (PPOEnvironment e = PPOEnvironmentMerchantIntegrationTestingEnvironment; e < PPOEnvironmentTotalCount; e++) {
+        
+        baseURL = [PPOPaymentBaseURLManager baseURLForEnvironment:e];
+        
+        switch (e) {
+            case PPOEnvironmentMerchantIntegrationTestingEnvironment:
+                NSAssert([baseURL.absoluteString isEqualToString:@"https://ppmobilesdkstub.herokuapp.com/mobileapi"], @"Base URL unexpected");
+                break;
+                
+            default:
+                break;
+        }
+        
+    }
+    
+}
+
 -(void)testSimplePaymentWithInvalidAmount {
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Simple payment amount invalid"];
