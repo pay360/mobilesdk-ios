@@ -15,7 +15,7 @@
     //api.mite.paypoint.net:2443
     
     switch (environment) {
-        case PPOMerchantIntegrationTestingEnvironment:
+        case PPOEnvironmentMerchantIntegrationTestingEnvironment:
             return [NSURL URLWithString:@"https://ppmobilesdkstub.herokuapp.com/mobileapi"];
             break;
             
