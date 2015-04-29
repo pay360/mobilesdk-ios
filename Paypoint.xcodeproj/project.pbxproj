@@ -59,8 +59,6 @@
 		50DCC1EA1AE7CC0D00D0FE26 /* PPOPaymentBaseURLManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50E3E6631AE1127700DA61E8 /* PPOPaymentBaseURLManager.m */; };
 		50DCC1EB1AE7CC1300D0FE26 /* PPOPaymentEndpointManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 506D55B11AE5326700D71180 /* PPOPaymentEndpointManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		50DCC1EC1AE7CC1900D0FE26 /* PPOPaymentEndpointManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 506D55B21AE5326700D71180 /* PPOPaymentEndpointManager.m */; };
-		50DCC1ED1AE7CC1E00D0FE26 /* PPOPaymentValidator.h in Headers */ = {isa = PBXBuildFile; fileRef = 506D55AC1AE531EC00D71180 /* PPOPaymentValidator.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		50DCC1EE1AE7CC2300D0FE26 /* PPOPaymentValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = 506D55AD1AE531EC00D71180 /* PPOPaymentValidator.m */; };
 		50DCC1EF1AE7CC2900D0FE26 /* PPOPaymentManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 50CC9AF51AD41ED300B97F2E /* PPOPaymentManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		50DCC1F01AE7CC3000D0FE26 /* PPOPaymentManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CC9AF61AD41ED300B97F2E /* PPOPaymentManager.m */; };
 		50DCC1F11AE7CC3600D0FE26 /* PPOPaymentsDispatchManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 506D55B71AE53AA000D71180 /* PPOPaymentsDispatchManager.h */; };
@@ -126,8 +124,6 @@
 		5056A1A91AD6A65900AB1276 /* PPOError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOError.m; sourceTree = "<group>"; };
 		5056A1AB1AD6A75200AB1276 /* PPOErrorManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOErrorManager.h; sourceTree = "<group>"; };
 		5056A1AC1AD6A75200AB1276 /* PPOErrorManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOErrorManager.m; sourceTree = "<group>"; };
-		506D55AC1AE531EC00D71180 /* PPOPaymentValidator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOPaymentValidator.h; sourceTree = "<group>"; };
-		506D55AD1AE531EC00D71180 /* PPOPaymentValidator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOPaymentValidator.m; sourceTree = "<group>"; };
 		506D55B11AE5326700D71180 /* PPOPaymentEndpointManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOPaymentEndpointManager.h; sourceTree = "<group>"; };
 		506D55B21AE5326700D71180 /* PPOPaymentEndpointManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOPaymentEndpointManager.m; sourceTree = "<group>"; };
 		506D55B71AE53AA000D71180 /* PPOPaymentsDispatchManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOPaymentsDispatchManager.h; sourceTree = "<group>"; };
@@ -136,7 +132,6 @@
 		507331EB1ADE72E700BBDFC2 /* PPOPayment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOPayment.m; sourceTree = "<group>"; };
 		507AA72D1AD7D78F00420DF7 /* PPOOutcome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOOutcome.h; sourceTree = "<group>"; };
 		507AA72E1AD7D78F00420DF7 /* PPOOutcome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOOutcome.m; sourceTree = "<group>"; };
-		508014121AEE51D300E12F0D /* Paypoint.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Paypoint.framework; path = "../../../../Library/Developer/Xcode/DerivedData/Development-ghzvlbfqtyylivhdrukhheoxbeyw/Build/Products/Debug-iphoneos/Paypoint.framework"; sourceTree = "<group>"; };
 		5081F3AE1AE7D28000D41911 /* Framework.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = Framework.sh; sourceTree = "<group>"; };
 		5081F3B81AE7D45600D41911 /* MultiPlatformFramework.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = MultiPlatformFramework.sh; path = Framework/MultiPlatformFramework.sh; sourceTree = SOURCE_ROOT; };
 		5081F3BD1AE7E56300D41911 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -313,15 +308,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		506D55B01AE531F000D71180 /* PPOPaymentValidator */ = {
-			isa = PBXGroup;
-			children = (
-				506D55AC1AE531EC00D71180 /* PPOPaymentValidator.h */,
-				506D55AD1AE531EC00D71180 /* PPOPaymentValidator.m */,
-			);
-			name = PPOPaymentValidator;
-			sourceTree = "<group>";
-		};
 		506D55B51AE5326A00D71180 /* PPOPaymentEndpointManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -336,7 +322,6 @@
 			children = (
 				50E3E6661AE1127A00DA61E8 /* PPOPaymentBaseURLManager */,
 				506D55B51AE5326A00D71180 /* PPOPaymentEndpointManager */,
-				506D55B01AE531F000D71180 /* PPOPaymentValidator */,
 				50CC9AF91AD41ED800B97F2E /* PPOPaymentManager */,
 				506D55BB1AE53AA300D71180 /* PPOPaymentsDispatchManager */,
 			);
@@ -373,7 +358,6 @@
 		5081F3B71AE7D43500D41911 /* Framework */ = {
 			isa = PBXGroup;
 			children = (
-				508014121AEE51D300E12F0D /* Paypoint.framework */,
 				5081F3B81AE7D45600D41911 /* MultiPlatformFramework.sh */,
 			);
 			name = Framework;
@@ -523,7 +507,6 @@
 				50DCC1C31AE7CAF000D0FE26 /* PPOError.h in Headers */,
 				50DCC1E71AE7CBFF00D0FE26 /* PPOTimeManager.h in Headers */,
 				50DCC1D91AE7CBAE00D0FE26 /* PPOCreditCard.h in Headers */,
-				50DCC1ED1AE7CC1E00D0FE26 /* PPOPaymentValidator.h in Headers */,
 				50DCC1DB1AE7CBB900D0FE26 /* PPOTransaction.h in Headers */,
 				50DCC1E11AE7CBD800D0FE26 /* PPOPayment.h in Headers */,
 				50DCC1C41AE7CB0100D0FE26 /* PPOLuhn.h in Headers */,
@@ -708,7 +691,6 @@
 				50DCC1E41AE7CBE900D0FE26 /* PPOWebViewController.m in Sources */,
 				50DCC1DA1AE7CBB300D0FE26 /* PPOCreditCard.m in Sources */,
 				50DCC1F01AE7CC3000D0FE26 /* PPOPaymentManager.m in Sources */,
-				50DCC1EE1AE7CC2300D0FE26 /* PPOPaymentValidator.m in Sources */,
 				50DCC1EA1AE7CC0D00D0FE26 /* PPOPaymentBaseURLManager.m in Sources */,
 				50DCC1E81AE7CC0200D0FE26 /* PPOTimeManager.m in Sources */,
 				50DCC1D81AE7CBA900D0FE26 /* PPOCredentials.m in Sources */,
