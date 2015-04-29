@@ -86,7 +86,7 @@ cp -a "${RW_FRAMEWORK_LOCATION}/Versions/A/${RW_FRAMEWORK_NAME}" \
 rm -rf  "build/${RW_FRAMEWORK_NAME}.framework"
 
 ditto "${BUILT_PRODUCTS_DIR}/Paypoint.framework" "build/${RW_FRAMEWORK_NAME}.framework"
-
+ditto -cz "build/${RW_FRAMEWORK_NAME}.framework" "build/${RW_FRAMEWORK_NAME}.framework.zip"
 #cp -a "${RW_FRAMEWORK_LOCATION}/Versions/A/${RW_FRAMEWORK_NAME}" \
 #"build/${RW_FRAMEWORK_NAME}.framework"
 
