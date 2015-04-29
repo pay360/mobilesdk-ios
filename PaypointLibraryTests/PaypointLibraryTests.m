@@ -51,14 +51,17 @@
                   self.serverErrorPan
                   ];
     
-    self.address = [[PPOBillingAddress alloc] initWithFirstLine:nil
-                                                 withSecondLine:nil
-                                                  withThirdLine:nil
-                                                 withFourthLine:nil
-                                                       withCity:nil
-                                                     withRegion:nil
-                                                   withPostcode:nil
-                                                withCountryCode:nil];
+    PPOBillingAddress *address = [PPOBillingAddress new];
+    address.line1 = nil;
+    address.line2 = nil;
+    address.line3 = nil;
+    address.line4 = nil;
+    address.city = nil;
+    address.region = nil;
+    address.postcode = nil;
+    address.countryCode = nil;
+    
+    self.address = address;
     
     NSURL *baseURL = [PPOPaymentBaseURLManager baseURLForEnvironment:0];
     self.paymentManager = [[PPOPaymentManager alloc] initWithBaseURL:baseURL];
@@ -100,20 +103,31 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Simple payment amount invalid"];
     
-    self.transaction = [[PPOTransaction alloc] initWithCurrency:@"GBP"
-                                                     withAmount:nil // < ---
-                                                withDescription:@"A description"
-                                          withMerchantReference:@"mer_txn_1234556"
-                                                     isDeferred:NO];
+    PPOTransaction *transaction = [PPOTransaction new];
+    transaction.currency = @"GBP";
+    transaction.amount = nil; // < ---
+    transaction.transactionDescription = @"A desc";
+    transaction.merchantRef = [NSString stringWithFormat:@"mer_%.0f", [[NSDate date] timeIntervalSince1970]];
+    transaction.isDeferred = @NO;
     
-    self.card = [[PPOCreditCard alloc] initWithPan:self.authorisedPan
-                              withSecurityCodeCode:@"123"
-                                        withExpiry:@"0116"
-                                withCardholderName:@"John Smith"];
+    self.transaction = transaction;
     
-    PPOCredentials *credentials = [[PPOCredentials alloc] initWithID:INSTALLATION_ID withToken:self.validBearerToken];
+    PPOCreditCard *card = [PPOCreditCard new];
+    card.pan = self.authorisedPan;
+    card.cvv = @"123";
+    card.expiry = @"0116";
+    card.cardHolderName = @"Dai Jones";
     
-    PPOPayment *payment = [[PPOPayment alloc] initWithTransaction:self.transaction withCard:self.card withBillingAddress:self.address];
+    self.card = card;
+    
+    PPOCredentials *credentials = [PPOCredentials new];
+    credentials.installationID = INSTALLATION_ID;
+    credentials.token = self.validBearerToken;
+    
+    PPOPayment *payment = [PPOPayment new];
+    payment.transaction = self.transaction;
+    payment.card = self.card;
+    payment.address = self.address;
     
     [self.paymentManager makePayment:payment withCredentials:credentials withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome, NSError *error) {
         if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] && error.code == PPOErrorPaymentAmountInvalid) {
@@ -135,20 +149,31 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Simple payment card cvv invalid"];
     
-    self.transaction = [[PPOTransaction alloc] initWithCurrency:@"GBP"
-                                                     withAmount:@100
-                                                withDescription:@"A description"
-                                          withMerchantReference:@"mer_txn_1234556"
-                                                     isDeferred:NO];
+    PPOTransaction *transaction = [PPOTransaction new];
+    transaction.currency = @"GBP";
+    transaction.amount = @100;
+    transaction.transactionDescription = @"A desc";
+    transaction.merchantRef = [NSString stringWithFormat:@"mer_%.0f", [[NSDate date] timeIntervalSince1970]];
+    transaction.isDeferred = @NO;
     
-    self.card = [[PPOCreditCard alloc] initWithPan:self.authorisedPan
-                              withSecurityCodeCode:nil // < ---
-                                        withExpiry:@"0116"
-                                withCardholderName:@"John Smith"];
+    self.transaction = transaction;
     
-    PPOCredentials *credentials = [[PPOCredentials alloc] initWithID:INSTALLATION_ID withToken:self.validBearerToken];
+    PPOCreditCard *card = [PPOCreditCard new];
+    card.pan = self.authorisedPan;
+    card.cvv = nil;
+    card.expiry = @"0116";
+    card.cardHolderName = @"Dai Jones";
+
+    self.card = card;
     
-    PPOPayment *payment = [[PPOPayment alloc] initWithTransaction:self.transaction withCard:self.card withBillingAddress:self.address];
+    PPOCredentials *credentials = [PPOCredentials new];
+    credentials.installationID = INSTALLATION_ID;
+    credentials.token = self.validBearerToken;
+    
+    PPOPayment *payment = [PPOPayment new];
+    payment.transaction = self.transaction;
+    payment.card = self.card;
+    payment.address = self.address;
     
     [self.paymentManager makePayment:payment withCredentials:credentials withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome, NSError *error) {
         if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] && error.code == PPOErrorCVVInvalid) {
@@ -172,20 +197,31 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Simple payment succeeded"];
     
-    self.transaction = [[PPOTransaction alloc] initWithCurrency:@"GBP"
-                                                     withAmount:@100
-                                                withDescription:@"A description"
-                                          withMerchantReference:@"mer_txn_1234556"
-                                                     isDeferred:NO];
+    PPOTransaction *transaction = [PPOTransaction new];
+    transaction.currency = @"GBP";
+    transaction.amount = @100;
+    transaction.transactionDescription = @"A desc";
+    transaction.merchantRef = [NSString stringWithFormat:@"mer_%.0f", [[NSDate date] timeIntervalSince1970]];
+    transaction.isDeferred = @NO;
     
-    self.card = [[PPOCreditCard alloc] initWithPan:self.authorisedPan
-                              withSecurityCodeCode:@"123"
-                                        withExpiry:@"0116"
-                                withCardholderName:@"John Smith"];
+    self.transaction = transaction;
     
-    PPOCredentials *credentials = [[PPOCredentials alloc] initWithID:INSTALLATION_ID withToken:self.validBearerToken];
+    PPOCreditCard *card = [PPOCreditCard new];
+    card.pan = self.authorisedPan;
+    card.cvv = @"123";
+    card.expiry = @"0116";
+    card.cardHolderName = @"Dai Jones";
     
-    PPOPayment *payment = [[PPOPayment alloc] initWithTransaction:self.transaction withCard:self.card withBillingAddress:self.address];
+    self.card = card;
+    
+    PPOCredentials *credentials = [PPOCredentials new];
+    credentials.installationID = INSTALLATION_ID;
+    credentials.token = self.validBearerToken;
+    
+    PPOPayment *payment = [PPOPayment new];
+    payment.transaction = self.transaction;
+    payment.card = self.card;
+    payment.address = self.address;
     
     [self.paymentManager makePayment:payment withCredentials:credentials withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome, NSError *error) {
         if (!error) [expectation fulfill];
@@ -207,20 +243,31 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Simple payment bearer token expired"];
     
-    self.transaction = [[PPOTransaction alloc] initWithCurrency:@"GBP"
-                                                     withAmount:@100
-                                                withDescription:@"A description"
-                                          withMerchantReference:@"mer_txn_1234556"
-                                                     isDeferred:NO];
+    PPOTransaction *transaction = [PPOTransaction new];
+    transaction.currency = @"GBP";
+    transaction.amount = @100;
+    transaction.transactionDescription = @"A desc";
+    transaction.merchantRef = [NSString stringWithFormat:@"mer_%.0f", [[NSDate date] timeIntervalSince1970]];
+    transaction.isDeferred = @NO;
     
-    self.card = [[PPOCreditCard alloc] initWithPan:self.authorisedPan
-                              withSecurityCodeCode:@"123"
-                                        withExpiry:@"0116"
-                                withCardholderName:@"John Smith"];
+    self.transaction = transaction;
     
-    PPOCredentials *credentials = [[PPOCredentials alloc] initWithID:INSTALLATION_ID withToken:self.expiredBearerToken];
+    PPOCreditCard *card = [PPOCreditCard new];
+    card.pan = self.authorisedPan;
+    card.cvv = @"123";
+    card.expiry = @"0116";
+    card.cardHolderName = @"Dai Jones";
     
-    PPOPayment *payment = [[PPOPayment alloc] initWithTransaction:self.transaction withCard:self.card withBillingAddress:self.address];
+    self.card = card;
+    
+    PPOCredentials *credentials = [PPOCredentials new];
+    credentials.installationID = INSTALLATION_ID;
+    credentials.token = self.expiredBearerToken;
+    
+    PPOPayment *payment = [PPOPayment new];
+    payment.transaction = self.transaction;
+    payment.card = self.card;
+    payment.address = self.address;
     
     [self.paymentManager makePayment:payment withCredentials:credentials withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome, NSError *error) {
         
@@ -243,20 +290,31 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Simple payment bearer token unauthorised"];
     
-    self.transaction = [[PPOTransaction alloc] initWithCurrency:@"GBP"
-                                                     withAmount:@100
-                                                withDescription:@"A description"
-                                          withMerchantReference:@"mer_txn_1234556"
-                                                     isDeferred:NO];
+    PPOTransaction *transaction = [PPOTransaction new];
+    transaction.currency = @"GBP";
+    transaction.amount = @100;
+    transaction.transactionDescription = @"A desc";
+    transaction.merchantRef = [NSString stringWithFormat:@"mer_%.0f", [[NSDate date] timeIntervalSince1970]];
+    transaction.isDeferred = @NO;
+
+    self.transaction = transaction;
     
-    self.card = [[PPOCreditCard alloc] initWithPan:self.authorisedPan
-                              withSecurityCodeCode:@"123"
-                                        withExpiry:@"0116"
-                                withCardholderName:@"John Smith"];
+    PPOCreditCard *card = [PPOCreditCard new];
+    card.pan = self.authorisedPan;
+    card.cvv = @"123";
+    card.expiry = @"0116";
+    card.cardHolderName = @"Dai Jones";
     
-    PPOCredentials *credentials = [[PPOCredentials alloc] initWithID:INSTALLATION_ID withToken:self.unauthorisedBearerToken];
+    self.card = card;
     
-    PPOPayment *payment = [[PPOPayment alloc] initWithTransaction:self.transaction withCard:self.card withBillingAddress:self.address];
+    PPOCredentials *credentials = [PPOCredentials new];
+    credentials.installationID = INSTALLATION_ID;
+    credentials.token = self.unauthorisedBearerToken;
+    
+    PPOPayment *payment = [PPOPayment new];
+    payment.transaction = self.transaction;
+    payment.card = self.card;
+    payment.address = self.address;
     
     [self.paymentManager makePayment:payment withCredentials:credentials withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome, NSError *error) {
         
@@ -281,20 +339,31 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Simple payment processing failed"];
     
-    self.transaction = [[PPOTransaction alloc] initWithCurrency:@"GBP"
-                                                     withAmount:@100
-                                                withDescription:@"A description"
-                                          withMerchantReference:@"mer_txn_1234556"
-                                                     isDeferred:NO];
+    PPOTransaction *transaction = [PPOTransaction new];
+    transaction.currency = @"GBP";
+    transaction.amount = @100;
+    transaction.transactionDescription = @"A desc";
+    transaction.merchantRef = [NSString stringWithFormat:@"mer_%.0f", [[NSDate date] timeIntervalSince1970]];
+    transaction.isDeferred = @NO;
     
-    self.card =     [[PPOCreditCard alloc] initWithPan:self.declinePan
-                                  withSecurityCodeCode:@"123"
-                                            withExpiry:@"0116"
-                                    withCardholderName:@"John Smith"];
+    self.transaction = transaction;
     
-    PPOCredentials *credentials = [[PPOCredentials alloc] initWithID:INSTALLATION_ID withToken:self.validBearerToken];
+    PPOCreditCard *card = [PPOCreditCard new];
+    card.pan = self.declinePan;
+    card.cvv = @"123";
+    card.expiry = @"0116";
+    card.cardHolderName = @"Dai Jones";
     
-    PPOPayment *payment = [[PPOPayment alloc] initWithTransaction:self.transaction withCard:self.card withBillingAddress:self.address];
+    self.card = card;
+    
+    PPOCredentials *credentials = [PPOCredentials new];
+    credentials.installationID = INSTALLATION_ID;
+    credentials.token = self.validBearerToken;
+    
+    PPOPayment *payment = [PPOPayment new];
+    payment.transaction = self.transaction;
+    payment.card = self.card;
+    payment.address = self.address;
     
     [self.paymentManager makePayment:payment withCredentials:credentials withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome, NSError *error) {
         
@@ -317,20 +386,31 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Simple payment timedout"];
     
-    self.transaction = [[PPOTransaction alloc] initWithCurrency:@"GBP"
-                                                     withAmount:@100
-                                                withDescription:@"A description"
-                                          withMerchantReference:@"mer_txn_1234556"
-                                                     isDeferred:NO];
+    PPOTransaction *transaction = [PPOTransaction new];
+    transaction.currency = @"GBP";
+    transaction.amount = @100;
+    transaction.transactionDescription = @"A desc";
+    transaction.merchantRef = [NSString stringWithFormat:@"mer_%.0f", [[NSDate date] timeIntervalSince1970]];
+    transaction.isDeferred = @NO;
     
-    self.card = [[PPOCreditCard alloc] initWithPan:self.delayAuthorisedPan
-                              withSecurityCodeCode:@"123"
-                                        withExpiry:@"0106"
-                                withCardholderName:@"Dai Jones"];
+    self.transaction = transaction;
     
-    PPOCredentials *credentials = [[PPOCredentials alloc] initWithID:INSTALLATION_ID withToken:self.validBearerToken];
+    PPOCreditCard *card = [PPOCreditCard new];
+    card.pan = self.delayAuthorisedPan;
+    card.cvv = @"123";
+    card.expiry = @"0116";
+    card.cardHolderName = @"Dai Jones";
     
-    PPOPayment *payment = [[PPOPayment alloc] initWithTransaction:self.transaction withCard:self.card withBillingAddress:self.address];
+    self.card = card;
+    
+    PPOCredentials *credentials = [PPOCredentials new];
+    credentials.installationID = INSTALLATION_ID;
+    credentials.token = self.validBearerToken;
+    
+    PPOPayment *payment = [PPOPayment new];
+    payment.transaction = self.transaction;
+    payment.card = self.card;
+    payment.address = self.address;
     
     [self.paymentManager makePayment:payment withCredentials:credentials withTimeOut:1.0 withCompletion:^(PPOOutcome *outcome, NSError *error) {
         if ([error.domain isEqualToString:@"NSURLErrorDomain"] && error.code == kCFURLErrorTimedOut) {
@@ -352,20 +432,31 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Simple payment server error"];
     
-    self.transaction = [[PPOTransaction alloc] initWithCurrency:@"GBP"
-                                                     withAmount:@100
-                                                withDescription:@"A description"
-                                          withMerchantReference:@"mer_txn_1234556"
-                                                     isDeferred:NO];
+    PPOTransaction *transaction = [PPOTransaction new];
+    transaction.currency = @"GBP";
+    transaction.amount = @100;
+    transaction.transactionDescription = @"A desc";
+    transaction.merchantRef = [NSString stringWithFormat:@"mer_%.0f", [[NSDate date] timeIntervalSince1970]];
+    transaction.isDeferred = @NO;
     
-    self.card = [[PPOCreditCard alloc] initWithPan:self.serverErrorPan
-                              withSecurityCodeCode:@"123"
-                                        withExpiry:@"0116"
-                                withCardholderName:@"Dai Jones"];
+    self.transaction = transaction;
     
-    PPOCredentials *credentials = [[PPOCredentials alloc] initWithID:INSTALLATION_ID withToken:self.validBearerToken];
+    PPOCreditCard *card = [PPOCreditCard new];
+    card.pan = self.serverErrorPan;
+    card.cvv = @"123";
+    card.expiry = @"0116";
+    card.cardHolderName = @"Dai Jones";
     
-    PPOPayment *payment = [[PPOPayment alloc] initWithTransaction:self.transaction withCard:self.card withBillingAddress:self.address];
+    self.card = card;
+    
+    PPOCredentials *credentials = [PPOCredentials new];
+    credentials.installationID = INSTALLATION_ID;
+    credentials.token = self.validBearerToken;
+    
+    PPOPayment *payment = [PPOPayment new];
+    payment.transaction = self.transaction;
+    payment.card = self.card;
+    payment.address = self.address;
     
     [self.paymentManager makePayment:payment withCredentials:credentials withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome, NSError *error) {
         if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] && error.code == PPOErrorServerFailure) {

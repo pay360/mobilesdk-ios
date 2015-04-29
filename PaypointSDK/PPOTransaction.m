@@ -8,27 +8,7 @@
 
 #import "PPOTransaction.h"
 
-@interface PPOTransaction ()
-@property (nonatomic, strong, readwrite) NSString *currency;
-@property (nonatomic, strong, readwrite) NSNumber *amount;
-@property (nonatomic, strong, readwrite) NSString *transactionDescription;
-@property (nonatomic, strong, readwrite) NSString *merchantRef;
-@property (nonatomic, strong, readwrite) NSNumber *isDeferred;
-@end
-
 @implementation PPOTransaction
-
--(instancetype)initWithCurrency:(NSString*)currency withAmount:(NSNumber*)amount withDescription:(NSString*)description withMerchantReference:(NSString*)reference isDeferred:(BOOL)deferred {
-    self = [super init];
-    if (self) {
-        _currency = currency;
-        _amount = amount;
-        _transactionDescription = description;
-        _merchantRef = reference;
-        _isDeferred = @(deferred);
-    }
-    return self;
-}
 
 -(NSDictionary*)jsonObjectRepresentation {
     id currency = (self.currency) ?: [NSNull null];

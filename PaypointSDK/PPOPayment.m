@@ -10,14 +10,4 @@
 
 @implementation PPOPayment
 
--(instancetype)initWithTransaction:(PPOTransaction*)transaction withCard:(PPOCreditCard*)card withBillingAddress:(PPOBillingAddress*)address {
-    self = [super init];
-    if (self) {
-        _transaction = transaction;
-        _creditCard = card;
-        _billingAddress = address;
-    }
-    return self;
-}
-
 @end

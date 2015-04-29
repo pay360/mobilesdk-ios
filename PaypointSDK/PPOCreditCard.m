@@ -8,25 +8,7 @@
 
 #import "PPOCreditCard.h"
 
-@interface PPOCreditCard ()
-@property (nonatomic, strong, readwrite) NSString *pan;
-@property (nonatomic, strong, readwrite) NSString *cvv;
-@property (nonatomic, strong, readwrite) NSString *expiry;
-@property (nonatomic, strong, readwrite) NSString *cardHolderName;
-@end
-
 @implementation PPOCreditCard
-
--(instancetype)initWithPan:(NSString*)pan withSecurityCodeCode:(NSString*)cvv withExpiry:(NSString*)date withCardholderName:(NSString*)cardholder {
-    self = [super init];
-    if (self) {
-        _pan = pan;
-        _cvv = cvv;
-        _expiry = date;
-        _cardHolderName = cardholder;
-    }
-    return self;
-}
 
 -(NSDictionary*)jsonObjectRepresentation {
     id pan = ([self cleanString:self.pan]) ?: [NSNull null];

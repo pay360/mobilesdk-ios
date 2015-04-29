@@ -6,15 +6,13 @@
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @interface PPOCreditCard : NSObject
-@property (nonatomic, strong, readonly) NSString *pan;
-@property (nonatomic, strong, readonly) NSString *cvv;
-@property (nonatomic, strong, readonly) NSString *expiry;
-@property (nonatomic, strong, readonly) NSString *cardHolderName;
-
--(instancetype)initWithPan:(NSString*)pan withSecurityCodeCode:(NSString*)cvv withExpiry:(NSString*)date withCardholderName:(NSString*)cardholder; //Designated Initialiser
+@property (nonatomic, strong) NSString *pan;
+@property (nonatomic, strong) NSString *cvv;
+@property (nonatomic, strong) NSString *expiry;
+@property (nonatomic, strong) NSString *cardHolderName;
 
 -(NSDictionary*)jsonObjectRepresentation;
 

@@ -6,12 +6,9 @@
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @interface PPOCredentials : NSObject
-@property (nonatomic, strong, readonly) NSString *installationID;
-@property (nonatomic, strong, readonly) NSString *token;
-
--(instancetype)initWithID:(NSString*)installationID withToken:(NSString*)token; //Designated Initialiser
-
+@property (nonatomic, strong) NSString *installationID;
+@property (nonatomic, strong) NSString *token;
 @end
