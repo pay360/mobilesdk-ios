@@ -14,7 +14,7 @@
     
     switch (environment) {
         case PPOMerchantIntegrationTestingEnvironment:
-            return [NSURL URLWithString:@"http://192.168.3.31:5000/mobileapi"];
+            return [NSURL URLWithString:@"https://ppmobilesdkstub.herokuapp.com/mobileapi"];
             break;
             
         default:

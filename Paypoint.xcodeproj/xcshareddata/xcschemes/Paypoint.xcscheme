@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0620"
+   LastUpgradeVersion = "0630"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,9 +14,23 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5069F67F1ABC7EBA0077FB10"
-               BuildableName = "PaypointSDK.framework"
-               BlueprintName = "PaypointSDK"
+               BlueprintIdentifier = "50DCC1A91AE7CAAA00D0FE26"
+               BuildableName = "libPaypoint.a"
+               BlueprintName = "Paypoint"
+               ReferencedContainer = "container:Paypoint.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "50DCC1B31AE7CAAA00D0FE26"
+               BuildableName = "PaypointTests.xctest"
+               BlueprintName = "PaypointTests"
                ReferencedContainer = "container:Paypoint.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -28,7 +42,26 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       buildConfiguration = "Debug">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "50DCC1B31AE7CAAA00D0FE26"
+               BuildableName = "PaypointTests.xctest"
+               BlueprintName = "PaypointTests"
+               ReferencedContainer = "container:Paypoint.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "50DCC1A91AE7CAAA00D0FE26"
+            BuildableName = "libPaypoint.a"
+            BlueprintName = "Paypoint"
+            ReferencedContainer = "container:Paypoint.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </TestAction>
    <LaunchAction
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
@@ -42,9 +75,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "5069F67F1ABC7EBA0077FB10"
-            BuildableName = "PaypointSDK.framework"
-            BlueprintName = "PaypointSDK"
+            BlueprintIdentifier = "50DCC1A91AE7CAAA00D0FE26"
+            BuildableName = "libPaypoint.a"
+            BlueprintName = "Paypoint"
             ReferencedContainer = "container:Paypoint.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -60,9 +93,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "5069F67F1ABC7EBA0077FB10"
-            BuildableName = "PaypointSDK.framework"
-            BlueprintName = "PaypointSDK"
+            BlueprintIdentifier = "50DCC1A91AE7CAAA00D0FE26"
+            BuildableName = "libPaypoint.a"
+            BlueprintName = "Paypoint"
             ReferencedContainer = "container:Paypoint.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

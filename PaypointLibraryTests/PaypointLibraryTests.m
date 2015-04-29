@@ -1,8 +1,8 @@
 //
-//  PaypointSDKTests.m
-//  PaypointSDKTests
+//  PaypointLibraryTests.m
+//  Paypoint
 //
-//  Created by Robert Nash on 20/03/2015.
+//  Created by Robert Nash on 23/04/2015.
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
@@ -10,11 +10,11 @@
 #import <XCTest/XCTest.h>
 
 //SDK
-#import <PaypointSDK/PaypointSDK.h>
+#import "Paypoint.h"
 
 #define INSTALLATION_ID @"5300065"
 
-@interface PaypointSDKTests : XCTestCase
+@interface PaypointLibraryTests : XCTestCase
 @property (nonatomic, strong) NSArray *pans;
 @property (nonatomic, strong) NSString *validBearerToken;
 @property (nonatomic, strong) NSString *expiredBearerToken;
@@ -30,7 +30,7 @@
 @property (nonatomic) PPOEnvironment currentEnvironment;
 @end
 
-@implementation PaypointSDKTests
+@implementation PaypointLibraryTests
 
 - (void)setUp {
     [super setUp];

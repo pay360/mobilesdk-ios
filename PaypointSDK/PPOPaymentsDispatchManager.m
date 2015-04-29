@@ -75,38 +75,13 @@
     
 }
 
--(void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler {
+- (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
+ completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandler {
     
-    //    if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
-    //    {
-    //        SecTrustResultType result;
-    //        //This takes the serverTrust object and checkes it against your keychain
-    //        SecTrustEvaluate(challenge.protectionSpace.serverTrust, &result);
-    //
-    //        //If allow invalid certs, end here
-    //        //completionHandler(NSURLSessionAuthChallengeUseCredential, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
-    //
-    //        //When testing this against a trusted server I got kSecTrustResultUnspecified every time. But the other two match the description of a trusted server
-    //        if(result == kSecTrustResultProceed ||  result == kSecTrustResultUnspecified){
-    //            completionHandler(NSURLSessionAuthChallengeUseCredential, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
-    //        }
-    //        else {
-    //            //Asks the user for trust
-    //            if (YES) {
-    //                //May need to add a method to add serverTrust to the keychain like Firefox's "Add Excpetion"
-    //                completionHandler(NSURLSessionAuthChallengeUseCredential, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
-    //            }
-    //            else {
-    //                [[challenge sender] cancelAuthenticationChallenge:challenge];
-    //            }
-    //        }
-    //    }
-    //    else if ([[challenge protectionSpace] authenticationMethod] == NSURLAuthenticationMethodDefault) {
-    //        NSURLCredential *newCredential = [NSURLCredential credentialWithUser:@"" password:@"" persistence:NSURLCredentialPersistenceNone];
-    //        completionHandler(NSURLSessionAuthChallengeUseCredential, newCredential);
-    //    }
+    NSURLCredential *credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
     
-    completionHandler(NSURLSessionAuthChallengeUseCredential, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
+    completionHandler(NSURLSessionAuthChallengeUseCredential, credential);
+    
 }
 
 @end
