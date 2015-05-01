@@ -16,7 +16,7 @@
     
     switch (environment) {
         case PPOEnvironmentMerchantIntegrationTestingEnvironment:
-            return [NSURL URLWithString:@"https://ppmobilesdkstub.herokuapp.com/mobileapi"];
+            return [NSURL URLWithString:@"http://localhost:5000/mobileapi"];
             break;
             
         default:
