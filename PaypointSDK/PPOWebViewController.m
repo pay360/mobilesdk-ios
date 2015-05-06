@@ -8,19 +8,18 @@
 
 #import "PPOWebViewController.h"
 
-#define PAYPOINT_SDK_BUNDLE_URL [[NSBundle bundleForClass:[self class]] URLForResource:@"PaypointSDKBundle" withExtension:@"bundle"]
-
 @interface PPOWebViewController () <UIWebViewDelegate>
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
-@property (nonatomic, strong) NSURLRequest *request;
 @end
 
 @implementation PPOWebViewController
 
--(instancetype)initWithRequest:(NSURLRequest*)request {
-    self = [super initWithNibName:NSStringFromClass([self class]) bundle:[NSBundle bundleWithURL:PAYPOINT_SDK_BUNDLE_URL]];
+-(instancetype)init {
+    NSString *resourceBundlePath = [[NSBundle mainBundle] pathForResource:@"PaypointResources" ofType:@"bundle"];
+    NSBundle *resourceBundle = [NSBundle bundleWithPath:resourceBundlePath];
+    
+    self = [super initWithNibName:NSStringFromClass([self class]) bundle:resourceBundle];
     if (self) {
-        _request = request;
     }
     return self;
 }

@@ -14,8 +14,10 @@
 
 @interface PPOWebViewController : UIViewController
 
-@property (nonatomic, weak) id <PPOWebViewControllerDelegate> delegate;
+//Holding strongly here
+@property (nonatomic, strong) id <PPOWebViewControllerDelegate> delegate;
+@property (nonatomic, strong) NSURLRequest *request;
 
--(instancetype)initWithRequest:(NSURLRequest*)request;
+-(instancetype)init;
 
 @end
