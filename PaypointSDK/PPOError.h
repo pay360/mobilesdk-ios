@@ -74,6 +74,9 @@ typedef NS_ENUM(NSInteger, PPOErrorCode) {
     PPOErrorSuppliedBaseURLInvalid,
     
     /* Credentials have not been set in the payment manager*/
-    PPOErrorCredentialsNotFound
+    PPOErrorCredentialsNotFound,
+    
+    /* There was an error processing 3D Secure*/
+    PPOErrorProcessingThreeDSecure
     
 };
