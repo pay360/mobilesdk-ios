@@ -15,6 +15,9 @@
 @interface PPOPaymentsDispatchManager () <NSURLSessionTaskDelegate, PPOWebViewControllerDelegate>
 @property (nonatomic, strong, readwrite) NSOperationQueue *payments;
 @property (nonatomic, strong) NSURLSession *session;
+@property (nonatomic, copy) void(^outcomeCompletion)(PPOOutcome *outcome, NSError *error);
+@property (nonatomic) CGFloat timeout;
+@property (nonatomic, strong) PPOCredentials *credentials;
 @end
 
 @implementation PPOPaymentsDispatchManager
@@ -35,7 +38,14 @@
     return _session;
 }
 
--(void)dispatchRequest:(NSURLRequest*)request withCompletion:(void (^)(PPOOutcome *outcome, NSError *error))completion {
+-(void)dispatchRequest:(NSURLRequest*)request
+           withTimeout:(CGFloat)timeout
+       withCredentials:(PPOCredentials*)credentials
+        withCompletion:(void (^)(PPOOutcome *outcome, NSError *error))completion {
+    
+    self.outcomeCompletion = completion;
+    self.timeout = timeout;
+    self.credentials = credentials;
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     
@@ -55,6 +65,24 @@
             });
             return;
         }
+        
+        /* 
+         Consider pulling out transaction here
+         
+         [json objectForKey:@"transaction"]
+         
+         transaction =     {
+         amount = 1000;
+         currency = GBP;
+         merchantRef = "mer_1430832896";
+         transactionId = 2120299066;
+         transactionTime = "2015-05-05T13:34:56.933Z";
+         type = PREAUTH;
+         };
+         
+         and keeping the transaction id around to inspect it later on, just to be sure nothing wierd has happened
+         
+         */
         
         id value = [json objectForKey:@"threeDSRedirect"];
         if ([value isKindOfClass:[NSDictionary class]]) {
@@ -79,6 +107,7 @@
                     PPOWebViewController *controller = [[PPOWebViewController alloc] init];
                     controller.delegate = self;
                     controller.request = request;
+                    controller.termURLString = termUrlString;
                     
                     UINavigationController *navCon = [[UINavigationController alloc] initWithRootViewController:controller];
                     dispatch_async(dispatch_get_main_queue(), ^{
@@ -145,17 +174,70 @@
     return output;
 }
 
-- (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
- completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandler {
+-(void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler {
     
     NSURLCredential *credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
-    
     completionHandler(NSURLSessionAuthChallengeUseCredential, credential);
+}
+
+-(void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandler {
     
+    NSURLCredential *credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
+    completionHandler(NSURLSessionAuthChallengeUseCredential, credential);
 }
 
 #pragma mark - PPOWebViewController
 
+-(void)completed:(NSString *)paRes transactionID:(NSString *)transID {
+    
+    id data;
+    if (paRes) {
+        NSDictionary *dictionary = @{@"threeDSecureResponse": @{@"pares":paRes}};
+        data = [NSJSONSerialization dataWithJSONObject:dictionary options:NSJSONWritingPrettyPrinted error:nil];
+    }
+#warning installation id hardcoded here
+    NSURLSessionDataTask *task;
+    NSString *urlString = [NSString stringWithFormat:@"http://localhost:5000/acceptor/rest/mobile/transactions/%@/%@/resume", @"5300065", transID];
+    NSURL *url = [NSURL URLWithString:urlString];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:self.timeout];
+    [request setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPMethod:@"POST"];
+    [request setValue:[self authorisation:self.credentials] forHTTPHeaderField:@"Authorization"];
+    [request setHTTPBody:data];
+    
+    task = [self.session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        
+        if (((NSHTTPURLResponse*)response).statusCode == 200) {
+            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
+            PPOOutcome *outcome = [[PPOOutcome alloc] initWithData:json];
+            if (outcome.isSuccessful == NO) {
+                PPOErrorCode code = [PPOErrorManager errorCodeForReasonCode:outcome.reasonCode.integerValue];
+                error = [PPOErrorManager errorForCode:code];
+            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+                [[[UIApplication sharedApplication] keyWindow].rootViewController dismissViewControllerAnimated:YES completion:^{
+                    self.outcomeCompletion(outcome, error);
+                }];
+            });
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+                [[[UIApplication sharedApplication] keyWindow].rootViewController dismissViewControllerAnimated:YES completion:^{
+                    self.outcomeCompletion(nil, [PPOErrorManager errorForCode:PPOErrorUnknown]);
+                }];
+            });
+        }
+        
+    }];
+    
+    [task resume];
+    
+}
 
+-(NSString*)authorisation:(PPOCredentials*)credentials {
+    return [NSString stringWithFormat:@"Bearer %@", credentials.token];
+}
 
 @end

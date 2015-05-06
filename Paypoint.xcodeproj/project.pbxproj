@@ -253,9 +253,9 @@
 		503E19E21AE91F4600CB4784 /* LinkedFrameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5081F3BD1AE7E56300D41911 /* UIKit.framework */,
 				5081F3C11AE7E58900D41911 /* CoreGraphics.framework */,
 				5081F3BF1AE7E58500D41911 /* SystemConfiguration.framework */,
-				5081F3BD1AE7E56300D41911 /* UIKit.framework */,
 			);
 			name = LinkedFrameworks;
 			sourceTree = "<group>";

@@ -7,11 +7,15 @@
 //
 
 #import "PPOOutcome.h"
+#import "PPOCredentials.h"
 
 @interface PPOPaymentsDispatchManager : NSObject
 
 @property (nonatomic, strong, readonly) NSOperationQueue *payments;
 
--(void)dispatchRequest:(NSURLRequest*)request withCompletion:(void (^)(PPOOutcome *outcome, NSError *error))completion;
+-(void)dispatchRequest:(NSURLRequest*)request
+           withTimeout:(CGFloat)timeout
+       withCredentials:(PPOCredentials*)credentials
+        withCompletion:(void (^)(PPOOutcome *outcome, NSError *error))completion;
 
 @end

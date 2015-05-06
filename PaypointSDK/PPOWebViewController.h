@@ -17,6 +17,7 @@
 //Holding strongly here
 @property (nonatomic, strong) id <PPOWebViewControllerDelegate> delegate;
 @property (nonatomic, strong) NSURLRequest *request;
+@property (nonatomic, copy) NSString *termURLString;
 
 -(instancetype)init;
 
