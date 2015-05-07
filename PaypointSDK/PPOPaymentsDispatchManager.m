@@ -182,6 +182,10 @@
     
 }
 
+-(NSString*)authorisation:(PPOCredentials*)credentials {
+    return [NSString stringWithFormat:@"Bearer %@", credentials.token];
+}
+
 +(NSString *)urlencode:(NSString*)string {
     NSMutableString *output = [NSMutableString string];
     const unsigned char *source = (const unsigned char *)[string UTF8String];
