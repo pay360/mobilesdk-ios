@@ -66,25 +66,19 @@
             return;
         }
         
-        /* 
-         Consider pulling out transaction here
-         
-         [json objectForKey:@"transaction"]
-         
-         transaction =     {
-         amount = 1000;
-         currency = GBP;
-         merchantRef = "mer_1430832896";
-         transactionId = 2120299066;
-         transactionTime = "2015-05-05T13:34:56.933Z";
-         type = PREAUTH;
-         };
-         
-         and keeping the transaction id around to inspect it later on, just to be sure nothing wierd has happened
-         
-         */
+        id value = [json objectForKey:@"transaction"];
+        if ([value isKindOfClass:[NSDictionary class]]) {
+            id string = [value objectForKey:@"transactionId"];;
+            if ([string isKindOfClass:[NSString class]]) {
+                self.transactionID = string;
+            }
+            string = [value objectForKey:@"transactionTime"];
+            if ([string isKindOfClass:[NSString class]]) {
+                self.transactionDate = [self.timeManager dateFromString:string];
+            }
+        }
         
-        id value = [json objectForKey:@"threeDSRedirect"];
+        value = [json objectForKey:@"threeDSRedirect"];
         if ([value isKindOfClass:[NSDictionary class]]) {
             NSString *acsURLString = [value objectForKey:@"acsUrl"];
             if ([acsURLString isKindOfClass:[NSString class]]) {
