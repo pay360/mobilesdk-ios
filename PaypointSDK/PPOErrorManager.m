@@ -185,6 +185,33 @@
                     ];
             break;
             
+        case PPOErrorProcessingThreeDSecure:
+            return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                       code:PPOErrorProcessingThreeDSecure
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"There has been an error processing your payment via 3D secure.", @"Failure message for 3D secure payment failure")
+                                              }
+                    ];
+            break;
+            
+        case PPOErrorThreeDSecureTimedOut:
+            return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                       code:PPOErrorThreeDSecureTimedOut
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"3D secure timed out.", @"Failure message for 3D secure payment failure")
+                                              }
+                    ];
+            break;
+            
+        case PPOErrorUserCancelled:
+            return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                       code:PPOErrorUserCancelled
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"User cancelled 3D secure.", @"Failure message for 3D secure payment failure")
+                                              }
+                    ];
+            break;
+            
         default:
             return nil;
             break;

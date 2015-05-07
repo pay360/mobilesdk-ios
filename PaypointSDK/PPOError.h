@@ -77,6 +77,12 @@ typedef NS_ENUM(NSInteger, PPOErrorCode) {
     PPOErrorCredentialsNotFound,
     
     /* There was an error processing 3D Secure*/
-    PPOErrorProcessingThreeDSecure
+    PPOErrorProcessingThreeDSecure,
+    
+    /* 3D secure timedout */
+    PPOErrorThreeDSecureTimedOut,
+    
+    /* User cancelled 3D Authentication */
+    PPOErrorUserCancelled
     
 };
