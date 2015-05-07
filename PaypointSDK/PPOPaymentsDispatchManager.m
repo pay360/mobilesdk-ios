@@ -249,16 +249,30 @@
             }
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-                [[[UIApplication sharedApplication] keyWindow].rootViewController dismissViewControllerAnimated:YES completion:^{
+                id controller = [[UIApplication sharedApplication] keyWindow].rootViewController.presentedViewController;
+                if (controller && controller == self.webController.navigationController) {
+                    [[[UIApplication sharedApplication] keyWindow].rootViewController dismissViewControllerAnimated:YES completion:^{
+                        self.outcomeCompletion(outcome, error);
+                        _preventShowWebView = NO;
+                    }];
+                } else {
                     self.outcomeCompletion(outcome, error);
-                }];
+                    _preventShowWebView = NO;
+                }
             });
         } else {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-                [[[UIApplication sharedApplication] keyWindow].rootViewController dismissViewControllerAnimated:YES completion:^{
+                id controller = [[UIApplication sharedApplication] keyWindow].rootViewController.presentedViewController;
+                if (controller && controller == self.webController.navigationController) {
+                    [[[UIApplication sharedApplication] keyWindow].rootViewController dismissViewControllerAnimated:YES completion:^{
+                        self.outcomeCompletion(nil, [PPOErrorManager errorForCode:PPOErrorUnknown]);
+                        _preventShowWebView = NO;
+                    }];
+                } else {
                     self.outcomeCompletion(nil, [PPOErrorManager errorForCode:PPOErrorUnknown]);
-                }];
+                    _preventShowWebView = NO;
+                }
             });
         }
         
@@ -268,8 +282,42 @@
     
 }
 
--(NSString*)authorisation:(PPOCredentials*)credentials {
-    return [NSString stringWithFormat:@"Bearer %@", credentials.token];
+-(void)webViewControllerDelayShowTimeoutExpired:(PPOWebViewController *)controller {
+    if (!_preventShowWebView) {
+        [self.webController.view removeFromSuperview];
+        UINavigationController *navCon = [[UINavigationController alloc] initWithRootViewController:self.webController];
+        [[[UIApplication sharedApplication] keyWindow].rootViewController presentViewController:navCon animated:YES completion:nil];
+    }
+}
+
+-(void)webViewControllerSessionTimeoutExpired:(PPOWebViewController *)webController {
+    [self handleError:[PPOErrorManager errorForCode:PPOErrorThreeDSecureTimedOut]
+        webController:webController];
+}
+
+-(void)webViewController:(PPOWebViewController *)webController failedWithError:(NSError *)error {
+    [self handleError:error
+        webController:webController];
+}
+
+-(void)webViewControllerUserCancelled:(PPOWebViewController *)webController {
+    [self handleError:[PPOErrorManager errorForCode:PPOErrorUserCancelled]
+        webController:webController];
+}
+
+-(void)handleError:(NSError *)error webController:(PPOWebViewController *)webController {
+    _preventShowWebView = YES;
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+    id controller = [[UIApplication sharedApplication] keyWindow].rootViewController.presentedViewController;
+    if (controller && controller == webController.navigationController) {
+        [[[UIApplication sharedApplication] keyWindow].rootViewController dismissViewControllerAnimated:YES completion:^{
+            self.outcomeCompletion(nil, error);
+            _preventShowWebView = NO;
+        }];
+    } else {
+        self.outcomeCompletion(nil, error);
+        _preventShowWebView = NO;
+    }
 }
 
 @end
