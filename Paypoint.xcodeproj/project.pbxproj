@@ -191,7 +191,6 @@
 			children = (
 				501B7CBC1AC40B3000F44193 /* PPOWebViewController.h */,
 				501B7CBD1AC40B3000F44193 /* PPOWebViewController.m */,
-				5027E5481AFA13ED00926C90 /* PPOWebViewController.xib */,
 			);
 			name = PPOWebViewController;
 			sourceTree = "<group>";
@@ -348,6 +347,7 @@
 		5092F3561AFA1E8F004FFF62 /* PaypointResources */ = {
 			isa = PBXGroup;
 			children = (
+				5027E5481AFA13ED00926C90 /* PPOWebViewController.xib */,
 				5092F3571AFA1E8F004FFF62 /* Supporting Files */,
 			);
 			path = PaypointResources;
