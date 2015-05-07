@@ -12,7 +12,10 @@
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
 @end
 
-@implementation PPOWebViewController
+@implementation PPOWebViewController {
+    BOOL _firstLoad;
+    BOOL _testingFastAuth;
+}
 
 -(instancetype)init {
     NSString *resourceBundlePath = [[NSBundle mainBundle] pathForResource:@"PaypointResources" ofType:@"bundle"];
@@ -26,11 +29,21 @@
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self.webView loadRequest:self.request];
+    if (_testingFastAuth) {
+        [self testingAutomaticAuthentication];
+    }
 }
 
--(void)webViewDidStartLoad:(UIWebView *)webView {
-    NSLog(@"Started");
+-(void)testingAutomaticAuthentication {
+    [self performSelector:@selector(trigger) withObject:nil afterDelay:2];
+}
+
+-(void)trigger {
+    [self.sessionTimeoutTimer invalidate];
+    self.sessionTimeoutTimer = nil;
+    [self.delayShowTimer invalidate];
+    self.delayShowTimer = nil;
+    [self.delegate webViewController:self completedWithPaRes:@"dsfds" forTransactionWithID:@"dsfsd"];
 }
 
 -(void)webViewDidFinishLoad:(UIWebView *)webView {
