@@ -220,7 +220,24 @@
 
 #pragma mark - PPOWebViewController
 
--(void)completed:(NSString *)paRes transactionID:(NSString *)transID {
+-(void)webViewController:(PPOWebViewController *)controller completedWithPaRes:(NSString *)paRes forTransactionWithID:(NSString *)transID {
+    
+    _preventShowWebView = YES;
+    
+    if ([[UIApplication sharedApplication] keyWindow] == self.webController.view.superview) {
+        [self.webController.view removeFromSuperview];
+    }
+    
+    BOOL checkTransID = YES;
+    
+    if (checkTransID) {
+        if (self.transactionID.length > 0 && ![self.transactionID isEqualToString:transID]) {
+            NSError *er = [PPOErrorManager errorForCode:PPOErrorProcessingThreeDSecure];
+            self.outcomeCompletion(nil, er);
+            _preventShowWebView = NO;
+            return;
+        }
+    }
     
     id data;
     if (paRes) {
