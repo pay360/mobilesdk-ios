@@ -114,15 +114,33 @@
                     
                     [request setHTTPBody:data];
                     
-                    PPOWebViewController *controller = [[PPOWebViewController alloc] init];
-                    controller.delegate = self;
-                    controller.request = request;
-                    controller.termURLString = termUrlString;
-                    
-                    UINavigationController *navCon = [[UINavigationController alloc] initWithRootViewController:controller];
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [[[UIApplication sharedApplication] keyWindow].rootViewController presentViewController:navCon animated:YES completion:nil];
+                        
+                        NSString *resourceBundlePath = [[NSBundle mainBundle] pathForResource:@"PaypointResources" ofType:@"bundle"];
+                        NSBundle *resourceBundle = [NSBundle bundleWithPath:resourceBundlePath];
+                        
+                        PPOWebViewController *webController = [[PPOWebViewController alloc] initWithNibName:NSStringFromClass([PPOWebViewController class]) bundle:resourceBundle];
+                        webController.delegate = self;
+                        webController.request = request;
+                        webController.termURLString = termUrlString;
+                        
+                        self.webController = webController;
+                        
+                        if ([sessionTimeout isKindOfClass:[NSNumber class]]) {
+                            webController.sessionTimeoutTimeInterval = @(secondsTimeout);
+                        }
+                        
+                        if ([delayShowTime isKindOfClass:[NSNumber class]]) {
+                            webController.delayTimeInterval = @(secondsDelayShow);
+                        }
+                        
+                        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+                        CGFloat width = [UIScreen mainScreen].bounds.size.width;
+                        CGFloat height = [UIScreen mainScreen].bounds.size.height;
+                        webController.view.frame = CGRectMake(-height, -width, width, height);
+                        [[[UIApplication sharedApplication] keyWindow] addSubview:webController.view];
                     });
+                    
                 } else {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
