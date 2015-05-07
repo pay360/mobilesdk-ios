@@ -11,6 +11,7 @@
 #import "PPOPayment.h"
 #import "PPOCredentials.h"
 #import "PPOErrorManager.h"
+#import "PPOTimeManager.h"
 
 @interface PPOPaymentsDispatchManager () <NSURLSessionTaskDelegate, PPOWebViewControllerDelegate>
 @property (nonatomic, strong, readwrite) NSOperationQueue *payments;
@@ -18,9 +19,22 @@
 @property (nonatomic, copy) void(^outcomeCompletion)(PPOOutcome *outcome, NSError *error);
 @property (nonatomic) CGFloat timeout;
 @property (nonatomic, strong) PPOCredentials *credentials;
+@property (nonatomic, strong) PPOWebViewController *webController;
+@property (nonatomic, strong) NSString *transactionID;
+@property (nonatomic, strong) NSDate *transactionDate;
+@property (nonatomic, strong) PPOTimeManager *timeManager;
 @end
 
-@implementation PPOPaymentsDispatchManager
+@implementation PPOPaymentsDispatchManager {
+    BOOL _preventShowWebView;
+}
+
+-(PPOTimeManager *)timeManager {
+    if (_timeManager == nil) {
+        _timeManager = [PPOTimeManager new];
+    }
+    return _timeManager;
+}
 
 -(NSOperationQueue *)payments {
     if (_payments == nil) {
