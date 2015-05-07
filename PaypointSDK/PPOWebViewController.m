@@ -10,6 +10,8 @@
 
 @interface PPOWebViewController () <UIWebViewDelegate>
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
+@property (nonatomic, strong) NSTimer *sessionTimeoutTimer;
+@property (nonatomic, strong) NSTimer *delayShowTimer;
 @end
 
 @implementation PPOWebViewController {
@@ -17,14 +19,17 @@
     BOOL _testingFastAuth;
 }
 
--(instancetype)init {
-    NSString *resourceBundlePath = [[NSBundle mainBundle] pathForResource:@"PaypointResources" ofType:@"bundle"];
-    NSBundle *resourceBundle = [NSBundle bundleWithPath:resourceBundlePath];
+-(void)viewDidLoad {
+    [super viewDidLoad];
     
-    self = [super initWithNibName:NSStringFromClass([self class]) bundle:resourceBundle];
-    if (self) {
+    _testingFastAuth = NO;
+    
+    [self.webView loadRequest:self.request];
+    if (!self.delayTimeInterval && !_testingFastAuth) {
+        [self delayShow:nil];
     }
-    return self;
+    
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed:)];
 }
 
 -(void)viewDidAppear:(BOOL)animated {
@@ -47,21 +52,78 @@
 }
 
 -(void)webViewDidFinishLoad:(UIWebView *)webView {
-    NSLog(@"Finished");
+
+    if (_firstLoad == NO) {
+        _firstLoad = YES;
+    }
+    
+    if (_firstLoad && self.delayTimeInterval) {
+        self.delayShowTimer = [NSTimer scheduledTimerWithTimeInterval:self.delayTimeInterval.doubleValue target:self selector:@selector(delayShow:) userInfo:nil repeats:NO];
+    }
     
     NSString *urlString = webView.request.URL.absoluteString;
     if ([urlString isEqualToString:self.termURLString]) {
-        NSLog(@"match");
         NSString *string = [webView stringByEvaluatingJavaScriptFromString:@"get3DSData();"];
         id json = [NSJSONSerialization JSONObjectWithData:[string dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingAllowFragments error:nil];
         NSString *pares = [json objectForKey:@"PaRes"];
         NSString *md = [json objectForKey:@"MD"];
-        [self.delegate completed:pares transactionID:md];
+        [self.delegate webViewController:self completedWithPaRes:pares forTransactionWithID:md];
     }
 }
 
 -(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
-    NSLog(@"Failed %@", error);
+    
+    //NSString *email = [self isEmail:error];
+    
+    [self.sessionTimeoutTimer invalidate];
+    self.sessionTimeoutTimer = nil;
+    [self.delayShowTimer invalidate];
+    self.delayShowTimer = nil;
+    [self.delegate webViewController:self failedWithError:error];
+}
+
+-(NSString *)isEmail:(NSError*)error {
+    
+    NSString *email;
+    
+    NSURL *url = [error.userInfo objectForKey:@"NSErrorFailingURLKey"];
+    if ([url isKindOfClass:[NSURL class]]) {
+        NSString *string = url.absoluteString;
+        NSArray *components = [string componentsSeparatedByString:@":"];
+        string = components.firstObject;
+        if ([string isEqualToString:@"mailto"]) {
+            //trigger native email client
+            NSLog(@"mailto");
+        }
+        email = components.lastObject;
+    }
+    
+    return email;
+}
+
+-(void)sessionTimedOut:(NSTimer*)timer {
+    [self.sessionTimeoutTimer invalidate];
+    self.sessionTimeoutTimer = nil;
+    [self.delayShowTimer invalidate];
+    self.delayShowTimer = nil;
+    [self.delegate webViewControllerSessionTimeoutExpired:self];
+}
+
+-(void)delayShow:(NSTimer*)timer {
+    [self.delayShowTimer invalidate];
+    self.delayShowTimer = nil;
+    [self.delegate webViewControllerDelayShowTimeoutExpired:self];
+    if (self.sessionTimeoutTimeInterval) {
+        self.sessionTimeoutTimer = [NSTimer scheduledTimerWithTimeInterval:self.sessionTimeoutTimeInterval.doubleValue target:self selector:@selector(sessionTimedOut:) userInfo:nil repeats:NO];
+    }
+}
+
+-(void)cancelButtonPressed:(UIBarButtonItem*)button {
+    [self.sessionTimeoutTimer invalidate];
+    self.sessionTimeoutTimer = nil;
+    [self.delayShowTimer invalidate];
+    self.delayShowTimer = nil;
+    [self.delegate webViewControllerUserCancelled:self];
 }
 
 @end
