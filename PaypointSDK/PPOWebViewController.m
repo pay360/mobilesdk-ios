@@ -44,10 +44,7 @@
 }
 
 -(void)trigger {
-    [self.sessionTimeoutTimer invalidate];
-    self.sessionTimeoutTimer = nil;
-    [self.delayShowTimer invalidate];
-    self.delayShowTimer = nil;
+    [self cancelTimers];
     [self.delegate webViewController:self completedWithPaRes:@"dsfds" forTransactionWithID:@"dsfsd"];
 }
 
@@ -77,6 +74,7 @@
         id json = [NSJSONSerialization JSONObjectWithData:[string dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingAllowFragments error:nil];
         NSString *pares = [json objectForKey:@"PaRes"];
         NSString *md = [json objectForKey:@"MD"];
+        [self cancelTimers];
         [self.delegate webViewController:self completedWithPaRes:pares forTransactionWithID:md];
     }
 }
@@ -86,10 +84,7 @@
     //NSURL *url = [error.userInfo objectForKey:@"NSErrorFailingURLKey"];
     //NSString *email = [self isEmail:url];
     
-    [self.sessionTimeoutTimer invalidate];
-    self.sessionTimeoutTimer = nil;
-    [self.delayShowTimer invalidate];
-    self.delayShowTimer = nil;
+    [self cancelTimers];
     [self.delegate webViewController:self failedWithError:error];
 }
 
@@ -111,10 +106,7 @@
 }
 
 -(void)sessionTimedOut:(NSTimer*)timer {
-    [self.sessionTimeoutTimer invalidate];
-    self.sessionTimeoutTimer = nil;
-    [self.delayShowTimer invalidate];
-    self.delayShowTimer = nil;
+    [self cancelTimers];
     [self.delegate webViewControllerSessionTimeoutExpired:self];
 }
 
@@ -128,11 +120,15 @@
 }
 
 -(void)cancelButtonPressed:(UIBarButtonItem*)button {
+    [self cancelTimers];
+    [self.delegate webViewControllerUserCancelled:self];
+}
+
+-(void)cancelTimers {
     [self.sessionTimeoutTimer invalidate];
     self.sessionTimeoutTimer = nil;
     [self.delayShowTimer invalidate];
     self.delayShowTimer = nil;
-    [self.delegate webViewControllerUserCancelled:self];
 }
 
 @end
