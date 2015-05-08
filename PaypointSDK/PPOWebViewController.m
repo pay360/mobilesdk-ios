@@ -51,6 +51,16 @@
     [self.delegate webViewController:self completedWithPaRes:@"dsfds" forTransactionWithID:@"dsfsd"];
 }
 
+-(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+    NSURL *url = request.URL;
+    NSString *email = [self isEmail:url];
+    if (email.length > 0) {
+#warning trigger mail client here. session timeout will still fire and this will dismiss any modal controller currently showing
+        return NO;
+    }
+    return YES;
+}
+
 -(void)webViewDidFinishLoad:(UIWebView *)webView {
 
     if (_firstLoad == NO) {
@@ -73,7 +83,8 @@
 
 -(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
     
-    //NSString *email = [self isEmail:error];
+    //NSURL *url = [error.userInfo objectForKey:@"NSErrorFailingURLKey"];
+    //NSString *email = [self isEmail:url];
     
     [self.sessionTimeoutTimer invalidate];
     self.sessionTimeoutTimer = nil;
@@ -82,18 +93,16 @@
     [self.delegate webViewController:self failedWithError:error];
 }
 
--(NSString *)isEmail:(NSError*)error {
+-(NSString *)isEmail:(NSURL*)url {
     
     NSString *email;
     
-    NSURL *url = [error.userInfo objectForKey:@"NSErrorFailingURLKey"];
     if ([url isKindOfClass:[NSURL class]]) {
         NSString *string = url.absoluteString;
         NSArray *components = [string componentsSeparatedByString:@":"];
         string = components.firstObject;
-        if ([string isEqualToString:@"mailto"]) {
-            //trigger native email client
-            NSLog(@"mailto");
+        if (![string isEqualToString:@"mailto"]) {
+            return nil;
         }
         email = components.lastObject;
     }
