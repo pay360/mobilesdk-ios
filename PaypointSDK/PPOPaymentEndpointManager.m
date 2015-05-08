@@ -11,7 +11,7 @@
 @implementation PPOPaymentEndpointManager
 
 -(NSURL*)simplePayment:(NSString*)installationID withBaseURL:(NSURL*)baseURL {
-    return [baseURL URLByAppendingPathComponent:[NSString stringWithFormat:@"/transactions/%@/payment", installationID]];
+    return [baseURL URLByAppendingPathComponent:[NSString stringWithFormat:@"acceptor/rest/mobile/transactions/%@/payment", installationID]];
     
 }
 

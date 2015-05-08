@@ -16,7 +16,7 @@
     
     switch (environment) {
         case PPOEnvironmentMerchantIntegrationTestingEnvironment:
-            return [NSURL URLWithString:@"http://localhost:5000/mobileapi"];
+            return [NSURL URLWithString:@"http://localhost:5000"];
             break;
             
         default:
