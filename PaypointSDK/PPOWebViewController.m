@@ -7,8 +7,9 @@
 //
 
 #import "PPOWebViewController.h"
+#import <MessageUI/MFMailComposeViewController.h>
 
-@interface PPOWebViewController () <UIWebViewDelegate>
+@interface PPOWebViewController () <UIWebViewDelegate, MFMailComposeViewControllerDelegate, UIAlertViewDelegate>
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
 @property (nonatomic, strong) NSTimer *sessionTimeoutTimer;
 @property (nonatomic, strong) NSTimer *delayShowTimer;
@@ -16,31 +17,17 @@
 
 @implementation PPOWebViewController {
     BOOL _firstLoad;
-    BOOL _testingFastAuth;
 }
 
 -(void)viewDidLoad {
     [super viewDidLoad];
     
-    _testingFastAuth = NO;
-    
     [self.webView loadRequest:self.request];
-    if (!self.delayTimeInterval && !_testingFastAuth) {
+    if (!self.delayTimeInterval) {
         [self delayShow:nil];
     }
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed:)];
-}
-
--(void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    if (_testingFastAuth) {
-        [self testingAutomaticAuthentication];
-    }
-}
-
--(void)testingAutomaticAuthentication {
-    [self performSelector:@selector(trigger) withObject:nil afterDelay:2];
 }
 
 -(void)trigger {
@@ -51,11 +38,51 @@
 -(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
     NSURL *url = request.URL;
     NSString *email = [self isEmail:url];
+    
     if (email.length > 0) {
-#warning trigger mail client here. session timeout will still fire and this will dismiss any modal controller currently showing
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            if ([MFMailComposeViewController canSendMail]) {
+                
+                MFMailComposeViewController* controller = [[MFMailComposeViewController alloc] init];
+                
+                controller.mailComposeDelegate = self;
+                
+                [controller setToRecipients:@[email]];
+                
+                if (controller) {
+                    
+                    [self presentViewController:controller
+                                       animated:YES
+                                     completion:^{
+                                     }];
+                }
+                
+            } else {
+                
+                NSString *title = @"Configuration";
+                NSString *message = @"Please configure an email account in the Settings App.";
+                NSString *dismissButton = @"Dismiss";
+                
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
+                                                                    message:message
+                                                                   delegate:self
+                                                          cancelButtonTitle:dismissButton
+                                                          otherButtonTitles:nil, nil];
+                
+                [alertView show];
+                
+            }
+            
+        });
+        
         return NO;
+        
     }
+    
     return YES;
+    
 }
 
 -(void)webViewDidFinishLoad:(UIWebView *)webView {
@@ -129,6 +156,52 @@
     self.sessionTimeoutTimer = nil;
     [self.delayShowTimer invalidate];
     self.delayShowTimer = nil;
+}
+
+#pragma mark - MFMailComposer
+
+-(void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
+    
+    switch (result) {
+            
+        case MFMailComposeResultSaved: {
+            [self dismissViewControllerAnimated:YES completion:^{
+                NSString *title = @"Mail";
+                NSString *message = @"Message Saved";
+                NSString *dismissButton = @"Dismiss";
+                
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
+                                                                    message:message
+                                                                   delegate:self
+                                                          cancelButtonTitle:dismissButton
+                                                          otherButtonTitles:nil, nil];
+                
+                [alertView show];
+            }];
+        }
+            break;
+            
+        case MFMailComposeResultSent: {
+            [self dismissViewControllerAnimated:YES completion:^{
+                NSString *title = @"Mail";
+                NSString *message = @"Message Sent";
+                NSString *dismissButton = @"Dismiss";
+                
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
+                                                                    message:message
+                                                                   delegate:self
+                                                          cancelButtonTitle:dismissButton
+                                                          otherButtonTitles:nil, nil];
+                
+                [alertView show];
+            }];
+        }
+            break;
+            
+        default:
+            [self dismissViewControllerAnimated:YES completion:nil];
+            break;
+    }
 }
 
 @end

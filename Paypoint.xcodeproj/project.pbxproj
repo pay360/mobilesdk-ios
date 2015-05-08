@@ -29,6 +29,7 @@
 		5081F3C01AE7E58500D41911 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5081F3BF1AE7E58500D41911 /* SystemConfiguration.framework */; };
 		5081F3C21AE7E58900D41911 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5081F3C11AE7E58900D41911 /* CoreGraphics.framework */; };
 		5081F3C41AE7E5D800D41911 /* Paypoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 5081F3C31AE7E5D800D41911 /* Paypoint.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		508F40E81AFD0D8700CF2AAA /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 508F40E61AFD0D7600CF2AAA /* MessageUI.framework */; };
 		5092F35C1AFA1E9B004FFF62 /* PPOWebViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5027E5481AFA13ED00926C90 /* PPOWebViewController.xib */; };
 		50DCC1C11AE7CACB00D0FE26 /* PPOError.m in Sources */ = {isa = PBXBuildFile; fileRef = 5056A1A91AD6A65900AB1276 /* PPOError.m */; };
 		50DCC1C31AE7CAF000D0FE26 /* PPOError.h in Headers */ = {isa = PBXBuildFile; fileRef = 5056A1A71AD68B2B00AB1276 /* PPOError.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -126,6 +127,7 @@
 		5081F3BF1AE7E58500D41911 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		5081F3C11AE7E58900D41911 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		5081F3C31AE7E5D800D41911 /* Paypoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Paypoint.h; sourceTree = "<group>"; };
+		508F40E61AFD0D7600CF2AAA /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		5092F3551AFA1E8F004FFF62 /* PaypointResources.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PaypointResources.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		5092F3581AFA1E8F004FFF62 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5092F36F1AFA4D9F004FFF62 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Framework/Info.plist; sourceTree = "<group>"; };
@@ -160,6 +162,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				508F40E81AFD0D8700CF2AAA /* MessageUI.framework in Frameworks */,
 				5081F3C21AE7E58900D41911 /* CoreGraphics.framework in Frameworks */,
 				5081F3C01AE7E58500D41911 /* SystemConfiguration.framework in Frameworks */,
 				5081F3BE1AE7E56300D41911 /* UIKit.framework in Frameworks */,
@@ -252,6 +255,7 @@
 		503E19E21AE91F4600CB4784 /* LinkedFrameworks */ = {
 			isa = PBXGroup;
 			children = (
+				508F40E61AFD0D7600CF2AAA /* MessageUI.framework */,
 				5081F3BD1AE7E56300D41911 /* UIKit.framework */,
 				5081F3C11AE7E58900D41911 /* CoreGraphics.framework */,
 				5081F3BF1AE7E58500D41911 /* SystemConfiguration.framework */,
