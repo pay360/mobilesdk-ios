@@ -50,171 +50,152 @@
 +(NSError*)errorForCode:(PPOErrorCode)code {
     
     switch (code) {
-        case PPOErrorSuppliedBaseURLInvalid:
+        case PPOErrorSuppliedBaseURLInvalid: {
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorSuppliedBaseURLInvalid
                                    userInfo:@{
                                               NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"PPOPaymentManager is missing a base URL", @"Failure message for BaseURL check")
                                               }
                     ];
-            break;
-            
-        case PPOErrorInstallationIDInvalid:
+        } break;
+        case PPOErrorInstallationIDInvalid: {
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorInstallationIDInvalid
                                    userInfo:@{
                                               NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The installation ID is missing", @"Failure message for credentials check")
                                               }
                     ];
-            break;
-            
-        case PPOErrorCardPanLengthInvalid:
+        } break;
+        case PPOErrorCardPanLengthInvalid: {
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorCardPanLengthInvalid
                                    userInfo:@{
                                               NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Pan number length is invalid", @"Failure message for a card validation check")
                                               }
                     ];
-            break;
-            
-        case PPOErrorLuhnCheckFailed:
+        } break;
+        case PPOErrorLuhnCheckFailed: {
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorLuhnCheckFailed
                                    userInfo:@{
                                               NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Pan number failed Luhn validation", @"Failure message for a card validation check")
                                               }
                     ];
-            break;
-            
-        case PPOErrorCVVInvalid:
+        } break;
+        case PPOErrorCVVInvalid: {
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorCVVInvalid
                                    userInfo:@{
                                               NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Card CVV is invalid", @"Failure message for a card validation check")
                                               }
                     ];
-            break;
-            
-        case PPOErrorCardExpiryDateInvalid:
+        } break;
+        case PPOErrorCardExpiryDateInvalid: {
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorCardExpiryDateInvalid
                                    userInfo:@{
                                               NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Expiry date is invalid", @"Failure message for a card validation check")
                                               }
                     ];
-            break;
-            
-        case PPOErrorCurrencyInvalid:
+        } break;
+        case PPOErrorCurrencyInvalid: {
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorCurrencyInvalid
                                    userInfo:@{
                                               NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The specified currency is invalid", @"Failure message for a transaction validation check")
                                               }
                     ];
-            break;
-            
-        case PPOErrorPaymentAmountInvalid:
+        } break;
+        case PPOErrorPaymentAmountInvalid: {
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorPaymentAmountInvalid
                                    userInfo:@{
                                               NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Payment amount is invalid", @"Failure message for a transaction validation check")
                                               }
                     ];
-            break;
-            
-        case PPOErrorCredentialsNotFound:
+        } break;
+        case PPOErrorCredentialsNotFound: {
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorCredentialsNotFound
                                    userInfo:@{
                                               NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Credentials not supplied", @"Failure message for payment parameters integrity check")
                                               }
                     ];
-            break;
-            
-        case PPOErrorServerFailure:
+        } break;
+        case PPOErrorServerFailure: {
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorServerFailure
                                    userInfo:@{
                                               NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"There was an error from the server at Paypoint", @"Generic paypoint server error failure message")
                                               }
                     ];
-            break;
-            
-        case PPOErrorClientTokenExpired:
+        } break;
+        case PPOErrorClientTokenExpired: {
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorClientTokenExpired
                                    userInfo:@{
                                               NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The supplied bearer token has expired", @"Failure message for payment error")
                                               }
                     ];
-            break;
-            
-        case PPOErrorClientTokenInvalid:
+        } break;
+        case PPOErrorClientTokenInvalid: {
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorUnauthorisedRequest
                                    userInfo:@{
                                               NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The supplied token is invalid", @"Failure message for a transaction validation check")
                                               }
                     ];
-            break;
-            
-        case PPOErrorUnauthorisedRequest:
+        } break;
+        case PPOErrorUnauthorisedRequest: {
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorUnauthorisedRequest
                                    userInfo:@{
                                               NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The supplied token does not have sufficient permissions", @"Failure message for account restriction")
                                               }
                     ];
-            break;
-            
-        case PPOErrorTransactionProcessingFailed:
+        } break;
+        case PPOErrorTransactionProcessingFailed: {
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorTransactionProcessingFailed
                                    userInfo:@{
-                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The transaction failed to be processed correctly", @"Failure message for payment failure")
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The transaction failed to process correctly", @"Failure message for payment failure")
                                               }
                     ];
-            break;
-            
-        case PPOErrorUnknown:
+        } break;
+        case PPOErrorUnknown: {
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorUnknown
                                    userInfo:@{
                                               NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"There has been an unknown error.", @"Failure message for payment failure")
                                               }
                     ];
-            break;
-            
-        case PPOErrorProcessingThreeDSecure:
+        } break;
+        case PPOErrorProcessingThreeDSecure: {
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorProcessingThreeDSecure
                                    userInfo:@{
                                               NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"There has been an error processing your payment via 3D secure.", @"Failure message for 3D secure payment failure")
                                               }
                     ];
-            break;
-            
-        case PPOErrorThreeDSecureTimedOut:
+        } break;
+        case PPOErrorThreeDSecureTimedOut: {
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorThreeDSecureTimedOut
                                    userInfo:@{
                                               NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"3D secure timed out.", @"Failure message for 3D secure payment failure")
                                               }
                     ];
-            break;
-            
-        case PPOErrorUserCancelled:
+        } break;
+        case PPOErrorUserCancelled: {
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorUserCancelled
                                    userInfo:@{
                                               NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"User cancelled 3D secure.", @"Failure message for 3D secure payment failure")
                                               }
                     ];
-            break;
+        } break;
             
-        default:
-            return nil;
-            break;
+        default: return nil; break;
     }
     
 }
