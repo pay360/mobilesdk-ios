@@ -16,7 +16,8 @@
 @end
 
 @implementation PPOWebViewController {
-    BOOL _firstLoad;
+    BOOL _firstLoadDone;
+    BOOL _userCancelled;
 }
 
 -(void)viewDidLoad {
@@ -36,6 +37,11 @@
 }
 
 -(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+    
+    if (_userCancelled) {
+        return NO;
+    }
+    
     NSURL *url = request.URL;
     NSString *email = [self isEmail:url];
     
@@ -52,7 +58,7 @@
                 [controller setToRecipients:@[email]];
                 
                 if (controller) {
-                    
+
                     [self presentViewController:controller
                                        animated:YES
                                      completion:^{
@@ -81,17 +87,29 @@
         
     }
     
-    return YES;
+    if (_firstLoadDone) {
+        BOOL isGet = [request.HTTPMethod isEqualToString:@"GET"];
+        if (isGet) {
+            if ([[UIApplication sharedApplication] canOpenURL:request.URL]) {
+                [[UIApplication sharedApplication] openURL:request.URL];
+            }
+            return NO;
+        } else {
+            
+            return YES;
+        }
+    }
     
+    return YES;
 }
 
 -(void)webViewDidFinishLoad:(UIWebView *)webView {
 
-    if (_firstLoad == NO) {
-        _firstLoad = YES;
+    if (_firstLoadDone == NO) {
+        _firstLoadDone = YES;
     }
     
-    if (_firstLoad && self.delayTimeInterval) {
+    if (_firstLoadDone && self.delayTimeInterval) {
         self.delayShowTimer = [NSTimer scheduledTimerWithTimeInterval:self.delayTimeInterval.doubleValue target:self selector:@selector(delayShow:) userInfo:nil repeats:NO];
     }
     
@@ -147,6 +165,7 @@
 }
 
 -(void)cancelButtonPressed:(UIBarButtonItem*)button {
+    _userCancelled = YES;
     [self cancelTimers];
     [self.delegate webViewControllerUserCancelled:self];
 }
