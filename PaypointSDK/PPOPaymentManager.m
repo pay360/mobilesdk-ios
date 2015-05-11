@@ -55,10 +55,7 @@
     [request setValue:authorisation forHTTPHeaderField:@"Authorization"];
     [request setHTTPBody:data];
     
-    [self.paymentsDispatch dispatchRequest:[request copy]
-                               withTimeout:timeout
-                           withCredentials:credentials
-                            withCompletion:completion];
+    [self.paymentsDispatch dispatchRequest:[request copy] withCompletion:completion];
     
 }
 

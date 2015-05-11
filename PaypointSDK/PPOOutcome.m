@@ -47,22 +47,30 @@
 }
 
 -(instancetype)initWithData:(NSDictionary*)data {
-    
-    if (!data) return nil;
-    
     self = [super init];
     
     if (self) {
         
         if (data) {
             
-            [self parseOutcome:[data objectForKey:@"outcome"]];
+            id value;
             
-            [self parseTransaction:[data objectForKey:@"transaction"]];
+            value = [data objectForKey:@"outcome"];
             
-            id paymentMethod = [data objectForKey:@"paymentMethod"];
+            [self parseOutcome:value];
             
-            if ([paymentMethod isKindOfClass:[NSDictionary class]]) [self parseCard:[paymentMethod objectForKey:@"card"]];
+            value = [data objectForKey:@"transaction"];
+            
+            [self parseTransaction:value];
+            
+            value = [data objectForKey:@"paymentMethod"];
+            
+            if ([value isKindOfClass:[NSDictionary class]]) {
+                
+                value = [value objectForKey:@"card"];
+                
+                [self parseCard:value];
+            }
             
         }
         

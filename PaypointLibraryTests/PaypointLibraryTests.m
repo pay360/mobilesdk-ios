@@ -88,7 +88,7 @@
         
         switch (e) {
             case PPOEnvironmentMerchantIntegrationTestingEnvironment:
-                NSAssert([baseURL.absoluteString isEqualToString:@"http://localhost:5000"], @"Base URL unexpected");
+                NSAssert([baseURL.absoluteString isEqualToString:@"https://ppmobilesdkstub.herokuapp.com/mobileapi"], @"Base URL unexpected");
                 break;
                 
             default:
