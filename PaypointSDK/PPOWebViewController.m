@@ -18,6 +18,7 @@
 @implementation PPOWebViewController {
     BOOL _firstLoadDone;
     BOOL _userCancelled;
+    BOOL _preventShow;
 }
 
 -(void)viewDidLoad {
@@ -115,6 +116,7 @@
     
     NSString *urlString = webView.request.URL.absoluteString;
     if ([urlString isEqualToString:self.termURLString]) {
+        _preventShow = YES;
         NSString *string = [webView stringByEvaluatingJavaScriptFromString:@"get3DSData();"];
         id json = [NSJSONSerialization JSONObjectWithData:[string dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingAllowFragments error:nil];
         NSString *pares = [json objectForKey:@"PaRes"];
@@ -158,6 +160,9 @@
 -(void)delayShow:(NSTimer*)timer {
     [self.delayShowTimer invalidate];
     self.delayShowTimer = nil;
+    if (_preventShow) {
+        return;
+    }
     [self.delegate webViewControllerDelayShowTimeoutExpired:self];
     if (self.sessionTimeoutTimeInterval) {
         self.sessionTimeoutTimer = [NSTimer scheduledTimerWithTimeInterval:self.sessionTimeoutTimeInterval.doubleValue target:self selector:@selector(sessionTimedOut:) userInfo:nil repeats:NO];

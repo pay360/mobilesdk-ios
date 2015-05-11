@@ -100,7 +100,7 @@
                 NSString *pareq = [value objectForKey:@"pareq"];
                 NSNumber *sessionTimeout = [value objectForKey:@"sessionTimeout"];
                 NSTimeInterval secondsTimeout = sessionTimeout.doubleValue/1000;
-                NSNumber *delayShowTime = nil;
+                NSNumber *delayShowTime = @5000;
                 NSTimeInterval secondsDelayShow = delayShowTime.doubleValue/1000;
                 NSString *termUrlString = [value objectForKey:@"termUrl"];
                 NSURL *termURL = [NSURL URLWithString:termUrlString];
