@@ -81,7 +81,8 @@
             return;
         }
         
-        id value = [json objectForKey:@"transaction"];
+        id value;
+        value = [json objectForKey:@"transaction"];
         if ([value isKindOfClass:[NSDictionary class]]) {
             id string = [value objectForKey:@"transactionId"];;
             if ([string isKindOfClass:[NSString class]]) {
@@ -101,8 +102,8 @@
                 NSString *pareq = [value objectForKey:@"pareq"];
                 NSNumber *sessionTimeout = [value objectForKey:@"sessionTimeout"];
                 NSTimeInterval secondsTimeout = sessionTimeout.doubleValue/1000;
-                NSNumber *delayShowTime = @5000;
-                NSTimeInterval secondsDelayShow = delayShowTime.doubleValue/1000;
+                NSNumber *acsTimeout = [value objectForKey:@"redirectTimeout"];
+                NSTimeInterval secondsDelayShow = (acsTimeout) ? acsTimeout.doubleValue/1000 : 5;
                 NSString *termUrlString = [value objectForKey:@"termUrl"];
                 NSURL *termURL = [NSURL URLWithString:termUrlString];
                 NSURL *acsURL = [NSURL URLWithString:acsURLString];
@@ -128,7 +129,7 @@
                             webController.sessionTimeoutTimeInterval = @(secondsTimeout);
                         }
                         
-                        if ([delayShowTime isKindOfClass:[NSNumber class]]) {
+                        if ([acsTimeout isKindOfClass:[NSNumber class]]) {
                             webController.delayTimeInterval = @(secondsDelayShow);
                         }
                         
