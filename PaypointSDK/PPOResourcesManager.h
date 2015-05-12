@@ -10,7 +10,7 @@
 
 @interface PPOResourcesManager : NSObject
 
-+(NSBundle*)bundle;
++(NSBundle*)resources;
 +(NSDictionary*)frameworkVersion;
 
 @end

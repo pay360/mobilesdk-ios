@@ -10,13 +10,13 @@
 
 @implementation PPOResourcesManager
 
-+(NSBundle*)bundle {
++(NSBundle*)resources {
     NSString *resourceBundlePath = [[NSBundle mainBundle] pathForResource:@"PaypointResources" ofType:@"bundle"];
     return [NSBundle bundleWithPath:resourceBundlePath];
 }
 
 +(NSDictionary*)frameworkVersion {
-    NSString *path = [[PPOResourcesManager bundle] pathForResource:@"Info" ofType:@"plist"];
+    NSString *path = [[PPOResourcesManager resources] pathForResource:@"Info" ofType:@"plist"];
     NSDictionary *plist = [NSDictionary dictionaryWithContentsOfFile:path];
     NSString *version = [plist objectForKey:@"CFBundleShortVersionString"];
     NSArray *components = [version componentsSeparatedByString:@"."];

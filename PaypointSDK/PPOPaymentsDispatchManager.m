@@ -118,7 +118,7 @@
                     
                     dispatch_async(dispatch_get_main_queue(), ^{
                         PPOWebViewController *webController = [[PPOWebViewController alloc] initWithNibName:NSStringFromClass([PPOWebViewController class])
-                                                                                                     bundle:[PPOResourcesManager bundle]];
+                                                                                                     bundle:[PPOResourcesManager resources]];
                         webController.delegate = self;
                         webController.request = request;
                         webController.termURLString = termUrlString;

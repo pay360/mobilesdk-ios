@@ -30,7 +30,7 @@
         [self delayShow:nil];
     }
     
-    NSBundle *bundle = [PPOResourcesManager bundle];
+    NSBundle *bundle = [PPOResourcesManager resources];
     NSString *title = [bundle localizedStringForKey:@"Cancel" value:nil table:nil];
     
     UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStylePlain target:self action:@selector(cancelButtonPressed:)];
