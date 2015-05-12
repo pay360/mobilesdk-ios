@@ -30,7 +30,6 @@
 		5081F3C41AE7E5D800D41911 /* Paypoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 5081F3C31AE7E5D800D41911 /* Paypoint.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5092F35C1AFA1E9B004FFF62 /* PPOWebViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5027E5481AFA13ED00926C90 /* PPOWebViewController.xib */; };
 		50D494FE1B021061004AD686 /* PaypointEnglish.strings in Resources */ = {isa = PBXBuildFile; fileRef = 50D494FD1B021061004AD686 /* PaypointEnglish.strings */; };
-		50D495081B0225B2004AD686 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 50D495071B0225B2004AD686 /* Info.plist */; };
 		50D4950C1B022892004AD686 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50D4950A1B02287A004AD686 /* MessageUI.framework */; };
 		50D4950D1B0228DB004AD686 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50D4950A1B02287A004AD686 /* MessageUI.framework */; };
 		50D495121B023423004AD686 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5092F36F1AFA4D9F004FFF62 /* Info.plist */; };
@@ -140,7 +139,6 @@
 		50CC9B091AD42CE800B97F2E /* PPOBillingAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOBillingAddress.h; sourceTree = "<group>"; };
 		50CC9B0A1AD42CE800B97F2E /* PPOBillingAddress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOBillingAddress.m; sourceTree = "<group>"; };
 		50D494FD1B021061004AD686 /* PaypointEnglish.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = PaypointEnglish.strings; sourceTree = "<group>"; };
-		50D495071B0225B2004AD686 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		50D4950A1B02287A004AD686 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		50D495151B023944004AD686 /* PPOResourcesManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOResourcesManager.h; sourceTree = "<group>"; };
 		50D495161B023944004AD686 /* PPOResourcesManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOResourcesManager.m; sourceTree = "<group>"; };
@@ -238,7 +236,6 @@
 		503E19A51AE8EF0600CB4784 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				50D495071B0225B2004AD686 /* Info.plist */,
 				5081F3AE1AE7D28000D41911 /* Framework.sh */,
 				5056A1A51AD68B1400AB1276 /* PPOSDKMacros.h */,
 			);
@@ -641,7 +638,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				50D495081B0225B2004AD686 /* Info.plist in Resources */,
 				50DCC1D31AE7CB6400D0FE26 /* PPOLuhnReadMe in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -894,7 +890,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = PaypointLibrary/Info.plist;
+				INFOPLIST_FILE = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
@@ -913,7 +909,7 @@
 				DEAD_CODE_STRIPPING = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = PaypointLibrary/Info.plist;
+				INFOPLIST_FILE = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
