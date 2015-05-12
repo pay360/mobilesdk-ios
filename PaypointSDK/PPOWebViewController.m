@@ -7,6 +7,7 @@
 //
 
 #import "PPOWebViewController.h"
+#import "PPOResourcesManager.h"
 #import <MessageUI/MFMailComposeViewController.h>
 
 @interface PPOWebViewController () <UIWebViewDelegate, MFMailComposeViewControllerDelegate, UIAlertViewDelegate>
@@ -29,12 +30,15 @@
         [self delayShow:nil];
     }
     
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed:)];
-}
-
--(void)trigger {
-    [self cancelTimers];
-    [self.delegate webViewController:self completedWithPaRes:@"dsfds" forTransactionWithID:@"dsfsd"];
+    NSBundle *bundle = [PPOResourcesManager bundle];
+    NSString *title = [bundle localizedStringForKey:@"Cancel" value:nil table:nil];
+    
+    UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStylePlain target:self action:@selector(cancelButtonPressed:)];
+    
+    title = [bundle localizedStringForKey:@"Authentication" value:nil table:nil];
+    
+    self.navigationItem.title = title;
+    self.navigationItem.leftBarButtonItem = button;
 }
 
 -(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {

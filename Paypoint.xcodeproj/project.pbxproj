@@ -14,7 +14,6 @@
 				5081F3B61AE7D3A200D41911 /* MultiPlatform Build */,
 			);
 			dependencies = (
-				5092F3601AFA20B6004FFF62 /* PBXTargetDependency */,
 				5081F3B51AE7D39300D41911 /* PBXTargetDependency */,
 			);
 			name = Framework;
@@ -29,8 +28,14 @@
 		5081F3C01AE7E58500D41911 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5081F3BF1AE7E58500D41911 /* SystemConfiguration.framework */; };
 		5081F3C21AE7E58900D41911 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5081F3C11AE7E58900D41911 /* CoreGraphics.framework */; };
 		5081F3C41AE7E5D800D41911 /* Paypoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 5081F3C31AE7E5D800D41911 /* Paypoint.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		508F40E81AFD0D8700CF2AAA /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 508F40E61AFD0D7600CF2AAA /* MessageUI.framework */; };
 		5092F35C1AFA1E9B004FFF62 /* PPOWebViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5027E5481AFA13ED00926C90 /* PPOWebViewController.xib */; };
+		50D494FE1B021061004AD686 /* PaypointEnglish.strings in Resources */ = {isa = PBXBuildFile; fileRef = 50D494FD1B021061004AD686 /* PaypointEnglish.strings */; };
+		50D495081B0225B2004AD686 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 50D495071B0225B2004AD686 /* Info.plist */; };
+		50D4950C1B022892004AD686 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50D4950A1B02287A004AD686 /* MessageUI.framework */; };
+		50D4950D1B0228DB004AD686 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50D4950A1B02287A004AD686 /* MessageUI.framework */; };
+		50D495121B023423004AD686 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5092F36F1AFA4D9F004FFF62 /* Info.plist */; };
+		50D495171B023944004AD686 /* PPOResourcesManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 50D495151B023944004AD686 /* PPOResourcesManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		50D495181B023944004AD686 /* PPOResourcesManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50D495161B023944004AD686 /* PPOResourcesManager.m */; };
 		50DCC1C11AE7CACB00D0FE26 /* PPOError.m in Sources */ = {isa = PBXBuildFile; fileRef = 5056A1A91AD6A65900AB1276 /* PPOError.m */; };
 		50DCC1C31AE7CAF000D0FE26 /* PPOError.h in Headers */ = {isa = PBXBuildFile; fileRef = 5056A1A71AD68B2B00AB1276 /* PPOError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		50DCC1C41AE7CB0100D0FE26 /* PPOLuhn.h in Headers */ = {isa = PBXBuildFile; fileRef = 50046ACB1AC2FB0400F23D05 /* PPOLuhn.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -68,13 +73,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		1A170A851AEFCB7A00851BFA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5069F64A1ABC7DA30077FB10 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 5081F3B01AE7D38300D41911;
-			remoteInfo = Framework;
-		};
 		5081F3B41AE7D39300D41911 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5069F64A1ABC7DA30077FB10 /* Project object */;
@@ -82,19 +80,19 @@
 			remoteGlobalIDString = 50DCC1A91AE7CAAA00D0FE26;
 			remoteInfo = PaypointLibrary;
 		};
-		5092F35F1AFA20B6004FFF62 /* PBXContainerItemProxy */ = {
+		50D495021B0215B6004AD686 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5069F64A1ABC7DA30077FB10 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 5092F3541AFA1E8F004FFF62;
 			remoteInfo = PaypointResources;
 		};
-		50DCC1B61AE7CAAA00D0FE26 /* PBXContainerItemProxy */ = {
+		50D4950E1B022C7A004AD686 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5069F64A1ABC7DA30077FB10 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 50DCC1A91AE7CAAA00D0FE26;
-			remoteInfo = PaypointLibrary;
+			remoteInfo = Paypoint;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -127,10 +125,8 @@
 		5081F3BF1AE7E58500D41911 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		5081F3C11AE7E58900D41911 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		5081F3C31AE7E5D800D41911 /* Paypoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Paypoint.h; sourceTree = "<group>"; };
-		508F40E61AFD0D7600CF2AAA /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		5092F3551AFA1E8F004FFF62 /* PaypointResources.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PaypointResources.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
-		5092F3581AFA1E8F004FFF62 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5092F36F1AFA4D9F004FFF62 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Framework/Info.plist; sourceTree = "<group>"; };
+		5092F36F1AFA4D9F004FFF62 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Framework/Info.plist; sourceTree = "<group>"; };
 		509B58891ADD477A001236CD /* PPOTimeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOTimeManager.h; sourceTree = "<group>"; };
 		509B588A1ADD477A001236CD /* PPOTimeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOTimeManager.m; sourceTree = "<group>"; };
 		50CC9AF51AD41ED300B97F2E /* PPOPaymentManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOPaymentManager.h; sourceTree = "<group>"; };
@@ -143,6 +139,11 @@
 		50CC9B051AD42B7500B97F2E /* PPOTransaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOTransaction.m; sourceTree = "<group>"; };
 		50CC9B091AD42CE800B97F2E /* PPOBillingAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOBillingAddress.h; sourceTree = "<group>"; };
 		50CC9B0A1AD42CE800B97F2E /* PPOBillingAddress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOBillingAddress.m; sourceTree = "<group>"; };
+		50D494FD1B021061004AD686 /* PaypointEnglish.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = PaypointEnglish.strings; sourceTree = "<group>"; };
+		50D495071B0225B2004AD686 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		50D4950A1B02287A004AD686 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		50D495151B023944004AD686 /* PPOResourcesManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOResourcesManager.h; sourceTree = "<group>"; };
+		50D495161B023944004AD686 /* PPOResourcesManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOResourcesManager.m; sourceTree = "<group>"; };
 		50DCC1AA1AE7CAAA00D0FE26 /* libPaypoint.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPaypoint.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		50DCC1B41AE7CAAA00D0FE26 /* PaypointTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PaypointTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		50DCC1BA1AE7CAAA00D0FE26 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -162,7 +163,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				508F40E81AFD0D8700CF2AAA /* MessageUI.framework in Frameworks */,
+				50D4950C1B022892004AD686 /* MessageUI.framework in Frameworks */,
 				5081F3C21AE7E58900D41911 /* CoreGraphics.framework in Frameworks */,
 				5081F3C01AE7E58500D41911 /* SystemConfiguration.framework in Frameworks */,
 				5081F3BE1AE7E56300D41911 /* UIKit.framework in Frameworks */,
@@ -173,6 +174,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				50D4950D1B0228DB004AD686 /* MessageUI.framework in Frameworks */,
 				503E19E31AE91FDB00CB4784 /* libPaypoint.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -210,6 +212,7 @@
 		501C8E671AC01D2700CBA25A /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				50D495191B023947004AD686 /* PPOResourcesManager */,
 				5056A1AF1AD6A75600AB1276 /* PPOErrorManager */,
 				509B588D1ADD477D001236CD /* PPOTimeManager */,
 				506D55B61AE5331D00D71180 /* Payments */,
@@ -235,6 +238,7 @@
 		503E19A51AE8EF0600CB4784 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				50D495071B0225B2004AD686 /* Info.plist */,
 				5081F3AE1AE7D28000D41911 /* Framework.sh */,
 				5056A1A51AD68B1400AB1276 /* PPOSDKMacros.h */,
 			);
@@ -255,7 +259,7 @@
 		503E19E21AE91F4600CB4784 /* LinkedFrameworks */ = {
 			isa = PBXGroup;
 			children = (
-				508F40E61AFD0D7600CF2AAA /* MessageUI.framework */,
+				50D4950A1B02287A004AD686 /* MessageUI.framework */,
 				5081F3BD1AE7E56300D41911 /* UIKit.framework */,
 				5081F3C11AE7E58900D41911 /* CoreGraphics.framework */,
 				5081F3BF1AE7E58500D41911 /* SystemConfiguration.framework */,
@@ -351,25 +355,17 @@
 		5092F3561AFA1E8F004FFF62 /* PaypointResources */ = {
 			isa = PBXGroup;
 			children = (
+				50D494FD1B021061004AD686 /* PaypointEnglish.strings */,
 				5027E5481AFA13ED00926C90 /* PPOWebViewController.xib */,
-				5092F3571AFA1E8F004FFF62 /* Supporting Files */,
+				5092F36F1AFA4D9F004FFF62 /* Info.plist */,
 			);
 			path = PaypointResources;
-			sourceTree = "<group>";
-		};
-		5092F3571AFA1E8F004FFF62 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				5092F3581AFA1E8F004FFF62 /* Info.plist */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		5092F36D1AFA4D09004FFF62 /* Framework */ = {
 			isa = PBXGroup;
 			children = (
 				5081F3B81AE7D45600D41911 /* MultiPlatformFramework.sh */,
-				5092F36F1AFA4D9F004FFF62 /* Info.plist */,
 			);
 			name = Framework;
 			sourceTree = "<group>";
@@ -440,6 +436,15 @@
 			name = PPOBillingAddress;
 			sourceTree = "<group>";
 		};
+		50D495191B023947004AD686 /* PPOResourcesManager */ = {
+			isa = PBXGroup;
+			children = (
+				50D495151B023944004AD686 /* PPOResourcesManager.h */,
+				50D495161B023944004AD686 /* PPOResourcesManager.m */,
+			);
+			name = PPOResourcesManager;
+			sourceTree = "<group>";
+		};
 		50DCC1AB1AE7CAAA00D0FE26 /* Paypoint */ = {
 			isa = PBXGroup;
 			children = (
@@ -492,6 +497,7 @@
 				5081F3C41AE7E5D800D41911 /* Paypoint.h in Headers */,
 				50DCC1F11AE7CC3600D0FE26 /* PPOPaymentsDispatchManager.h in Headers */,
 				50DCC1E31AE7CBE400D0FE26 /* PPOWebViewController.h in Headers */,
+				50D495171B023944004AD686 /* PPOResourcesManager.h in Headers */,
 				50DCC1F31AE7CC4100D0FE26 /* PPOSDKMacros.h in Headers */,
 				50DCC1EF1AE7CC2900D0FE26 /* PPOPaymentManager.h in Headers */,
 				50DCC1D51AE7CB9700D0FE26 /* PPOReachability.h in Headers */,
@@ -543,6 +549,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				50D495031B0215B6004AD686 /* PBXTargetDependency */,
 			);
 			name = Paypoint;
 			productName = PaypointLibrary;
@@ -560,8 +567,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				1A170A861AEFCB7A00851BFA /* PBXTargetDependency */,
-				50DCC1B71AE7CAAA00D0FE26 /* PBXTargetDependency */,
+				50D4950F1B022C7A004AD686 /* PBXTargetDependency */,
 			);
 			name = PaypointTests;
 			productName = PaypointLibraryTests;
@@ -619,6 +625,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				5092F35C1AFA1E9B004FFF62 /* PPOWebViewController.xib in Resources */,
+				50D494FE1B021061004AD686 /* PaypointEnglish.strings in Resources */,
+				50D495121B023423004AD686 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -633,6 +641,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				50D495081B0225B2004AD686 /* Info.plist in Resources */,
 				50DCC1D31AE7CB6400D0FE26 /* PPOLuhnReadMe in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -689,6 +698,7 @@
 				50DCC1EA1AE7CC0D00D0FE26 /* PPOPaymentBaseURLManager.m in Sources */,
 				50DCC1E81AE7CC0200D0FE26 /* PPOTimeManager.m in Sources */,
 				50DCC1D81AE7CBA900D0FE26 /* PPOCredentials.m in Sources */,
+				50D495181B023944004AD686 /* PPOResourcesManager.m in Sources */,
 				50DCC1F21AE7CC3800D0FE26 /* PPOPaymentsDispatchManager.m in Sources */,
 				50DCC1D61AE7CB9B00D0FE26 /* PPOReachability.m in Sources */,
 				50DCC1E01AE7CBD300D0FE26 /* PPOOutcome.m in Sources */,
@@ -712,25 +722,20 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		1A170A861AEFCB7A00851BFA /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 5081F3B01AE7D38300D41911 /* Framework */;
-			targetProxy = 1A170A851AEFCB7A00851BFA /* PBXContainerItemProxy */;
-		};
 		5081F3B51AE7D39300D41911 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 50DCC1A91AE7CAAA00D0FE26 /* Paypoint */;
 			targetProxy = 5081F3B41AE7D39300D41911 /* PBXContainerItemProxy */;
 		};
-		5092F3601AFA20B6004FFF62 /* PBXTargetDependency */ = {
+		50D495031B0215B6004AD686 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 5092F3541AFA1E8F004FFF62 /* PaypointResources */;
-			targetProxy = 5092F35F1AFA20B6004FFF62 /* PBXContainerItemProxy */;
+			targetProxy = 50D495021B0215B6004AD686 /* PBXContainerItemProxy */;
 		};
-		50DCC1B71AE7CAAA00D0FE26 /* PBXTargetDependency */ = {
+		50D4950F1B022C7A004AD686 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 50DCC1A91AE7CAAA00D0FE26 /* Paypoint */;
-			targetProxy = 50DCC1B61AE7CAAA00D0FE26 /* PBXContainerItemProxy */;
+			targetProxy = 50D4950E1B022C7A004AD686 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -842,7 +847,8 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = PaypointResources/Info.plist;
+				INFOPLIST_EXPAND_BUILD_SETTINGS = YES;
+				INFOPLIST_PREPROCESS = NO;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
@@ -864,7 +870,8 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_NO_COMMON_BLOCKS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
-				INFOPLIST_FILE = PaypointResources/Info.plist;
+				INFOPLIST_EXPAND_BUILD_SETTINGS = YES;
+				INFOPLIST_PREPROCESS = NO;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
@@ -887,6 +894,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				INFOPLIST_FILE = PaypointLibrary/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
@@ -894,6 +902,7 @@
 				PUBLIC_HEADERS_FOLDER_PATH = "include/$(PROJECT_NAME)";
 				SKIP_INSTALL = YES;
 				STRIP_STYLE = "non-global";
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
 		};
@@ -904,12 +913,14 @@
 				DEAD_CODE_STRIPPING = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = PaypointLibrary/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PUBLIC_HEADERS_FOLDER_PATH = "include/$(PROJECT_NAME)";
 				SKIP_INSTALL = YES;
 				STRIP_STYLE = "non-global";
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
 		};

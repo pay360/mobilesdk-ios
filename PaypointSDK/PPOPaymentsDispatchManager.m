@@ -12,6 +12,7 @@
 #import "PPOCredentials.h"
 #import "PPOErrorManager.h"
 #import "PPOTimeManager.h"
+#import "PPOResourcesManager.h"
 
 @interface PPOPaymentsDispatchManager () <NSURLSessionTaskDelegate, PPOWebViewControllerDelegate>
 @property (nonatomic, strong, readwrite) NSOperationQueue *payments;
@@ -115,11 +116,8 @@
                     [request setHTTPBody:data];
                     
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        
-                        NSString *resourceBundlePath = [[NSBundle mainBundle] pathForResource:@"PaypointResources" ofType:@"bundle"];
-                        NSBundle *resourceBundle = [NSBundle bundleWithPath:resourceBundlePath];
-                        
-                        PPOWebViewController *webController = [[PPOWebViewController alloc] initWithNibName:NSStringFromClass([PPOWebViewController class]) bundle:resourceBundle];
+                        PPOWebViewController *webController = [[PPOWebViewController alloc] initWithNibName:NSStringFromClass([PPOWebViewController class])
+                                                                                                     bundle:[PPOResourcesManager bundle]];
                         webController.delegate = self;
                         webController.request = request;
                         webController.termURLString = termUrlString;
