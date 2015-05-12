@@ -167,6 +167,7 @@
     if (_preventShow) {
         return;
     }
+    _preventShow = YES;
     [self.delegate webViewControllerDelayShowTimeoutExpired:self];
     if (self.sessionTimeoutTimeInterval) {
         self.sessionTimeoutTimer = [NSTimer scheduledTimerWithTimeInterval:self.sessionTimeoutTimeInterval.doubleValue target:self selector:@selector(sessionTimedOut:) userInfo:nil repeats:NO];
