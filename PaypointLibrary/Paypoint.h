@@ -18,3 +18,4 @@
 #import <Paypoint/PPOError.h>
 #import <Paypoint/PPOOutcome.h>
 #import <Paypoint/PPOPaymentBaseURLManager.h>
+#import <Paypoint/PPOResourcesManager.h>
