@@ -12,5 +12,6 @@
 
 +(NSBundle*)resources;
 +(NSDictionary*)frameworkVersion;
++(NSNumber*)frameworkBuild;
 
 @end

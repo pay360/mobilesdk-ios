@@ -15,10 +15,13 @@
     return [NSBundle bundleWithPath:resourceBundlePath];
 }
 
-+(NSDictionary*)frameworkVersion {
++(NSDictionary*)info {
     NSString *path = [[PPOResourcesManager resources] pathForResource:@"Info" ofType:@"plist"];
-    NSDictionary *plist = [NSDictionary dictionaryWithContentsOfFile:path];
-    NSString *version = [plist objectForKey:@"CFBundleShortVersionString"];
+    return [NSDictionary dictionaryWithContentsOfFile:path];
+}
+
++(NSDictionary*)frameworkVersion {
+    NSString *version = [[PPOResourcesManager info] objectForKey:@"CFBundleShortVersionString"];
     NSArray *components = [version componentsSeparatedByString:@"."];
     NSUInteger counter = 0;
     NSMutableDictionary *collector = [NSMutableDictionary new];
@@ -44,6 +47,13 @@
     }
     
     return [collector copy];
+}
+
+//Read note under Step 2 here https://developer.apple.com/library/ios/qa/qa1827/_index.html
+
++(NSNumber*)frameworkBuild {
+    NSString *version = [[PPOResourcesManager info] objectForKey:@"DYLIB_CURRENT_VERSION"];
+    return @(version.doubleValue);
 }
 
 @end
