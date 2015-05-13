@@ -237,6 +237,7 @@
 			isa = PBXGroup;
 			children = (
 				5081F3AE1AE7D28000D41911 /* Framework.sh */,
+				5081F3B81AE7D45600D41911 /* MultiPlatformFramework.sh */,
 				5056A1A51AD68B1400AB1276 /* PPOSDKMacros.h */,
 			);
 			name = "Supporting Files";
@@ -248,7 +249,6 @@
 				50DCC1AB1AE7CAAA00D0FE26 /* Paypoint */,
 				50DCC1B81AE7CAAA00D0FE26 /* PaypointTests */,
 				5092F3561AFA1E8F004FFF62 /* PaypointResources */,
-				5092F36D1AFA4D09004FFF62 /* Framework */,
 			);
 			name = Targets;
 			sourceTree = "<group>";
@@ -357,14 +357,6 @@
 				5092F36F1AFA4D9F004FFF62 /* Info.plist */,
 			);
 			path = PaypointResources;
-			sourceTree = "<group>";
-		};
-		5092F36D1AFA4D09004FFF62 /* Framework */ = {
-			isa = PBXGroup;
-			children = (
-				5081F3B81AE7D45600D41911 /* MultiPlatformFramework.sh */,
-			);
-			name = Framework;
 			sourceTree = "<group>";
 		};
 		509B588D1ADD477D001236CD /* PPOTimeManager */ = {
