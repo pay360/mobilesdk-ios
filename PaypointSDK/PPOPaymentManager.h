@@ -8,7 +8,6 @@
 
 #import "PPOError.h"
 #import "PPOOutcome.h"
-#import "PPOPaymentEndpointManager.h"
 
 @class PPOPayment;
 @class PPOCredentials;
@@ -16,7 +15,9 @@
 @class PPOBillingAddress;
 @class PPOCreditCard;
 
-@interface PPOPaymentManager : PPOPaymentEndpointManager
+#define INSTALLATION_ID @"5300065"
+
+@interface PPOPaymentManager : NSObject
 
 @property (nonatomic, strong, readonly) NSURL *baseURL;
 

@@ -15,4 +15,8 @@
     
 }
 
+-(NSURL*)resumePaymentWithInstallationID:(NSString*)installationID transactionID:(NSString*)transID withBaseURL:(NSURL*)baseURL {
+    return [baseURL URLByAppendingPathComponent:[NSString stringWithFormat:@"acceptor/rest/mobile/transactions/%@/%@/resume", transID, installationID]];
+}
+
 @end

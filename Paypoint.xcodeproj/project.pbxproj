@@ -66,8 +66,6 @@
 		50DCC1EC1AE7CC1900D0FE26 /* PPOPaymentEndpointManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 506D55B21AE5326700D71180 /* PPOPaymentEndpointManager.m */; };
 		50DCC1EF1AE7CC2900D0FE26 /* PPOPaymentManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 50CC9AF51AD41ED300B97F2E /* PPOPaymentManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		50DCC1F01AE7CC3000D0FE26 /* PPOPaymentManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CC9AF61AD41ED300B97F2E /* PPOPaymentManager.m */; };
-		50DCC1F11AE7CC3600D0FE26 /* PPOPaymentsDispatchManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 506D55B71AE53AA000D71180 /* PPOPaymentsDispatchManager.h */; };
-		50DCC1F21AE7CC3800D0FE26 /* PPOPaymentsDispatchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 506D55B81AE53AA000D71180 /* PPOPaymentsDispatchManager.m */; };
 		50DCC1F31AE7CC4100D0FE26 /* PPOSDKMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 5056A1A51AD68B1400AB1276 /* PPOSDKMacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
@@ -112,8 +110,6 @@
 		5056A1AC1AD6A75200AB1276 /* PPOErrorManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOErrorManager.m; sourceTree = "<group>"; };
 		506D55B11AE5326700D71180 /* PPOPaymentEndpointManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOPaymentEndpointManager.h; sourceTree = "<group>"; };
 		506D55B21AE5326700D71180 /* PPOPaymentEndpointManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOPaymentEndpointManager.m; sourceTree = "<group>"; };
-		506D55B71AE53AA000D71180 /* PPOPaymentsDispatchManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOPaymentsDispatchManager.h; sourceTree = "<group>"; };
-		506D55B81AE53AA000D71180 /* PPOPaymentsDispatchManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOPaymentsDispatchManager.m; sourceTree = "<group>"; };
 		507331EA1ADE72E700BBDFC2 /* PPOPayment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOPayment.h; sourceTree = "<group>"; };
 		507331EB1ADE72E700BBDFC2 /* PPOPayment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOPayment.m; sourceTree = "<group>"; };
 		507AA72D1AD7D78F00420DF7 /* PPOOutcome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOOutcome.h; sourceTree = "<group>"; };
@@ -317,18 +313,8 @@
 				50E3E6661AE1127A00DA61E8 /* PPOPaymentBaseURLManager */,
 				506D55B51AE5326A00D71180 /* PPOPaymentEndpointManager */,
 				50CC9AF91AD41ED800B97F2E /* PPOPaymentManager */,
-				506D55BB1AE53AA300D71180 /* PPOPaymentsDispatchManager */,
 			);
 			name = Payments;
-			sourceTree = "<group>";
-		};
-		506D55BB1AE53AA300D71180 /* PPOPaymentsDispatchManager */ = {
-			isa = PBXGroup;
-			children = (
-				506D55B71AE53AA000D71180 /* PPOPaymentsDispatchManager.h */,
-				506D55B81AE53AA000D71180 /* PPOPaymentsDispatchManager.m */,
-			);
-			name = PPOPaymentsDispatchManager;
 			sourceTree = "<group>";
 		};
 		507331EE1ADE72EA00BBDFC2 /* PPOPayment */ = {
@@ -484,7 +470,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				5081F3C41AE7E5D800D41911 /* Paypoint.h in Headers */,
-				50DCC1F11AE7CC3600D0FE26 /* PPOPaymentsDispatchManager.h in Headers */,
 				50DCC1E31AE7CBE400D0FE26 /* PPOWebViewController.h in Headers */,
 				50D495171B023944004AD686 /* PPOResourcesManager.h in Headers */,
 				50DCC1F31AE7CC4100D0FE26 /* PPOSDKMacros.h in Headers */,
@@ -687,7 +672,6 @@
 				50DCC1E81AE7CC0200D0FE26 /* PPOTimeManager.m in Sources */,
 				50DCC1D81AE7CBA900D0FE26 /* PPOCredentials.m in Sources */,
 				50D495181B023944004AD686 /* PPOResourcesManager.m in Sources */,
-				50DCC1F21AE7CC3800D0FE26 /* PPOPaymentsDispatchManager.m in Sources */,
 				50DCC1D61AE7CB9B00D0FE26 /* PPOReachability.m in Sources */,
 				50DCC1E01AE7CBD300D0FE26 /* PPOOutcome.m in Sources */,
 				50DCC1E21AE7CBDD00D0FE26 /* PPOPayment.m in Sources */,

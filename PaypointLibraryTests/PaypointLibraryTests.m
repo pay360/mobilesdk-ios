@@ -12,8 +12,6 @@
 //SDK
 #import "Paypoint.h"
 
-#define INSTALLATION_ID @"5300065"
-
 @interface PaypointLibraryTests : XCTestCase
 @property (nonatomic, strong) NSArray *pans;
 @property (nonatomic, strong) NSString *validBearerToken;

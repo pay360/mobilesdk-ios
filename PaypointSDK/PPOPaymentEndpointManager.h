@@ -6,10 +6,11 @@
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#import "PPOPaymentBaseURLManager.h"
+#import <UIKit/UIKit.h>
 
-@interface PPOPaymentEndpointManager : PPOPaymentBaseURLManager
+@interface PPOPaymentEndpointManager : NSObject
 
 -(NSURL*)simplePayment:(NSString*)installationID withBaseURL:(NSURL*)baseURL;
+-(NSURL*)resumePaymentWithInstallationID:(NSString*)installationID transactionID:(NSString*)transID withBaseURL:(NSURL*)baseURL;
 
 @end
