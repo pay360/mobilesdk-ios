@@ -31,6 +31,7 @@
 
 @implementation PPOPaymentManager {
     BOOL _preventShowWebView;
+    BOOL _isDismissingWebView;
 }
 
 -(instancetype)initWithBaseURL:(NSURL*)baseURL {
@@ -228,40 +229,39 @@
     
     task = [self.session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         
-        if (((NSHTTPURLResponse*)response).statusCode == 200) {
-            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
-            PPOOutcome *outcome = [[PPOOutcome alloc] initWithData:json];
-            if (outcome.isSuccessful == NO) {
-                PPOErrorCode code = [PPOErrorManager errorCodeForReasonCode:outcome.reasonCode.integerValue];
-                error = [PPOErrorManager errorForCode:code];
+        NSInteger statusCode = ((NSHTTPURLResponse*)response).statusCode;
+        
+        if (statusCode == 200) {
+            
+            NSError *invalidJSON;
+            id json;
+            if (data.length > 0) {
+                json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&invalidJSON];
             }
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-                id controller = [[UIApplication sharedApplication] keyWindow].rootViewController.presentedViewController;
-                if (controller && controller == self.webController.navigationController) {
-                    [[[UIApplication sharedApplication] keyWindow].rootViewController dismissViewControllerAnimated:YES completion:^{
-                        self.outcomeCompletion(outcome, error);
-                        _preventShowWebView = NO;
-                    }];
-                } else {
-                    self.outcomeCompletion(outcome, error);
-                    _preventShowWebView = NO;
-                }
-            });
+            
+            if (invalidJSON) {
+                [self completeOnMainThreadWithOutcome:nil withError:[PPOErrorManager errorForCode:PPOErrorServerFailure]];
+                return;
+            }
+            
+            PPOOutcome *outcome;
+            if (json) {
+                outcome = [[PPOOutcome alloc] initWithData:json];
+            }
+            
+            if (outcome && outcome.isSuccessful == NO) {
+                PPOErrorCode code = [PPOErrorManager errorCodeForReasonCode:outcome.reasonCode.integerValue];
+                [self completeOnMainThreadWithOutcome:outcome withError:[PPOErrorManager errorForCode:code]];
+            } else if (outcome.isSuccessful == YES) {
+                [self completeOnMainThreadWithOutcome:outcome withError:nil];
+            } else {
+                [self completeOnMainThreadWithOutcome:outcome withError:[PPOErrorManager errorForCode:PPOErrorUnknown]];
+            }
+            
         } else {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-                id controller = [[UIApplication sharedApplication] keyWindow].rootViewController.presentedViewController;
-                if (controller && controller == self.webController.navigationController) {
-                    [[[UIApplication sharedApplication] keyWindow].rootViewController dismissViewControllerAnimated:YES completion:^{
-                        self.outcomeCompletion(nil, [PPOErrorManager errorForCode:PPOErrorUnknown]);
-                        _preventShowWebView = NO;
-                    }];
-                } else {
-                    self.outcomeCompletion(nil, [PPOErrorManager errorForCode:PPOErrorUnknown]);
-                    _preventShowWebView = NO;
-                }
-            });
+            
+            [self completeOnMainThreadWithOutcome:nil withError:[PPOErrorManager errorForCode:PPOErrorUnknown]];
+            
         }
         
     }];
@@ -295,17 +295,30 @@
 
 -(void)handleError:(NSError *)error webController:(PPOWebViewController *)webController {
     _preventShowWebView = YES;
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-    id controller = [[UIApplication sharedApplication] keyWindow].rootViewController.presentedViewController;
-    if (controller && controller == webController.navigationController) {
-        [[[UIApplication sharedApplication] keyWindow].rootViewController dismissViewControllerAnimated:YES completion:^{
-            self.outcomeCompletion(nil, error);
+    [self completeOnMainThreadWithOutcome:nil withError:error];
+}
+
+-(void)completeOnMainThreadWithOutcome:(PPOOutcome*)outcome withError:(NSError*)error {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+        
+        //Depending on the delay show and session timeout timers, we may be currently showing the webview, or not.
+        //Thus this check is essential.
+        id controller = [[UIApplication sharedApplication] keyWindow].rootViewController.presentedViewController;
+        if (controller && controller == self.webController.navigationController) {
+            if (!_isDismissingWebView) {
+                _isDismissingWebView = YES;
+                [[[UIApplication sharedApplication] keyWindow].rootViewController dismissViewControllerAnimated:YES completion:^{
+                    _isDismissingWebView = NO;
+                    self.outcomeCompletion(outcome, error);
+                    _preventShowWebView = NO;
+                }];
+            }
+        } else {
+            self.outcomeCompletion(outcome, error);
             _preventShowWebView = NO;
-        }];
-    } else {
-        self.outcomeCompletion(nil, error);
-        _preventShowWebView = NO;
-    }
+        }
+    });
 }
 
 @end
