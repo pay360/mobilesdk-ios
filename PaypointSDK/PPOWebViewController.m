@@ -9,6 +9,7 @@
 #import "PPOWebViewController.h"
 #import "PPOResourcesManager.h"
 #import "PPOErrorManager.h"
+#import "PPOSDKConstants.h"
 #import <MessageUI/MFMailComposeViewController.h>
 
 @interface PPOWebViewController () <UIWebViewDelegate, MFMailComposeViewControllerDelegate, UIAlertViewDelegate>
@@ -135,8 +136,8 @@
         if ([string isKindOfClass:[NSString class]] && string.length > 0) {
             json = [NSJSONSerialization JSONObjectWithData:[string dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingAllowFragments error:nil];
         }
-        NSString *pares = [json objectForKey:@"PaRes"];
-        NSString *md = [json objectForKey:@"MD"];
+        NSString *pares = [json objectForKey:THREE_D_SECURE_PARES_KEY];
+        NSString *md = [json objectForKey:THREE_D_SECURE_MD_KEY];
         [self cancelTimers];
         if (
             (pares && [pares isKindOfClass:[NSString class]] && pares.length == 0) ||

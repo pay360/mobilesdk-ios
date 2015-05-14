@@ -26,6 +26,7 @@
 		503E19E31AE91FDB00CB4784 /* libPaypoint.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 50DCC1AA1AE7CAAA00D0FE26 /* libPaypoint.a */; };
 		505AB2ED1B04B9A8001FAD15 /* PPORedirect.h in Headers */ = {isa = PBXBuildFile; fileRef = 505AB2EB1B04B9A8001FAD15 /* PPORedirect.h */; };
 		505AB2EE1B04B9A8001FAD15 /* PPORedirect.m in Sources */ = {isa = PBXBuildFile; fileRef = 505AB2EC1B04B9A8001FAD15 /* PPORedirect.m */; };
+		505AB2F11B04C7DE001FAD15 /* PPOSDKConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 505AB2F01B04C7DE001FAD15 /* PPOSDKConstants.h */; };
 		5081F3BE1AE7E56300D41911 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5081F3BD1AE7E56300D41911 /* UIKit.framework */; };
 		5081F3C01AE7E58500D41911 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5081F3BF1AE7E58500D41911 /* SystemConfiguration.framework */; };
 		5081F3C21AE7E58900D41911 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5081F3C11AE7E58900D41911 /* CoreGraphics.framework */; };
@@ -112,6 +113,7 @@
 		5056A1AC1AD6A75200AB1276 /* PPOErrorManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOErrorManager.m; sourceTree = "<group>"; };
 		505AB2EB1B04B9A8001FAD15 /* PPORedirect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPORedirect.h; sourceTree = "<group>"; };
 		505AB2EC1B04B9A8001FAD15 /* PPORedirect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPORedirect.m; sourceTree = "<group>"; };
+		505AB2F01B04C7DE001FAD15 /* PPOSDKConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOSDKConstants.h; sourceTree = "<group>"; };
 		506D55B11AE5326700D71180 /* PPOPaymentEndpointManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOPaymentEndpointManager.h; sourceTree = "<group>"; };
 		506D55B21AE5326700D71180 /* PPOPaymentEndpointManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOPaymentEndpointManager.m; sourceTree = "<group>"; };
 		507331EA1ADE72E700BBDFC2 /* PPOPayment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOPayment.h; sourceTree = "<group>"; };
@@ -240,6 +242,7 @@
 				5081F3AE1AE7D28000D41911 /* Framework.sh */,
 				5081F3B81AE7D45600D41911 /* MultiPlatformFramework.sh */,
 				5056A1A51AD68B1400AB1276 /* PPOSDKMacros.h */,
+				505AB2F01B04C7DE001FAD15 /* PPOSDKConstants.h */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -484,6 +487,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5081F3C41AE7E5D800D41911 /* Paypoint.h in Headers */,
+				505AB2F11B04C7DE001FAD15 /* PPOSDKConstants.h in Headers */,
 				50DCC1E31AE7CBE400D0FE26 /* PPOWebViewController.h in Headers */,
 				50D495171B023944004AD686 /* PPOResourcesManager.h in Headers */,
 				50DCC1F31AE7CC4100D0FE26 /* PPOSDKMacros.h in Headers */,

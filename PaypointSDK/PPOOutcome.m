@@ -9,6 +9,7 @@
 #import "PPOOutcome.h"
 #import "PPOError.h"
 #import "PPOTimeManager.h"
+#import "PPOSDKConstants.h"
 
 @interface PPOOutcome ()
 @property (nonatomic, strong, readwrite) NSNumber *amount;
@@ -56,13 +57,13 @@
         
         if (data) {
             
-            [self parseOutcome:[data objectForKey:@"outcome"]];
+            [self parseOutcome:[data objectForKey:PAYMENT_RESPONSE_OUTCOME_KEY]];
             
-            [self parseTransaction:[data objectForKey:@"transaction"]];
+            [self parseTransaction:[data objectForKey:PAYMENT_RESPONSE_TRANSACTION_KEY]];
             
-            id paymentMethod = [data objectForKey:@"paymentMethod"];
+            id paymentMethod = [data objectForKey:PAYMENT_RESPONSE_METHOD_KEY];
             
-            if ([paymentMethod isKindOfClass:[NSDictionary class]]) [self parseCard:[paymentMethod objectForKey:@"card"]];
+            if ([paymentMethod isKindOfClass:[NSDictionary class]]) [self parseCard:[paymentMethod objectForKey:PAYMENT_RESPONSE_METHOD_CARD_KEY]];
             
         }
         
@@ -74,11 +75,11 @@
 -(void)parseOutcome:(NSDictionary*)outcome {
     id value;
     if ([outcome isKindOfClass:[NSDictionary class]]) {
-        value = [outcome objectForKey:@"reasonCode"];
+        value = [outcome objectForKey:PAYMENT_RESPONSE_OUTCOME_REASON_KEY];
         if ([value isKindOfClass:[NSNumber class]]) {
             self.reasonCode = value;
         }
-        value = [outcome objectForKey:@"reasonMessage"];
+        value = [outcome objectForKey:PAYMENT_RESPONSE_OUTCOME_REASON_MESSAGE_KEY];
         if ([value isKindOfClass:[NSString class]]) {
             self.localisedReason = value;
         }
@@ -88,27 +89,27 @@
 -(void)parseTransaction:(NSDictionary*)transaction {
     id value;
     if ([transaction isKindOfClass:[NSDictionary class]]) {
-        value = [transaction objectForKey:@"amount"];
+        value = [transaction objectForKey:PAYMENT_RESPONSE_TRANSACTION_AMOUNT_KEY];
         if ([value isKindOfClass:[NSNumber class]]) {
             self.amount = value;
         }
-        value = [transaction objectForKey:@"currency"];
+        value = [transaction objectForKey:PAYMENT_RESPONSE_TRANSACTION_CURRENCY_KEY];
         if ([value isKindOfClass:[NSString class]]) {
             self.currency = value;
         }
-        value = [transaction objectForKey:@"transactionTime"];
+        value = [transaction objectForKey:PAYMENT_RESPONSE_TRANSACTION_TIME_KEY];
         if ([value isKindOfClass:[NSString class]]) {
             self.date = [self.timeManager dateFromString:value];
         }
-        value = [transaction objectForKey:@"merchantRef"];
+        value = [transaction objectForKey:PAYMENT_RESPONSE_TRANSACTION_MERCH_REF_KEY];
         if ([value isKindOfClass:[NSString class]]) {
             self.merchantRef = value;
         }
-        value = [transaction objectForKey:@"type"];
+        value = [transaction objectForKey:PAYMENT_RESPONSE_TRANSACTION_TYPE_KEY];
         if ([value isKindOfClass:[NSString class]]) {
             self.type = value;
         }
-        value = [transaction objectForKey:@"transactionId"];
+        value = [transaction objectForKey:PAYMENT_RESPONSE_TRANSACTION_ID_KEY];
         if ([value isKindOfClass:[NSString class]]) {
             self.identifier = value;
         }
@@ -118,15 +119,15 @@
 -(void)parseCard:(NSDictionary*)card {
     id value;
     if ([card isKindOfClass:[NSDictionary class]]) {
-        value = [card objectForKey:@"lastFour"];
+        value = [card objectForKey:PAYMENT_RESPONSE_METHOD_CARD_LAST_FOUR_KEY];
         if ([value isKindOfClass:[NSString class]]) {
             self.lastFour = value;
         }
-        value = [card objectForKey:@"cardUsageType"];
+        value = [card objectForKey:PAYMENT_RESPONSE_METHOD_CARD_USER_TYPE_KEY];
         if ([value isKindOfClass:[NSString class]]) {
             self.cardUsageType = value;
         }
-        value = [card objectForKey:@"cardScheme"];
+        value = [card objectForKey:PAYMENT_RESPONSE_METHOD_CARD_SCHEME_KEY];
         if ([value isKindOfClass:[NSString class]]) {
             self.cardScheme = value;
         }

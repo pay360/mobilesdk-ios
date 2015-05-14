@@ -7,49 +7,54 @@
 //
 
 #import "PPORedirect.h"
+#import "PPOSDKConstants.h"
 
 @implementation PPORedirect
 
 -(instancetype)initWithData:(NSDictionary *)data {
     self = [super init];
     if (self) {
-        NSString *acsURLString = [data objectForKey:@"acsUrl"];
-        if ([acsURLString isKindOfClass:[NSString class]]) {
-            NSString *md = [data objectForKey:@"md"];
-            NSString *pareq = [data objectForKey:@"pareq"];
-            NSNumber *sessionTimeout = [data objectForKey:@"sessionTimeout"];
-            NSTimeInterval secondsTimeout = sessionTimeout.doubleValue/1000;
-            NSNumber *acsTimeout = [data objectForKey:@"redirectTimeout"];
-            NSTimeInterval secondsDelayShow = (acsTimeout) ? acsTimeout.doubleValue/1000 : 5;
-            NSString *termUrlString = [data objectForKey:@"termUrl"];
-            NSURL *termURL = [NSURL URLWithString:termUrlString];
-            self.termURL = termURL;
-            NSURL *acsURL = [NSURL URLWithString:acsURLString];
-            if (acsURL) {
-                NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:acsURL];
-                [request setHTTPMethod:@"POST"];
-                
-                NSString *string = [NSString stringWithFormat:@"PaReq=%@&MD=%@&TermUrl=%@", [self urlencode:pareq], [self urlencode:md], termURL];
-                NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
-                
-                [request setHTTPBody:data];
-                
-                self.request = [request copy];
-            }
-            
-            if ([sessionTimeout isKindOfClass:[NSNumber class]]) {
-                self.sessionTimeoutTimeInterval = @(secondsTimeout);
-            }
-            
-            if ([acsTimeout isKindOfClass:[NSNumber class]]) {
-                self.delayTimeInterval = @(secondsDelayShow);
-            }
-        }
+        
+        self.termURL = [self parseURL:[data objectForKey:THREE_D_SECURE_TERMINATION_URL_KEY]];
+        
+        NSString *body = [NSString stringWithFormat:
+                          @"PaReq=%@&MD=%@&TermUrl=%@",
+                          [self urlencode:[self parseStringParam:[data objectForKey:THREE_D_SECURE_PAREQ_KEY]]],
+                          [self urlencode:[self parseStringParam:[data objectForKey:THREE_D_SECURE_MD_KEY]]],
+                           self.termURL
+                          ];
+                          
+        NSData *bodyData = [body dataUsingEncoding:NSUTF8StringEncoding];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[self parseURL:[data objectForKey:THREE_D_SECURE_ACS_URL_KEY]]];
+        [request setHTTPMethod:@"POST"];
+        [request setHTTPBody:bodyData];
+        self.request = [request copy];
+        
+        self.sessionTimeoutTimeInterval = [self parseSessionTimeout:[data objectForKey:THREE_D_SECURE_SESSION_TIMEOUT_TIME_KEY]];
+        
+        self.delayTimeInterval = [self parseDelayShowTimeout:[data objectForKey:THREE_D_SECURE_DELAYSHOW_TIME_KEY]];
     }
     return self;
 }
 
+-(NSURL*)parseURL:(NSString*)value {
+    if ([self parseStringParam:value] != nil) {
+        return [NSURL URLWithString:value];
+    }
+    return nil;
+}
+
+-(NSString*)parseStringParam:(NSString*)param {
+    if (param && [param isKindOfClass:[NSString class]] && param.length > 0) {
+        return param;
+    }
+    return nil;
+}
+
 -(NSString *)urlencode:(NSString*)string {
+    if ([self parseStringParam:string] == nil) {
+        return nil;
+    }
     NSMutableString *output = [NSMutableString string];
     const unsigned char *source = (const unsigned char *)[string UTF8String];
     unsigned long sourceLen = strlen((const char *)source);
@@ -67,6 +72,20 @@
         }
     }
     return output;
+}
+
+-(NSNumber*)parseSessionTimeout:(NSNumber*)value {
+    if ([value isKindOfClass:[NSNumber class]]) {
+        return @(value.doubleValue/1000);
+    }
+    return nil;
+}
+
+-(NSNumber*)parseDelayShowTimeout:(NSNumber*)value {
+    if ([value isKindOfClass:[NSNumber class]]) {
+        return @((value) ? value.doubleValue/1000 : 5);
+    }
+    return nil;
 }
 
 @end
