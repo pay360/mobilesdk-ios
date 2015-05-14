@@ -224,6 +224,8 @@
     [request setValue:[self authorisation:self.credentials] forHTTPHeaderField:@"Authorization"];
     [request setHTTPBody:data];
     
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    
     task = [self.session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         
         if (((NSHTTPURLResponse*)response).statusCode == 200) {
