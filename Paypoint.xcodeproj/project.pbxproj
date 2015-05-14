@@ -24,6 +24,8 @@
 /* Begin PBXBuildFile section */
 		503E19A21AE8E3D800CB4784 /* PaypointLibraryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 503E19A11AE8E3D800CB4784 /* PaypointLibraryTests.m */; };
 		503E19E31AE91FDB00CB4784 /* libPaypoint.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 50DCC1AA1AE7CAAA00D0FE26 /* libPaypoint.a */; };
+		505AB2ED1B04B9A8001FAD15 /* PPORedirect.h in Headers */ = {isa = PBXBuildFile; fileRef = 505AB2EB1B04B9A8001FAD15 /* PPORedirect.h */; };
+		505AB2EE1B04B9A8001FAD15 /* PPORedirect.m in Sources */ = {isa = PBXBuildFile; fileRef = 505AB2EC1B04B9A8001FAD15 /* PPORedirect.m */; };
 		5081F3BE1AE7E56300D41911 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5081F3BD1AE7E56300D41911 /* UIKit.framework */; };
 		5081F3C01AE7E58500D41911 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5081F3BF1AE7E58500D41911 /* SystemConfiguration.framework */; };
 		5081F3C21AE7E58900D41911 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5081F3C11AE7E58900D41911 /* CoreGraphics.framework */; };
@@ -108,6 +110,8 @@
 		5056A1A91AD6A65900AB1276 /* PPOError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOError.m; sourceTree = "<group>"; };
 		5056A1AB1AD6A75200AB1276 /* PPOErrorManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOErrorManager.h; sourceTree = "<group>"; };
 		5056A1AC1AD6A75200AB1276 /* PPOErrorManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOErrorManager.m; sourceTree = "<group>"; };
+		505AB2EB1B04B9A8001FAD15 /* PPORedirect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPORedirect.h; sourceTree = "<group>"; };
+		505AB2EC1B04B9A8001FAD15 /* PPORedirect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPORedirect.m; sourceTree = "<group>"; };
 		506D55B11AE5326700D71180 /* PPOPaymentEndpointManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOPaymentEndpointManager.h; sourceTree = "<group>"; };
 		506D55B21AE5326700D71180 /* PPOPaymentEndpointManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOPaymentEndpointManager.m; sourceTree = "<group>"; };
 		507331EA1ADE72E700BBDFC2 /* PPOPayment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOPayment.h; sourceTree = "<group>"; };
@@ -224,6 +228,7 @@
 				50CC9B0D1AD42CEB00B97F2E /* PPOBillingAddress */,
 				507AA7311AD7D79300420DF7 /* PPOOutcome */,
 				507331EE1ADE72EA00BBDFC2 /* PPOPayment */,
+				505AB2EF1B04B9AD001FAD15 /* PPORedirect */,
 			);
 			name = Model;
 			path = ../PaypointSDK;
@@ -277,6 +282,15 @@
 			);
 			name = PPOError;
 			path = ../PaypointSDK;
+			sourceTree = "<group>";
+		};
+		505AB2EF1B04B9AD001FAD15 /* PPORedirect */ = {
+			isa = PBXGroup;
+			children = (
+				505AB2EB1B04B9A8001FAD15 /* PPORedirect.h */,
+				505AB2EC1B04B9A8001FAD15 /* PPORedirect.m */,
+			);
+			name = PPORedirect;
 			sourceTree = "<group>";
 		};
 		5069F6491ABC7DA30077FB10 = {
@@ -475,6 +489,7 @@
 				50DCC1F31AE7CC4100D0FE26 /* PPOSDKMacros.h in Headers */,
 				50DCC1EF1AE7CC2900D0FE26 /* PPOPaymentManager.h in Headers */,
 				50DCC1D51AE7CB9700D0FE26 /* PPOReachability.h in Headers */,
+				505AB2ED1B04B9A8001FAD15 /* PPORedirect.h in Headers */,
 				50DCC1C31AE7CAF000D0FE26 /* PPOError.h in Headers */,
 				50DCC1E71AE7CBFF00D0FE26 /* PPOTimeManager.h in Headers */,
 				50DCC1D91AE7CBAE00D0FE26 /* PPOCreditCard.h in Headers */,
@@ -675,6 +690,7 @@
 				50DCC1D61AE7CB9B00D0FE26 /* PPOReachability.m in Sources */,
 				50DCC1E01AE7CBD300D0FE26 /* PPOOutcome.m in Sources */,
 				50DCC1E21AE7CBDD00D0FE26 /* PPOPayment.m in Sources */,
+				505AB2EE1B04B9A8001FAD15 /* PPORedirect.m in Sources */,
 				50DCC1DC1AE7CBBD00D0FE26 /* PPOTransaction.m in Sources */,
 				50DCC1DE1AE7CBC900D0FE26 /* PPOBillingAddress.m in Sources */,
 				50DCC1C11AE7CACB00D0FE26 /* PPOError.m in Sources */,

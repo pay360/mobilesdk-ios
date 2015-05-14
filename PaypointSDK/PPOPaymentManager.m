@@ -16,7 +16,7 @@
 #import "PPOTransaction.h"
 #import "PPOPaymentEndpointManager.h"
 #import "PPOWebViewController.h"
-#import "PPOResourcesManager.h"
+#import "PPORedirect.h"
 
 @interface PPOPaymentManager () <NSURLSessionTaskDelegate, PPOWebViewControllerDelegate>
 @property (nonatomic, strong, readwrite) NSURL *baseURL;
@@ -107,56 +107,22 @@
         
         id value = [json objectForKey:@"threeDSRedirect"];
         if ([value isKindOfClass:[NSDictionary class]]) {
-            NSString *acsURLString = [value objectForKey:@"acsUrl"];
-            if ([acsURLString isKindOfClass:[NSString class]]) {
-                NSString *md = [value objectForKey:@"md"];
-                NSString *pareq = [value objectForKey:@"pareq"];
-                NSNumber *sessionTimeout = [value objectForKey:@"sessionTimeout"];
-                NSTimeInterval secondsTimeout = sessionTimeout.doubleValue/1000;
-                NSNumber *acsTimeout = [value objectForKey:@"redirectTimeout"];
-                NSTimeInterval secondsDelayShow = (acsTimeout) ? acsTimeout.doubleValue/1000 : 5;
-                NSString *termUrlString = [value objectForKey:@"termUrl"];
-                NSURL *termURL = [NSURL URLWithString:termUrlString];
-                NSURL *acsURL = [NSURL URLWithString:acsURLString];
-                if (acsURL) {
-                    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:acsURL];
-                    [request setHTTPMethod:@"POST"];
+            PPORedirect *redirect = [[PPORedirect alloc] initWithData:value];
+            if (redirect.request) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.webController = [[PPOWebViewController alloc] initWithRedirect:redirect withDelegate:self];
                     
-                    NSString *string = [NSString stringWithFormat:@"PaReq=%@&MD=%@&TermUrl=%@", [PPOPaymentManager urlencode:pareq], [PPOPaymentManager urlencode:md], termURL];
-                    NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
-                    
-                    [request setHTTPBody:data];
-                    
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        PPOWebViewController *webController = [[PPOWebViewController alloc] initWithNibName:NSStringFromClass([PPOWebViewController class])
-                                                                                                     bundle:[PPOResourcesManager resources]];
-                        webController.delegate = self;
-                        webController.request = request;
-                        webController.termURLString = termUrlString;
-                        
-                        self.webController = webController;
-                        
-                        if ([sessionTimeout isKindOfClass:[NSNumber class]]) {
-                            webController.sessionTimeoutTimeInterval = @(secondsTimeout);
-                        }
-                        
-                        if ([acsTimeout isKindOfClass:[NSNumber class]]) {
-                            webController.delayTimeInterval = @(secondsDelayShow);
-                        }
-                        
-                        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-                        CGFloat width = [UIScreen mainScreen].bounds.size.width;
-                        CGFloat height = [UIScreen mainScreen].bounds.size.height;
-                        webController.view.frame = CGRectMake(-height, -width, width, height);
-                        [[[UIApplication sharedApplication] keyWindow] addSubview:webController.view];
-                    });
-                    
-                } else {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-                        completion(nil, [PPOErrorManager errorForCode:PPOErrorProcessingThreeDSecure]);
-                    });
-                }
+                    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+                    CGFloat width = [UIScreen mainScreen].bounds.size.width;
+                    CGFloat height = [UIScreen mainScreen].bounds.size.height;
+                    self.webController.view.frame = CGRectMake(-height, -width, width, height);
+                    [[[UIApplication sharedApplication] keyWindow] addSubview:self.webController.view];
+                });
+            } else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+                    completion(nil, [PPOErrorManager errorForCode:PPOErrorProcessingThreeDSecure]);
+                });
             }
             return;
         }
@@ -226,26 +192,6 @@
                   };
     
     return [NSJSONSerialization dataWithJSONObject:object options:NSJSONWritingPrettyPrinted error:nil];
-}
-
-+(NSString *)urlencode:(NSString*)string {
-    NSMutableString *output = [NSMutableString string];
-    const unsigned char *source = (const unsigned char *)[string UTF8String];
-    unsigned long sourceLen = strlen((const char *)source);
-    for (int i = 0; i < sourceLen; ++i) {
-        const unsigned char thisChar = source[i];
-        if (thisChar == ' '){
-            [output appendString:@"+"];
-        } else if (thisChar == '.' || thisChar == '-' || thisChar == '_' || thisChar == '~' ||
-                   (thisChar >= 'a' && thisChar <= 'z') ||
-                   (thisChar >= 'A' && thisChar <= 'Z') ||
-                   (thisChar >= '0' && thisChar <= '9')) {
-            [output appendFormat:@"%c", thisChar];
-        } else {
-            [output appendFormat:@"%%%02X", thisChar];
-        }
-    }
-    return output;
 }
 
 -(void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler {

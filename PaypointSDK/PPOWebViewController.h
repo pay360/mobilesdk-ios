@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PPORedirect.h"
 
 @class PPOWebViewController;
 @protocol PPOWebViewControllerDelegate <NSObject>
@@ -18,11 +19,9 @@
 @end
 
 @interface PPOWebViewController : UIViewController
+@property (nonatomic, strong) id <PPOWebViewControllerDelegate> delegate; //Holding strongly here
+@property (nonatomic, strong) PPORedirect *redirect;
 
-//Holding strongly here
-@property (nonatomic, strong) id <PPOWebViewControllerDelegate> delegate;
-@property (nonatomic, strong) NSURLRequest *request;
-@property (nonatomic, copy) NSString *termURLString;
-@property (nonatomic, strong) NSNumber *delayTimeInterval;
-@property (nonatomic, strong) NSNumber *sessionTimeoutTimeInterval;
+-(instancetype)initWithRedirect:(PPORedirect*)redirect withDelegate:(id<PPOWebViewControllerDelegate>)delegate;
+
 @end

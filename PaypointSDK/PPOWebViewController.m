@@ -23,11 +23,20 @@
     BOOL _preventShow;
 }
 
+-(instancetype)initWithRedirect:(PPORedirect *)redirect withDelegate:(id<PPOWebViewControllerDelegate>)delegate {
+    self = [super initWithNibName:NSStringFromClass([PPOWebViewController class]) bundle:[PPOResourcesManager resources]];
+    if (self) {
+        _redirect = redirect;
+        _delegate = delegate;
+    }
+    return self;
+}
+
 -(void)viewDidLoad {
     [super viewDidLoad];
     
-    [self.webView loadRequest:self.request];
-    if (!self.delayTimeInterval) {
+    [self.webView loadRequest:self.redirect.request];
+    if (!self.redirect.delayTimeInterval) {
         [self delayShow:nil];
     }
     
@@ -115,12 +124,11 @@
         _firstLoadDone = YES;
     }
     
-    if (_firstLoadDone && self.delayTimeInterval) {
-        self.delayShowTimer = [NSTimer scheduledTimerWithTimeInterval:self.delayTimeInterval.doubleValue target:self selector:@selector(delayShow:) userInfo:nil repeats:NO];
+    if (_firstLoadDone && self.redirect.delayTimeInterval) {
+        self.delayShowTimer = [NSTimer scheduledTimerWithTimeInterval:self.redirect.delayTimeInterval.doubleValue target:self selector:@selector(delayShow:) userInfo:nil repeats:NO];
     }
     
-    NSString *urlString = webView.request.URL.absoluteString;
-    if ([urlString isEqualToString:self.termURLString]) {
+    if ([webView.request.URL isEqual:self.redirect.termURL]) {
         _preventShow = YES;
         NSString *string = [webView stringByEvaluatingJavaScriptFromString:@"get3DSDataAsString();"];
         id json;
@@ -182,8 +190,8 @@
     }
     _preventShow = YES;
     [self.delegate webViewControllerDelayShowTimeoutExpired:self];
-    if (self.sessionTimeoutTimeInterval) {
-        self.sessionTimeoutTimer = [NSTimer scheduledTimerWithTimeInterval:self.sessionTimeoutTimeInterval.doubleValue target:self selector:@selector(sessionTimedOut:) userInfo:nil repeats:NO];
+    if (self.redirect.sessionTimeoutTimeInterval) {
+        self.sessionTimeoutTimer = [NSTimer scheduledTimerWithTimeInterval:self.redirect.sessionTimeoutTimeInterval.doubleValue target:self selector:@selector(sessionTimedOut:) userInfo:nil repeats:NO];
     }
 }
 
