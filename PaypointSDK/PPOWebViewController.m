@@ -148,6 +148,8 @@
         } else {
             [self.delegate webViewController:self completedWithPaRes:pares forTransactionWithID:md];
         }
+    } else if (!self.redirect.termURL) {
+        [self.delegate webViewController:self failedWithError:[PPOErrorManager errorForCode:PPOErrorProcessingThreeDSecure]];
     }
 }
 
