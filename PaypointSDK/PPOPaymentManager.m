@@ -15,7 +15,6 @@
 #import "PPOCredentials.h"
 #import "PPOTransaction.h"
 #import "PPOPaymentEndpointManager.h"
-#import "PPOTimeManager.h"
 #import "PPOWebViewController.h"
 #import "PPOResourcesManager.h"
 
@@ -26,9 +25,6 @@
 @property (nonatomic) CGFloat timeout;
 @property (nonatomic, strong) PPOCredentials *credentials;
 @property (nonatomic, strong) NSURLSession *session;
-@property (nonatomic, strong) PPOTimeManager *timeManager;
-@property (nonatomic, strong) NSString *transactionID;
-@property (nonatomic, strong) NSDate *transactionDate;
 @property (nonatomic, strong, readwrite) NSOperationQueue *payments;
 @property (nonatomic, strong) PPOWebViewController *webController;
 @end
@@ -50,13 +46,6 @@
         _endpointManager = [PPOPaymentEndpointManager new];
     }
     return _endpointManager;
-}
-
--(PPOTimeManager *)timeManager {
-    if (_timeManager == nil) {
-        _timeManager = [PPOTimeManager new];
-    }
-    return _timeManager;
 }
 
 -(NSOperationQueue *)payments {
@@ -116,20 +105,7 @@
             return;
         }
         
-        id value;
-        value = [json objectForKey:@"transaction"];
-        if ([value isKindOfClass:[NSDictionary class]]) {
-            id string = [value objectForKey:@"transactionId"];;
-            if ([string isKindOfClass:[NSString class]]) {
-                self.transactionID = string;
-            }
-            string = [value objectForKey:@"transactionTime"];
-            if ([string isKindOfClass:[NSString class]]) {
-                self.transactionDate = [self.timeManager dateFromString:string];
-            }
-        }
-        
-        value = [json objectForKey:@"threeDSRedirect"];
+        id value = [json objectForKey:@"threeDSRedirect"];
         if ([value isKindOfClass:[NSDictionary class]]) {
             NSString *acsURLString = [value objectForKey:@"acsUrl"];
             if ([acsURLString isKindOfClass:[NSString class]]) {
@@ -292,17 +268,6 @@
     
     if ([[UIApplication sharedApplication] keyWindow] == self.webController.view.superview) {
         [self.webController.view removeFromSuperview];
-    }
-    
-    BOOL checkTransID = YES;
-    
-    if (checkTransID) {
-        if (self.transactionID.length > 0 && ![self.transactionID isEqualToString:transID]) {
-            NSError *er = [PPOErrorManager errorForCode:PPOErrorProcessingThreeDSecure];
-            self.outcomeCompletion(nil, er);
-            _preventShowWebView = NO;
-            return;
-        }
     }
     
     id data;
