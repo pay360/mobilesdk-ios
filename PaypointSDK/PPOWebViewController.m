@@ -8,6 +8,7 @@
 
 #import "PPOWebViewController.h"
 #import "PPOResourcesManager.h"
+#import "PPOErrorManager.h"
 #import <MessageUI/MFMailComposeViewController.h>
 
 @interface PPOWebViewController () <UIWebViewDelegate, MFMailComposeViewControllerDelegate, UIAlertViewDelegate>
@@ -121,12 +122,24 @@
     NSString *urlString = webView.request.URL.absoluteString;
     if ([urlString isEqualToString:self.termURLString]) {
         _preventShow = YES;
-        NSString *string = [webView stringByEvaluatingJavaScriptFromString:@"get3DSData();"];
-        id json = [NSJSONSerialization JSONObjectWithData:[string dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingAllowFragments error:nil];
+        NSString *string = [webView stringByEvaluatingJavaScriptFromString:@"get3DSDataAsString();"];
+        id json;
+        if ([string isKindOfClass:[NSString class]] && string.length > 0) {
+            json = [NSJSONSerialization JSONObjectWithData:[string dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingAllowFragments error:nil];
+        }
         NSString *pares = [json objectForKey:@"PaRes"];
         NSString *md = [json objectForKey:@"MD"];
         [self cancelTimers];
-        [self.delegate webViewController:self completedWithPaRes:pares forTransactionWithID:md];
+        if (
+            (pares && [pares isKindOfClass:[NSString class]] && pares.length == 0) ||
+            (md && [md isKindOfClass:[NSString class]] && md.length == 0) ||
+            !pares ||
+            !md
+            ) {
+            [self.delegate webViewController:self failedWithError:[PPOErrorManager errorForCode:PPOErrorProcessingThreeDSecure]];
+        } else {
+            [self.delegate webViewController:self completedWithPaRes:pares forTransactionWithID:md];
+        }
     }
 }
 
