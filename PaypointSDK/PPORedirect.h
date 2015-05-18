@@ -14,6 +14,7 @@
 @property (nonatomic, strong) NSNumber *sessionTimeoutTimeInterval;
 @property (nonatomic, strong) NSNumber *delayTimeInterval;
 @property (nonatomic, strong) NSURL *termURL;
+@property (nonatomic, strong) NSString *transactionID;
 
 -(instancetype)initWithData:(NSDictionary*)data;
 

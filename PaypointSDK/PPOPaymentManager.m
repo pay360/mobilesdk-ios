@@ -17,6 +17,7 @@
 #import "PPOPaymentEndpointManager.h"
 #import "PPOWebViewController.h"
 #import "PPORedirect.h"
+#import "PPOSDKConstants.h"
 
 @interface PPOPaymentManager () <NSURLSessionTaskDelegate, PPOWebViewControllerDelegate>
 @property (nonatomic, strong, readwrite) NSURL *baseURL;
@@ -107,10 +108,18 @@
             return;
         }
         
+        //Keep pointer for transaction id around for later use, when we callback
+        NSString *transactionID;
+        id value = [json objectForKey:@"transaction"];
+        if ([value isKindOfClass:[NSDictionary class]]) {
+            transactionID = [value objectForKey:@"transactionId"];
+        }
+        
         //Check three d secure re-direct next
-        id value = [json objectForKey:@"threeDSRedirect"];
+        value = [json objectForKey:@"threeDSRedirect"];
         if ([value isKindOfClass:[NSDictionary class]]) {
             PPORedirect *redirect = [[PPORedirect alloc] initWithData:value];
+            redirect.transactionID = transactionID;
             if (redirect.request) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.webController = [[PPOWebViewController alloc] initWithRedirect:redirect withDelegate:self];

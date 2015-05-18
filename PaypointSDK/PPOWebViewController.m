@@ -147,7 +147,7 @@
             ) {
             [self.delegate webViewController:self failedWithError:[PPOErrorManager errorForCode:PPOErrorProcessingThreeDSecure]];
         } else {
-            [self.delegate webViewController:self completedWithPaRes:pares forTransactionWithID:md];
+            [self.delegate webViewController:self completedWithPaRes:pares forTransactionWithID:self.redirect.transactionID];
         }
     } else if (!self.redirect.termURL) {
         [self.delegate webViewController:self failedWithError:[PPOErrorManager errorForCode:PPOErrorProcessingThreeDSecure]];
