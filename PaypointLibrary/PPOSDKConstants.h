@@ -31,3 +31,5 @@
 #define PAYMENT_RESPONSE_METHOD_CARD_LAST_FOUR_KEY @"lastFour"
 #define PAYMENT_RESPONSE_METHOD_CARD_USER_TYPE_KEY @"cardUsageType"
 #define PAYMENT_RESPONSE_METHOD_CARD_SCHEME_KEY @"cardScheme"
+
+#define PPO_UNIQUE_IDENTIFIER @"unique_identifier_ppo"
