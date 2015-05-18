@@ -11,6 +11,7 @@
 @interface PPOResourcesManager : NSObject
 
 +(NSBundle*)resources;
++(NSDictionary*)infoPlist;
 +(NSDictionary*)frameworkVersion;
 +(NSNumber*)frameworkBuild;
 

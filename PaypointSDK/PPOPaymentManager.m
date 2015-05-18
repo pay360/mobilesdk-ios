@@ -18,6 +18,8 @@
 #import "PPOWebViewController.h"
 #import "PPORedirect.h"
 #import "PPOSDKConstants.h"
+#import "PPODeviceInfo.h"
+#import "PPOResourcesManager.h"
 
 @interface PPOPaymentManager () <NSURLSessionTaskDelegate, PPOWebViewControllerDelegate>
 @property (nonatomic, strong, readwrite) NSURL *baseURL;
@@ -28,6 +30,7 @@
 @property (nonatomic, strong) NSURLSession *session;
 @property (nonatomic, strong, readwrite) NSOperationQueue *payments;
 @property (nonatomic, strong) PPOWebViewController *webController;
+@property (nonatomic, strong) PPODeviceInfo *deviceInfo;
 @end
 
 @implementation PPOPaymentManager {
@@ -48,6 +51,13 @@
         _endpointManager = [PPOPaymentEndpointManager new];
     }
     return _endpointManager;
+}
+
+-(PPODeviceInfo *)deviceInfo {
+    if (_deviceInfo == nil) {
+        _deviceInfo = [PPODeviceInfo new];
+    }
+    return _deviceInfo;
 }
 
 -(NSOperationQueue *)payments {
@@ -76,7 +86,7 @@
     }
     
     NSURL *url = [self.endpointManager simplePayment:credentials.installationID withBaseURL:self.baseURL];
-    NSData *data = [self buildPostBodyWithTransaction:payment.transaction withCard:payment.card withAddress:payment.address];
+    NSData *data = [self buildPostBodyWithPayment:payment withDeviceInfo:self.deviceInfo];
     NSString *authorisation = [self authorisation:credentials];
     
     NSMutableURLRequest *request = [self mutableJSONPostRequest:url withTimeOut:timeout];
@@ -184,26 +194,33 @@
     return [NSString stringWithFormat:@"Bearer %@", credentials.token];
 }
 
--(NSData*)buildPostBodyWithTransaction:(PPOTransaction*)transaction withCard:(PPOCreditCard*)card withAddress:(PPOBillingAddress*)address {
+-(NSData*)buildPostBodyWithPayment:(PPOPayment*)payment withDeviceInfo:(PPODeviceInfo*)deviceInfo {
     
     id value;
+    id i;
     id t;
     id c;
     id a;
     
-    value = [transaction jsonObjectRepresentation];
+    NSString *version = [[PPOResourcesManager infoPlist] objectForKey:@"CFBundleShortVersionString"];
+    NSString *sdkVersion = [NSString stringWithFormat:@"pp_ios_sdk:%@", version];
+    
+    value = [deviceInfo jsonObjectRepresentation];
+    i = (value) ?: [NSNull null];
+    value = [payment.transaction jsonObjectRepresentation];
     t = (value) ?: [NSNull null];
-    value = [card jsonObjectRepresentation];
+    value = [payment.card jsonObjectRepresentation];
     c = (value) ?: [NSNull null];
-    value = [address jsonObjectRepresentation];
+    value = [payment.address jsonObjectRepresentation];
     a = (value) ?: [NSNull null];
     
-    id object = @{
-                  @"transaction": t,
-                  @"paymentMethod": @{
-                                    @"card": c,
-                                    @"billingAddress": a
-                                    }
+    id object = @{@"sdkVersion"     : sdkVersion,
+                  @"deviceInfo"     : i,
+                  @"transaction"    : t,
+                  @"paymentMethod"  : @{
+                                        @"card"             : c,
+                                        @"billingAddress"   : a
+                                        }
                   };
     
     return [NSJSONSerialization dataWithJSONObject:object options:NSJSONWritingPrettyPrinted error:nil];
