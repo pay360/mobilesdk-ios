@@ -10,6 +10,7 @@
 #import "PPOError.h"
 #import "PPOTimeManager.h"
 #import "PPOSDKConstants.h"
+#import "PPOCustomField.h"
 
 @interface PPOOutcome ()
 @property (nonatomic, strong, readwrite) NSNumber *amount;
@@ -23,6 +24,7 @@
 @property (nonatomic, strong, readwrite) NSString *lastFour;
 @property (nonatomic, strong, readwrite) NSString *cardUsageType;
 @property (nonatomic, strong, readwrite) NSString *cardScheme;
+@property (nonatomic, strong, readwrite) NSSet *customFields;
 @property (nonatomic, readwrite) BOOL isSuccessful;
 @property (nonatomic, strong) PPOTimeManager *timeManager;
 @end
@@ -57,6 +59,8 @@
         
         if (data) {
             
+            [self parseCustomFields:[data objectForKey:PAYMENT_RESPONSE_CUSTOM_FIELDS]];
+            
             [self parseOutcome:[data objectForKey:PAYMENT_RESPONSE_OUTCOME_KEY]];
             
             [self parseTransaction:[data objectForKey:PAYMENT_RESPONSE_TRANSACTION_KEY]];
@@ -70,6 +74,23 @@
     }
     
     return self;
+}
+
+-(void)parseCustomFields:(NSDictionary*)customFields {
+    
+    NSArray *fieldState = [customFields objectForKey:PAYMENT_RESPONSE_CUSTOM_FIELDS_STATE];
+    if ([fieldState isKindOfClass:[NSArray class]]) {
+        NSMutableSet *collector = [NSMutableSet new];
+        PPOCustomField *field;
+        for (id object in fieldState) {
+            if ([object isKindOfClass:[NSDictionary class]]) {
+                field = [[PPOCustomField alloc] initWithData:object];
+                [collector addObject:field];
+            }
+        }
+        self.customFields = [collector copy];
+    }
+    
 }
 
 -(void)parseOutcome:(NSDictionary*)outcome {

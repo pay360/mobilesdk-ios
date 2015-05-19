@@ -255,8 +255,8 @@
             [collector addObject:field];
         }
         if (collector.count) {
-            [mutableObject setValue:@{@"fieldState" : [collector copy]}
-                             forKey:@"customFields"];
+            [mutableObject setValue:@{PAYMENT_RESPONSE_CUSTOM_FIELDS_STATE : [collector copy]}
+                             forKey:PAYMENT_RESPONSE_CUSTOM_FIELDS];
         }
     }
     

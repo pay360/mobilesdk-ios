@@ -14,5 +14,6 @@
 @property (nonatomic, strong) NSNumber *isTransient; //Bool
 
 -(NSDictionary*)jsonObjectRepresentation;
+-(instancetype)initWithData:(NSDictionary*)data;
 
 @end
