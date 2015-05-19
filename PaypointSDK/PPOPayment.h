@@ -19,4 +19,5 @@
 @property (nonatomic, strong) PPOBillingAddress *address;
 @property (nonatomic, strong) PPOFinancialServices *financialServices;
 @property (nonatomic, strong) PPOCustomer *customer;
+@property (nonatomic, strong) NSSet *customFields;
 @end

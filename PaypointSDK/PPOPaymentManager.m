@@ -79,7 +79,7 @@
     return _session;
 }
 
--(void)makePayment:(PPOPayment*)payment withCredentials:(PPOCredentials*)credentials withTimeOut:(CGFloat)timeout customFields:(NSSet*)fields withCompletion:(void(^)(PPOOutcome *outcome, NSError *paymentFailure))completion {
+-(void)makePayment:(PPOPayment*)payment withCredentials:(PPOCredentials*)credentials withTimeOut:(CGFloat)timeout withCompletion:(void(^)(PPOOutcome *outcome, NSError *paymentFailure))completion {
     
     NSError *invalid = [PPOPaymentValidator validateCredentials:credentials validateBaseURL:self.baseURL validatePayment:payment];
     
@@ -89,7 +89,7 @@
     }
     
     NSURL *url = [self.endpointManager simplePayment:credentials.installationID withBaseURL:self.baseURL];
-    NSData *data = [self buildPostBodyWithPayment:payment withDeviceInfo:self.deviceInfo withCustomFields:fields];
+    NSData *data = [self buildPostBodyWithPayment:payment withDeviceInfo:self.deviceInfo];
     NSString *authorisation = [self authorisation:credentials];
     
     NSMutableURLRequest *request = [self mutableJSONPostRequest:url withTimeOut:timeout];
@@ -196,7 +196,7 @@
     return [NSString stringWithFormat:@"Bearer %@", credentials.token];
 }
 
--(NSData*)buildPostBodyWithPayment:(PPOPayment*)payment withDeviceInfo:(PPODeviceInfo*)deviceInfo withCustomFields:(NSSet*)fields {
+-(NSData*)buildPostBodyWithPayment:(PPOPayment*)payment withDeviceInfo:(PPODeviceInfo*)deviceInfo {
     
     id value;
     id i;
@@ -231,7 +231,7 @@
     
     NSMutableDictionary *mutableObject;
     
-    if (payment.financialServices || payment.customer || fields.count) {
+    if (payment.financialServices || payment.customer || payment.customFields.count) {
         mutableObject = [object mutableCopy];
     }
     
@@ -247,15 +247,15 @@
         [mutableObject setValue:cus forKey:@"customer"];
     }
     
-    if (fields.count) {
+    if (payment.customFields.count) {
         NSMutableArray *collector = [NSMutableArray new];
-        for (PPOCustomField *f in fields) {
+        for (PPOCustomField *f in payment.customFields) {
             value = [f jsonObjectRepresentation];
             field = (value) ?: [NSNull null];
-            [collector addObject:f];
+            [collector addObject:field];
         }
         if (collector.count) {
-            [mutableObject setValue:@{@"fieldsState" : [collector copy]}
+            [mutableObject setValue:@{@"fieldState" : [collector copy]}
                              forKey:@"customFields"];
         }
     }

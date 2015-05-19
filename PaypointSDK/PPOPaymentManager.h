@@ -39,7 +39,6 @@
 -(void)makePayment:(PPOPayment*)payment
    withCredentials:(PPOCredentials*)credentials
        withTimeOut:(CGFloat)timeout
-      customFields:(NSSet*)fields
     withCompletion:(void(^)(PPOOutcome *outcome, NSError *paymentFailure))completion;
 
 @end
