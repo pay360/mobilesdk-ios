@@ -50,6 +50,26 @@
 +(NSError*)errorForCode:(PPOErrorCode)code {
     
     switch (code) {
+        case PPOErrorBadRequest: {
+            return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                       code:PPOErrorBadRequest
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The request was not well formed", @"Networking error")
+                                              }
+                    ];
+        }
+            break;
+            
+        case PPOErrorAuthenticationFailed: {
+            return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                       code:PPOErrorAuthenticationFailed
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Authentication failed", @"Failure message for authentication")
+                                              }
+                    ];
+        }
+            break;
+            
         case PPOErrorSuppliedBaseURLInvalid: {
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorSuppliedBaseURLInvalid
