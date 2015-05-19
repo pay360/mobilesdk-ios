@@ -12,19 +12,17 @@
 //SDK
 #import "Paypoint.h"
 
+#define VALID_BEARER_TOKEN @"VALID_TOKEN"
+#define EXPIRED_BEARER_TOKEN @"EXPIRED_TOKEN"
+#define UNAUTHORISED_BEARER_TOKEN @"UNAUTHORISED_TOKEN"
+#define AUTHORISED_PAN @"9900000000005159"
+#define DECLINE_PAN @"9900000000005282"
+#define DELAY_AUTHORISED_PAN @"9900000000000168"
+#define SERVER_ERROR_PAN @"9900000000010407"
+
 @interface PaypointLibraryTests : XCTestCase
 @property (nonatomic, strong) NSArray *pans;
-@property (nonatomic, strong) NSString *validBearerToken;
-@property (nonatomic, strong) NSString *expiredBearerToken;
-@property (nonatomic, strong) NSString *unauthorisedBearerToken;
-@property (nonatomic, strong) PPOTransaction *transaction;
-@property (nonatomic, strong) PPOCreditCard *card;
-@property (nonatomic, strong) PPOBillingAddress *address;
 @property (nonatomic, strong) PPOPaymentManager *paymentManager;
-@property (nonatomic, strong) NSString *authorisedPan; //will generate an authorization result
-@property (nonatomic, strong) NSString *declinePan; //will generate a decline result
-@property (nonatomic, strong) NSString *delayAuthorisedPan; //will return a valid response but wait 61 seconds
-@property (nonatomic, strong) NSString *serverErrorPan; //will return an internal server error
 @property (nonatomic) PPOEnvironment currentEnvironment;
 @end
 
@@ -33,39 +31,26 @@
 - (void)setUp {
     [super setUp];
     
-    self.validBearerToken = @"VALID_TOKEN";
-    self.expiredBearerToken = @"EXPIRED_TOKEN";
-    self.unauthorisedBearerToken = @"UNAUTHORISED_TOKEN";
-    
-    self.authorisedPan = @"9900000000005159";
-    self.declinePan = @"9900000000005282";
-    self.delayAuthorisedPan = @"9900000000000168";
-    self.serverErrorPan = @"9900000000010407";
-    
     self.pans = @[
-                  self.authorisedPan,
-                  self.declinePan,
-                  self.delayAuthorisedPan,
-                  self.serverErrorPan
+                  AUTHORISED_PAN,
+                  DECLINE_PAN,
+                  DELAY_AUTHORISED_PAN,
+                  SERVER_ERROR_PAN
                   ];
     
-    PPOBillingAddress *address = [PPOBillingAddress new];
-    
-    self.address = address;
-    
-    NSURL *baseURL = [PPOPaymentBaseURLManager baseURLForEnvironment:0];
-    self.paymentManager = [[PPOPaymentManager alloc] initWithBaseURL:baseURL];
+    self.paymentManager = [[PPOPaymentManager alloc] initWithBaseURL:[PPOPaymentBaseURLManager baseURLForEnvironment:0]];
 }
 
 - (void)tearDown {
-    self.pans = nil;
     [super tearDown];
 }
 
 #pragma mark - Local Validation (Good Pan & Good Token)
 
 -(void)testLuhn {
-    for (NSString *pan in self.pans) NSAssert([PPOLuhn validateString:pan], @"Luhn check failed");
+    for (NSString *pan in self.pans) {
+        NSAssert([PPOLuhn validateString:pan], @"Luhn check failed");
+    }
 }
 
 -(void)testBaseURLManager {
@@ -89,62 +74,31 @@
     
 }
 
--(void)testPaymentWithFinancialServices {
+-(void)testPaymentWithFinancialServicesAndCustomer {
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Valid payment with financial services"];
     
-    PPOTransaction *transaction = [PPOTransaction new];
-    transaction.currency = @"GBP";
-    transaction.amount = @100;
-    transaction.transactionDescription = @"A desc";
-    transaction.merchantRef = [NSString stringWithFormat:@"mer_%.0f", [[NSDate date] timeIntervalSince1970]];
-    transaction.isDeferred = @NO;
-    
-    self.transaction = transaction;
-    
-    PPOCreditCard *card = [PPOCreditCard new];
-    card.pan = self.authorisedPan;
-    card.cvv = @"123";
-    card.expiry = @"0116";
-    card.cardHolderName = @"Dai Jones";
-    
-    self.card = card;
-    
-    PPOFinancialServices *financialServices = [PPOFinancialServices new];
-    financialServices.dateOfBirth = @"19870818";
-    financialServices.surname = @"Smith";
-    financialServices.accountNumber = @"123ABC";
-    financialServices.postCode = @"BS20";
-    
-    PPOCustomer *customer = [PPOCustomer new];
-    customer.email = @"test@paypoint.com";
-    customer.dateOfBirth = @"1900-01-01";
-    customer.telephone = @"01225 123456";
-    
     PPOPayment *payment = [PPOPayment new];
-    payment.transaction = self.transaction;
-    payment.card = self.card;
-    payment.address = self.address;
-    payment.customer = customer;
-    payment.financialServices = financialServices;
+    payment.transaction = [self transactionWithAmount:@100];
+    payment.card = [self creditCardWithPan:AUTHORISED_PAN];
+    payment.customer = [self customer];
+    payment.financialServices = [self financialServices];
     
-    PPOCredentials *credentials = [PPOCredentials new];
-    credentials.installationID = INSTALLATION_ID;
-    credentials.token = self.validBearerToken;
+    [self.paymentManager makePayment:payment
+                     withCredentials:[self credentialsWithToken:VALID_BEARER_TOKEN]
+                         withTimeOut:60.0f
+                      withCompletion:^(PPOOutcome *outcome, NSError *paymentFailure) {
+                          if (!paymentFailure) {
+                              [expectation fulfill];
+                          }
+                      }];
     
-    [self.paymentManager makePayment:payment withCredentials:credentials withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome, NSError *error) {
-        if (!error) {
-            [expectation fulfill];
-        }
-    }];
-    
-    [self waitForExpectationsWithTimeout:10.0f handler:^(NSError *error) {
-        
-        if(error) {
-            XCTFail(@"Simple payment failed with error: %@", error);
-        }
-        
-    }];
+    [self waitForExpectationsWithTimeout:10.0f
+                                 handler:^(NSError *error) {
+                                     if(error) {
+                                         XCTFail(@"Simple payment failed with error: %@", error);
+                                     }
+                                 }];
     
 }
 
@@ -152,45 +106,26 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Simple payment amount invalid"];
     
-    PPOTransaction *transaction = [PPOTransaction new];
-    transaction.currency = @"GBP";
-    transaction.amount = nil; // < ---
-    transaction.transactionDescription = @"A desc";
-    transaction.merchantRef = [NSString stringWithFormat:@"mer_%.0f", [[NSDate date] timeIntervalSince1970]];
-    transaction.isDeferred = @NO;
-    
-    self.transaction = transaction;
-    
-    PPOCreditCard *card = [PPOCreditCard new];
-    card.pan = self.authorisedPan;
-    card.cvv = @"123";
-    card.expiry = @"0116";
-    card.cardHolderName = @"Dai Jones";
-    
-    self.card = card;
-    
-    PPOCredentials *credentials = [PPOCredentials new];
-    credentials.installationID = INSTALLATION_ID;
-    credentials.token = self.validBearerToken;
-    
     PPOPayment *payment = [PPOPayment new];
-    payment.transaction = self.transaction;
-    payment.card = self.card;
-    payment.address = self.address;
+    payment.transaction = [self transactionWithAmount:nil];
+    payment.card = [self creditCardWithPan:AUTHORISED_PAN];
     
-    [self.paymentManager makePayment:payment withCredentials:credentials withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome, NSError *error) {
-        if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] && error.code == PPOErrorPaymentAmountInvalid) {
-            [expectation fulfill];
-        }
-    }];
+    [self.paymentManager makePayment:payment
+                     withCredentials:[self credentialsWithToken:VALID_BEARER_TOKEN]
+                         withTimeOut:60.0f
+                      withCompletion:^(PPOOutcome *outcome, NSError *error) {
+                          if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] &&
+                              error.code == PPOErrorPaymentAmountInvalid) {
+                              [expectation fulfill];
+                          }
+                      }];
     
-    [self waitForExpectationsWithTimeout:60.0f handler:^(NSError *error) {
-        
-        if(error) {
-            XCTFail(@"Simple payment failed with error: %@", error);
-        }
-        
-    }];
+    [self waitForExpectationsWithTimeout:60.0f
+                                 handler:^(NSError *error) {
+                                     if(error) {
+                                         XCTFail(@"Simple payment failed with error: %@", error);
+                                     }
+                                 }];
     
 }
 
@@ -198,68 +133,26 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Simple payment amount invalid"];
     
-    PPOTransaction *transaction = [PPOTransaction new];
-    transaction.currency = @"GBP";
-    transaction.amount = @100;
-    transaction.transactionDescription = @"A desc";
-    transaction.merchantRef = [NSString stringWithFormat:@"mer_%.0f", [[NSDate date] timeIntervalSince1970]];
-    transaction.isDeferred = @NO;
-    
-    self.transaction = transaction;
-    
-    PPOCreditCard *card = [PPOCreditCard new];
-    card.pan = self.authorisedPan;
-    card.cvv = @"123";
-    card.expiry = @"0116";
-    card.cardHolderName = @"Dai Jones";
-    
-    self.card = card;
-    
-    PPOCredentials *credentials = [PPOCredentials new];
-    credentials.installationID = INSTALLATION_ID;
-    credentials.token = self.validBearerToken;
-    
-    PPOCustomField *customField;
-    
-    NSMutableSet *collector = [NSMutableSet new];
-    
-    customField = [PPOCustomField new];
-    customField.name = @"CustomName";
-    customField.value = @"CustomValue";
-    customField.isTransient = @YES;
-    
-    [collector addObject:customField];
-    
-    customField = [PPOCustomField new];
-    customField.name = @"CustomName";
-    
-    [collector addObject:customField];
-    
-    customField = [PPOCustomField new];
-    customField.name = @"AnotherCustomName";
-    customField.isTransient = @YES;
-    
-    [collector addObject:customField];
-    
     PPOPayment *payment = [PPOPayment new];
-    payment.transaction = self.transaction;
-    payment.card = self.card;
-    payment.address = self.address;
-    payment.customFields = [collector copy];
+    payment.transaction = [self transactionWithAmount:@100];
+    payment.card = [self creditCardWithPan:AUTHORISED_PAN];
+    payment.customFields = [self customFields];
     
-    [self.paymentManager makePayment:payment withCredentials:credentials withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome, NSError *error) {
-        if (!error) {
-            [expectation fulfill];
-        }
-    }];
+    [self.paymentManager makePayment:payment
+                     withCredentials:[self credentialsWithToken:VALID_BEARER_TOKEN]
+                         withTimeOut:60.0f
+                      withCompletion:^(PPOOutcome *outcome, NSError *error) {
+                          if (!error) {
+                              [expectation fulfill];
+                          }
+                      }];
     
-    [self waitForExpectationsWithTimeout:10.0f handler:^(NSError *error) {
-        
-        if(error) {
-            XCTFail(@"Simple payment failed with error: %@", error);
-        }
-        
-    }];
+    [self waitForExpectationsWithTimeout:10.0f
+                                 handler:^(NSError *error) {
+                                     if(error) {
+                                         XCTFail(@"Simple payment failed with error: %@", error);
+                                     }
+                                 }];
     
 }
 
@@ -267,188 +160,108 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Simple payment card cvv invalid"];
     
-    PPOTransaction *transaction = [PPOTransaction new];
-    transaction.currency = @"GBP";
-    transaction.amount = @100;
-    transaction.transactionDescription = @"A desc";
-    transaction.merchantRef = [NSString stringWithFormat:@"mer_%.0f", [[NSDate date] timeIntervalSince1970]];
-    transaction.isDeferred = @NO;
-    
-    self.transaction = transaction;
-    
-    PPOCreditCard *card = [PPOCreditCard new];
-    card.pan = self.authorisedPan;
+    PPOCreditCard *card = [self creditCardWithPan:AUTHORISED_PAN];
     card.cvv = nil;
-    card.expiry = @"0116";
-    card.cardHolderName = @"Dai Jones";
-
-    self.card = card;
-    
-    PPOCredentials *credentials = [PPOCredentials new];
-    credentials.installationID = INSTALLATION_ID;
-    credentials.token = self.validBearerToken;
     
     PPOPayment *payment = [PPOPayment new];
-    payment.transaction = self.transaction;
-    payment.card = self.card;
-    payment.address = self.address;
+    payment.transaction = [self transactionWithAmount:@100];
+    payment.card = card;
     
-    [self.paymentManager makePayment:payment withCredentials:credentials withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome, NSError *error) {
-        if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] && error.code == PPOErrorCVVInvalid) {
-            [expectation fulfill];
-        }
-    }];
+    [self.paymentManager makePayment:payment
+                     withCredentials:[self credentialsWithToken:VALID_BEARER_TOKEN]
+                         withTimeOut:60.0f
+                      withCompletion:^(PPOOutcome *outcome, NSError *error) {
+                          if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] &&
+                              error.code == PPOErrorCVVInvalid) {
+                              [expectation fulfill];
+                          }
+                      }];
     
-    [self waitForExpectationsWithTimeout:60.0f handler:^(NSError *error) {
-        
-        if(error) {
-            XCTFail(@"Simple payment failed with error: %@", error);
-        }
-        
-    }];
-    
+    [self waitForExpectationsWithTimeout:60.0f
+                                 handler:^(NSError *error) {
+                                     if(error) {
+                                         XCTFail(@"Simple payment failed with error: %@", error);
+                                     }
+                                 }];
 }
-
-#pragma mark - Good Pan & Good Token
 
 -(void)testSimplePaymentWithAuthorisedPan {
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Simple payment succeeded"];
     
-    PPOTransaction *transaction = [PPOTransaction new];
-    transaction.currency = @"GBP";
-    transaction.amount = @100;
-    transaction.transactionDescription = @"A desc";
-    transaction.merchantRef = [NSString stringWithFormat:@"mer_%.0f", [[NSDate date] timeIntervalSince1970]];
-    transaction.isDeferred = @NO;
-    
-    self.transaction = transaction;
-    
-    PPOCreditCard *card = [PPOCreditCard new];
-    card.pan = self.authorisedPan;
-    card.cvv = @"123";
-    card.expiry = @"0116";
-    card.cardHolderName = @"Dai Jones";
-    
-    self.card = card;
-    
-    PPOCredentials *credentials = [PPOCredentials new];
-    credentials.installationID = INSTALLATION_ID;
-    credentials.token = self.validBearerToken;
-    
     PPOPayment *payment = [PPOPayment new];
-    payment.transaction = self.transaction;
-    payment.card = self.card;
-    payment.address = self.address;
+    payment.transaction = [self transactionWithAmount:@100];
+    payment.card = [self creditCardWithPan:AUTHORISED_PAN];
     
-    [self.paymentManager makePayment:payment withCredentials:credentials withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome, NSError *error) {
-        if (!error) [expectation fulfill];
-    }];
+    [self.paymentManager makePayment:payment
+                     withCredentials:[self credentialsWithToken:VALID_BEARER_TOKEN]
+                         withTimeOut:60.0f
+                      withCompletion:^(PPOOutcome *outcome, NSError *error) {
+                          if (!error) {
+                              [expectation fulfill];
+                          }
+                      }];
     
-    [self waitForExpectationsWithTimeout:60.0f handler:^(NSError *error) {
-        
-        if(error) {
-            XCTFail(@"Simple payment failed with error: %@", error);
-        }
-        
-    }];
+    [self waitForExpectationsWithTimeout:60.0f
+                                 handler:^(NSError *error) {
+                                     if(error) {
+                                         XCTFail(@"Simple payment failed with error: %@", error);
+                                     }
+                                 }];
     
 }
 
-#pragma mark - Good Pan & Bad Token
-
--(void)testSimplePaymentWithAuthorisedPanAndExpiredBearerToken {
+-(void)testSimplePaymentWithExpiredBearerToken {
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Simple payment bearer token expired"];
     
-    PPOTransaction *transaction = [PPOTransaction new];
-    transaction.currency = @"GBP";
-    transaction.amount = @100;
-    transaction.transactionDescription = @"A desc";
-    transaction.merchantRef = [NSString stringWithFormat:@"mer_%.0f", [[NSDate date] timeIntervalSince1970]];
-    transaction.isDeferred = @NO;
-    
-    self.transaction = transaction;
-    
-    PPOCreditCard *card = [PPOCreditCard new];
-    card.pan = self.authorisedPan;
-    card.cvv = @"123";
-    card.expiry = @"0116";
-    card.cardHolderName = @"Dai Jones";
-    
-    self.card = card;
-    
-    PPOCredentials *credentials = [PPOCredentials new];
-    credentials.installationID = INSTALLATION_ID;
-    credentials.token = self.expiredBearerToken;
-    
     PPOPayment *payment = [PPOPayment new];
-    payment.transaction = self.transaction;
-    payment.card = self.card;
-    payment.address = self.address;
+    payment.transaction = [self transactionWithAmount:@100];
+    payment.card = [self creditCardWithPan:AUTHORISED_PAN];
     
-    [self.paymentManager makePayment:payment withCredentials:credentials withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome, NSError *error) {
-        
-        if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] && error.code == PPOErrorClientTokenExpired) {
-            [expectation fulfill];
-        }
-    }];
+    [self.paymentManager makePayment:payment
+                     withCredentials:[self credentialsWithToken:EXPIRED_BEARER_TOKEN]
+                         withTimeOut:60.0f
+                      withCompletion:^(PPOOutcome *outcome, NSError *error) {
+                          if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] &&
+                              error.code == PPOErrorClientTokenExpired) {
+                              [expectation fulfill];
+                          }
+                      }];
     
-    [self waitForExpectationsWithTimeout:60.0f handler:^(NSError *error) {
-        
-        if(error) {
-            XCTFail(@"Simple payment failed with error: %@", error);
-        }
-        
-    }];
+    [self waitForExpectationsWithTimeout:60.0f
+                                 handler:^(NSError *error) {
+                                     if(error) {
+                                         XCTFail(@"Simple payment failed with error: %@", error);
+                                     }
+                                 }];
     
 }
 
--(void)testSimplePaymentWithAuthorisedPanAndUnauthorisedBearerToken {
+-(void)testSimplePaymentWithUnauthorisedBearerToken {
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Simple payment bearer token unauthorised"];
     
-    PPOTransaction *transaction = [PPOTransaction new];
-    transaction.currency = @"GBP";
-    transaction.amount = @100;
-    transaction.transactionDescription = @"A desc";
-    transaction.merchantRef = [NSString stringWithFormat:@"mer_%.0f", [[NSDate date] timeIntervalSince1970]];
-    transaction.isDeferred = @NO;
-
-    self.transaction = transaction;
-    
-    PPOCreditCard *card = [PPOCreditCard new];
-    card.pan = self.authorisedPan;
-    card.cvv = @"123";
-    card.expiry = @"0116";
-    card.cardHolderName = @"Dai Jones";
-    
-    self.card = card;
-    
-    PPOCredentials *credentials = [PPOCredentials new];
-    credentials.installationID = INSTALLATION_ID;
-    credentials.token = self.unauthorisedBearerToken;
-    
     PPOPayment *payment = [PPOPayment new];
-    payment.transaction = self.transaction;
-    payment.card = self.card;
-    payment.address = self.address;
+    payment.transaction = [self transactionWithAmount:@100];
+    payment.card = [self creditCardWithPan:AUTHORISED_PAN];
     
-    [self.paymentManager makePayment:payment withCredentials:credentials withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome, NSError *error) {
-        
-        if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] && error.code == PPOErrorUnauthorisedRequest) {
-            [expectation fulfill];
-        }
-    }];
+    [self.paymentManager makePayment:payment
+                     withCredentials:[self credentialsWithToken:UNAUTHORISED_BEARER_TOKEN]
+                         withTimeOut:60.0f
+                      withCompletion:^(PPOOutcome *outcome, NSError *error) {
+                          if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] &&
+                              error.code == PPOErrorUnauthorisedRequest) {
+                              [expectation fulfill];
+                          }
+                      }];
     
-    [self waitForExpectationsWithTimeout:60.0f handler:^(NSError *error) {
-        
-        if(error) {
-            XCTFail(@"Simple payment failed with error: %@", error);
-        }
-        
-    }];
-    
+    [self waitForExpectationsWithTimeout:60.0f
+                                 handler:^(NSError *error) {
+                                     if(error) {
+                                         XCTFail(@"Simple payment failed with error: %@", error);
+                                     }
+                                 }];
 }
 
 #pragma mark - Good Token & Bad Pan
@@ -457,74 +270,153 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Simple payment processing failed"];
     
-    PPOTransaction *transaction = [PPOTransaction new];
-    transaction.currency = @"GBP";
-    transaction.amount = @100;
-    transaction.transactionDescription = @"A desc";
-    transaction.merchantRef = [NSString stringWithFormat:@"mer_%.0f", [[NSDate date] timeIntervalSince1970]];
-    transaction.isDeferred = @NO;
-    
-    self.transaction = transaction;
-    
-    PPOCreditCard *card = [PPOCreditCard new];
-    card.pan = self.declinePan;
-    card.cvv = @"123";
-    card.expiry = @"0116";
-    card.cardHolderName = @"Dai Jones";
-    
-    self.card = card;
-    
-    PPOCredentials *credentials = [PPOCredentials new];
-    credentials.installationID = INSTALLATION_ID;
-    credentials.token = self.validBearerToken;
-    
     PPOPayment *payment = [PPOPayment new];
-    payment.transaction = self.transaction;
-    payment.card = self.card;
-    payment.address = self.address;
+    payment.transaction = [self transactionWithAmount:@100];
+    payment.card = [self creditCardWithPan:DECLINE_PAN];
     
-    [self.paymentManager makePayment:payment withCredentials:credentials withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome, NSError *error) {
-        
-        if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] && error.code == PPOErrorTransactionProcessingFailed) {
-            [expectation fulfill];
-        }
-    }];
+    [self.paymentManager makePayment:payment
+                     withCredentials:[self credentialsWithToken:VALID_BEARER_TOKEN]
+                         withTimeOut:60.0f
+                      withCompletion:^(PPOOutcome *outcome, NSError *error) {
+                          if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] &&
+                              error.code == PPOErrorTransactionProcessingFailed) {
+                              [expectation fulfill];
+                          }
+                      }];
     
-    [self waitForExpectationsWithTimeout:60.0f handler:^(NSError *error) {
-        
-        if(error) {
-            XCTFail(@"Simple payment failed with error: %@", error);
-        }
-        
-    }];
-    
+    [self waitForExpectationsWithTimeout:60.0f
+                                 handler:^(NSError *error) {
+                                     if(error) {
+                                         XCTFail(@"Simple payment failed with error: %@", error);
+                                     }
+                                 }];
 }
 
 -(void)testSimplePaymentWithDeclinePanWithCustomFields {
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Simple payment processing failed"];
     
-    PPOTransaction *transaction = [PPOTransaction new];
+    PPOPayment *payment = [PPOPayment new];
+    payment.transaction = [self transactionWithAmount:@100];
+    payment.card = [self creditCardWithPan:DECLINE_PAN];
+    payment.customFields = [self customFields];
+    
+    [self.paymentManager makePayment:payment
+                     withCredentials:[self credentialsWithToken:VALID_BEARER_TOKEN]
+                         withTimeOut:60.0f
+                      withCompletion:^(PPOOutcome *outcome, NSError *error) {
+                          if (outcome.customFields.count > 0) {
+                              [expectation fulfill];
+                          }
+                      }];
+    
+    [self waitForExpectationsWithTimeout:10.0f
+                                 handler:^(NSError *error) {
+                                     if(error) {
+                                         XCTFail(@"Simple payment failed with error: %@", error);
+                                     }
+                                 }];
+}
+
+-(void)testSimplePaymentWithDelayedAuthorisedPan {
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Simple payment timedout"];
+    
+    PPOPayment *payment = [PPOPayment new];
+    payment.transaction = [self transactionWithAmount:@100];
+    payment.card = [self creditCardWithPan:DELAY_AUTHORISED_PAN];
+    
+    [self.paymentManager makePayment:payment
+                     withCredentials:[self credentialsWithToken:VALID_BEARER_TOKEN]
+                         withTimeOut:1.0
+                      withCompletion:^(PPOOutcome *outcome, NSError *error) {
+                          if ([error.domain isEqualToString:@"NSURLErrorDomain"] && error.code == kCFURLErrorTimedOut) {
+                              [expectation fulfill];
+                          }
+                      }];
+    
+    [self waitForExpectationsWithTimeout:2.0
+                                 handler:^(NSError *error) {
+                                     if(error) {
+                                         XCTFail(@"Simple payment failed with error: %@", error);
+                                     }
+                                 }];
+}
+
+-(void)testSimplePaymentWithServerErrorPan {
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Simple payment server error"];
+    
+    PPOPayment *payment = [PPOPayment new];
+    payment.transaction = [self transactionWithAmount:@100];
+    payment.card = [self creditCardWithPan:SERVER_ERROR_PAN];
+    
+    [self.paymentManager makePayment:payment
+                     withCredentials:[self credentialsWithToken:VALID_BEARER_TOKEN]
+                         withTimeOut:60.0f
+                      withCompletion:^(PPOOutcome *outcome, NSError *error) {
+                          if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] &&
+                              error.code == PPOErrorServerFailure) {
+                              [expectation fulfill];
+                          }
+                      }];
+    
+    [self waitForExpectationsWithTimeout:60.0f
+                                 handler:^(NSError *error) {
+                                     if(error) {
+                                         XCTFail(@"Simple payment failed with error: %@", error);
+                                     }
+                                 }];
+}
+
+-(PPOTransaction*)transactionWithAmount:(NSNumber*)amount {
+    PPOTransaction *transaction;
+    transaction = [PPOTransaction new];
     transaction.currency = @"GBP";
-    transaction.amount = @100;
+    transaction.amount = amount;
     transaction.transactionDescription = @"A desc";
     transaction.merchantRef = [NSString stringWithFormat:@"mer_%.0f", [[NSDate date] timeIntervalSince1970]];
     transaction.isDeferred = @NO;
-    
-    self.transaction = transaction;
-    
+    return transaction;
+}
+
+-(PPOCreditCard*)creditCardWithPan:(NSString*)pan {
     PPOCreditCard *card = [PPOCreditCard new];
-    card.pan = self.declinePan;
+    card.pan = pan;
     card.cvv = @"123";
     card.expiry = @"0116";
     card.cardHolderName = @"Dai Jones";
-    
-    self.card = card;
-    
-    PPOCustomField *customField;
-    
+    return card;
+}
+
+-(PPOFinancialServices*)financialServices {
+    PPOFinancialServices *financialServices = [PPOFinancialServices new];
+    financialServices.dateOfBirth = @"19870818";
+    financialServices.surname = @"Smith";
+    financialServices.accountNumber = @"123ABC";
+    financialServices.postCode = @"BS20";
+    return financialServices;
+}
+
+-(PPOCustomer*)customer {
+    PPOCustomer *customer = [PPOCustomer new];
+    customer.email = @"test@paypoint.com";
+    customer.dateOfBirth = @"1900-01-01";
+    customer.telephone = @"01225 123456";
+    return customer;
+}
+
+-(PPOCredentials*)credentialsWithToken:(NSString*)token {
+    PPOCredentials *credentials = [PPOCredentials new];
+    credentials.installationID = INSTALLATION_ID;
+    credentials.token = token;
+    return credentials;
+}
+
+-(NSSet*)customFields {
     NSMutableSet *collector = [NSMutableSet new];
     
+    PPOCustomField *customField;
     customField = [PPOCustomField new];
     customField.name = @"CustomName";
     customField.value = @"CustomValue";
@@ -543,124 +435,7 @@
     
     [collector addObject:customField];
     
-    PPOCredentials *credentials = [PPOCredentials new];
-    credentials.installationID = INSTALLATION_ID;
-    credentials.token = self.validBearerToken;
-    
-    PPOPayment *payment = [PPOPayment new];
-    payment.transaction = self.transaction;
-    payment.card = self.card;
-    payment.address = self.address;
-    payment.customFields = [collector copy];
-    
-    [self.paymentManager makePayment:payment withCredentials:credentials withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome, NSError *error) {
-        
-        if (outcome.customFields.count > 0) {
-            [expectation fulfill];
-        }
-        
-    }];
-    
-    [self waitForExpectationsWithTimeout:10.0f handler:^(NSError *error) {
-        
-        if(error) {
-            XCTFail(@"Simple payment failed with error: %@", error);
-        }
-        
-    }];
-    
-}
-
--(void)testSimplePaymentWithDelayedAuthorisedPan {
-    
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Simple payment timedout"];
-    
-    PPOTransaction *transaction = [PPOTransaction new];
-    transaction.currency = @"GBP";
-    transaction.amount = @100;
-    transaction.transactionDescription = @"A desc";
-    transaction.merchantRef = [NSString stringWithFormat:@"mer_%.0f", [[NSDate date] timeIntervalSince1970]];
-    transaction.isDeferred = @NO;
-    
-    self.transaction = transaction;
-    
-    PPOCreditCard *card = [PPOCreditCard new];
-    card.pan = self.delayAuthorisedPan;
-    card.cvv = @"123";
-    card.expiry = @"0116";
-    card.cardHolderName = @"Dai Jones";
-    
-    self.card = card;
-    
-    PPOCredentials *credentials = [PPOCredentials new];
-    credentials.installationID = INSTALLATION_ID;
-    credentials.token = self.validBearerToken;
-    
-    PPOPayment *payment = [PPOPayment new];
-    payment.transaction = self.transaction;
-    payment.card = self.card;
-    payment.address = self.address;
-    
-    [self.paymentManager makePayment:payment withCredentials:credentials withTimeOut:1.0 withCompletion:^(PPOOutcome *outcome, NSError *error) {
-        if ([error.domain isEqualToString:@"NSURLErrorDomain"] && error.code == kCFURLErrorTimedOut) {
-            [expectation fulfill];
-        }
-    }];
-    
-    [self waitForExpectationsWithTimeout:2.0 handler:^(NSError *error) {
-        
-        if(error) {
-            XCTFail(@"Simple payment failed with error: %@", error);
-        }
-        
-    }];
-    
-}
-
--(void)testSimplePaymentWithServerErrorPan {
-    
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Simple payment server error"];
-    
-    PPOTransaction *transaction = [PPOTransaction new];
-    transaction.currency = @"GBP";
-    transaction.amount = @100;
-    transaction.transactionDescription = @"A desc";
-    transaction.merchantRef = [NSString stringWithFormat:@"mer_%.0f", [[NSDate date] timeIntervalSince1970]];
-    transaction.isDeferred = @NO;
-    
-    self.transaction = transaction;
-    
-    PPOCreditCard *card = [PPOCreditCard new];
-    card.pan = self.serverErrorPan;
-    card.cvv = @"123";
-    card.expiry = @"0116";
-    card.cardHolderName = @"Dai Jones";
-    
-    self.card = card;
-    
-    PPOCredentials *credentials = [PPOCredentials new];
-    credentials.installationID = INSTALLATION_ID;
-    credentials.token = self.validBearerToken;
-    
-    PPOPayment *payment = [PPOPayment new];
-    payment.transaction = self.transaction;
-    payment.card = self.card;
-    payment.address = self.address;
-    
-    [self.paymentManager makePayment:payment withCredentials:credentials withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome, NSError *error) {
-        if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] && error.code == PPOErrorServerFailure) {
-            [expectation fulfill];
-        }
-    }];
-    
-    [self waitForExpectationsWithTimeout:60.0f handler:^(NSError *error) {
-        
-        if(error) {
-            XCTFail(@"Simple payment failed with error: %@", error);
-        }
-        
-    }];
-    
+    return [collector copy];
 }
 
 @end
