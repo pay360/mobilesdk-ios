@@ -140,7 +140,7 @@
         } break;
         case PPOErrorClientTokenInvalid: {
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
-                                       code:PPOErrorUnauthorisedRequest
+                                       code:PPOErrorClientTokenInvalid
                                    userInfo:@{
                                               NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The supplied token is invalid", @"Failure message for a transaction validation check")
                                               }
