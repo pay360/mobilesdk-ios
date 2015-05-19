@@ -19,3 +19,5 @@
 #import <Paypoint/PPOOutcome.h>
 #import <Paypoint/PPOPaymentBaseURLManager.h>
 #import <Paypoint/PPOResourcesManager.h>
+#import <Paypoint/PPOFinancialServices.h>
+#import <Paypoint/PPOCustomer.h>

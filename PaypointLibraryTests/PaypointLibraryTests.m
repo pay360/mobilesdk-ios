@@ -50,14 +50,6 @@
                   ];
     
     PPOBillingAddress *address = [PPOBillingAddress new];
-    address.line1 = nil;
-    address.line2 = nil;
-    address.line3 = nil;
-    address.line4 = nil;
-    address.city = nil;
-    address.region = nil;
-    address.postcode = nil;
-    address.countryCode = nil;
     
     self.address = address;
     
@@ -94,6 +86,65 @@
         }
         
     }
+    
+}
+
+-(void)testPaymentWithFinancialServices {
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Valid payment with financial services"];
+    
+    PPOTransaction *transaction = [PPOTransaction new];
+    transaction.currency = @"GBP";
+    transaction.amount = @100;
+    transaction.transactionDescription = @"A desc";
+    transaction.merchantRef = [NSString stringWithFormat:@"mer_%.0f", [[NSDate date] timeIntervalSince1970]];
+    transaction.isDeferred = @NO;
+    
+    self.transaction = transaction;
+    
+    PPOCreditCard *card = [PPOCreditCard new];
+    card.pan = self.authorisedPan;
+    card.cvv = @"123";
+    card.expiry = @"0116";
+    card.cardHolderName = @"Dai Jones";
+    
+    self.card = card;
+    
+    PPOFinancialServices *financialServices = [PPOFinancialServices new];
+    financialServices.dateOfBirth = @"19870818";
+    financialServices.surname = @"Smith";
+    financialServices.accountNumber = @"123ABC";
+    financialServices.postCode = @"BS20";
+    
+    PPOCustomer *customer = [PPOCustomer new];
+    customer.email = @"test@paypoint.com";
+    customer.dateOfBirth = @"1900-01-01";
+    customer.telephone = @"01225 123456";
+    
+    PPOPayment *payment = [PPOPayment new];
+    payment.transaction = self.transaction;
+    payment.card = self.card;
+    payment.address = self.address;
+    payment.customer = customer;
+    payment.financialServices = financialServices;
+    
+    PPOCredentials *credentials = [PPOCredentials new];
+    credentials.installationID = INSTALLATION_ID;
+    credentials.token = self.validBearerToken;
+    
+    [self.paymentManager makePayment:payment withCredentials:credentials withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome, NSError *error) {
+        if (!error) {
+            [expectation fulfill];
+        }
+    }];
+    
+    [self waitForExpectationsWithTimeout:10.0f handler:^(NSError *error) {
+        
+        if(error) {
+            XCTFail(@"Simple payment failed with error: %@", error);
+        }
+        
+    }];
     
 }
 

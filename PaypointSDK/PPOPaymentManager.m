@@ -20,6 +20,8 @@
 #import "PPOSDKConstants.h"
 #import "PPODeviceInfo.h"
 #import "PPOResourcesManager.h"
+#import "PPOFinancialServices.h"
+#import "PPOCustomer.h"
 
 @interface PPOPaymentManager () <NSURLSessionTaskDelegate, PPOWebViewControllerDelegate>
 @property (nonatomic, strong, readwrite) NSURL *baseURL;
@@ -92,7 +94,6 @@
     NSMutableURLRequest *request = [self mutableJSONPostRequest:url withTimeOut:timeout];
     [request setValue:authorisation forHTTPHeaderField:@"Authorization"];
     [request setHTTPBody:data];
-    
 
     self.outcomeCompletion = completion;
     self.timeout = timeout;
@@ -201,6 +202,8 @@
     id t;
     id c;
     id a;
+    id f;
+    id cus;
     
     NSString *version = [[PPOResourcesManager infoPlist] objectForKey:@"CFBundleShortVersionString"];
     NSString *sdkVersion = [NSString stringWithFormat:@"pp_ios_sdk:%@", version];
@@ -213,14 +216,21 @@
     c = (value) ?: [NSNull null];
     value = [payment.address jsonObjectRepresentation];
     a = (value) ?: [NSNull null];
+    value = [payment.financialServices jsonObjectRepresentation];
+    f = (value) ?: [NSNull null];
+    value = [payment.customer jsonObjectRepresentation];
+    cus = (value) ?: [NSNull null];
     
-    id object = @{@"sdkVersion"     : sdkVersion,
-                  @"deviceInfo"     : i,
-                  @"transaction"    : t,
-                  @"paymentMethod"  : @{
-                                        @"card"             : c,
-                                        @"billingAddress"   : a
-                                        }
+    id object = @{
+                  @"customer"           : cus,
+                  @"financialServices"  : f,
+                  @"sdkVersion"         : sdkVersion,
+                  @"deviceInfo"         : i,
+                  @"transaction"        : t,
+                  @"paymentMethod"      : @{
+                                            @"card"             : c,
+                                            @"billingAddress"   : a
+                                            }
                   };
     
     return [NSJSONSerialization dataWithJSONObject:object options:NSJSONWritingPrettyPrinted error:nil];

@@ -17,7 +17,7 @@
     
     return @{
              @"email": email,
-             @"dateOfBirth": dateOfBirth,
+             @"dob": dateOfBirth,
              @"telephone": telephone
              };
 }
