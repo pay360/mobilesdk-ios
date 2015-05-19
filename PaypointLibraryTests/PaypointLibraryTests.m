@@ -194,6 +194,75 @@
     
 }
 
+-(void)testSimplePaymentWithCustomFields {
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Simple payment amount invalid"];
+    
+    PPOTransaction *transaction = [PPOTransaction new];
+    transaction.currency = @"GBP";
+    transaction.amount = @100;
+    transaction.transactionDescription = @"A desc";
+    transaction.merchantRef = [NSString stringWithFormat:@"mer_%.0f", [[NSDate date] timeIntervalSince1970]];
+    transaction.isDeferred = @NO;
+    
+    self.transaction = transaction;
+    
+    PPOCreditCard *card = [PPOCreditCard new];
+    card.pan = self.authorisedPan;
+    card.cvv = @"123";
+    card.expiry = @"0116";
+    card.cardHolderName = @"Dai Jones";
+    
+    self.card = card;
+    
+    PPOCredentials *credentials = [PPOCredentials new];
+    credentials.installationID = INSTALLATION_ID;
+    credentials.token = self.validBearerToken;
+    
+    PPOCustomField *customField;
+    
+    NSMutableSet *collector = [NSMutableSet new];
+    
+    customField = [PPOCustomField new];
+    customField.name = @"CustomName";
+    customField.value = @"CustomValue";
+    customField.isTransient = @YES;
+    
+    [collector addObject:customField];
+    
+    customField = [PPOCustomField new];
+    customField.name = @"CustomName";
+    
+    [collector addObject:customField];
+    
+    customField = [PPOCustomField new];
+    customField.name = @"AnotherCustomName";
+    customField.isTransient = @YES;
+    
+    [collector addObject:customField];
+    
+    PPOPayment *payment = [PPOPayment new];
+    payment.transaction = self.transaction;
+    payment.card = self.card;
+    payment.address = self.address;
+    payment.customFields = [collector copy];
+    
+    [self.paymentManager makePayment:payment withCredentials:credentials withTimeOut:60.0f withCompletion:^(PPOOutcome *outcome, NSError *error) {
+        if (!error) {
+            [expectation fulfill];
+        }
+    }];
+    
+    [self waitForExpectationsWithTimeout:10.0f handler:^(NSError *error) {
+        
+        if(error) {
+            XCTFail(@"Simple payment failed with error: %@", error);
+        }
+        
+    }];
+    
+}
+
 -(void)testSimplePaymentWithInvalidCVV {
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Simple payment card cvv invalid"];
