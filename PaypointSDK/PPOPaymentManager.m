@@ -22,6 +22,7 @@
 #import "PPOResourcesManager.h"
 #import "PPOFinancialServices.h"
 #import "PPOCustomer.h"
+#import "PPOCustomField.h"
 
 @interface PPOPaymentManager () <NSURLSessionTaskDelegate, PPOWebViewControllerDelegate>
 @property (nonatomic, strong, readwrite) NSURL *baseURL;
@@ -78,7 +79,7 @@
     return _session;
 }
 
--(void)makePayment:(PPOPayment*)payment withCredentials:(PPOCredentials*)credentials withTimeOut:(CGFloat)timeout withCompletion:(void(^)(PPOOutcome *outcome, NSError *paymentFailure))completion {
+-(void)makePayment:(PPOPayment*)payment withCredentials:(PPOCredentials*)credentials withTimeOut:(CGFloat)timeout customFields:(NSSet*)fields withCompletion:(void(^)(PPOOutcome *outcome, NSError *paymentFailure))completion {
     
     NSError *invalid = [PPOPaymentValidator validateCredentials:credentials validateBaseURL:self.baseURL validatePayment:payment];
     
@@ -88,7 +89,7 @@
     }
     
     NSURL *url = [self.endpointManager simplePayment:credentials.installationID withBaseURL:self.baseURL];
-    NSData *data = [self buildPostBodyWithPayment:payment withDeviceInfo:self.deviceInfo];
+    NSData *data = [self buildPostBodyWithPayment:payment withDeviceInfo:self.deviceInfo withCustomFields:fields];
     NSString *authorisation = [self authorisation:credentials];
     
     NSMutableURLRequest *request = [self mutableJSONPostRequest:url withTimeOut:timeout];
@@ -195,7 +196,7 @@
     return [NSString stringWithFormat:@"Bearer %@", credentials.token];
 }
 
--(NSData*)buildPostBodyWithPayment:(PPOPayment*)payment withDeviceInfo:(PPODeviceInfo*)deviceInfo {
+-(NSData*)buildPostBodyWithPayment:(PPOPayment*)payment withDeviceInfo:(PPODeviceInfo*)deviceInfo withCustomFields:(NSSet*)fields {
     
     id value;
     id i;
@@ -204,6 +205,7 @@
     id a;
     id f;
     id cus;
+    id field;
     
     NSString *version = [[PPOResourcesManager infoPlist] objectForKey:@"CFBundleShortVersionString"];
     NSString *sdkVersion = [NSString stringWithFormat:@"pp_ios_sdk:%@", version];
@@ -216,14 +218,8 @@
     c = (value) ?: [NSNull null];
     value = [payment.address jsonObjectRepresentation];
     a = (value) ?: [NSNull null];
-    value = [payment.financialServices jsonObjectRepresentation];
-    f = (value) ?: [NSNull null];
-    value = [payment.customer jsonObjectRepresentation];
-    cus = (value) ?: [NSNull null];
     
     id object = @{
-                  @"customer"           : cus,
-                  @"financialServices"  : f,
                   @"sdkVersion"         : sdkVersion,
                   @"deviceInfo"         : i,
                   @"transaction"        : t,
@@ -232,6 +228,41 @@
                                             @"billingAddress"   : a
                                             }
                   };
+    
+    NSMutableDictionary *mutableObject;
+    
+    if (payment.financialServices || payment.customer || fields.count) {
+        mutableObject = [object mutableCopy];
+    }
+    
+    if (payment.financialServices) {
+        value = [payment.financialServices jsonObjectRepresentation];
+        f = (value) ?: [NSNull null];
+        [mutableObject setValue:f forKey:@"financialServices"];
+    }
+    
+    if (payment.customer) {
+        value = [payment.customer jsonObjectRepresentation];
+        cus = (value) ?: [NSNull null];
+        [mutableObject setValue:cus forKey:@"customer"];
+    }
+    
+    if (fields.count) {
+        NSMutableArray *collector = [NSMutableArray new];
+        for (PPOCustomField *f in fields) {
+            value = [f jsonObjectRepresentation];
+            field = (value) ?: [NSNull null];
+            [collector addObject:f];
+        }
+        if (collector.count) {
+            [mutableObject setValue:@{@"fieldsState" : [collector copy]}
+                             forKey:@"customFields"];
+        }
+    }
+    
+    if (mutableObject) {
+        object = [mutableObject copy];
+    }
     
     return [NSJSONSerialization dataWithJSONObject:object options:NSJSONWritingPrettyPrinted error:nil];
 }

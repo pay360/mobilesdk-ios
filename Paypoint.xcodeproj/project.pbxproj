@@ -26,6 +26,8 @@
 		503D52BC1B0B31200074CB44 /* PPOFinancialServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 503D52BA1B0B31200074CB44 /* PPOFinancialServices.m */; };
 		503D52C01B0B32A90074CB44 /* PPOCustomer.h in Headers */ = {isa = PBXBuildFile; fileRef = 503D52BE1B0B32A90074CB44 /* PPOCustomer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		503D52C11B0B32A90074CB44 /* PPOCustomer.m in Sources */ = {isa = PBXBuildFile; fileRef = 503D52BF1B0B32A90074CB44 /* PPOCustomer.m */; };
+		503D52C51B0B74230074CB44 /* PPOCustomField.h in Headers */ = {isa = PBXBuildFile; fileRef = 503D52C31B0B74230074CB44 /* PPOCustomField.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		503D52C61B0B74230074CB44 /* PPOCustomField.m in Sources */ = {isa = PBXBuildFile; fileRef = 503D52C41B0B74230074CB44 /* PPOCustomField.m */; };
 		503E19A21AE8E3D800CB4784 /* PaypointLibraryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 503E19A11AE8E3D800CB4784 /* PaypointLibraryTests.m */; };
 		503E19E31AE91FDB00CB4784 /* libPaypoint.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 50DCC1AA1AE7CAAA00D0FE26 /* libPaypoint.a */; };
 		505AB2ED1B04B9A8001FAD15 /* PPORedirect.h in Headers */ = {isa = PBXBuildFile; fileRef = 505AB2EB1B04B9A8001FAD15 /* PPORedirect.h */; };
@@ -117,6 +119,8 @@
 		503D52BA1B0B31200074CB44 /* PPOFinancialServices.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOFinancialServices.m; sourceTree = "<group>"; };
 		503D52BE1B0B32A90074CB44 /* PPOCustomer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOCustomer.h; sourceTree = "<group>"; };
 		503D52BF1B0B32A90074CB44 /* PPOCustomer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOCustomer.m; sourceTree = "<group>"; };
+		503D52C31B0B74230074CB44 /* PPOCustomField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOCustomField.h; sourceTree = "<group>"; };
+		503D52C41B0B74230074CB44 /* PPOCustomField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOCustomField.m; sourceTree = "<group>"; };
 		503E19A11AE8E3D800CB4784 /* PaypointLibraryTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PaypointLibraryTests.m; sourceTree = "<group>"; };
 		5056A1A51AD68B1400AB1276 /* PPOSDKMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPOSDKMacros.h; path = ../PaypointSDK/PPOSDKMacros.h; sourceTree = "<group>"; };
 		5056A1A71AD68B2B00AB1276 /* PPOError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOError.h; sourceTree = "<group>"; };
@@ -249,6 +253,7 @@
 				505CEE7F1B0A36E1006FD47A /* PPODeviceInfo */,
 				503D52BD1B0B31240074CB44 /* PPOFinancialServices */,
 				503D52C21B0B32AC0074CB44 /* PPOCustomer */,
+				503D52C71B0B74270074CB44 /* PPOCustomField */,
 			);
 			name = Model;
 			path = ../PaypointSDK;
@@ -270,6 +275,15 @@
 				503D52BF1B0B32A90074CB44 /* PPOCustomer.m */,
 			);
 			name = PPOCustomer;
+			sourceTree = "<group>";
+		};
+		503D52C71B0B74270074CB44 /* PPOCustomField */ = {
+			isa = PBXGroup;
+			children = (
+				503D52C31B0B74230074CB44 /* PPOCustomField.h */,
+				503D52C41B0B74230074CB44 /* PPOCustomField.m */,
+			);
+			name = PPOCustomField;
 			sourceTree = "<group>";
 		};
 		503E19A51AE8EF0600CB4784 /* Supporting Files */ = {
@@ -552,6 +566,7 @@
 				50DCC1E91AE7CC0900D0FE26 /* PPOPaymentBaseURLManager.h in Headers */,
 				50DCC1DD1AE7CBC400D0FE26 /* PPOBillingAddress.h in Headers */,
 				50DCC1EB1AE7CC1300D0FE26 /* PPOPaymentEndpointManager.h in Headers */,
+				503D52C51B0B74230074CB44 /* PPOCustomField.h in Headers */,
 				505CEE7D1B0A36DE006FD47A /* PPODeviceInfo.h in Headers */,
 				503D52C01B0B32A90074CB44 /* PPOCustomer.h in Headers */,
 				50DCC1D71AE7CBA300D0FE26 /* PPOCredentials.h in Headers */,
@@ -747,6 +762,7 @@
 				503D52BC1B0B31200074CB44 /* PPOFinancialServices.m in Sources */,
 				50DCC1E21AE7CBDD00D0FE26 /* PPOPayment.m in Sources */,
 				505AB2EE1B04B9A8001FAD15 /* PPORedirect.m in Sources */,
+				503D52C61B0B74230074CB44 /* PPOCustomField.m in Sources */,
 				50DCC1DC1AE7CBBD00D0FE26 /* PPOTransaction.m in Sources */,
 				50DCC1DE1AE7CBC900D0FE26 /* PPOBillingAddress.m in Sources */,
 				50DCC1C11AE7CACB00D0FE26 /* PPOError.m in Sources */,

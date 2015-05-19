@@ -21,3 +21,4 @@
 #import <Paypoint/PPOResourcesManager.h>
 #import <Paypoint/PPOFinancialServices.h>
 #import <Paypoint/PPOCustomer.h>
+#import <Paypoint/PPOCustomField.h>
