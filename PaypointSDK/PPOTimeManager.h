@@ -11,5 +11,6 @@
 @interface PPOTimeManager : NSObject
 
 -(NSDate*)dateFromString:(NSString*)date;
++(BOOL)cardExpiryDateExpired:(NSString*)expiry;
 
 @end

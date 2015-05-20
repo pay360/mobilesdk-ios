@@ -60,6 +60,15 @@
         }
             break;
             
+        case PPOErrorCardExpiryDateExpired:
+            return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                       code:PPOErrorCardExpiryDateExpired
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Expiry date is in the past", @"Failure message for card validation")
+                                              }
+                    ];
+            break;
+            
         case PPOErrorAuthenticationFailed: {
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorAuthenticationFailed

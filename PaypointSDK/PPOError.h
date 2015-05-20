@@ -58,6 +58,9 @@ typedef NS_ENUM(NSInteger, PPOErrorCode) {
     /* CVV card security code invalid */
     PPOErrorCVVInvalid,
     
+    /* The date of the expirty for the current card has expired*/
+    PPOErrorCardExpiryDateExpired,
+    
     /* Card expiry date is invalid */
     PPOErrorCardExpiryDateInvalid,
     

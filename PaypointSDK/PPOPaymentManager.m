@@ -23,6 +23,7 @@
 #import "PPOFinancialServices.h"
 #import "PPOCustomer.h"
 #import "PPOCustomField.h"
+#import "PPOTimeManager.h"
 
 @interface PPOPaymentManager () <NSURLSessionTaskDelegate, PPOWebViewControllerDelegate>
 @property (nonatomic, strong, readwrite) NSURL *baseURL;
@@ -471,8 +472,9 @@
     strippedValue = [card.expiry stringByReplacingOccurrencesOfString:@" " withString:@""];
     
     if (strippedValue == nil || strippedValue.length != 4) {
-        
         return [PPOErrorManager errorForCode:PPOErrorCardExpiryDateInvalid];
+    } else if ([PPOPaymentValidator cardExpiryHasExpired:strippedValue]) {
+        return [PPOErrorManager errorForCode:PPOErrorCardExpiryDateExpired];
     }
     
     strippedValue = [transaction.currency stringByReplacingOccurrencesOfString:@" " withString:@""];
@@ -486,6 +488,10 @@
     }
     
     return nil;
+}
+
++(BOOL)cardExpiryHasExpired:(NSString*)expiry {
+    return [PPOTimeManager cardExpiryDateExpired:expiry];
 }
 
 @end

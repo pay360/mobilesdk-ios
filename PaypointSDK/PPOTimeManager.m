@@ -31,12 +31,7 @@
         _formatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
         //https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/DataFormatting/Articles/dfDateFormatting10_4.html#//apple_ref/doc/uid/TP40002369-SW13
         
-        // Time zones created with this never have daylight savings and the
-        // offset is constant no matter the date;
-        // Sidenote: the NAME and ABBREVIATION do NOT follow the POSIX convention (of minutes-west).
-        NSTimeZone *timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
-        
-        [_formatter setTimeZone:timeZone];
+        [_formatter setTimeZone:[PPOTimeManager timezone]];
         
     }
     return _formatter;
@@ -44,6 +39,62 @@
 
 -(NSDate*)dateFromString:(NSString*)date {
     return [self.formatter dateFromString:date];
+}
+
++(NSTimeZone*)timezone {
+    // Time zones created with this never have daylight savings and the
+    // offset is constant no matter the date;
+    // Sidenote: the NAME and ABBREVIATION do NOT follow the POSIX convention (of minutes-west).
+    return [NSTimeZone timeZoneForSecondsFromGMT:0];
+}
+
++(BOOL)cardExpiryDateExpired:(NSString*)expiry {
+    if (!expiry || expiry.length != 4) {
+        return NO;
+    }
+    
+    NSDate *currentDate = [NSDate date];
+    
+    NSString *m = [expiry substringToIndex:2];
+    NSString *y = [PPOTimeManager buildCardExpiryYear:[expiry substringFromIndex:2]];
+    NSDate *computedDate = [PPOTimeManager dateWithMonth:@(m.intValue) withYear:@(y.intValue)];
+    
+    return [currentDate compare:computedDate] == NSOrderedDescending;
+}
+
++(NSDate*)dateWithMonth:(NSNumber*)m withYear:(NSNumber*)y {
+    NSDate *computedDate;
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDateComponents *components = [[NSDateComponents alloc] init];
+    
+    //The first moment of a given month is expressed as the first instance following the final moment of the previous month
+    //e.g. 01 May 2015 is expressed as 2015-04-30 23:00:00 UTC
+    //We bump the month by 1, so that we get the end of the month we want
+    NSInteger monthInteger = m.intValue;
+    NSInteger yearInteger = y.intValue;
+    if (monthInteger == 12) {
+        //Bumping the month would result in 13, which is invalid
+        monthInteger = 1;
+        yearInteger++;
+    } else {
+        monthInteger++;
+    }
+    
+    NSNumber *month = @(monthInteger);
+    NSNumber *year = @(yearInteger);
+    [components setMonth:[month intValue]];
+    [components setYear:[year intValue]];
+    computedDate = [calendar dateFromComponents:components];
+    return computedDate;
+}
+
++(NSString*)buildCardExpiryYear:(NSString*)digit {
+    NSInteger number = digit.intValue;
+    if (number < 10) {
+        return [NSString stringWithFormat:@"200%li", (long)number];
+    } else {
+        return [NSString stringWithFormat:@"20%li", (long)number];
+    }
 }
 
 @end
