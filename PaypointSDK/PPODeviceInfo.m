@@ -85,7 +85,6 @@
         NSString *screenWidth = [NSString stringWithFormat:@"%.0f", [UIScreen mainScreen].bounds.size.width*scale];
         NSString *screenHeight = [NSString stringWithFormat:@"%.0f", [UIScreen mainScreen].bounds.size.height*scale];
         _screenRes = [NSString stringWithFormat:@"%@x%@", screenWidth, screenHeight];
-#warning make a note of this in documentation
         //http://www.paintcodeapp.com/news/ultimate-guide-to-iphone-resolutions
     }
     return _screenRes;
@@ -112,8 +111,6 @@
              @"screenRes" : screenRes
              };
 }
-
-#warning make a note of this in the documentation
 
 - (NSString*)hardwareDescription {
     
