@@ -52,8 +52,8 @@ typedef NS_ENUM(NSInteger, PPOErrorCode) {
     /* Luhn check failed */
     PPOErrorLuhnCheckFailed,
     
-    /* Pan card length invalid */
-    PPOErrorCardPanLengthInvalid,
+    /* Pan card invalid */
+    PPOErrorCardPanInvalid,
     
     /* CVV card security code invalid */
     PPOErrorCVVInvalid,

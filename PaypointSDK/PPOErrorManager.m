@@ -95,11 +95,11 @@
                                               }
                     ];
         } break;
-        case PPOErrorCardPanLengthInvalid: {
+        case PPOErrorCardPanInvalid: {
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
-                                       code:PPOErrorCardPanLengthInvalid
-                                   userInfo:@{
-                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Pan number length is invalid", @"Failure message for a card validation check")
+                                       code:PPOErrorCardPanInvalid
+                                   userInfo:@{ //Description as per BLU-15022
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Invalid card number. Must be numbers only.", @"Failure message for a card validation check")
                                               }
                     ];
         } break;
@@ -107,7 +107,7 @@
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorLuhnCheckFailed
                                    userInfo:@{
-                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Pan number failed Luhn validation", @"Failure message for a card validation check")
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Invalid card number.", @"Failure message for a card validation check")
                                               }
                     ];
         } break;
@@ -115,7 +115,7 @@
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorCVVInvalid
                                    userInfo:@{
-                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Card CVV is invalid", @"Failure message for a card validation check")
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Invalid CVV.", @"Failure message for a card validation check")
                                               }
                     ];
         } break;
@@ -123,7 +123,7 @@
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorCardExpiryDateInvalid
                                    userInfo:@{
-                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Expiry date is invalid", @"Failure message for a card validation check")
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Invalid expiry date. Must be YY MM.", @"Failure message for a card validation check")
                                               }
                     ];
         } break;

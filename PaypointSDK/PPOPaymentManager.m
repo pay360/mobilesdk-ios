@@ -455,8 +455,10 @@
     
     strippedValue = [card.pan stringByReplacingOccurrencesOfString:@" " withString:@""];
     
-    if (strippedValue.length < 13 || strippedValue.length > 19) {
-        return [PPOErrorManager errorForCode:PPOErrorCardPanLengthInvalid];
+    BOOL containsLetters = [strippedValue rangeOfCharacterFromSet:[NSCharacterSet letterCharacterSet]].location != NSNotFound;
+    
+    if (strippedValue.length < 13 || strippedValue.length > 19 || containsLetters) {
+        return [PPOErrorManager errorForCode:PPOErrorCardPanInvalid];
     }
     
     if (![PPOLuhn validateString:strippedValue]) {
