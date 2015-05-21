@@ -465,18 +465,18 @@
         return [PPOErrorManager errorForCode:PPOErrorLuhnCheckFailed];
     }
     
-    strippedValue = [card.cvv stringByReplacingOccurrencesOfString:@" " withString:@""];
-    
-    if (strippedValue == nil || strippedValue.length < 3 || strippedValue.length > 4) {
-        return [PPOErrorManager errorForCode:PPOErrorCVVInvalid];
-    }
-    
     strippedValue = [card.expiry stringByReplacingOccurrencesOfString:@" " withString:@""];
     
     if (strippedValue == nil || strippedValue.length != 4) {
         return [PPOErrorManager errorForCode:PPOErrorCardExpiryDateInvalid];
     } else if ([PPOPaymentValidator cardExpiryHasExpired:strippedValue]) {
         return [PPOErrorManager errorForCode:PPOErrorCardExpiryDateExpired];
+    }
+    
+    strippedValue = [card.cvv stringByReplacingOccurrencesOfString:@" " withString:@""];
+    
+    if (strippedValue == nil || strippedValue.length < 3 || strippedValue.length > 4) {
+        return [PPOErrorManager errorForCode:PPOErrorCVVInvalid];
     }
     
     strippedValue = [transaction.currency stringByReplacingOccurrencesOfString:@" " withString:@""];
