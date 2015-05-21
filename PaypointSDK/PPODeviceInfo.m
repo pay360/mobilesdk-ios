@@ -11,6 +11,7 @@
 #import <sys/types.h>
 #import <sys/sysctl.h>
 #import <UIKit/UIKit.h>
+#import "PPOResourcesManager.h"
 
 @interface PPODeviceInfo ()
 @property (nonatomic, copy) NSString *uniqueIdentifier;
@@ -18,6 +19,8 @@
 @property (nonatomic, copy) NSString *modelFamily;
 @property (nonatomic, copy) NSString *type;
 @property (nonatomic, copy) NSString *screenRes;
+@property (nonatomic, copy) NSString *appName;
+@property (nonatomic, copy) NSString *appVersion;
 @end
 
 @implementation PPODeviceInfo
@@ -72,8 +75,10 @@
     if (_type == nil) {
         if ([self.modelFamily isEqualToString:@"iPad"]) {
             _type = @"TABLET";
-        } else {
+        } else if ([self.modelFamily isEqualToString:@"iPhone"]) {
             _type = @"SMARTPHONE";
+        } else {
+            _type = @"OTHER";
         }
     }
     return _type;
@@ -90,6 +95,31 @@
     return _screenRes;
 }
 
+-(NSString *)appName {
+    if (_appName == nil) {
+        NSString *appName = [[PPODeviceInfo infoPlist] objectForKey:@"CFBundleName"];
+        if (appName.length > 0) {
+            _appName = appName;
+        }
+    }
+    return _appName;
+}
+
+-(NSString *)appVersion {
+    if (_appVersion == nil) {
+        NSString *appVersion = [[PPODeviceInfo infoPlist] objectForKey:@"CFBundleShortVersionString"];
+        if (appVersion.length > 0) {
+            _appVersion = appVersion;
+        }
+    }
+    return _appVersion;
+}
+
++(NSDictionary*)infoPlist {
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"Info" ofType:@"plist"];
+    return [NSDictionary dictionaryWithContentsOfFile:path];
+}
+
 -(NSDictionary*)jsonObjectRepresentation {
     id uniqueIdentifier = (self.uniqueIdentifier) ?: [NSNull null];
     id osFamily = @"IOS";
@@ -99,6 +129,8 @@
     id manufacturer = @"Apple";
     id type = self.type;
     id screenRes = self.screenRes;
+    id appName = (self.appName) ?: [NSNull null];
+    id appVersion = (self.appVersion) ?: [NSNull null];
     
     return @{
              @"sdkInstallId" : uniqueIdentifier,
@@ -109,6 +141,8 @@
              @"manufacturer" : manufacturer,
              @"type" : type,
              @"screenRes" : screenRes
+             //@"appName" : appName,
+             //@"appVersion" : appVersion
              };
 }
 
