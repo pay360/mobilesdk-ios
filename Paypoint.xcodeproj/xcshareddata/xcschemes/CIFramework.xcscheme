@@ -58,6 +58,15 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "50DCC1B31AE7CAAA00D0FE26"
+            BuildableName = "PaypointTests.xctest"
+            BlueprintName = "PaypointTests"
+            ReferencedContainer = "container:Paypoint.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
