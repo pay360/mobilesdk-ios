@@ -1,6 +1,0 @@
-framework module PaypointSDK {
-  umbrella header "PaypointSDK.h"
-
-  export *
-  module * { export * }
-}
