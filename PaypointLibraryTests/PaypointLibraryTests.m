@@ -142,7 +142,7 @@
                      withCredentials:[self credentialsWithToken:VALID_BEARER_TOKEN]
                          withTimeOut:60.0f
                       withCompletion:^(PPOOutcome *outcome, NSError *error) {
-                          if (!error) {
+                          if (!error && outcome.customFields.count == 3) {
                               [expectation fulfill];
                           }
                       }];
