@@ -10,12 +10,15 @@
 
 @implementation PPOPaymentEndpointManager
 
--(NSURL*)simplePayment:(NSString*)installationID withBaseURL:(NSURL*)baseURL {
+-(NSURL*)urlForSimplePayment:(NSString*)installationID withBaseURL:(NSURL*)baseURL {
     return [baseURL URLByAppendingPathComponent:[NSString stringWithFormat:@"acceptor/rest/mobile/transactions/%@/payment", installationID]];
-    
 }
 
--(NSURL*)resumePaymentWithInstallationID:(NSString*)installationID transactionID:(NSString*)transID withBaseURL:(NSURL*)baseURL {
+-(NSURL*)urlForPaymentWithID:(NSString*)paymentIdentifier withInst:(NSString*)installationID withBaseURL:(NSURL*)baseURL {
+    return [baseURL URLByAppendingPathComponent:[NSString stringWithFormat:@"acceptor/rest/mobile/transactions/%@/opref/%@", installationID, paymentIdentifier]];
+}
+
+-(NSURL*)urlForResumePaymentWithInstallationID:(NSString*)installationID transactionID:(NSString*)transID withBaseURL:(NSURL*)baseURL {
     return [baseURL URLByAppendingPathComponent:[NSString stringWithFormat:@"acceptor/rest/mobile/transactions/%@/%@/resume", installationID, transID]];
 }
 

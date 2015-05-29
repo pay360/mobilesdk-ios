@@ -41,6 +41,10 @@
        withTimeOut:(CGFloat)timeout
     withCompletion:(void(^)(PPOOutcome *outcome, NSError *paymentFailure))completion;
 
+-(void)paymentStatus:(PPOPayment*)payment
+     withCredentials:(PPOCredentials*)credentials
+      withCompletion:(void(^)(PPOOutcome *outcome, NSError *networkError))completion;
+
 @end
 
 @interface PPOPaymentValidator : NSObject

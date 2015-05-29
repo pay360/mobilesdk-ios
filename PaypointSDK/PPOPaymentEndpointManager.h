@@ -10,7 +10,8 @@
 
 @interface PPOPaymentEndpointManager : NSObject
 
--(NSURL*)simplePayment:(NSString*)installationID withBaseURL:(NSURL*)baseURL;
--(NSURL*)resumePaymentWithInstallationID:(NSString*)installationID transactionID:(NSString*)transID withBaseURL:(NSURL*)baseURL;
+-(NSURL*)urlForSimplePayment:(NSString*)installationID withBaseURL:(NSURL*)baseURL;
+-(NSURL*)urlForPaymentWithID:(NSString*)paymentIdentifier withInst:(NSString*)installationID withBaseURL:(NSURL*)baseURL;
+-(NSURL*)urlForResumePaymentWithInstallationID:(NSString*)installationID transactionID:(NSString*)transID withBaseURL:(NSURL*)baseURL;
 
 @end

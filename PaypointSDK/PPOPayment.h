@@ -20,4 +20,5 @@
 @property (nonatomic, strong) PPOFinancialServices *financialServices;
 @property (nonatomic, strong) PPOCustomer *customer;
 @property (nonatomic, strong) NSSet *customFields;
+@property (nonatomic, readonly, copy) NSString *identifier;
 @end

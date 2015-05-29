@@ -21,7 +21,7 @@
 @property (nonatomic, strong, readonly) NSString *cardUsageType;
 @property (nonatomic, strong, readonly) NSString *cardScheme;
 @property (nonatomic, strong, readonly) NSSet *customFields;
-@property (nonatomic, readonly) BOOL isSuccessful;
+@property (nonatomic, strong, readonly) NSNumber *isSuccessful;
 
 -(instancetype)initWithData:(NSDictionary*)data;
 

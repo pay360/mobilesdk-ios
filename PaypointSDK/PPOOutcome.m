@@ -25,21 +25,19 @@
 @property (nonatomic, strong, readwrite) NSString *cardUsageType;
 @property (nonatomic, strong, readwrite) NSString *cardScheme;
 @property (nonatomic, strong, readwrite) NSSet *customFields;
-@property (nonatomic, readwrite) BOOL isSuccessful;
+@property (nonatomic, strong, readwrite) NSNumber *isSuccessful;
 @property (nonatomic, strong) PPOTimeManager *timeManager;
 @end
 
 @implementation PPOOutcome
 
--(NSNumber *)reasonCode {
-    if (_reasonCode == nil) {
-        _reasonCode = @(PPOErrorNotInitialised);
+-(void)setReasonCode:(NSNumber *)reasonCode {
+    _reasonCode = reasonCode;
+    if (_reasonCode) {
+        self.isSuccessful = @(_reasonCode.integerValue == 0);
+    } else {
+        self.isSuccessful = nil;
     }
-    return _reasonCode;
-}
-
--(BOOL)isSuccessful {
-    return (self.reasonCode) ? self.reasonCode.integerValue == 0 : NO;
 }
 
 -(PPOTimeManager *)timeManager {

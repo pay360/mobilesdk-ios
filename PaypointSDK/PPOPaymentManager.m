@@ -24,17 +24,20 @@
 #import "PPOCustomer.h"
 #import "PPOCustomField.h"
 #import "PPOTimeManager.h"
+#import "PPOPaymentTrackingManager.h"
 
 @interface PPOPaymentManager () <NSURLSessionTaskDelegate, PPOWebViewControllerDelegate>
 @property (nonatomic, strong, readwrite) NSURL *baseURL;
 @property (nonatomic, strong) PPOPaymentEndpointManager *endpointManager;
 @property (nonatomic, copy) void(^outcomeCompletion)(PPOOutcome *outcome, NSError *error);
-@property (nonatomic) CGFloat timeout;
 @property (nonatomic, strong) PPOCredentials *credentials;
 @property (nonatomic, strong) NSURLSession *session;
 @property (nonatomic, strong, readwrite) NSOperationQueue *payments;
 @property (nonatomic, strong) PPOWebViewController *webController;
 @property (nonatomic, strong) PPODeviceInfo *deviceInfo;
+@property (nonatomic, strong) PPOPaymentTrackingManager *trackingManager;
+@property (nonatomic, strong) NSTimer *userPaymentSessionTimeout;
+@property (nonatomic) BOOL userPaymentSessionTimeLimitExpired;
 @end
 
 @implementation PPOPaymentManager {
@@ -55,6 +58,13 @@
         _endpointManager = [PPOPaymentEndpointManager new];
     }
     return _endpointManager;
+}
+
+-(PPOPaymentTrackingManager *)trackingManager {
+    if (_trackingManager == nil) {
+        _trackingManager = [PPOPaymentTrackingManager new];
+    }
+    return _trackingManager;
 }
 
 -(PPODeviceInfo *)deviceInfo {
@@ -80,7 +90,85 @@
     return _session;
 }
 
+-(void)paymentStatus:(PPOPayment*)payment withCredentials:(PPOCredentials*)credentials withCompletion:(void(^)(PPOOutcome *outcome, NSError *networkError))completion {
+    
+    if (!payment) {
+        completion(nil, nil);
+        return;
+    }
+    
+    NSURL *url = [self.endpointManager urlForPaymentWithID:payment.identifier withInst:credentials.installationID withBaseURL:self.baseURL];
+    NSURLRequest *request = [self requestWithMethod:@"GET" withURL:url withCredentials:credentials withPayment:payment withBaseURL:self.baseURL withDeviceInfo:self.deviceInfo withTimeout:5.0f];
+    
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    
+    NSURLSessionDataTask *task = [self.session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *networkError) {
+        
+        //Check JSON first, as this will contain specific information about array of potential errors, including authentication errors.
+        id json;
+        NSError *invalidJSON;
+        
+        if (data.length > 0) {
+            json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&invalidJSON];
+        }
+        
+        if (invalidJSON) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+                completion(nil, [PPOErrorManager errorForCode:PPOErrorServerFailure]);
+            });
+            return;
+        }
+        
+        if (json) {
+            NSError *error;
+            PPOOutcome *outcome = [[PPOOutcome alloc] initWithData:json];
+            if (outcome.isSuccessful != nil && outcome.isSuccessful.boolValue == NO) {
+                PPOErrorCode code = [PPOErrorManager errorCodeForReasonCode:outcome.reasonCode.integerValue];
+                error = [PPOErrorManager errorForCode:code];
+            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+                completion(outcome, error);
+            });
+        }
+        
+        if (networkError) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+                if (((NSHTTPURLResponse*)response).statusCode == 404) {
+                    completion(nil, [PPOErrorManager errorForCode:PPOErrorTransactionUnknown]);
+                } else {
+                    completion(nil, networkError);
+                }
+            });
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+                completion(nil, [PPOErrorManager errorForCode:PPOErrorUnknown]);
+            });
+        }
+        
+    }];
+    
+    [task resume];
+    
+}
+
+-(void)startTimeoutWithTime:(CGFloat)timeout {
+    self.userPaymentSessionTimeout = [NSTimer scheduledTimerWithTimeInterval:timeout target:self selector:@selector(userSessionTimeoutFired:) userInfo:nil repeats:NO];
+}
+
+-(void)userSessionTimeoutFired:(NSTimer*)timer {
+    self.userPaymentSessionTimeLimitExpired = YES; // On main thread
+}
+
 -(void)makePayment:(PPOPayment*)payment withCredentials:(PPOCredentials*)credentials withTimeOut:(CGFloat)timeout withCompletion:(void(^)(PPOOutcome *outcome, NSError *paymentFailure))completion {
+    
+    if ([self.trackingManager stateForPayment:payment] != PAYMENT_STATE_NON_EXISTENT) {
+        completion(nil, [PPOErrorManager errorForCode:PPOErrorPaymentUnderway]);
+        return;
+    }
     
     NSError *invalid = [PPOPaymentValidator validateCredentials:credentials validateBaseURL:self.baseURL validatePayment:payment];
     
@@ -89,16 +177,13 @@
         return;
     }
     
-    NSURL *url = [self.endpointManager simplePayment:credentials.installationID withBaseURL:self.baseURL];
-    NSData *data = [self buildPostBodyWithPayment:payment withDeviceInfo:self.deviceInfo];
-    NSString *authorisation = [self authorisation:credentials];
+    [self.trackingManager beginTrackingPayment:payment];
+    [self startTimeoutWithTime:timeout];
     
-    NSMutableURLRequest *request = [self mutableJSONPostRequest:url withTimeOut:timeout];
-    [request setValue:authorisation forHTTPHeaderField:@"Authorization"];
-    [request setHTTPBody:data];
+    NSURL *url = [self.endpointManager urlForSimplePayment:credentials.installationID withBaseURL:self.baseURL];
+    NSURLRequest *request = [self requestWithMethod:@"POST" withURL:url withCredentials:credentials withPayment:payment withBaseURL:self.baseURL withDeviceInfo:self.deviceInfo withTimeout:30.0f];
 
     self.outcomeCompletion = completion;
-    self.timeout = timeout;
     self.credentials = credentials;
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
@@ -121,7 +206,7 @@
             return;
         }
         
-        //Keep pointer for transaction id around for later use, when we callback
+        //Keep pointer for transaction id around for later use, when we redirect
         NSString *transactionID;
         id value = [json objectForKey:@"transaction"];
         if ([value isKindOfClass:[NSDictionary class]]) {
@@ -157,7 +242,7 @@
         if (json) {
             NSError *error;
             PPOOutcome *outcome = [[PPOOutcome alloc] initWithData:json];
-            if (outcome.isSuccessful == NO) {
+            if (outcome.isSuccessful != nil && outcome.isSuccessful.boolValue == NO) {
                 PPOErrorCode code = [PPOErrorManager errorCodeForReasonCode:outcome.reasonCode.integerValue];
                 error = [PPOErrorManager errorForCode:code];
             }
@@ -187,10 +272,21 @@
     
 }
 
--(NSMutableURLRequest*)mutableJSONPostRequest:(NSURL*)url withTimeOut:(CGFloat)timeout {
+-(NSURLRequest*)requestWithMethod:(NSString*)method withURL:(NSURL*)url withCredentials:(PPOCredentials*)credentials withPayment:(PPOPayment*)payment withBaseURL:(NSURL*)baseURL withDeviceInfo:(PPODeviceInfo*)deviceInfo withTimeout:(CGFloat)timeout {
+    NSData *data = [self buildPostBodyWithPayment:payment withDeviceInfo:deviceInfo];
+    NSString *authorisation = [self authorisation:credentials];
+    
+    NSMutableURLRequest *request = [self mutableJSONRequestWithMethod:method withURL:url forPayment:payment withTimeout:timeout];
+    [request setValue:authorisation forHTTPHeaderField:@"Authorization"];
+    [request setHTTPBody:data];
+    return [request copy];
+}
+
+-(NSMutableURLRequest*)mutableJSONRequestWithMethod:(NSString*)method withURL:(NSURL*)url forPayment:(PPOPayment*)payment withTimeout:(CGFloat)timeout {
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:timeout];
     [request setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-    [request setHTTPMethod:@"POST"];
+    [request setValue:@"AP-Operation-ID" forKey:payment.identifier];
+    [request setHTTPMethod:method];
     return request;
 }
 
@@ -286,9 +382,9 @@
     }
     
     NSURLSessionDataTask *task;
-    NSURL *url = [self.endpointManager resumePaymentWithInstallationID:INSTALLATION_ID transactionID:transID withBaseURL:self.baseURL];
+    NSURL *url = [self.endpointManager urlForResumePaymentWithInstallationID:INSTALLATION_ID transactionID:transID withBaseURL:self.baseURL];
     
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:self.timeout];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:30.0f];
     [request setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
     [request setHTTPMethod:@"POST"];
     [request setValue:[self authorisation:self.credentials] forHTTPHeaderField:@"Authorization"];
@@ -318,10 +414,10 @@
                 outcome = [[PPOOutcome alloc] initWithData:json];
             }
             
-            if (outcome && outcome.isSuccessful == NO) {
+            if (outcome.isSuccessful != nil && outcome.isSuccessful.boolValue == NO) {
                 PPOErrorCode code = [PPOErrorManager errorCodeForReasonCode:outcome.reasonCode.integerValue];
                 [self completeOnMainThreadWithOutcome:outcome withError:[PPOErrorManager errorForCode:code]];
-            } else if (outcome.isSuccessful == YES) {
+            } else if (outcome.isSuccessful.boolValue == YES) {
                 [self completeOnMainThreadWithOutcome:outcome withError:nil];
             } else {
                 [self completeOnMainThreadWithOutcome:outcome withError:[PPOErrorManager errorForCode:PPOErrorUnknown]];
