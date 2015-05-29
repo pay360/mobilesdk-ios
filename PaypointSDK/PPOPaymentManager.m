@@ -36,8 +36,6 @@
 @property (nonatomic, strong) PPOWebViewController *webController;
 @property (nonatomic, strong) PPODeviceInfo *deviceInfo;
 @property (nonatomic, strong) PPOPaymentTrackingManager *trackingManager;
-@property (nonatomic, strong) NSTimer *userPaymentSessionTimeout;
-@property (nonatomic) BOOL userPaymentSessionTimeLimitExpired;
 @end
 
 @implementation PPOPaymentManager {
@@ -155,14 +153,6 @@
     
 }
 
--(void)startTimeoutWithTime:(CGFloat)timeout {
-    self.userPaymentSessionTimeout = [NSTimer scheduledTimerWithTimeInterval:timeout target:self selector:@selector(userSessionTimeoutFired:) userInfo:nil repeats:NO];
-}
-
--(void)userSessionTimeoutFired:(NSTimer*)timer {
-    self.userPaymentSessionTimeLimitExpired = YES; // On main thread
-}
-
 -(void)makePayment:(PPOPayment*)payment withCredentials:(PPOCredentials*)credentials withTimeOut:(CGFloat)timeout withCompletion:(void(^)(PPOOutcome *outcome, NSError *paymentFailure))completion {
     
     if ([self.trackingManager stateForPayment:payment] != PAYMENT_STATE_NON_EXISTENT) {
@@ -178,7 +168,6 @@
     }
     
     [self.trackingManager beginTrackingPayment:payment];
-    [self startTimeoutWithTime:timeout];
     
     NSURL *url = [self.endpointManager urlForSimplePayment:credentials.installationID withBaseURL:self.baseURL];
     NSURLRequest *request = [self requestWithMethod:@"POST" withURL:url withCredentials:credentials withPayment:payment withBaseURL:self.baseURL withDeviceInfo:self.deviceInfo withTimeout:30.0f];
