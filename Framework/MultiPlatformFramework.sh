@@ -61,4 +61,9 @@ rm -rf  "build/${SF_TARGET_NAME}.framework"
 ditto "${BUILT_PRODUCTS_DIR}/${SF_RESOURCES_NAME}" "${BUILT_PRODUCTS_DIR}/${SF_TARGET_NAME}.framework/${SF_RESOURCES_NAME}"
 ditto "${BUILT_PRODUCTS_DIR}/${SF_TARGET_NAME}.framework" "build/${SF_TARGET_NAME}.framework"
 
+if [ -d "../Merchant" ];
+then
+ditto "${BUILT_PRODUCTS_DIR}/${SF_TARGET_NAME}.framework" "../Merchant/${SF_TARGET_NAME}.framework"
+fi
+
 ditto -cz "build/${SF_TARGET_NAME}.framework" "build/${SF_TARGET_NAME}.framework.zip"
