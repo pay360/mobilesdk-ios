@@ -9,26 +9,28 @@
 #import "PPOPaymentTrackingManager.h"
 #import "PPOPayment.h"
 
-@interface PPOPaymentTrackingManager ()
-@property (nonatomic, strong) NSMutableSet *payments;
-@end
-
 @interface PPOPaymentTrackingChapperone : NSObject
-
 @property (nonatomic, strong) PPOPayment *payment;
 @property (nonatomic) PAYMENT_STATE state;
+-(instancetype)initWithPayment:(PPOPayment*)payment withTimeout:(NSTimeInterval)timeout;
+-(void)startTimeoutTimer;
+-(void)stopTimeoutTimer;
+-(BOOL)hasTimedout;
+@end
 
--(instancetype)initWithPayment:(PPOPayment*)payment;
-
+@interface PPOPaymentTrackingChapperone ()
+@property (nonatomic) NSTimeInterval paymentTimeout;
+@property (nonatomic, strong) NSTimer *timer;
 @end
 
 @implementation PPOPaymentTrackingChapperone
 
--(instancetype)initWithPayment:(PPOPayment *)payment {
+-(instancetype)initWithPayment:(PPOPayment *)payment withTimeout:(NSTimeInterval)timeout {
     self = [super init];
     if (self) {
         _payment = payment;
         _state = PAYMENT_STATE_NOT_STARTED;
+        _paymentTimeout = timeout;
     }
     return self;
 }
@@ -45,6 +47,34 @@
     return (chapperone && [chapperone isKindOfClass:[PPOPaymentTrackingChapperone class]] && [self.payment isEqual:chapperone.payment]);
 }
 
+-(void)startTimeoutTimer {
+    if (self.paymentTimeout >= 0) {
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timeoutTimerFired:) userInfo:nil repeats:YES];
+    }
+}
+
+-(void)stopTimeoutTimer {
+    [self.timer invalidate];
+    self.timer = nil;
+}
+
+-(void)timeoutTimerFired:(NSTimer*)timer {
+    if (self.paymentTimeout <= 0) {
+        [timer invalidate];
+        timer = nil;
+    } else {
+        self.paymentTimeout--;
+    }
+}
+
+-(BOOL)hasTimedout {
+    return (self.paymentTimeout <= 0);
+}
+
+@end
+
+@interface PPOPaymentTrackingManager ()
+@property (nonatomic, strong) NSMutableSet *payments;
 @end
 
 @implementation PPOPaymentTrackingManager
@@ -66,8 +96,8 @@
     return _payments;
 }
 
--(void)beginTrackingPayment:(PPOPayment*)payment {
-    PPOPaymentTrackingChapperone *chapperone = [[PPOPaymentTrackingChapperone alloc] initWithPayment:payment];
+-(void)beginTrackingPayment:(PPOPayment*)payment withTimeout:(CGFloat)timeout {
+    PPOPaymentTrackingChapperone *chapperone = [[PPOPaymentTrackingChapperone alloc] initWithPayment:payment withTimeout:timeout];
     [[PPOPaymentTrackingManager sharedManager] insertPaymentTrackingChapperone:chapperone];
 }
 
@@ -100,6 +130,11 @@
     if ([[PPOPaymentTrackingManager sharedManager].payments containsObject:payment]) {
         [[PPOPaymentTrackingManager sharedManager].payments removeObject:payment];
     }
+}
+
+-(NSNumber*)hasPaymentTimedout:(PPOPayment *)payment {
+    PPOPaymentTrackingChapperone *chapperone = [self chapperoneForPayment:payment];
+    return (chapperone != nil) ? @([chapperone hasTimedout]) : nil;
 }
 
 @end

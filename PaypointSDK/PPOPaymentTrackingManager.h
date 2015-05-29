@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 typedef enum : NSUInteger {
     PAYMENT_STATE_NON_EXISTENT,
@@ -18,8 +18,9 @@ typedef enum : NSUInteger {
 @class PPOPayment;
 @interface PPOPaymentTrackingManager : NSObject
 
--(void)beginTrackingPayment:(PPOPayment*)payment;
+-(void)beginTrackingPayment:(PPOPayment*)payment withTimeout:(CGFloat)timeout;
 -(void)endTrackingPayment:(PPOPayment*)payment;
 -(PAYMENT_STATE)stateForPayment:(PPOPayment*)payment;
+-(NSNumber*)hasPaymentTimedout:(PPOPayment*)payment;
 
 @end
