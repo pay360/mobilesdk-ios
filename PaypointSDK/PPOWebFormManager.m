@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#import "PPOWebFormDelegate.h"
+#import "PPOWebFormManager.h"
 #import "PPOWebViewController.h"
 #import "PPORedirect.h"
 #import "PPOPaymentTrackingManager.h"
@@ -14,7 +14,7 @@
 #import "PPOCredentials.h"
 #import "PPOErrorManager.h"
 
-@interface PPOWebFormDelegate () <PPOWebViewControllerDelegate>
+@interface PPOWebFormManager () <PPOWebViewControllerDelegate>
 @property (nonatomic, strong) PPORedirect *redirect;
 @property (nonatomic, copy) void(^outcomeHandler)(PPOOutcome *outcome, NSError *error);
 @property (nonatomic, strong) PPOWebViewController *webController;
@@ -23,7 +23,7 @@
 @property (nonatomic, strong) NSURLSession *session;
 @end
 
-@implementation PPOWebFormDelegate  {
+@implementation PPOWebFormManager  {
     BOOL _preventShowWebView;
     BOOL _isDismissingWebView;
 }

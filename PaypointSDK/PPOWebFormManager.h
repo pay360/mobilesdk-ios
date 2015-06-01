@@ -12,7 +12,7 @@
 @class PPOOutcome;
 @class PPOPaymentEndpointManager;
 @class PPOCredentials;
-@interface PPOWebFormDelegate : NSObject
+@interface PPOWebFormManager : NSObject
 
 -(instancetype)initWithRedirect:(PPORedirect*)redirect
                 withCredentials:(PPOCredentials*)credentials
