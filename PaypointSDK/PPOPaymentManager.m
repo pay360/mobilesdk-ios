@@ -26,19 +26,16 @@
 #import "PPOTimeManager.h"
 #import "PPOPaymentTrackingManager.h"
 
-@interface PPOPaymentManager () <NSURLSessionTaskDelegate, PPOWebViewControllerDelegate>
+@interface PPOPaymentManager () <NSURLSessionTaskDelegate>
 @property (nonatomic, strong) PPOPaymentEndpointManager *endpointManager;
-@property (nonatomic, copy) void(^outcomeCompletion)(PPOOutcome *outcome, NSError *error);
+@property (nonatomic, copy) void(^outcomeHandler)(PPOOutcome *outcome, NSError *error);
 @property (nonatomic, strong) PPOCredentials *credentials;
 @property (nonatomic, strong) NSURLSession *session;
 @property (nonatomic, strong) PPOWebViewController *webController;
 @property (nonatomic, strong) PPODeviceInfo *deviceInfo;
 @end
 
-@implementation PPOPaymentManager {
-    BOOL _preventShowWebView;
-    BOOL _isDismissingWebView;
-}
+@implementation PPOPaymentManager
 
 -(instancetype)initWithBaseURL:(NSURL*)baseURL {
     self = [super init];
@@ -59,7 +56,7 @@
     withCompletion:(void(^)(PPOOutcome *outcome, NSError *paymentFailure))outcomeHandler {
     
     self.credentials = credentials;
-    self.outcomeCompletion = outcomeHandler;
+    self.outcomeHandler = outcomeHandler;
     
     if ([self baseURLInvalid:self.endpointManager.baseURL]) return;
     if ([self credentialsInvalid:credentials]) return;
@@ -101,7 +98,7 @@
       withCompletion:(void(^)(PPOOutcome *outcome, NSError *networkError))outcomeHandler {
     
     self.credentials = credentials;
-    self.outcomeCompletion = outcomeHandler;
+    self.outcomeHandler = outcomeHandler;
     
     if ([self baseURLInvalid:self.endpointManager.baseURL]) return;
     if ([self credentialsInvalid:credentials]) return;
@@ -136,7 +133,7 @@
 -(BOOL)baseURLInvalid:(NSURL*)url {
     NSError *invalid = [PPOPaymentValidator validateBaseURL:url];
     if (invalid) {
-        self.outcomeCompletion(nil, invalid);
+        self.outcomeHandler(nil, invalid);
         return YES;
     }
     return NO;
@@ -146,7 +143,7 @@
     
     NSError *invalid = [PPOPaymentValidator validateCredentials:credentials];
     if (invalid) {
-        self.outcomeCompletion(nil, invalid);
+        self.outcomeHandler(nil, invalid);
         return YES;
     }
     return NO;
@@ -156,7 +153,7 @@
     
     NSError *invalid = [PPOPaymentValidator validatePayment:payment];
     if (invalid) {
-        self.outcomeCompletion(nil, invalid);
+        self.outcomeHandler(nil, invalid);
         return YES;
     }
     return NO;
@@ -167,7 +164,7 @@
     PAYMENT_STATE state = [PPOPaymentTrackingManager stateForPayment:payment];
     
     if (state != PAYMENT_STATE_NON_EXISTENT) {
-        self.outcomeCompletion(nil, [PPOErrorManager errorForCode:PPOErrorPaymentUnderway]);
+        self.outcomeHandler(nil, [PPOErrorManager errorForCode:PPOErrorPaymentUnderway]);
         return YES;
     }
     
@@ -193,7 +190,7 @@
         if (invalidJSON) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-                weakSelf.outcomeCompletion(nil, [PPOErrorManager errorForCode:PPOErrorServerFailure]);
+                weakSelf.outcomeHandler(nil, [PPOErrorManager errorForCode:PPOErrorServerFailure]);
             });
         } else if (redirectData) {
             
@@ -202,12 +199,12 @@
                 NSNumber *timedOut = [PPOPaymentTrackingManager hasPaymentSessionTimedoutForPayment:payment];
                 if (!timedOut || timedOut.boolValue == YES) {
                     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-                    weakSelf.outcomeCompletion(nil, [PPOErrorManager errorForCode:PPOErrorSessionTimedOut]);
+                    weakSelf.outcomeHandler(nil, [PPOErrorManager errorForCode:PPOErrorSessionTimedOut]);
                 } else {
                     NSError *redirectError = [weakSelf performSecureRedirect:redirectData forPayment:payment];
                     if (redirectError) {
                         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-                        weakSelf.outcomeCompletion(nil, redirectError);
+                        weakSelf.outcomeHandler(nil, redirectError);
                     }
                 }
                 
@@ -223,15 +220,15 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
                 if (((NSHTTPURLResponse*)response).statusCode == 404) {
-                    weakSelf.outcomeCompletion(nil, [PPOErrorManager errorForCode:PPOErrorPaymentUnknown]);
+                    weakSelf.outcomeHandler(nil, [PPOErrorManager errorForCode:PPOErrorPaymentUnknown]);
                 } else {
-                    weakSelf.outcomeCompletion(nil, networkError);
+                    weakSelf.outcomeHandler(nil, networkError);
                 }
             });
         } else {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-                weakSelf.outcomeCompletion(nil, [PPOErrorManager errorForCode:PPOErrorUnknown]);
+                weakSelf.outcomeHandler(nil, [PPOErrorManager errorForCode:PPOErrorUnknown]);
             });
         }
     };
@@ -290,7 +287,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [PPOPaymentTrackingManager removePayment:payment];
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-        self.outcomeCompletion(outcome, error);
+        self.outcomeHandler(outcome, error);
     });
     
 }
@@ -364,135 +361,6 @@
     return [NSJSONSerialization dataWithJSONObject:object
                                            options:NSJSONWritingPrettyPrinted
                                              error:nil];
-}
-
-#pragma mark - PPOWebViewController
-
--(void)webViewController:(PPOWebViewController *)controller completedWithPaRes:(NSString *)paRes forTransactionWithID:(NSString *)transID {
-    
-    _preventShowWebView = YES;
-    
-    [PPOPaymentTrackingManager resumeTimeoutForPayment:controller.redirect.payment];
-    
-    if ([[UIApplication sharedApplication] keyWindow] == self.webController.view.superview) {
-        [self.webController.view removeFromSuperview];
-    }
-    
-    id data;
-    
-    if (paRes) {
-        NSDictionary *dictionary = @{@"threeDSecureResponse": @{@"pares":paRes}};
-        data = [NSJSONSerialization dataWithJSONObject:dictionary options:NSJSONWritingPrettyPrinted error:nil];
-    }
-    
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[self.endpointManager urlForResumePaymentWithInstallationID:INSTALLATION_ID transactionID:transID]
-                                                           cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
-                                                       timeoutInterval:30.0f];
-    
-    [request setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-    
-    [request setHTTPMethod:@"POST"];
-    
-    [request setValue:[NSString stringWithFormat:@"Bearer %@", self.credentials.token] forHTTPHeaderField:@"Authorization"];
-    
-    [request setHTTPBody:data];
-    
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-    
-    NSURLSessionDataTask *task = [self.session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        
-        NSInteger statusCode = ((NSHTTPURLResponse*)response).statusCode;
-        
-        if (statusCode == 200) {
-            
-            NSError *invalidJSON;
-            id json;
-            if (data.length > 0) {
-                json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&invalidJSON];
-            }
-            
-            if (invalidJSON) {
-                [self completePayment:controller.redirect.payment onMainThreadWithOutcome:nil withError:[PPOErrorManager errorForCode:PPOErrorServerFailure]];
-                return;
-            }
-            
-            PPOOutcome *outcome;
-            if (json) {
-                outcome = [[PPOOutcome alloc] initWithData:json];
-            }
-            
-            if (outcome.isSuccessful != nil && outcome.isSuccessful.boolValue == NO) {
-                PPOErrorCode code = [PPOErrorManager errorCodeForReasonCode:outcome.reasonCode.integerValue];
-                [self completePayment:controller.redirect.payment onMainThreadWithOutcome:outcome withError:[PPOErrorManager errorForCode:code]];
-            } else if (outcome.isSuccessful.boolValue == YES) {
-                [self completePayment:controller.redirect.payment onMainThreadWithOutcome:outcome withError:nil];
-            } else {
-                [self completePayment:controller.redirect.payment onMainThreadWithOutcome:outcome withError:[PPOErrorManager errorForCode:PPOErrorUnknown]];
-            }
-            
-        } else {
-            [self completePayment:controller.redirect.payment onMainThreadWithOutcome:nil withError:[PPOErrorManager errorForCode:PPOErrorUnknown]];
-        }
-        
-    }];
-    
-    [task resume];
-    
-}
-
--(void)webViewControllerDelayShowTimeoutExpired:(PPOWebViewController *)controller {
-    if (!_preventShowWebView) {
-        [PPOPaymentTrackingManager stopTimeoutForPayment:controller.redirect.payment];
-        [self.webController.view removeFromSuperview];
-        UINavigationController *navCon = [[UINavigationController alloc] initWithRootViewController:self.webController];
-        [[[UIApplication sharedApplication] keyWindow].rootViewController presentViewController:navCon animated:YES completion:nil];
-    }
-}
-
--(void)webViewControllerSessionTimeoutExpired:(PPOWebViewController *)webController {
-    [self handleError:[PPOErrorManager errorForCode:PPOErrorThreeDSecureTimedOut]
-        webController:webController];
-}
-
--(void)webViewController:(PPOWebViewController *)webController failedWithError:(NSError *)error {
-    [self handleError:error
-        webController:webController];
-}
-
--(void)webViewControllerUserCancelled:(PPOWebViewController *)webController {
-    [self handleError:[PPOErrorManager errorForCode:PPOErrorUserCancelled]
-        webController:webController];
-}
-
--(void)handleError:(NSError *)error webController:(PPOWebViewController *)webController {
-    _preventShowWebView = YES;
-    [self completePayment:webController.redirect.payment onMainThreadWithOutcome:nil withError:error];
-}
-
--(void)completePayment:(PPOPayment*)payment onMainThreadWithOutcome:(PPOOutcome*)outcome withError:(NSError*)error {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        
-        [PPOPaymentTrackingManager removePayment:payment];
-        
-        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-        
-        //Depending on the delay show and session timeout timers, we may be currently showing the webview, or not.
-        //Thus this check is essential.
-        id controller = [[UIApplication sharedApplication] keyWindow].rootViewController.presentedViewController;
-        if (controller && controller == self.webController.navigationController) {
-            if (!_isDismissingWebView) {
-                _isDismissingWebView = YES;
-                [[[UIApplication sharedApplication] keyWindow].rootViewController dismissViewControllerAnimated:YES completion:^{
-                    _isDismissingWebView = NO;
-                    self.outcomeCompletion(outcome, error);
-                    _preventShowWebView = NO;
-                }];
-            }
-        } else {
-            self.outcomeCompletion(outcome, error);
-            _preventShowWebView = NO;
-        }
-    });
 }
 
 @end

@@ -15,8 +15,6 @@
 @class PPOBillingAddress;
 @class PPOCreditCard;
 
-#define INSTALLATION_ID @"5300065"
-
 @interface PPOPaymentManager : NSObject
 
 /*!

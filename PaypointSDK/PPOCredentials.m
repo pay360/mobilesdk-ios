@@ -10,4 +10,11 @@
 
 @implementation PPOCredentials
 
+-(NSString *)installationID {
+    if (_installationID == nil) {
+        _installationID = @"5300065";
+    }
+    return _installationID;
+}
+
 @end
