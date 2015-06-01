@@ -25,6 +25,7 @@
 #import "PPOTimeManager.h"
 #import "PPOPaymentTrackingManager.h"
 #import "PPOWebFormManager.h"
+#import "PPOPaymentValidator.h"
 
 @interface PPOPaymentManager () <NSURLSessionTaskDelegate>
 @property (nonatomic, strong) PPOPaymentEndpointManager *endpointManager;
@@ -360,88 +361,6 @@
     return [NSJSONSerialization dataWithJSONObject:object
                                            options:NSJSONWritingPrettyPrinted
                                              error:nil];
-}
-
-@end
-
-@implementation PPOPaymentValidator
-
-+(NSError*)validatePayment:(PPOPayment*)payment {
-    
-    return [self validateTransaction:payment.transaction
-                            withCard:payment.card];
-    
-}
-
-+(NSError*)validateBaseURL:(NSURL*)baseURL {
-    if (!baseURL) {
-        return [PPOErrorManager errorForCode:PPOErrorSuppliedBaseURLInvalid];
-    }
-    return nil;
-}
-
-+(NSError*)validateCredentials:(PPOCredentials*)credentials {
-    
-    if (!credentials) {
-        return [PPOErrorManager errorForCode:PPOErrorCredentialsNotFound];
-    }
-    
-    if (!credentials.token || credentials.token.length == 0) {
-        return [PPOErrorManager errorForCode:PPOErrorClientTokenInvalid];
-    }
-    
-    if (!credentials.installationID || credentials.installationID.length == 0) {
-        return [PPOErrorManager errorForCode:PPOErrorInstallationIDInvalid];
-    }
-    
-    return nil;
-}
-
-+(NSError*)validateTransaction:(PPOTransaction*)transaction withCard:(PPOCreditCard*)card {
-    
-    NSString *strippedValue;
-    
-    strippedValue = [card.pan stringByReplacingOccurrencesOfString:@" " withString:@""];
-    
-    BOOL containsLetters = [strippedValue rangeOfCharacterFromSet:[NSCharacterSet letterCharacterSet]].location != NSNotFound;
-    
-    if (strippedValue.length < 13 || strippedValue.length > 19 || containsLetters) {
-        return [PPOErrorManager errorForCode:PPOErrorCardPanInvalid];
-    }
-    
-    if (![PPOLuhn validateString:strippedValue]) {
-        return [PPOErrorManager errorForCode:PPOErrorLuhnCheckFailed];
-    }
-    
-    strippedValue = [card.expiry stringByReplacingOccurrencesOfString:@" " withString:@""];
-    
-    if (strippedValue == nil || strippedValue.length != 4) {
-        return [PPOErrorManager errorForCode:PPOErrorCardExpiryDateInvalid];
-    } else if ([PPOPaymentValidator cardExpiryHasExpired:strippedValue]) {
-        return [PPOErrorManager errorForCode:PPOErrorCardExpiryDateExpired];
-    }
-    
-    strippedValue = [card.cvv stringByReplacingOccurrencesOfString:@" " withString:@""];
-    
-    if (strippedValue == nil || strippedValue.length < 3 || strippedValue.length > 4) {
-        return [PPOErrorManager errorForCode:PPOErrorCVVInvalid];
-    }
-    
-    strippedValue = [transaction.currency stringByReplacingOccurrencesOfString:@" " withString:@""];
-    
-    if (strippedValue == nil || strippedValue.length == 0) {
-        return [PPOErrorManager errorForCode:PPOErrorCurrencyInvalid];
-    }
-    
-    if (transaction.amount == nil || transaction.amount.floatValue <= 0.0) {
-        return [PPOErrorManager errorForCode:PPOErrorPaymentAmountInvalid];
-    }
-    
-    return nil;
-}
-
-+(BOOL)cardExpiryHasExpired:(NSString*)expiry {
-    return [PPOTimeManager cardExpiryDateExpired:expiry];
 }
 
 @end

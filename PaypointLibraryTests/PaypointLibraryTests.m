@@ -408,7 +408,6 @@
 
 -(PPOCredentials*)credentialsWithToken:(NSString*)token {
     PPOCredentials *credentials = [PPOCredentials new];
-    credentials.installationID = INSTALLATION_ID;
     credentials.token = token;
     return credentials;
 }
