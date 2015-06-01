@@ -17,10 +17,10 @@ typedef enum : NSUInteger {
 
 @class PPOPayment;
 @interface PPOPaymentTrackingManager : NSObject
--(void)appendPayment:(PPOPayment*)payment withTimeout:(NSTimeInterval)timeout commenceTimeoutImmediately:(BOOL)begin;
--(void)removePayment:(PPOPayment*)payment;
--(void)resumeTimeoutForPayment:(PPOPayment*)payment;
--(void)stopTimeoutForPayment:(PPOPayment*)payment;
--(PAYMENT_STATE)stateForPayment:(PPOPayment*)payment;
--(NSNumber*)hasPaymentSessionTimedoutForPayment:(PPOPayment*)payment;
++(void)appendPayment:(PPOPayment*)payment withTimeout:(NSTimeInterval)timeout commenceTimeoutImmediately:(BOOL)begin;
++(void)removePayment:(PPOPayment*)payment;
++(void)resumeTimeoutForPayment:(PPOPayment*)payment;
++(void)stopTimeoutForPayment:(PPOPayment*)payment;
++(PAYMENT_STATE)stateForPayment:(PPOPayment*)payment;
++(NSNumber*)hasPaymentSessionTimedoutForPayment:(PPOPayment*)payment;
 @end

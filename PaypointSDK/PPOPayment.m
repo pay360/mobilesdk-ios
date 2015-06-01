@@ -38,4 +38,8 @@
     return [self.identifier hash];
 }
 
+-(void)dealloc {
+    NSLog(@"%@ deallocated", [self class]);
+}
+
 @end

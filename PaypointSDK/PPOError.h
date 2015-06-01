@@ -49,6 +49,9 @@ typedef NS_ENUM(NSInteger, PPOErrorCode) {
     /* An internal server error occurred at paypoint */
     PPOErrorServerFailure,
     
+    /* The payment is currently in flight */
+    PPOErrorPaymentProcessing,
+    
     /* Luhn check failed */
     PPOErrorLuhnCheckFailed,
     
@@ -72,6 +75,9 @@ typedef NS_ENUM(NSInteger, PPOErrorCode) {
     
     /* Specified currency is invalid */
     PPOErrorCurrencyInvalid,
+    
+    /* The payment hasn't been sent or hasn't arrived yet*/
+    PPOErrorPaymentUnknown,
     
     /* The specified amount is invalid */
     PPOErrorPaymentAmountInvalid,

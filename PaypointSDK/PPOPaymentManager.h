@@ -56,6 +56,5 @@
 +(NSError*)validatePayment:(PPOPayment*)payment;
 +(NSError*)validateCredentials:(PPOCredentials*)credentials;
 +(NSError*)validateTransaction:(PPOTransaction*)transaction withCard:(PPOCreditCard*)card;
-+(NSError*)validateCredentials:(PPOCredentials*)credentials validateBaseURL:(NSURL*)baseURL validatePayment:(PPOPayment*)payment;
 
 @end

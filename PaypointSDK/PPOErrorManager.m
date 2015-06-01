@@ -38,7 +38,8 @@
         case 4: code = PPOErrorUnauthorisedRequest; break;
         case 5: code = PPOErrorTransactionProcessingFailed; break;
         case 6: code = PPOErrorServerFailure; break;
-            
+        case 9: code = PPOErrorPaymentProcessing; break;
+#warning handle case 10
         default:
             break;
     }
@@ -89,9 +90,9 @@
         }
             break;
             
-        case PPOErrorTransactionUnknown:
+        case PPOErrorPaymentUnknown:
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
-                                       code:PPOErrorTransactionUnknown
+                                       code:PPOErrorPaymentUnknown
                                    userInfo:@{
                                               NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The transaction is not known or has not arrived at our servers yet.", @"Failure message for authentication")
                                               }
