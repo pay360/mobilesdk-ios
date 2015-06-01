@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+@class PPOPayment;
 @interface PPORedirect : NSObject
 
 @property (nonatomic, strong) NSURLRequest *request;
@@ -15,6 +16,7 @@
 @property (nonatomic, strong) NSNumber *delayTimeInterval;
 @property (nonatomic, strong) NSURL *termURL;
 @property (nonatomic, strong) NSString *transactionID;
+@property (nonatomic, strong) PPOPayment *payment;
 
 -(instancetype)initWithData:(NSDictionary*)data;
 

@@ -8,18 +8,30 @@
 
 #import "PPOPaymentEndpointManager.h"
 
+@interface PPOPaymentEndpointManager ()
+@property (nonatomic, strong, readwrite) NSURL *baseURL;
+@end
+
 @implementation PPOPaymentEndpointManager
 
--(NSURL*)urlForSimplePayment:(NSString*)installationID withBaseURL:(NSURL*)baseURL {
-    return [baseURL URLByAppendingPathComponent:[NSString stringWithFormat:@"acceptor/rest/mobile/transactions/%@/payment", installationID]];
+-(instancetype)initWithBaseURL:(NSURL*)baseURL {
+    self = [super init];
+    if (self) {
+        _baseURL = baseURL;
+    }
+    return self;
 }
 
--(NSURL*)urlForPaymentWithID:(NSString*)paymentIdentifier withInst:(NSString*)installationID withBaseURL:(NSURL*)baseURL {
-    return [baseURL URLByAppendingPathComponent:[NSString stringWithFormat:@"acceptor/rest/mobile/transactions/%@/opref/%@", installationID, paymentIdentifier]];
+-(NSURL*)urlForSimplePayment:(NSString*)installationID {
+    return [self.baseURL URLByAppendingPathComponent:[NSString stringWithFormat:@"acceptor/rest/mobile/transactions/%@/payment", installationID]];
 }
 
--(NSURL*)urlForResumePaymentWithInstallationID:(NSString*)installationID transactionID:(NSString*)transID withBaseURL:(NSURL*)baseURL {
-    return [baseURL URLByAppendingPathComponent:[NSString stringWithFormat:@"acceptor/rest/mobile/transactions/%@/%@/resume", installationID, transID]];
+-(NSURL*)urlForPaymentWithID:(NSString*)paymentIdentifier withInst:(NSString*)installationID {
+    return [self.baseURL URLByAppendingPathComponent:[NSString stringWithFormat:@"acceptor/rest/mobile/transactions/%@/opref/%@", installationID, paymentIdentifier]];
+}
+
+-(NSURL*)urlForResumePaymentWithInstallationID:(NSString*)installationID transactionID:(NSString*)transID {
+    return [self.baseURL URLByAppendingPathComponent:[NSString stringWithFormat:@"acceptor/rest/mobile/transactions/%@/%@/resume", installationID, transID]];
 }
 
 @end

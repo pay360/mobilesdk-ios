@@ -69,6 +69,16 @@
                     ];
             break;
             
+        case PPOErrorSessionTimedOut: {
+            return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                       code:PPOErrorSessionTimedOut
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Payment session timedout", @"Failure message for card validation")
+                                              }
+                    ];
+        }
+            break;
+            
         case PPOErrorAuthenticationFailed: {
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorAuthenticationFailed
@@ -77,6 +87,24 @@
                                               }
                     ];
         }
+            break;
+            
+        case PPOErrorTransactionUnknown:
+            return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                       code:PPOErrorTransactionUnknown
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The transaction is not known or has not arrived at our servers yet.", @"Failure message for authentication")
+                                              }
+                    ];
+            break;
+            
+        case PPOErrorPaymentProcessing:
+            return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                       code:PPOErrorPaymentProcessing
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Transaction in progress", @"Status message for payment status check")
+                                              }
+                    ];
             break;
             
         case PPOErrorSuppliedBaseURLInvalid: {

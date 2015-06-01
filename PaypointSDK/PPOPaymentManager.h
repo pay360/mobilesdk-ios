@@ -19,8 +19,6 @@
 
 @interface PPOPaymentManager : NSObject
 
-@property (nonatomic, strong, readonly) NSURL *baseURL;
-
 /*!
  * @discussion A required initialiser for setting the baseURL.
  * @param baseURL The baseURL to be used for all subsequent payments made using an instance of this class.
@@ -38,7 +36,7 @@
  */
 -(void)makePayment:(PPOPayment*)payment
    withCredentials:(PPOCredentials*)credentials
-       withTimeOut:(CGFloat)timeout
+       withTimeOut:(NSTimeInterval)timeout
     withCompletion:(void(^)(PPOOutcome *outcome, NSError *paymentFailure))completion;
 
 -(void)paymentStatus:(PPOPayment*)payment

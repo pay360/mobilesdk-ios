@@ -64,6 +64,9 @@ typedef NS_ENUM(NSInteger, PPOErrorCode) {
     /* Only one payment can be made per unit time. Please wait for the current payment to complete, before starting a new payment. */
     PPOErrorPaymentUnderway,
     
+    /* The payment session timed out */
+    PPOErrorSessionTimedOut,
+    
     /* Card expiry date is invalid */
     PPOErrorCardExpiryDateInvalid,
     
