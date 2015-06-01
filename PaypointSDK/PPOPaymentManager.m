@@ -31,7 +31,6 @@
 @property (nonatomic, copy) void(^outcomeCompletion)(PPOOutcome *outcome, NSError *error);
 @property (nonatomic, strong) PPOCredentials *credentials;
 @property (nonatomic, strong) NSURLSession *session;
-@property (nonatomic, strong, readwrite) NSOperationQueue *payments;
 @property (nonatomic, strong) PPOWebViewController *webController;
 @property (nonatomic, strong) PPODeviceInfo *deviceInfo;
 @property (nonatomic, strong) PPOPaymentTrackingManager *trackingManager;
@@ -46,55 +45,22 @@
     self = [super init];
     if (self) {
         _endpointManager = [[PPOPaymentEndpointManager alloc] initWithBaseURL:baseURL];
+        _deviceInfo = [PPODeviceInfo new];
+        _trackingManager = [PPOPaymentTrackingManager new];
+        NSOperationQueue *q = [NSOperationQueue new];
+        q.name = @"Payments_Queue";
+        q.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
+        _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:q];
     }
     return self;
 }
 
--(PPOPaymentTrackingManager *)trackingManager {
-    if (_trackingManager == nil) {
-        _trackingManager = [PPOPaymentTrackingManager new];
-    }
-    return _trackingManager;
-}
-
--(PPODeviceInfo *)deviceInfo {
-    if (_deviceInfo == nil) {
-        _deviceInfo = [PPODeviceInfo new];
-    }
-    return _deviceInfo;
-}
-
--(NSOperationQueue *)payments {
-    if (_payments == nil) {
-        _payments = [NSOperationQueue new];
-        _payments.name = @"Payments_Queue";
-        _payments.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
-    }
-    return _payments;
-}
-
--(NSURLSession *)session {
-    if (_session == nil) {
-        _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:self.payments];
-    }
-    return _session;
-}
-
--(void)makePayment:(PPOPayment*)payment withCredentials:(PPOCredentials*)credentials withTimeOut:(NSTimeInterval)timeout withCompletion:(void(^)(PPOOutcome *outcome, NSError *paymentFailure))completion {
+-(void)makePayment:(PPOPayment*)payment withCredentials:(PPOCredentials*)credentials withTimeOut:(NSTimeInterval)timeout withCompletion:(void(^)(PPOOutcome *outcome, NSError *paymentFailure))outcomeHandler {
     
-    if ([self.trackingManager stateForPayment:payment] != PAYMENT_STATE_NON_EXISTENT) {
-        completion(nil, [PPOErrorManager errorForCode:PPOErrorPaymentUnderway]);
-        return;
-    }
+    self.credentials = credentials;
+    self.outcomeCompletion = outcomeHandler;
     
-    NSError *invalid = [PPOPaymentValidator validateCredentials:credentials
-                                                validateBaseURL:self.endpointManager.baseURL
-                                                validatePayment:payment];
-    
-    if (invalid) {
-        completion(nil, invalid);
-        return;
-    }
+    if ([self paymentIsUnderwayOrInvalid:payment]) return;
     
     [self.trackingManager appendPayment:payment
                             withTimeout:timeout
@@ -106,18 +72,28 @@
                                             withURL:url
                                     withCredentials:credentials
                                         withPayment:payment
-                                     withDeviceInfo:self.deviceInfo
                                         withTimeout:30.0f];
-
-    self.outcomeCompletion = completion;
-    self.credentials = credentials;
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     
+    id completionHandler = [self transactionResponseHandlerForPayment:payment
+                                                      attemptRecovery:NO
+                                                       outcomeHandler:outcomeHandler];
+    
+    NSURLSessionDataTask *task = [self.session dataTaskWithRequest:request
+                                                 completionHandler:completionHandler];
+    
+    [task resume];
+    
+}
+
+-(void(^)(NSData *data, NSURLResponse *response, NSError *networkError))transactionResponseHandlerForPayment:(PPOPayment*)payment
+                                                                                            attemptRecovery:(BOOL)retry
+                                                                                             outcomeHandler:(void(^)(PPOOutcome *outcome, NSError *paymentFailure))completion {
+    
     __weak typeof(self) weakSelf = self;
     
-    NSURLSessionDataTask *task = [self.session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *networkError) {
-        
+    return ^ (NSData *data, NSURLResponse *response, NSError *networkError) {
         id json;
         NSError *invalidJSON;
         
@@ -134,12 +110,12 @@
             });
         } else if (redirectData) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                NSNumber *timedOut = [self.trackingManager hasPaymentSessionTimedoutForPayment:payment];
+                NSNumber *timedOut = [weakSelf.trackingManager hasPaymentSessionTimedoutForPayment:payment];
                 if (!timedOut || timedOut.boolValue == YES) {
                     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
                     completion(nil, [PPOErrorManager errorForCode:PPOErrorSessionTimedOut]);
                 } else {
-                    id redirectError = [self performSecureRedirect:redirectData forPayment:payment];
+                    id redirectError = [weakSelf performSecureRedirect:redirectData forPayment:payment];
                     if (redirectError) {
                         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
                         completion(nil, redirectError);
@@ -149,13 +125,46 @@
         } else if (json) {
             [weakSelf determineOutcome:json forPayment:payment completionHandler:completion];
         } else {
-            //Perform get for transaction
+            if (retry) {
+                //Perform get for transaction
+            } else {
+                if (networkError) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+                        if (((NSHTTPURLResponse*)response).statusCode == 404) {
+                            completion(nil, [PPOErrorManager errorForCode:PPOErrorTransactionUnknown]);
+                        } else {
+                            completion(nil, networkError);
+                        }
+                    });
+                } else {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+                        completion(nil, [PPOErrorManager errorForCode:PPOErrorUnknown]);
+                    });
+                }
+            }
         }
-        
-    }];
+    };
+}
+
+-(BOOL)paymentIsUnderwayOrInvalid:(PPOPayment*)payment {
     
-    [task resume];
+    PAYMENT_STATE state = [self.trackingManager stateForPayment:payment];
     
+    if (state != PAYMENT_STATE_NON_EXISTENT) {
+        self.outcomeCompletion(nil, [PPOErrorManager errorForCode:PPOErrorPaymentUnderway]);
+        return YES;
+    }
+    
+    NSError *invalid = [PPOPaymentValidator validateCredentials:self.credentials validateBaseURL:self.endpointManager.baseURL validatePayment:payment];
+    
+    if (invalid) {
+        self.outcomeCompletion(nil, invalid);
+        return YES;
+    }
+    
+    return NO;
 }
 
 -(NSDictionary*)redirectData:(id)json {
@@ -209,10 +218,10 @@
     });
 }
 
--(void)paymentStatus:(PPOPayment*)payment withCredentials:(PPOCredentials*)credentials withCompletion:(void(^)(PPOOutcome *outcome, NSError *networkError))completion {
+-(void)paymentStatus:(PPOPayment*)payment withCredentials:(PPOCredentials*)credentials withCompletion:(void(^)(PPOOutcome *outcome, NSError *networkError))outcomeHandler {
     
     if (!payment) {
-        completion(nil, nil);
+        outcomeHandler(nil, nil);
         return;
     }
     
@@ -223,53 +232,22 @@
                                             withURL:url
                                     withCredentials:credentials
                                         withPayment:payment
-                                     withDeviceInfo:self.deviceInfo
                                         withTimeout:5.0f];
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     
-    __weak typeof(self) weakSelf = self;
+    id completionHandler = [self transactionResponseHandlerForPayment:payment
+                                                      attemptRecovery:NO
+                                                       outcomeHandler:outcomeHandler];
     
-    NSURLSessionDataTask *task = [self.session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *networkError) {
-        
-        id json;
-        NSError *invalidJSON;
-        
-        if (data.length > 0) {
-            json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&invalidJSON];
-        }
-        
-        if (invalidJSON) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-                completion(nil, [PPOErrorManager errorForCode:PPOErrorServerFailure]);
-            });
-        } else if (json) {
-            [weakSelf determineOutcome:json forPayment:payment completionHandler:completion];
-        } else if (networkError) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-                if (((NSHTTPURLResponse*)response).statusCode == 404) {
-                    completion(nil, [PPOErrorManager errorForCode:PPOErrorTransactionUnknown]);
-                } else {
-                    completion(nil, networkError);
-                }
-            });
-        } else {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-                completion(nil, [PPOErrorManager errorForCode:PPOErrorUnknown]);
-            });
-        }
-        
-    }];
+    NSURLSessionDataTask *task = [self.session dataTaskWithRequest:request completionHandler:completionHandler];
     
     [task resume];
     
 }
 
--(NSURLRequest*)requestWithMethod:(NSString*)method withURL:(NSURL*)url withCredentials:(PPOCredentials*)credentials withPayment:(PPOPayment*)payment withDeviceInfo:(PPODeviceInfo*)deviceInfo withTimeout:(CGFloat)timeout {
-    NSData *data = [self buildPostBodyWithPayment:payment withDeviceInfo:deviceInfo];
+-(NSURLRequest*)requestWithMethod:(NSString*)method withURL:(NSURL*)url withCredentials:(PPOCredentials*)credentials withPayment:(PPOPayment*)payment withTimeout:(CGFloat)timeout {
+    NSData *data = [self buildPostBodyWithPayment:payment withDeviceInfo:self.deviceInfo];
     NSString *authorisation = [self authorisation:credentials];
     
     NSMutableURLRequest *request = [self mutableJSONRequestWithMethod:method withURL:url forPayment:payment withTimeout:timeout];
