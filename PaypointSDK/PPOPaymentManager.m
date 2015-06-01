@@ -15,7 +15,6 @@
 #import "PPOCredentials.h"
 #import "PPOTransaction.h"
 #import "PPOPaymentEndpointManager.h"
-#import "PPOWebViewController.h"
 #import "PPORedirect.h"
 #import "PPOSDKConstants.h"
 #import "PPODeviceInfo.h"
@@ -25,14 +24,15 @@
 #import "PPOCustomField.h"
 #import "PPOTimeManager.h"
 #import "PPOPaymentTrackingManager.h"
+#import "PPOWebFormManager.h"
 
 @interface PPOPaymentManager () <NSURLSessionTaskDelegate>
 @property (nonatomic, strong) PPOPaymentEndpointManager *endpointManager;
 @property (nonatomic, copy) void(^outcomeHandler)(PPOOutcome *outcome, NSError *error);
 @property (nonatomic, strong) PPOCredentials *credentials;
 @property (nonatomic, strong) NSURLSession *session;
-@property (nonatomic, strong) PPOWebViewController *webController;
 @property (nonatomic, strong) PPODeviceInfo *deviceInfo;
+@property (nonatomic, strong) PPOWebFormManager *webFormManager;
 @end
 
 @implementation PPOPaymentManager
@@ -264,12 +264,11 @@
         return [PPOErrorManager errorForCode:PPOErrorProcessingThreeDSecure];
     }
     
-    self.webController = [[PPOWebViewController alloc] initWithRedirect:redirect withDelegate:self];
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-    CGFloat width = [UIScreen mainScreen].bounds.size.width;
-    CGFloat height = [UIScreen mainScreen].bounds.size.height;
-    self.webController.view.frame = CGRectMake(-height, -width, width, height);
-    [[[UIApplication sharedApplication] keyWindow] addSubview:self.webController.view];
+    self.webFormManager = [[PPOWebFormManager alloc] initWithRedirect:redirect
+                                                      withCredentials:self.credentials
+                                                          withSession:self.session
+                                                  withEndpointManager:self.endpointManager
+                                                          withOutcome:self.outcomeHandler];
     
     return nil;
 }

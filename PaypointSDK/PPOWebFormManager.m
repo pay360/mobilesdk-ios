@@ -35,13 +35,23 @@
                     withOutcome:(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandler {
     self = [super init];
     if (self) {
-        _redirect = redirect;
         _credentials = credentials;
         _endpointManager = endpointManager;
         _outcomeHandler = outcomeHandler;
         _session = session;
+        _redirect = redirect;
+        [self loadRedirect:redirect];
     }
     return self;
+}
+
+-(void)loadRedirect:(PPORedirect*)redirect {
+    self.webController = [[PPOWebViewController alloc] initWithRedirect:redirect withDelegate:self];
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+    CGFloat width = [UIScreen mainScreen].bounds.size.width;
+    CGFloat height = [UIScreen mainScreen].bounds.size.height;
+    self.webController.view.frame = CGRectMake(-height, -width, width, height);
+    [[[UIApplication sharedApplication] keyWindow] addSubview:self.webController.view];
 }
 
 #pragma mark - PPOWebViewController
