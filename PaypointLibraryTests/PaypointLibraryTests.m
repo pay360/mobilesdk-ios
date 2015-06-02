@@ -318,7 +318,11 @@
                                  }];
 }
 
--(void)testSimplePaymentWithDelayedAuthorisedPan {
+/**
+ *  Network returns a valid response after 2 second delay.
+ *  We cancel the network task associated with this payment after a 1 second timeout.
+ */
+-(void)testSessionTimeout {
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Simple payment timedout"];
     
@@ -330,12 +334,12 @@
                      withCredentials:[self credentialsWithToken:VALID_BEARER_TOKEN]
                          withTimeOut:1.0
                       withCompletion:^(PPOOutcome *outcome, NSError *error) {
-                          if ([error.domain isEqualToString:@"NSURLErrorDomain"] && error.code == kCFURLErrorTimedOut) {
+                          if ([error.domain isEqualToString:@"NSURLErrorDomain"] && error.code == kCFURLErrorCancelled) {
                               [expectation fulfill];
                           }
                       }];
     
-    [self waitForExpectationsWithTimeout:2.0
+    [self waitForExpectationsWithTimeout:3.0
                                  handler:^(NSError *error) {
                                      if(error) {
                                          XCTFail(@"Simple payment failed with error: %@", error);
