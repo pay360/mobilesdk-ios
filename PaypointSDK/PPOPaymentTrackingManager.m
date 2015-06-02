@@ -21,6 +21,7 @@
 @interface PPOPaymentTrackingChapperone ()
 @property (nonatomic) NSTimeInterval paymentTimeout;
 @property (nonatomic, strong) NSTimer *timer;
+@property (nonatomic, copy) void(^timeoutHandler)(void);
 @end
 
 @implementation PPOPaymentTrackingChapperone
@@ -29,7 +30,7 @@
     self = [super init];
     if (self) {
         _payment = payment;
-        _state = PAYMENT_STATE_NOT_STARTED;
+        _state = PAYMENT_STATE_READY;
         if (timeout < 0.0f) {
             timeout = 0;
         }
@@ -65,6 +66,7 @@
     if (self.paymentTimeout <= 0) {
         [timer invalidate];
         timer = nil;
+        self.timeoutHandler();
     } else {
         self.paymentTimeout--;
     }
@@ -77,7 +79,7 @@
 @end
 
 @interface PPOPaymentTrackingManager ()
-@property (nonatomic, strong) NSMutableSet *payments;
+@property (nonatomic, strong) NSMutableSet *paymentChapperones;
 @end
 
 @implementation PPOPaymentTrackingManager
@@ -92,20 +94,22 @@
     return sharedManager;
 }
 
--(NSMutableSet *)payments {
-    if (_payments == nil) {
-        _payments = [NSMutableSet new];
+-(NSMutableSet *)paymentChapperones {
+    if (_paymentChapperones == nil) {
+        _paymentChapperones = [NSMutableSet new];
     }
-    return _payments;
+    return _paymentChapperones;
 }
 
-+(void)appendPayment:(PPOPayment*)payment withTimeout:(NSTimeInterval)timeout commenceTimeoutImmediately:(BOOL)begin {
++(void)appendPayment:(PPOPayment*)payment withTimeout:(NSTimeInterval)timeout commenceTimeoutImmediately:(BOOL)begin timeoutHanlder:(void(^)(void))handler {
     
     PPOPaymentTrackingChapperone *chapperone = [[PPOPaymentTrackingChapperone alloc] initWithPayment:payment withTimeout:timeout];
+    chapperone.timeoutHandler = handler;
     
     [PPOPaymentTrackingManager insertPaymentTrackingChapperone:chapperone];
     
     if (begin) {
+        chapperone.state = PAYMENT_STATE_IN_PROGRESS;
         [chapperone startTimeoutTimer];
     }
     
@@ -127,7 +131,7 @@
     
     PPOPaymentTrackingChapperone *chapperone;
     
-    for (PPOPaymentTrackingChapperone *c in manager.payments) {
+    for (PPOPaymentTrackingChapperone *c in manager.paymentChapperones) {
         
         if ([c.payment isEqual:payment]) {
             chapperone = c;
@@ -152,16 +156,16 @@
     
     PPOPaymentTrackingManager *manager = [PPOPaymentTrackingManager sharedManager];
     
-    [manager.payments addObject:chapperone];
+    [manager.paymentChapperones addObject:chapperone];
     
 }
 
-+(void)removePaymentChapperone:(PPOPaymentTrackingChapperone*)payment {
++(void)removePaymentChapperone:(PPOPaymentTrackingChapperone*)chapperone {
     
     PPOPaymentTrackingManager *manager = [PPOPaymentTrackingManager sharedManager];
     
-    if ([manager.payments containsObject:payment]) {
-        [manager.payments removeObject:payment];
+    if ([manager.paymentChapperones containsObject:chapperone]) {
+        [manager.paymentChapperones removeObject:chapperone];
     }
     
 }
@@ -169,14 +173,16 @@
 +(void)resumeTimeoutForPayment:(PPOPayment *)payment {
     
     PPOPaymentTrackingChapperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
+    chapperone.state = PAYMENT_STATE_IN_PROGRESS;
     
     [chapperone startTimeoutTimer];
     
 }
 
-+(void)stopTimeoutForPayment:(PPOPayment *)payment {
++(void)suspendTimeoutForPayment:(PPOPayment *)payment {
     
     PPOPaymentTrackingChapperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
+    chapperone.state = PAYMENT_STATE_SUSPENDED;
     
     [chapperone stopTimeoutTimer];
     
@@ -188,6 +194,23 @@
     
     return (chapperone != nil) ? @([chapperone hasTimedout]) : nil;
     
+}
+
++(BOOL)allPaymentsComplete {
+    
+    PPOPaymentTrackingManager *manager = [PPOPaymentTrackingManager sharedManager];
+    
+    PPOPaymentTrackingChapperone *chapperone;
+    
+    for (PPOPaymentTrackingChapperone *c in manager.paymentChapperones) {
+        
+        if (c.state != PAYMENT_STATE_NON_EXISTENT) {
+            chapperone = c;
+            break;
+        }
+    }
+    
+    return (chapperone == nil);
 }
 
 @end

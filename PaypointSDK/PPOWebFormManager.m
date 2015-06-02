@@ -13,6 +13,7 @@
 #import "PPOPaymentEndpointManager.h"
 #import "PPOCredentials.h"
 #import "PPOErrorManager.h"
+#import "PPOPayment.h"
 
 @interface PPOWebFormManager () <PPOWebViewControllerDelegate>
 @property (nonatomic, strong) PPORedirect *redirect;
@@ -76,50 +77,45 @@
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[self.endpointManager urlForResumePaymentWithInstallationID:self.credentials.installationID transactionID:transID]
                                                            cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
                                                        timeoutInterval:30.0f];
-    
     [request setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-    
+    [request setValue:controller.redirect.payment.identifier forHTTPHeaderField:@"AP-Operation-ID"];
     [request setHTTPMethod:@"POST"];
-    
     [request setValue:[NSString stringWithFormat:@"Bearer %@", self.credentials.token] forHTTPHeaderField:@"Authorization"];
-    
     [request setHTTPBody:data];
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     
-    NSURLSessionDataTask *task = [self.session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    NSURLSessionDataTask *task = [self.session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *networkError) {
         
-        NSInteger statusCode = ((NSHTTPURLResponse*)response).statusCode;
+        NSError *invalidJSON;
+        id json;
+        if (data.length > 0) {
+            json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&invalidJSON];
+        }
         
-        if (statusCode == 200) {
-            
-            NSError *invalidJSON;
-            id json;
-            if (data.length > 0) {
-                json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&invalidJSON];
-            }
-            
-            if (invalidJSON) {
-                [self completePayment:controller.redirect.payment onMainThreadWithOutcome:nil withError:[PPOErrorManager errorForCode:PPOErrorServerFailure]];
-                return;
-            }
-            
-            PPOOutcome *outcome;
-            if (json) {
-                outcome = [[PPOOutcome alloc] initWithData:json];
-            }
-            
-            if (outcome.isSuccessful != nil && outcome.isSuccessful.boolValue == NO) {
-                PPOErrorCode code = [PPOErrorManager errorCodeForReasonCode:outcome.reasonCode.integerValue];
-                [self completePayment:controller.redirect.payment onMainThreadWithOutcome:outcome withError:[PPOErrorManager errorForCode:code]];
-            } else if (outcome.isSuccessful.boolValue == YES) {
-                [self completePayment:controller.redirect.payment onMainThreadWithOutcome:outcome withError:nil];
-            } else {
-                [self completePayment:controller.redirect.payment onMainThreadWithOutcome:outcome withError:[PPOErrorManager errorForCode:PPOErrorUnknown]];
-            }
-            
+        if (invalidJSON) {
+            [PPOPaymentTrackingManager removePayment:controller.redirect.payment];
+            [self completePayment:controller.redirect.payment onMainThreadWithOutcome:nil withError:[PPOErrorManager errorForCode:PPOErrorServerFailure]];
+            return;
+        }
+        
+        PPOOutcome *outcome;
+        if (json) {
+            outcome = [[PPOOutcome alloc] initWithData:json];
+        }
+        
+        if (outcome.isSuccessful != nil && outcome.isSuccessful.boolValue == NO) {
+            [PPOPaymentTrackingManager removePayment:controller.redirect.payment];
+            PPOErrorCode code = [PPOErrorManager errorCodeForReasonCode:outcome.reasonCode.integerValue];
+            [self completePayment:controller.redirect.payment onMainThreadWithOutcome:outcome withError:[PPOErrorManager errorForCode:code]];
+        } else if (outcome.isSuccessful.boolValue == YES) {
+            [self completePayment:controller.redirect.payment onMainThreadWithOutcome:outcome withError:nil];
+        } else if (networkError) {
+            [PPOPaymentTrackingManager removePayment:controller.redirect.payment];
+            [self completePayment:controller.redirect.payment onMainThreadWithOutcome:outcome withError:networkError];
         } else {
-            [self completePayment:controller.redirect.payment onMainThreadWithOutcome:nil withError:[PPOErrorManager errorForCode:PPOErrorUnknown]];
+            [PPOPaymentTrackingManager removePayment:controller.redirect.payment];
+            [self completePayment:controller.redirect.payment onMainThreadWithOutcome:outcome withError:[PPOErrorManager errorForCode:PPOErrorUnknown]];
         }
         
     }];
@@ -128,9 +124,17 @@
     
 }
 
+/**
+ *  The delay show mechanism is in place to prevent the web view from presenting itself, when it begins to load.
+ *  Once the delay expires, the web view is shown, regardless of it's loading state.
+ *  This mechanism is used to show the webview, even when a time value is not provided i.e. timeout value = 0
+ *  ensuring that this method is the only method that controls web view presentation.
+ *
+ *  @param controller <#controller description#>
+ */
 -(void)webViewControllerDelayShowTimeoutExpired:(PPOWebViewController *)controller {
     if (!_preventShowWebView) {
-        [PPOPaymentTrackingManager stopTimeoutForPayment:controller.redirect.payment];
+        [PPOPaymentTrackingManager suspendTimeoutForPayment:controller.redirect.payment];
         [self.webController.view removeFromSuperview];
         UINavigationController *navCon = [[UINavigationController alloc] initWithRootViewController:self.webController];
         [[[UIApplication sharedApplication] keyWindow].rootViewController presentViewController:navCon animated:YES completion:nil];
@@ -154,24 +158,23 @@
 
 -(void)handleError:(NSError *)error webController:(PPOWebViewController *)webController {
     _preventShowWebView = YES;
+    [PPOPaymentTrackingManager removePayment:webController.redirect.payment];
     [self completePayment:webController.redirect.payment onMainThreadWithOutcome:nil withError:error];
 }
 
 -(void)completePayment:(PPOPayment*)payment onMainThreadWithOutcome:(PPOOutcome*)outcome withError:(NSError*)error {
     dispatch_async(dispatch_get_main_queue(), ^{
         
-        [PPOPaymentTrackingManager removePayment:payment];
-        
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         
         //Depending on the delay show and session timeout timers, we may be currently showing the webview, or not.
-        //Thus this check is essential.
         id controller = [[UIApplication sharedApplication] keyWindow].rootViewController.presentedViewController;
         if (controller && controller == self.webController.navigationController) {
             if (!_isDismissingWebView) {
                 _isDismissingWebView = YES;
                 [[[UIApplication sharedApplication] keyWindow].rootViewController dismissViewControllerAnimated:YES completion:^{
                     _isDismissingWebView = NO;
+                    if (!error) [PPOPaymentTrackingManager resumeTimeoutForPayment:payment];
                     self.outcomeHandler(outcome, error);
                     _preventShowWebView = NO;
                 }];
