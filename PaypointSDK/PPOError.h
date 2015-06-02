@@ -49,9 +49,6 @@ typedef NS_ENUM(NSInteger, PPOErrorCode) {
     /* An internal server error occurred at paypoint */
     PPOErrorServerFailure,
     
-    /* The payment is currently in flight */
-    PPOErrorPaymentProcessing,
-    
     /* Luhn check failed */
     PPOErrorLuhnCheckFailed,
     
@@ -64,9 +61,6 @@ typedef NS_ENUM(NSInteger, PPOErrorCode) {
     /* The date of the expirty for the current card has expired*/
     PPOErrorCardExpiryDateExpired,
     
-    /* Only one payment can be made per unit time. Please wait for the current payment to complete, before starting a new payment. */
-    PPOErrorPaymentUnderway,
-    
     /* The payment session timed out */
     PPOErrorSessionTimedOut,
     
@@ -75,9 +69,6 @@ typedef NS_ENUM(NSInteger, PPOErrorCode) {
     
     /* Specified currency is invalid */
     PPOErrorCurrencyInvalid,
-    
-    /* The payment hasn't been sent or hasn't arrived yet*/
-    PPOErrorPaymentUnknown,
     
     /* The specified amount is invalid */
     PPOErrorPaymentAmountInvalid,
@@ -94,10 +85,25 @@ typedef NS_ENUM(NSInteger, PPOErrorCode) {
     /* There was an error processing 3D Secure*/
     PPOErrorProcessingThreeDSecure,
     
+    /* The payment is currently suspended, awaiting 3D Secure processing*/
+    PPOErrorPaymentSuspendedForThreeDSecure,
+    
     /* 3D secure timedout */
     PPOErrorThreeDSecureTimedOut,
     
-    /* User cancelled 3D Authentication */
-    PPOErrorUserCancelled
+    /* User cancelled 3D Secure */
+    PPOErrorUserCancelled,
+    
+    /* The payment is ready to begin, but has not started yet*/
+    PPOErrorPaymentReadyNotStarted,
+    
+    /* The payment is currently in flight */
+    PPOErrorPaymentProcessing,
+    
+    /* Only one payment can be made per unit time. Please wait for the current payment to complete, before starting a new payment. */
+    PPOErrorPaymentManagerOccupied,
+    
+    /* The transaction or operation was not found */
+    PPOErrorPaymentNotFound
     
 };

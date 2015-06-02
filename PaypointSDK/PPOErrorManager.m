@@ -39,7 +39,7 @@
         case 5: code = PPOErrorTransactionProcessingFailed; break;
         case 6: code = PPOErrorServerFailure; break;
         case 9: code = PPOErrorPaymentProcessing; break;
-#warning handle case 10
+        case 10: code = PPOErrorPaymentNotFound; break;
         default:
             break;
     }
@@ -80,6 +80,16 @@
         }
             break;
             
+        case PPOErrorPaymentSuspendedForThreeDSecure: {
+            return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                       code:PPOErrorPaymentSuspendedForThreeDSecure
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Payment currently suspended awaiting 3D Secure processing.", @"Feedback message for payment status")
+                                              }
+                    ];
+        }
+            break;
+            
         case PPOErrorAuthenticationFailed: {
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorAuthenticationFailed
@@ -88,15 +98,6 @@
                                               }
                     ];
         }
-            break;
-            
-        case PPOErrorPaymentUnknown:
-            return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
-                                       code:PPOErrorPaymentUnknown
-                                   userInfo:@{
-                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The transaction is not known or has not arrived at our servers yet.", @"Failure message for authentication")
-                                              }
-                    ];
             break;
             
         case PPOErrorPaymentProcessing:
@@ -148,6 +149,16 @@
                                               }
                     ];
         } break;
+            
+        case PPOErrorPaymentReadyNotStarted: {
+            return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                       code:PPOErrorPaymentReadyNotStarted
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The payment is ready but it has not been sent for processing.", @"Failure message for a card validation check")
+                                              }
+                    ];
+        }
+            break;
         case PPOErrorCardExpiryDateInvalid: {
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorCardExpiryDateInvalid
@@ -156,9 +167,9 @@
                                               }
                     ];
         } break;
-        case PPOErrorPaymentUnderway: {
+        case PPOErrorPaymentManagerOccupied: {
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
-                                       code:PPOErrorPaymentUnderway
+                                       code:PPOErrorPaymentManagerOccupied
                                    userInfo:@{
                                               NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"A payment is currently being managed. Please wait for the current payment to complete, before starting a new payment.", @"Status message for preventing duplicate payments.")
                                               }
@@ -253,6 +264,15 @@
                                               }
                     ];
         } break;
+        case PPOErrorPaymentNotFound: {
+            return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                       code:PPOErrorPaymentNotFound
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The payment or transaction was not found", @"Failure message for payment status")
+                                              }
+                    ];
+        }
+            break;
         case PPOErrorUserCancelled: {
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorUserCancelled
