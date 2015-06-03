@@ -165,12 +165,11 @@
     
     [task resume];
     
-    __weak typeof(task) weakTask = task;
     __weak typeof(self) weakSelf = self;
     [PPOPaymentTrackingManager setTimeoutHandler:^{
         [weakSelf.pollingTimer invalidate];
-        if (weakTask) {
-            [weakTask cancel];
+        if (weakSelf.session.delegateQueue.operationCount > 0) {
+            [weakSelf.session invalidateAndCancel];
         } else {
             weakSelf.outcomeHandler(nil, [PPOErrorManager errorForCode:PPOErrorSessionTimedOut]);
         }
@@ -182,7 +181,7 @@
                                                                   withOutcomeHandler:(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandler {
     
     __weak typeof(self) weakSelf = self;
-        
+    
     return ^ (NSData *data, NSURLResponse *response, NSError *networkError) {
         
         id json;
@@ -373,9 +372,7 @@
 -(void)statusOfPayment:(NSTimer*)timer {
     
     PPOPayment *payment = timer.userInfo[@"PaymentKey"];
-    
-    NSLog(@"polling");
-    
+        
     __weak typeof(self) weakSelf = self;
     [self queryPayment:payment
        withCredentials:self.credentials
