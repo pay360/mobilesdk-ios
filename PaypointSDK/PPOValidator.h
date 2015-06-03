@@ -13,7 +13,7 @@
 @class PPOTransaction;
 @class PPOCreditCard;
 @class PPOOutcome;
-@interface PPOPaymentValidator : NSObject
+@interface PPOValidator : NSObject
 
 /*!
  * @discussion Checks for the existence of a base URL.

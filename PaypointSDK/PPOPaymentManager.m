@@ -25,7 +25,7 @@
 #import "PPOTimeManager.h"
 #import "PPOPaymentTrackingManager.h"
 #import "PPOWebFormManager.h"
-#import "PPOPaymentValidator.h"
+#import "PPOValidator.h"
 #import "PPOURLRequestManager.h"
 
 @interface PPOPaymentManager () <NSURLSessionTaskDelegate>
@@ -60,16 +60,16 @@
     self.credentials = credentials;
     self.outcomeHandler = outcomeHandler;
     
-    if ([PPOPaymentValidator baseURLInvalid:self.endpointManager.baseURL withHandler:outcomeHandler]) return;
-    if ([PPOPaymentValidator credentialsInvalid:credentials withHandler:outcomeHandler]) return;
-    if ([PPOPaymentValidator paymentUnderway:payment withHandler:outcomeHandler]) return;
+    if ([PPOValidator baseURLInvalid:self.endpointManager.baseURL withHandler:outcomeHandler]) return;
+    if ([PPOValidator credentialsInvalid:credentials withHandler:outcomeHandler]) return;
+    if ([PPOValidator paymentUnderway:payment withHandler:outcomeHandler]) return;
     
     if (![PPOPaymentTrackingManager allPaymentsComplete]) {
         outcomeHandler(nil, [PPOErrorManager errorForCode:PPOErrorPaymentManagerOccupied]);
         return;
     }
     
-    if ([PPOPaymentValidator paymentInvalid:payment withHandler:outcomeHandler]) return;
+    if ([PPOValidator paymentInvalid:payment withHandler:outcomeHandler]) return;
     
     NSURL *url = [self.endpointManager urlForSimplePayment:credentials.installationID];
     
@@ -107,8 +107,8 @@
     self.credentials = credentials;
     self.outcomeHandler = outcomeHandler;
     
-    if ([PPOPaymentValidator baseURLInvalid:self.endpointManager.baseURL withHandler:outcomeHandler]) return;
-    if ([PPOPaymentValidator credentialsInvalid:credentials withHandler:outcomeHandler]) return;
+    if ([PPOValidator baseURLInvalid:self.endpointManager.baseURL withHandler:outcomeHandler]) return;
+    if ([PPOValidator credentialsInvalid:credentials withHandler:outcomeHandler]) return;
     
     PAYMENT_STATE state = [PPOPaymentTrackingManager stateForPayment:payment];
     

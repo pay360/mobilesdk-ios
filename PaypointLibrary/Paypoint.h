@@ -22,4 +22,4 @@
 #import <Paypoint/PPOFinancialServices.h>
 #import <Paypoint/PPOCustomer.h>
 #import <Paypoint/PPOCustomField.h>
-#import <Paypoint/PPOPaymentValidator.h>
+#import <Paypoint/PPOValidator.h>

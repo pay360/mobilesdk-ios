@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#import "PPOPaymentValidator.h"
+#import "PPOValidator.h"
 #import "PPOPayment.h"
 #import "PPOErrorManager.h"
 #import "PPOTimeManager.h"
@@ -16,7 +16,7 @@
 #import "PPOTransaction.h"
 #import "PPOPaymentTrackingManager.h"
 
-@implementation PPOPaymentValidator
+@implementation PPOValidator
 
 +(NSError*)validatePayment:(PPOPayment*)payment {
     
@@ -69,7 +69,7 @@
     
     if (strippedValue == nil || strippedValue.length != 4) {
         return [PPOErrorManager errorForCode:PPOErrorCardExpiryDateInvalid];
-    } else if ([PPOPaymentValidator cardExpiryHasExpired:strippedValue]) {
+    } else if ([PPOValidator cardExpiryHasExpired:strippedValue]) {
         return [PPOErrorManager errorForCode:PPOErrorCardExpiryDateExpired];
     }
     
@@ -97,7 +97,7 @@
 }
 
 +(BOOL)baseURLInvalid:(NSURL*)url withHandler:(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandler {
-    NSError *invalid = [PPOPaymentValidator validateBaseURL:url];
+    NSError *invalid = [PPOValidator validateBaseURL:url];
     if (invalid) {
         outcomeHandler(nil, invalid);
         return YES;
@@ -107,7 +107,7 @@
 
 +(BOOL)credentialsInvalid:(PPOCredentials*)credentials withHandler:(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandler {
     
-    NSError *invalid = [PPOPaymentValidator validateCredentials:credentials];
+    NSError *invalid = [PPOValidator validateCredentials:credentials];
     if (invalid) {
         outcomeHandler(nil, invalid);
         return YES;
@@ -117,7 +117,7 @@
 
 +(BOOL)paymentInvalid:(PPOPayment*)payment withHandler:(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandler {
     
-    NSError *invalid = [PPOPaymentValidator validatePayment:payment];
+    NSError *invalid = [PPOValidator validatePayment:payment];
     if (invalid) {
         outcomeHandler(nil, invalid);
         return YES;
