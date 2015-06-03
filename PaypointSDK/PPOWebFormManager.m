@@ -14,6 +14,7 @@
 #import "PPOCredentials.h"
 #import "PPOErrorManager.h"
 #import "PPOPayment.h"
+#import "PPOURLRequestManager.h"
 
 @interface PPOWebFormManager () <PPOWebViewControllerDelegate>
 @property (nonatomic, strong) PPORedirect *redirect;
@@ -67,21 +68,21 @@
         [self.webController.view removeFromSuperview];
     }
     
-    id data;
+    id body;
     
     if (paRes) {
         NSDictionary *dictionary = @{@"threeDSecureResponse": @{@"pares":paRes}};
-        data = [NSJSONSerialization dataWithJSONObject:dictionary options:NSJSONWritingPrettyPrinted error:nil];
+        body = [NSJSONSerialization dataWithJSONObject:dictionary options:NSJSONWritingPrettyPrinted error:nil];
     }
     
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[self.endpointManager urlForResumePaymentWithInstallationID:self.credentials.installationID transactionID:transID]
-                                                           cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
-                                                       timeoutInterval:30.0f];
-    [request setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:controller.redirect.payment.identifier forHTTPHeaderField:@"AP-Operation-ID"];
-    [request setHTTPMethod:@"POST"];
-    [request setValue:[NSString stringWithFormat:@"Bearer %@", self.credentials.token] forHTTPHeaderField:@"Authorization"];
-    [request setHTTPBody:data];
+    NSURL *url = [self.endpointManager urlForResumePaymentWithInstallationID:self.credentials.installationID transactionID:transID];
+    
+    NSURLRequest *request = [PPOURLRequestManager requestWithURL:url
+                                                      withMethod:@"POST"
+                                                     withTimeout:30.0f
+                                                       withToken:self.credentials.token
+                                                        withBody:body
+                                                forPaymentWithID:controller.redirect.payment.identifier];
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     

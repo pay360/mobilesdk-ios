@@ -26,6 +26,7 @@
 #import "PPOPaymentTrackingManager.h"
 #import "PPOWebFormManager.h"
 #import "PPOPaymentValidator.h"
+#import "PPOURLRequestManager.h"
 
 @interface PPOPaymentManager () <NSURLSessionTaskDelegate>
 @property (nonatomic, strong) PPOPaymentEndpointManager *endpointManager;
@@ -70,14 +71,17 @@
     
     if ([self paymentInvalid:payment]) return;
     
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[self.endpointManager urlForSimplePayment:credentials.installationID]
-                                                           cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
-                                                       timeoutInterval:30.0f];
-    [request setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:payment.identifier forHTTPHeaderField:@"AP-Operation-ID"];
-    [request setHTTPMethod:@"POST"];
-    [request setValue:[NSString stringWithFormat:@"Bearer %@", credentials.token] forHTTPHeaderField:@"Authorization"];
-    [request setHTTPBody:[self buildPostBodyWithPayment:payment withDeviceInfo:self.deviceInfo]];
+    NSURL *url = [self.endpointManager urlForSimplePayment:credentials.installationID];
+    
+    NSData *body = [PPOURLRequestManager buildPostBodyWithPayment:payment
+                                                   withDeviceInfo:self.deviceInfo];
+    
+    NSURLRequest *request = [PPOURLRequestManager requestWithURL:url
+                                                      withMethod:@"POST"
+                                                     withTimeout:30.0f
+                                                       withToken:credentials.token
+                                                        withBody:body
+                                                forPaymentWithID:payment.identifier];
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     
@@ -90,7 +94,7 @@
     [PPOPaymentTrackingManager appendPayment:payment
                                  withTimeout:timeout
                   commenceTimeoutImmediately:YES
-                              timeoutHanlder:^{
+                              timeoutHandler:^{
                                   [weakTask cancel];
                               }];
     
@@ -138,13 +142,15 @@
 
 -(void)queryPayment:(PPOPayment*)payment withCredentials:(PPOCredentials*)credentials {
     
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[self.endpointManager urlForPaymentWithID:payment.identifier withInst:credentials.installationID]
-                                                           cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
-                                                       timeoutInterval:5.0f];
-    [request setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:@"AP-Operation-ID" forHTTPHeaderField:payment.identifier];
-    [request setHTTPMethod:@"GET"];
-    [request setValue:[NSString stringWithFormat:@"Bearer %@", credentials.token] forHTTPHeaderField:@"Authorization"];
+    NSURL *url = [self.endpointManager urlForPaymentWithID:payment.identifier
+                                                  withInst:credentials.installationID];
+    
+    NSURLRequest *request = [PPOURLRequestManager requestWithURL:url
+                                                      withMethod:@"GET"
+                                                     withTimeout:5.0f
+                                                       withToken:credentials.token
+                                                        withBody:nil
+                                                forPaymentWithID:payment.identifier];
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     
@@ -318,77 +324,6 @@
         self.outcomeHandler(outcome, e);
     });
     
-}
-
--(NSData*)buildPostBodyWithPayment:(PPOPayment*)payment withDeviceInfo:(PPODeviceInfo*)deviceInfo {
-    
-    id value = [deviceInfo jsonObjectRepresentation];
-    id i = (value) ?: [NSNull null];
-    value = [payment.transaction jsonObjectRepresentation];
-    id t = (value) ?: [NSNull null];
-    value = [payment.card jsonObjectRepresentation];
-    id c = (value) ?: [NSNull null];
-    value = [payment.address jsonObjectRepresentation];
-    id a = (value) ?: [NSNull null];
-    NSDictionary *merchantAppPlist = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Info" ofType:@"plist"]];
-    value = [merchantAppPlist objectForKey:@"CFBundleName"];
-    id apn = ([value isKindOfClass:[NSString class]]) ? value : [NSNull null];
-    value = [merchantAppPlist objectForKey:@"CFBundleShortVersionString"];
-    id apv = ([value isKindOfClass:[NSString class]]) ? value : [NSNull null];
-    value = [NSString stringWithFormat:@"pp_ios_sdk:%@", [[PPOResourcesManager infoPlist] objectForKey:@"CFBundleShortVersionString"]];
-    id sdkv = ([value isKindOfClass:[NSString class]]) ? value : [NSNull class];
-    
-    id object = @{
-                  @"merchantAppName"    : apn,
-                  @"merchantAppVersion" : apv,
-                  @"sdkVersion"         : sdkv,
-                  @"deviceInfo"         : i,
-                  @"transaction"        : t,
-                  @"paymentMethod"      : @{
-                                            @"card"             : c,
-                                            @"billingAddress"   : a
-                                            }
-                  };
-    
-    NSMutableDictionary *mutableObject;
-    
-    if (payment.financialServices || payment.customer || payment.customFields.count) {
-        mutableObject = [object mutableCopy];
-    }
-    
-    if (payment.financialServices) {
-        value = [payment.financialServices jsonObjectRepresentation];
-        id f = (value) ?: [NSNull null];
-        [mutableObject setValue:f forKey:@"financialServices"];
-    }
-    
-    if (payment.customer) {
-        value = [payment.customer jsonObjectRepresentation];
-        id cus = (value) ?: [NSNull null];
-        [mutableObject setValue:cus forKey:@"customer"];
-    }
-    
-    if (payment.customFields.count) {
-        NSMutableArray *collector = [NSMutableArray new];
-        id field;
-        for (PPOCustomField *f in payment.customFields) {
-            value = [f jsonObjectRepresentation];
-            field = (value) ?: [NSNull null];
-            [collector addObject:field];
-        }
-        if (collector.count) {
-            [mutableObject setValue:@{PAYMENT_RESPONSE_CUSTOM_FIELDS_STATE : [collector copy]}
-                             forKey:PAYMENT_RESPONSE_CUSTOM_FIELDS];
-        }
-    }
-    
-    if (mutableObject) {
-        object = [mutableObject copy];
-    }
-    
-    return [NSJSONSerialization dataWithJSONObject:object
-                                           options:NSJSONWritingPrettyPrinted
-                                             error:nil];
 }
 
 @end

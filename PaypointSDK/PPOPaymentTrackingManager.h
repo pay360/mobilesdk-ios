@@ -17,7 +17,7 @@ typedef enum : NSUInteger {
 
 @class PPOPayment;
 @interface PPOPaymentTrackingManager : NSObject
-+(void)appendPayment:(PPOPayment*)payment withTimeout:(NSTimeInterval)timeout commenceTimeoutImmediately:(BOOL)begin timeoutHanlder:(void(^)(void))handler;
++(void)appendPayment:(PPOPayment*)payment withTimeout:(NSTimeInterval)timeout commenceTimeoutImmediately:(BOOL)begin timeoutHandler:(void(^)(void))handler;
 +(void)removePayment:(PPOPayment*)payment;
 +(void)resumeTimeoutForPayment:(PPOPayment*)payment;
 +(void)suspendTimeoutForPayment:(PPOPayment*)payment;
