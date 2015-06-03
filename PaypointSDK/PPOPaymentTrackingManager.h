@@ -27,5 +27,5 @@ typedef enum : NSUInteger {
 +(NSNumber*)remainingSessionTimeoutForPayment:(PPOPayment*)payment;
 +(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandlerForPayment:(PPOPayment*)payment;
 +(void)overrideTimeoutHandler:(void(^)(void))handler forPayment:(PPOPayment*)payment;
-+(BOOL)allPaymentsComplete;
+
 @end

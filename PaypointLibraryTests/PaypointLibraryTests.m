@@ -372,23 +372,25 @@
     
     __block BOOL paymentComplete = NO;
     
+    PPOCredentials *credentials = [self credentialsWithToken:VALID_BEARER_TOKEN];
+    
     [manager makePayment:payment
-         withCredentials:[self credentialsWithToken:VALID_BEARER_TOKEN]
+         withCredentials:credentials
              withTimeOut:2.0
           withCompletion:^(PPOOutcome *outcome, NSError *error) {
               paymentComplete = YES;
           }];
     
     [manager paymentOutcome:payment
-            withCredentials:[self credentialsWithToken:VALID_BEARER_TOKEN]
+            withCredentials:credentials
              withCompletion:^(PPOOutcome *outcome, NSError *error) {
-                 //We expect this test to return 'in progress' error, but in production, it could be any kind of error, so testing 'anything' instead.
+                 //We expect this test to return 'payment in progress' error, but in production, it could be any kind of error, so testing 'anything' instead.
                  if (!paymentComplete && error) {
                      [expectation fulfill];
                  }
              }];
     
-    [self waitForExpectationsWithTimeout:2.0
+    [self waitForExpectationsWithTimeout:4.0
                                  handler:^(NSError *error) {
                                      if(error) {
                                          XCTFail(@"Serial payments check failed with error: %@", error);

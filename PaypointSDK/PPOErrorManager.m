@@ -167,15 +167,6 @@
                                               }
                     ];
         } break;
-        case PPOErrorPaymentManagerOccupied: {
-            return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
-                                       code:PPOErrorPaymentManagerOccupied
-                                   userInfo:@{
-                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"A payment is currently being managed. Please wait for the current payment to complete, before starting a new payment.", @"Status message for preventing duplicate payments.")
-                                              }
-                    ];
-        }
-            break;
         case PPOErrorCurrencyInvalid: {
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorCurrencyInvalid

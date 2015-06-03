@@ -56,17 +56,12 @@
    withCredentials:(PPOCredentials*)credentials
        withTimeOut:(NSTimeInterval)timeout
     withCompletion:(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandler {
-        
+    
     self.credentials = credentials;
     
     if ([PPOValidator baseURLInvalid:self.endpointManager.baseURL withHandler:outcomeHandler]) return;
     if ([PPOValidator credentialsInvalid:credentials withHandler:outcomeHandler]) return;
     if ([PPOValidator paymentUnderway:payment withHandler:outcomeHandler]) return;
-    
-    if (![PPOPaymentTrackingManager allPaymentsComplete]) {
-        outcomeHandler(nil, [PPOErrorManager errorForCode:PPOErrorPaymentManagerOccupied]);
-        return;
-    }
     
     if ([PPOValidator paymentInvalid:payment withHandler:outcomeHandler]) return;
     
@@ -115,6 +110,10 @@
     
     switch (state) {
         case PAYMENT_STATE_NON_EXISTENT: {
+            //Non existent may arrise for the edge cases where the pointer to the payment was lost (the tracker holds payment weakly).
+            //Thus the reason we explicity remove the payment from the tracker here is in anticipation of developer error.
+            //It wouldn't really matter if we left an empty chapperone object in the tracker.
+            [PPOPaymentTrackingManager removePayment:payment];
             [self queryPayment:payment withCredentials:credentials withOutcomeHandler:outcomeHandler withPolling:NO];
             return;
         }
@@ -185,9 +184,14 @@
         __weak typeof(task) weakTask = task;
         [PPOPaymentTrackingManager overrideTimeoutHandler:^{
             [weakSelf.pollingTimer invalidate];
+            //Cancel task calls back to the outcome handler currently associated with this task
             if (weakTask) {
                 [weakTask cancel];
             } else {
+                //If the task does not exist then it must have completed
+                //If the task completed the payment tracker should have stopped tracking this payment
+                //So this 'else' case is redundant
+                //Still doing it anyway though...
                 void(^outcomeHandler)(PPOOutcome *outcome, NSError *error) = [PPOPaymentTrackingManager outcomeHandlerForPayment:payment];
                 [PPOPaymentTrackingManager removePayment:payment];
                 outcomeHandler(nil, [PPOErrorManager errorForCode:PPOErrorSessionTimedOut]);
@@ -225,7 +229,7 @@
                 outcomeHandler(nil, [PPOErrorManager errorForCode:PPOErrorServerFailure]);
                 
             } else if (redirectData) {
-                
+                                
                 NSError *redirectError = [weakSelf performSecureRedirect:redirectData forPayment:payment];
                 if (redirectError) {
                     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
@@ -307,7 +311,7 @@
     
     //we pass the outcome handler in here, rather than query it from the payment tracker within the web form
     //we anticipate only one web form i.e. one payment at a time
-    //the payment tracking manager handles multiple payments, but we are not prepared to support that at this time
+    //the payment tracking manager handles multiple payments, but we are not prepared to support that elsewhere
     self.webFormManager = [[PPOWebFormManager alloc] initWithRedirect:redirect
                                                       withCredentials:self.credentials
                                                           withSession:self.session

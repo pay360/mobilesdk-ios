@@ -100,9 +100,6 @@ typedef NS_ENUM(NSInteger, PPOErrorCode) {
     /* The payment is currently in flight */
     PPOErrorPaymentProcessing,
     
-    /* Only one payment can be made per unit time. Please wait for the current payment to complete, before starting a new payment. */
-    PPOErrorPaymentManagerOccupied,
-    
     /* The transaction or operation was not found */
     PPOErrorPaymentNotFound
     

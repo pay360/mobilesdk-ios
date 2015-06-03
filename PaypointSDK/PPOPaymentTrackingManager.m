@@ -10,7 +10,9 @@
 #import "PPOPayment.h"
 
 @interface PPOPaymentTrackingChapperone : NSObject
-@property (nonatomic, strong) PPOPayment *payment;
+//The payment is weak here. If no other object is using it, we will discard it.
+//The payment tracker will report back with 'non-existent'
+@property (nonatomic, weak) PPOPayment *payment;
 @property (nonatomic, readonly) NSTimeInterval sessionTimeout;
 @property (nonatomic) PAYMENT_STATE state;
 -(instancetype)initWithPayment:(PPOPayment*)payment withTimeout:(NSTimeInterval)timeout withOutcomeHandler:(void(^)(PPOOutcome *outcome, NSError *error))handler;
@@ -165,7 +167,7 @@
     
     PPOPaymentTrackingChapperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
     
-    return (chapperone == nil) ? PAYMENT_STATE_NON_EXISTENT : chapperone.state;
+    return (chapperone == nil || chapperone.payment == nil) ? PAYMENT_STATE_NON_EXISTENT : chapperone.state;
     
 }
 
@@ -219,23 +221,6 @@
     
     return (chapperone != nil) ? @(chapperone.sessionTimeout) : nil;
     
-}
-
-+(BOOL)allPaymentsComplete {
-    
-    PPOPaymentTrackingManager *manager = [PPOPaymentTrackingManager sharedManager];
-    
-    PPOPaymentTrackingChapperone *chapperone;
-    
-    for (PPOPaymentTrackingChapperone *c in manager.paymentChapperones) {
-        
-        if (c.state != PAYMENT_STATE_NON_EXISTENT) {
-            chapperone = c;
-            break;
-        }
-    }
-    
-    return (chapperone == nil);
 }
 
 @end
