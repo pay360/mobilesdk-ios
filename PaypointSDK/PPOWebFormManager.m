@@ -127,6 +127,10 @@
             
             e = [PPOErrorManager errorForCode:[PPOErrorManager errorCodeForReasonCode:outcome.reasonCode.integerValue]];
             
+        } else if (outcome.isSuccessful != nil && outcome.isSuccessful.boolValue == YES) {
+            
+            e = nil;
+            
         } else if (networkError) {
             
             e = networkError;
