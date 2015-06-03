@@ -13,7 +13,7 @@
 @property (nonatomic, strong) PPOPayment *payment;
 @property (nonatomic, readonly) NSTimeInterval sessionTimeout;
 @property (nonatomic) PAYMENT_STATE state;
--(instancetype)initWithPayment:(PPOPayment*)payment withTimeout:(NSTimeInterval)timeout;
+-(instancetype)initWithPayment:(PPOPayment*)payment withTimeout:(NSTimeInterval)timeout withOutcomeHandler:(void(^)(PPOOutcome *outcome, NSError *error))handler;
 -(void)startTimeoutTimer;
 -(void)stopTimeoutTimer;
 -(BOOL)hasTimedout;
@@ -23,11 +23,12 @@
 @property (nonatomic, readwrite) NSTimeInterval sessionTimeout;
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, copy) void(^timeoutHandler)(void);
+@property (nonatomic, strong) void(^outcomeHandler)(PPOOutcome *outcome, NSError *error);
 @end
 
 @implementation PPOPaymentTrackingChapperone
 
--(instancetype)initWithPayment:(PPOPayment *)payment withTimeout:(NSTimeInterval)timeout {
+-(instancetype)initWithPayment:(PPOPayment *)payment withTimeout:(NSTimeInterval)timeout withOutcomeHandler:(void(^)(PPOOutcome *outcome, NSError *error))handler {
     self = [super init];
     if (self) {
         _payment = payment;
@@ -36,6 +37,7 @@
             timeout = 0;
         }
         _sessionTimeout = timeout;
+        _outcomeHandler = handler;
     }
     return self;
 }
@@ -102,10 +104,10 @@
     return _paymentChapperones;
 }
 
-+(void)appendPayment:(PPOPayment*)payment withTimeout:(NSTimeInterval)timeout commenceTimeoutImmediately:(BOOL)begin timeoutHandler:(void(^)(void))handler {
++(void)appendPayment:(PPOPayment*)payment withOutcomeHandler:(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandler withTimeout:(NSTimeInterval)timeout commenceTimeoutImmediately:(BOOL)begin timeoutHandler:(void(^)(void))timeoutHandler {
     
-    PPOPaymentTrackingChapperone *chapperone = [[PPOPaymentTrackingChapperone alloc] initWithPayment:payment withTimeout:timeout];
-    chapperone.timeoutHandler = handler;
+    PPOPaymentTrackingChapperone *chapperone = [[PPOPaymentTrackingChapperone alloc] initWithPayment:payment withTimeout:timeout withOutcomeHandler:outcomeHandler];
+    chapperone.timeoutHandler = timeoutHandler;
     
     [PPOPaymentTrackingManager insertPaymentTrackingChapperone:chapperone];
     
@@ -116,7 +118,7 @@
     
 }
 
-+(void)setTimeoutHandler:(void(^)(void))handler forPayment:(PPOPayment*)payment {
++(void)overrideTimeoutHandler:(void(^)(void))handler forPayment:(PPOPayment*)payment {
     
     PPOPaymentTrackingChapperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
     chapperone.timeoutHandler = handler;
@@ -149,6 +151,13 @@
     }
     
     return chapperone;
+    
+}
+
++(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandlerForPayment:(PPOPayment*)payment {
+    
+    PPOPaymentTrackingChapperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
+    return chapperone.outcomeHandler;
     
 }
 
