@@ -11,6 +11,7 @@
 
 @interface PPOPaymentTrackingChapperone : NSObject
 @property (nonatomic, strong) PPOPayment *payment;
+@property (nonatomic, readonly) NSTimeInterval sessionTimeout;
 @property (nonatomic) PAYMENT_STATE state;
 -(instancetype)initWithPayment:(PPOPayment*)payment withTimeout:(NSTimeInterval)timeout;
 -(void)startTimeoutTimer;
@@ -19,7 +20,7 @@
 @end
 
 @interface PPOPaymentTrackingChapperone ()
-@property (nonatomic) NSTimeInterval paymentTimeout;
+@property (nonatomic, readwrite) NSTimeInterval sessionTimeout;
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, copy) void(^timeoutHandler)(void);
 @end
@@ -34,7 +35,7 @@
         if (timeout < 0.0f) {
             timeout = 0;
         }
-        _paymentTimeout = timeout;
+        _sessionTimeout = timeout;
     }
     return self;
 }
@@ -52,7 +53,7 @@
 }
 
 -(void)startTimeoutTimer {
-    if (self.paymentTimeout >= 0) {
+    if (self.sessionTimeout >= 0) {
         self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timeoutTimerFired:) userInfo:nil repeats:YES];
     }
 }
@@ -63,17 +64,17 @@
 }
 
 -(void)timeoutTimerFired:(NSTimer*)timer {
-    if (self.paymentTimeout <= 0) {
+    if (self.sessionTimeout <= 0) {
         [timer invalidate];
         timer = nil;
         self.timeoutHandler();
     } else {
-        self.paymentTimeout--;
+        self.sessionTimeout--;
     }
 }
 
 -(BOOL)hasTimedout {
-    return (self.paymentTimeout <= 0);
+    return (self.sessionTimeout <= 0);
 }
 
 @end
@@ -112,6 +113,13 @@
         chapperone.state = PAYMENT_STATE_IN_PROGRESS;
         [chapperone startTimeoutTimer];
     }
+    
+}
+
++(void)setTimeoutHandler:(void(^)(void))handler forPayment:(PPOPayment*)payment {
+    
+    PPOPaymentTrackingChapperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
+    chapperone.timeoutHandler = handler;
     
 }
 
@@ -193,6 +201,14 @@
     PPOPaymentTrackingChapperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
     
     return (chapperone != nil) ? @([chapperone hasTimedout]) : nil;
+    
+}
+
++(NSNumber *)remainingSessionTimeoutForPayment:(PPOPayment *)payment {
+    
+    PPOPaymentTrackingChapperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
+    
+    return (chapperone != nil) ? @(chapperone.sessionTimeout) : nil;
     
 }
 

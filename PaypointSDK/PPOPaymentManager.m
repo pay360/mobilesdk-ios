@@ -35,6 +35,7 @@
 @property (nonatomic, strong) NSURLSession *session;
 @property (nonatomic, strong) PPODeviceInfo *deviceInfo;
 @property (nonatomic, strong) PPOWebFormManager *webFormManager;
+@property (nonatomic, strong) NSTimer *pollingTimer;
 @end
 
 @implementation PPOPaymentManager
@@ -86,16 +87,18 @@
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     
     NSURLSessionDataTask *task = [self.session dataTaskWithRequest:request
-                                                 completionHandler:[self transactionResponseHandlerForPayment:payment]];
+                                                 completionHandler:[self transactionResponseHandlerForPayment:payment withOutcomeHandler:outcomeHandler]];
     
     [task resume];
     
     __weak typeof(task) weakTask = task;
+    __weak typeof(self) weakSelf = self;
     [PPOPaymentTrackingManager appendPayment:payment
                                  withTimeout:timeout
                   commenceTimeoutImmediately:YES
                               timeoutHandler:^{
                                   [weakTask cancel];
+                                  [weakSelf.pollingTimer invalidate];
                               }];
     
 }
@@ -114,7 +117,7 @@
     
     switch (state) {
         case PAYMENT_STATE_NON_EXISTENT: {
-            [self queryPayment:payment withCredentials:credentials];
+            [self queryPayment:payment withCredentials:credentials withOutcomeHandler:outcomeHandler];
             return;
         }
             break;
@@ -140,8 +143,11 @@
 
 }
 
--(void)queryPayment:(PPOPayment*)payment withCredentials:(PPOCredentials*)credentials {
+-(void)queryPayment:(PPOPayment*)payment
+    withCredentials:(PPOCredentials*)credentials
+ withOutcomeHandler:(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandler {
     
+    //The payment identifier is passed in the url here, not as a header.
     NSURL *url = [self.endpointManager urlForPaymentWithID:payment.identifier
                                                   withInst:credentials.installationID];
     
@@ -150,22 +156,33 @@
                                                      withTimeout:5.0f
                                                        withToken:credentials.token
                                                         withBody:nil
-                                                forPaymentWithID:payment.identifier];
+                                                forPaymentWithID:nil];
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     
     NSURLSessionDataTask *task = [self.session dataTaskWithRequest:request
-                                                 completionHandler:[self transactionResponseHandlerForPayment:payment]];
+                                                 completionHandler:[self transactionResponseHandlerForPayment:payment withOutcomeHandler:outcomeHandler]];
     
     [task resume];
+    
+    __weak typeof(task) weakTask = task;
+    __weak typeof(self) weakSelf = self;
+    [PPOPaymentTrackingManager setTimeoutHandler:^{
+        [weakSelf.pollingTimer invalidate];
+        if (weakTask) {
+            [weakTask cancel];
+        } else {
+            weakSelf.outcomeHandler(nil, [PPOErrorManager errorForCode:PPOErrorSessionTimedOut]);
+        }
+    } forPayment:payment];
+    
 }
 
--(void(^)(NSData *, NSURLResponse *, NSError *))transactionResponseHandlerForPayment:(PPOPayment*)payment {
+-(void(^)(NSData *, NSURLResponse *, NSError *))transactionResponseHandlerForPayment:(PPOPayment*)payment
+                                                                  withOutcomeHandler:(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandler {
     
     __weak typeof(self) weakSelf = self;
-    
-#warning clean up logs
-    
+        
     return ^ (NSData *data, NSURLResponse *response, NSError *networkError) {
         
         id json;
@@ -178,10 +195,7 @@
         
         id redirectData = [weakSelf redirectData:json];
         
-        NSLog(@"1");
-        
         if (invalidJSON) {
-            NSLog(@"2");
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
                 [PPOPaymentTrackingManager removePayment:payment];
@@ -191,10 +205,8 @@
 
             dispatch_async(dispatch_get_main_queue(), ^{
                 
-                NSLog(@"5");
                 NSError *redirectError = [weakSelf performSecureRedirect:redirectData forPayment:payment];
                 if (redirectError) {
-                    NSLog(@"6");
                     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
                     [PPOPaymentTrackingManager removePayment:payment];
                     weakSelf.outcomeHandler(nil, redirectError);
@@ -203,24 +215,31 @@
             });
             
         } else if (json) {
-            NSLog(@"7");
-            [weakSelf determineOutcome:json forPayment:payment forNetworkError:networkError];
+            [weakSelf determineOutcome:json
+                            forPayment:payment
+                       forNetworkError:networkError];
         } else if (networkError) {
-            NSLog(@"9");
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-                [PPOPaymentTrackingManager removePayment:payment];
-                weakSelf.outcomeHandler(nil, networkError);
-            });
+            if ([PPOPaymentManager noNetwork:networkError]) {
+                [weakSelf pollStatusOfPayment:payment];
+            } else if ([networkError.domain isEqualToString:NSURLErrorDomain] && networkError.code == NSURLErrorCancelled) {
+                weakSelf.outcomeHandler(nil, [PPOErrorManager errorForCode:PPOErrorSessionTimedOut]);
+            } else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+                    [PPOPaymentTrackingManager removePayment:payment];
+                    weakSelf.outcomeHandler(nil, networkError);
+                });
+            }
         } else {
-            NSLog(@"13");
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
                 [PPOPaymentTrackingManager removePayment:payment];
                 weakSelf.outcomeHandler(nil, [PPOErrorManager errorForCode:PPOErrorUnknown]);
             });
         }
+        
     };
+    
 }
 
 -(NSDictionary*)redirectData:(id)json {
@@ -277,11 +296,97 @@
         e = error;
     }
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-        [PPOPaymentTrackingManager removePayment:payment];
-        self.outcomeHandler(outcome, e);
-    });
+    if (self.pollingTimer && outcome.reasonCode.integerValue != PPOErrorPaymentProcessing) {
+        if ([self.pollingTimer isValid]) {
+            [self.pollingTimer invalidate];
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+            [PPOPaymentTrackingManager removePayment:payment];
+            self.outcomeHandler(outcome, e);
+        });
+    } else if ([PPOPaymentManager noNetwork:e]) {
+        if (![self.pollingTimer isValid]) {
+            [self pollStatusOfPayment:payment];
+        }
+    } else if (![self.pollingTimer isValid]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+            [PPOPaymentTrackingManager removePayment:payment];
+            self.outcomeHandler(outcome, e);
+        });
+    }
+    
+}
+
+-(void)pollStatusOfPayment:(PPOPayment*)payment {
+    
+    if (!payment) return;
+    
+    NSNumber *sessionTimeoutInterval = [PPOPaymentTrackingManager remainingSessionTimeoutForPayment:payment];
+    
+    if (sessionTimeoutInterval) {
+        
+        CGFloat time = sessionTimeoutInterval.floatValue;
+        
+        CGFloat attemptCount = 10;
+        
+        CGFloat interval = time / attemptCount;
+        
+        
+        self.pollingTimer = [NSTimer timerWithTimeInterval:interval
+                                                    target:self
+                                                  selector:@selector(statusOfPayment:)
+                                                  userInfo:@{@"PaymentKey" : payment}
+                                                   repeats:YES];
+        
+        [[NSRunLoop mainRunLoop] addTimer:self.pollingTimer forMode:NSDefaultRunLoopMode];
+    }
+    
+}
+
++(BOOL)noNetwork:(NSError*)error {
+    return [[self noNetworkConnectionErrorCodes] containsObject:@(error.code)];
+}
+
++(NSArray*)noNetworkConnectionErrorCodes {
+    int codes[] = {
+        kCFURLErrorTimedOut,
+        kCFURLErrorCannotConnectToHost,
+        kCFURLErrorNetworkConnectionLost,
+        kCFURLErrorDNSLookupFailed,
+        kCFURLErrorResourceUnavailable,
+        kCFURLErrorNotConnectedToInternet,
+        kCFURLErrorInternationalRoamingOff,
+        kCFURLErrorCallIsActive,
+        kCFURLErrorFileDoesNotExist,
+        kCFURLErrorNoPermissionsToReadFile,
+    };
+    int size = sizeof(codes)/sizeof(int);
+    NSMutableArray *array = [[NSMutableArray alloc] init];
+    for (int i=0;i<size;++i){
+        [array addObject:[NSNumber numberWithInt:codes[i]]];
+    }
+    return [array copy];
+}
+
+-(void)statusOfPayment:(NSTimer*)timer {
+    
+    PPOPayment *payment = timer.userInfo[@"PaymentKey"];
+    
+    NSLog(@"polling");
+    
+    __weak typeof(self) weakSelf = self;
+    [self queryPayment:payment
+       withCredentials:self.credentials
+    withOutcomeHandler:^(PPOOutcome *outcome, NSError *error) {
+        
+        if (outcome && outcome.reasonCode.integerValue != PPOErrorPaymentProcessing) {
+            [timer invalidate];
+            weakSelf.outcomeHandler(outcome, error);
+        }
+        
+    }];;
     
 }
 

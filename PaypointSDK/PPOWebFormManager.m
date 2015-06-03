@@ -152,61 +152,86 @@
  *  Once the delay expires, the web view is shown, regardless of it's loading state.
  *  This mechanism is used to show the webview, even when a time value is not provided i.e. timeout value = 0
  *  ensuring that this method is the only method that controls web view presentation.
- *
- *  @param controller <#controller description#>
  */
 -(void)webViewControllerDelayShowTimeoutExpired:(PPOWebViewController *)controller {
+    
     if (!_preventShowWebView) {
+        
         [PPOPaymentTrackingManager suspendTimeoutForPayment:controller.redirect.payment];
+        
         [self.webController.view removeFromSuperview];
+        
         UINavigationController *navCon = [[UINavigationController alloc] initWithRootViewController:self.webController];
-        [[[UIApplication sharedApplication] keyWindow].rootViewController presentViewController:navCon animated:YES completion:nil];
+        
+        [[[UIApplication sharedApplication] keyWindow].rootViewController presentViewController:navCon
+                                                                                       animated:YES
+                                                                                     completion:nil];
     }
+    
 }
 
 -(void)webViewControllerSessionTimeoutExpired:(PPOWebViewController *)webController {
-    [self handleError:[PPOErrorManager errorForCode:PPOErrorThreeDSecureTimedOut]
-        webController:webController];
+    [self handleError:[PPOErrorManager errorForCode:PPOErrorThreeDSecureTimedOut] webController:webController];
 }
 
 -(void)webViewController:(PPOWebViewController *)webController failedWithError:(NSError *)error {
-    [self handleError:error
-        webController:webController];
+    [self handleError:error webController:webController];
 }
 
 -(void)webViewControllerUserCancelled:(PPOWebViewController *)webController {
-    [self handleError:[PPOErrorManager errorForCode:PPOErrorUserCancelled]
-        webController:webController];
+    [self handleError:[PPOErrorManager errorForCode:PPOErrorUserCancelled] webController:webController];
 }
 
 -(void)handleError:(NSError *)error webController:(PPOWebViewController *)webController {
+    
     _preventShowWebView = YES;
+    
     [PPOPaymentTrackingManager removePayment:webController.redirect.payment];
+    
     [self completePayment:webController.redirect.payment onMainThreadWithOutcome:nil withError:error];
+    
 }
 
 -(void)completePayment:(PPOPayment*)payment onMainThreadWithOutcome:(PPOOutcome*)outcome withError:(NSError*)error {
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         
         //Depending on the delay show and session timeout timers, we may be currently showing the webview, or not.
         id controller = [[UIApplication sharedApplication] keyWindow].rootViewController.presentedViewController;
+        
         if (controller && controller == self.webController.navigationController) {
+            
             if (!_isDismissingWebView) {
+                
                 _isDismissingWebView = YES;
+                
                 [[[UIApplication sharedApplication] keyWindow].rootViewController dismissViewControllerAnimated:YES completion:^{
+                    
                     _isDismissingWebView = NO;
-                    if (!error) [PPOPaymentTrackingManager resumeTimeoutForPayment:payment];
+                    
+                    if (!error) {
+                        [PPOPaymentTrackingManager resumeTimeoutForPayment:payment];
+                    }
+                    
                     self.outcomeHandler(outcome, error);
+                    
                     _preventShowWebView = NO;
+                    
                 }];
+                
             }
+            
         } else {
+            
             self.outcomeHandler(outcome, error);
+            
             _preventShowWebView = NO;
+            
         }
     });
+    
 }
 
 @end

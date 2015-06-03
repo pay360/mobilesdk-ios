@@ -25,9 +25,9 @@
 +(NSURLRequest*)requestWithURL:(NSURL*)url withMethod:(NSString*)method withTimeout:(CGFloat)timeout withToken:(NSString*)token withBody:(NSData*)body forPaymentWithID:(NSString*)paymentID {
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:timeout];
     [request setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:paymentID forHTTPHeaderField:@"AP-Operation-ID"];
     [request setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
     [request setHTTPMethod:method];
+    if (paymentID) [request setValue:paymentID forHTTPHeaderField:@"AP-Operation-ID"];
     if (body) [request setHTTPBody:body];;
     return [request copy];
 }
