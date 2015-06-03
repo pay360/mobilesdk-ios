@@ -12,6 +12,7 @@
 @class PPOCredentials;
 @class PPOTransaction;
 @class PPOCreditCard;
+@class PPOOutcome;
 @interface PPOPaymentValidator : NSObject
 
 /*!
@@ -23,5 +24,9 @@
 +(NSError*)validatePayment:(PPOPayment*)payment;
 +(NSError*)validateCredentials:(PPOCredentials*)credentials;
 +(NSError*)validateTransaction:(PPOTransaction*)transaction withCard:(PPOCreditCard*)card;
++(BOOL)baseURLInvalid:(NSURL*)url withHandler:(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandler;
++(BOOL)credentialsInvalid:(PPOCredentials*)credentials withHandler:(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandler;
++(BOOL)paymentInvalid:(PPOPayment*)payment withHandler:(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandler;
++(BOOL)paymentUnderway:(PPOPayment*)payment withHandler:(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandler;
 
 @end

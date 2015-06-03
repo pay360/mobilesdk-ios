@@ -60,16 +60,16 @@
     self.credentials = credentials;
     self.outcomeHandler = outcomeHandler;
     
-    if ([self baseURLInvalid:self.endpointManager.baseURL]) return;
-    if ([self credentialsInvalid:credentials]) return;
-    if ([self paymentUnderway:payment]) return;
+    if ([PPOPaymentValidator baseURLInvalid:self.endpointManager.baseURL withHandler:outcomeHandler]) return;
+    if ([PPOPaymentValidator credentialsInvalid:credentials withHandler:outcomeHandler]) return;
+    if ([PPOPaymentValidator paymentUnderway:payment withHandler:outcomeHandler]) return;
     
     if (![PPOPaymentTrackingManager allPaymentsComplete]) {
         outcomeHandler(nil, [PPOErrorManager errorForCode:PPOErrorPaymentManagerOccupied]);
         return;
     }
     
-    if ([self paymentInvalid:payment]) return;
+    if ([PPOPaymentValidator paymentInvalid:payment withHandler:outcomeHandler]) return;
     
     NSURL *url = [self.endpointManager urlForSimplePayment:credentials.installationID];
     
@@ -107,8 +107,8 @@
     self.credentials = credentials;
     self.outcomeHandler = outcomeHandler;
     
-    if ([self baseURLInvalid:self.endpointManager.baseURL]) return;
-    if ([self credentialsInvalid:credentials]) return;
+    if ([PPOPaymentValidator baseURLInvalid:self.endpointManager.baseURL withHandler:outcomeHandler]) return;
+    if ([PPOPaymentValidator credentialsInvalid:credentials withHandler:outcomeHandler]) return;
     
     PAYMENT_STATE state = [PPOPaymentTrackingManager stateForPayment:payment];
     
@@ -158,47 +158,6 @@
                                                  completionHandler:[self transactionResponseHandlerForPayment:payment]];
     
     [task resume];
-}
-
--(BOOL)baseURLInvalid:(NSURL*)url {
-    NSError *invalid = [PPOPaymentValidator validateBaseURL:url];
-    if (invalid) {
-        self.outcomeHandler(nil, invalid);
-        return YES;
-    }
-    return NO;
-}
-
--(BOOL)credentialsInvalid:(PPOCredentials*)credentials {
-    
-    NSError *invalid = [PPOPaymentValidator validateCredentials:credentials];
-    if (invalid) {
-        self.outcomeHandler(nil, invalid);
-        return YES;
-    }
-    return NO;
-}
-
--(BOOL)paymentInvalid:(PPOPayment*)payment {
-    
-    NSError *invalid = [PPOPaymentValidator validatePayment:payment];
-    if (invalid) {
-        self.outcomeHandler(nil, invalid);
-        return YES;
-    }
-    return NO;
-}
-
--(BOOL)paymentUnderway:(PPOPayment*)payment {
-    
-    PAYMENT_STATE state = [PPOPaymentTrackingManager stateForPayment:payment];
-    
-    if (state != PAYMENT_STATE_NON_EXISTENT) {
-        self.outcomeHandler(nil, [PPOErrorManager errorForCode:PPOErrorPaymentProcessing]);
-        return YES;
-    }
-    
-    return NO;
 }
 
 -(void(^)(NSData *, NSURLResponse *, NSError *))transactionResponseHandlerForPayment:(PPOPayment*)payment {

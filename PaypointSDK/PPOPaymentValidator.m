@@ -14,6 +14,7 @@
 #import "PPOCreditCard.h"
 #import "PPOLuhn.h"
 #import "PPOTransaction.h"
+#import "PPOPaymentTrackingManager.h"
 
 @implementation PPOPaymentValidator
 
@@ -93,6 +94,47 @@
 
 +(BOOL)cardExpiryHasExpired:(NSString*)expiry {
     return [PPOTimeManager cardExpiryDateExpired:expiry];
+}
+
++(BOOL)baseURLInvalid:(NSURL*)url withHandler:(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandler {
+    NSError *invalid = [PPOPaymentValidator validateBaseURL:url];
+    if (invalid) {
+        outcomeHandler(nil, invalid);
+        return YES;
+    }
+    return NO;
+}
+
++(BOOL)credentialsInvalid:(PPOCredentials*)credentials withHandler:(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandler {
+    
+    NSError *invalid = [PPOPaymentValidator validateCredentials:credentials];
+    if (invalid) {
+        outcomeHandler(nil, invalid);
+        return YES;
+    }
+    return NO;
+}
+
++(BOOL)paymentInvalid:(PPOPayment*)payment withHandler:(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandler {
+    
+    NSError *invalid = [PPOPaymentValidator validatePayment:payment];
+    if (invalid) {
+        outcomeHandler(nil, invalid);
+        return YES;
+    }
+    return NO;
+}
+
++(BOOL)paymentUnderway:(PPOPayment*)payment withHandler:(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandler {
+    
+    PAYMENT_STATE state = [PPOPaymentTrackingManager stateForPayment:payment];
+    
+    if (state != PAYMENT_STATE_NON_EXISTENT) {
+        outcomeHandler(nil, [PPOErrorManager errorForCode:PPOErrorPaymentProcessing]);
+        return YES;
+    }
+    
+    return NO;
 }
 
 @end

@@ -47,6 +47,8 @@
     return self;
 }
 
+//Loading a webpage requires a webView, but we don't want to show a webview on screen during this time.
+//The webview's delegate will still fire, even if the webview is not displayed on screen.
 -(void)loadRedirect:(PPORedirect*)redirect {
     self.webController = [[PPOWebViewController alloc] initWithRedirect:redirect withDelegate:self];
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
@@ -58,7 +60,9 @@
 
 #pragma mark - PPOWebViewController
 
--(void)webViewController:(PPOWebViewController *)controller completedWithPaRes:(NSString *)paRes forTransactionWithID:(NSString *)transID {
+-(void)webViewController:(PPOWebViewController *)controller
+      completedWithPaRes:(NSString *)paRes
+    forTransactionWithID:(NSString *)transID {
     
     _preventShowWebView = YES;
     
@@ -86,43 +90,57 @@
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     
-    NSURLSessionDataTask *task = [self.session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *networkError) {
+    NSURLSessionDataTask *task = [self.session dataTaskWithRequest:request
+                                                 completionHandler:[self resumeResponseHandlerForPayment:controller.redirect.payment]];
+    
+    [task resume];
+    
+}
+
+-(void(^)(NSData *, NSURLResponse *, NSError *))resumeResponseHandlerForPayment:(PPOPayment*)payment {
+    
+    __weak typeof(self) weakSelf = self;
+    
+    return ^ (NSData *data, NSURLResponse *response, NSError *networkError) {
         
         NSError *invalidJSON;
+        
         id json;
+        
         if (data.length > 0) {
             json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&invalidJSON];
         }
         
-        if (invalidJSON) {
-            [PPOPaymentTrackingManager removePayment:controller.redirect.payment];
-            [self completePayment:controller.redirect.payment onMainThreadWithOutcome:nil withError:[PPOErrorManager errorForCode:PPOErrorServerFailure]];
-            return;
-        }
-        
         PPOOutcome *outcome;
+        
         if (json) {
             outcome = [[PPOOutcome alloc] initWithData:json];
         }
         
-        if (outcome.isSuccessful != nil && outcome.isSuccessful.boolValue == NO) {
-            [PPOPaymentTrackingManager removePayment:controller.redirect.payment];
-            PPOErrorCode code = [PPOErrorManager errorCodeForReasonCode:outcome.reasonCode.integerValue];
-            [self completePayment:controller.redirect.payment onMainThreadWithOutcome:outcome withError:[PPOErrorManager errorForCode:code]];
-        } else if (outcome.isSuccessful.boolValue == YES) {
-            [self completePayment:controller.redirect.payment onMainThreadWithOutcome:outcome withError:nil];
+        NSError *e;
+        
+        if (invalidJSON) {
+            
+            e = [PPOErrorManager errorForCode:PPOErrorServerFailure];
+            
+        } else if (outcome.isSuccessful != nil && outcome.isSuccessful.boolValue == NO) {
+            
+            e = [PPOErrorManager errorForCode:[PPOErrorManager errorCodeForReasonCode:outcome.reasonCode.integerValue]];
+            
         } else if (networkError) {
-            [PPOPaymentTrackingManager removePayment:controller.redirect.payment];
-            [self completePayment:controller.redirect.payment onMainThreadWithOutcome:outcome withError:networkError];
+            
+            e = networkError;
+
         } else {
-            [PPOPaymentTrackingManager removePayment:controller.redirect.payment];
-            [self completePayment:controller.redirect.payment onMainThreadWithOutcome:outcome withError:[PPOErrorManager errorForCode:PPOErrorUnknown]];
+            
+            e = [PPOErrorManager errorForCode:PPOErrorUnknown];
+            
         }
         
-    }];
-    
-    [task resume];
-    
+        [PPOPaymentTrackingManager removePayment:payment];
+        
+        [weakSelf completePayment:payment onMainThreadWithOutcome:outcome withError:e];
+    };
 }
 
 /**
