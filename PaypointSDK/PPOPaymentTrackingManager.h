@@ -16,16 +16,14 @@ typedef enum : NSUInteger {
 } PAYMENT_STATE;
 
 @class PPOPayment;
-@class PPOOutcome;
 @interface PPOPaymentTrackingManager : NSObject
-+(void)appendPayment:(PPOPayment*)payment withOutcomeHandler:(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandler withTimeout:(NSTimeInterval)timeout commenceTimeoutImmediately:(BOOL)begin timeoutHandler:(void(^)(void))timeoutHandler;
++(void)appendPayment:(PPOPayment*)payment withTimeout:(NSTimeInterval)timeout commenceTimeoutImmediately:(BOOL)begin timeoutHandler:(void(^)(void))handler;
 +(void)removePayment:(PPOPayment*)payment;
 +(void)resumeTimeoutForPayment:(PPOPayment*)payment;
 +(void)suspendTimeoutForPayment:(PPOPayment*)payment;
 +(PAYMENT_STATE)stateForPayment:(PPOPayment*)payment;
 +(NSNumber*)hasPaymentSessionTimedoutForPayment:(PPOPayment*)payment;
 +(NSNumber*)remainingSessionTimeoutForPayment:(PPOPayment*)payment;
-+(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandlerForPayment:(PPOPayment*)payment;
-+(void)overrideTimeoutHandler:(void(^)(void))handler forPayment:(PPOPayment*)payment;
-
++(void)setTimeoutHandler:(void(^)(void))handler forPayment:(PPOPayment*)payment;
++(BOOL)allPaymentsComplete;
 @end
