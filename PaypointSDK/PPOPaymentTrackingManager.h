@@ -31,4 +31,5 @@ typedef enum : NSUInteger {
 +(void)logIsQueryingStatusOfPayment:(PPOPayment*)payment;
 +(void)logIsNotQueryingStatusOfPayment:(PPOPayment*)payment;
 +(BOOL)isQueryingStatusOfPayment:(PPOPayment*)payment;
++(NSUInteger)currentTrackCount;
 @end

@@ -47,4 +47,6 @@
       withCredentials:(PPOCredentials*)credentials
        withCompletion:(void(^)(PPOOutcome *outcome, NSError *error))completion;
 
+-(NSUInteger)trackerCount;
+
 @end

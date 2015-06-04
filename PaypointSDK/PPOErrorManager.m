@@ -30,7 +30,7 @@
 +(PPOErrorCode)errorCodeForReasonCode:(NSInteger)reasonCode {
     
     PPOErrorCode code = PPOErrorUnknown;
-    NSLog(@"reason code %i", reasonCode);
+    
     switch (reasonCode) {
         case 1: code = PPOErrorBadRequest; break;
         case 2: code = PPOErrorAuthenticationFailed; break;
@@ -45,9 +45,7 @@
         default:
             break;
     }
-    
-    NSLog(@"code %i", code);
-    
+        
     return code;
     
 }

@@ -67,6 +67,10 @@
     self.querySession = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:q];
 }
 
+-(NSUInteger)trackerCount {
+    return [PPOPaymentTrackingManager currentTrackCount];
+}
+
 -(void)makePayment:(PPOPayment*)payment
    withCredentials:(PPOCredentials*)credentials
        withTimeOut:(NSTimeInterval)timeout
@@ -77,8 +81,7 @@
     if ([PPOValidator baseURLInvalid:self.endpointManager.baseURL withHandler:outcomeHandler]) return;
     if ([PPOValidator credentialsInvalid:credentials withHandler:outcomeHandler]) return;
     if ([PPOValidator paymentUnderway:payment withHandler:outcomeHandler]) return;
-    
-#warning remove singleton from tracker.
+        
     if (![PPOPaymentTrackingManager allPaymentsComplete]) {
         outcomeHandler(nil, [PPOErrorManager errorForCode:PPOErrorPaymentManagerOccupied]);
         return;
@@ -119,6 +122,7 @@
                                   [weakSelf.pollingTimer invalidate];
                                   [weakSelf.paymentSession invalidateAndCancel];
                                   weakSelf.paymentSession = nil;
+                                  [PPOPaymentTrackingManager removePayment:payment];
                               } withOutcomeHandler:outcomeHandler];
     
 }
@@ -342,7 +346,6 @@
 -(void)handleOutcome:(PPOOutcome*)outcome forPayment:(PPOPayment*)payment forNetworkError:(NSError*)error forHandler:(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandler isQuery:(BOOL)query {
     
     NSLog(@"handling outcome, %@", outcome);
-    
     NSError *e;
     
     PPOErrorCode code = PPOErrorNotInitialised;
@@ -371,7 +374,7 @@
             NSLog(@"outcomeHandler missing");
         }
         
-    } else if ([PPOPaymentManager noNetwork:e]) {
+    } else if ([PPOPaymentManager noNetwork:e] || code == PPOErrorPaymentProcessing) {
         if (![self.pollingTimer isValid]) {
             [self pollStatusOfPayment:payment];
         }
@@ -420,7 +423,7 @@
     PPOPayment *payment = timer.userInfo[@"PaymentKey"];
     
     if ([PPOPaymentTrackingManager isQueryingStatusOfPayment:payment]) {
-        return;
+        //return;
     }
     
     [PPOPaymentTrackingManager logIsQueryingStatusOfPayment:payment];
@@ -432,9 +435,7 @@
         NSLog(@"Query outcome handler fired");
         
         [PPOPaymentTrackingManager logIsNotQueryingStatusOfPayment:payment];
-        
-        NSLog(@"outcome reason code %@", outcome.reasonCode);
-        
+                
         NSLog(@"remaining session time %@", [PPOPaymentTrackingManager remainingSessionTimeoutForPayment:payment]);
         
         PPOErrorCode code = [PPOErrorManager errorCodeForReasonCode:outcome.reasonCode.integerValue];

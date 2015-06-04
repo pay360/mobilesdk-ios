@@ -257,4 +257,8 @@
     return chapperone.queryingStatus;
 }
 
++(NSUInteger)currentTrackCount {
+    return [PPOPaymentTrackingManager sharedManager].paymentChapperones.count;
+}
+
 @end
