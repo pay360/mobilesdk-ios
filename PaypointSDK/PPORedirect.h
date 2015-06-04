@@ -17,6 +17,7 @@
 @property (nonatomic, strong) NSURL *termURL;
 @property (nonatomic, strong) NSString *transactionID;
 @property (nonatomic, strong) PPOPayment *payment;
+@property (nonatomic, strong) NSData *threeDSecureResumeBody;
 
 -(instancetype)initWithData:(NSDictionary*)data;
 

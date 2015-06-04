@@ -30,7 +30,7 @@
 +(PPOErrorCode)errorCodeForReasonCode:(NSInteger)reasonCode {
     
     PPOErrorCode code = PPOErrorUnknown;
-    
+    NSLog(@"reason code %i", reasonCode);
     switch (reasonCode) {
         case 1: code = PPOErrorBadRequest; break;
         case 2: code = PPOErrorAuthenticationFailed; break;
@@ -38,11 +38,15 @@
         case 4: code = PPOErrorUnauthorisedRequest; break;
         case 5: code = PPOErrorTransactionProcessingFailed; break;
         case 6: code = PPOErrorServerFailure; break;
+        case 7: code = PPOErrorTransactionProcessingFailed; break;
+        case 8: code = PPOErrorTransactionProcessingFailed; break;
         case 9: code = PPOErrorPaymentProcessing; break;
         case 10: code = PPOErrorPaymentNotFound; break;
         default:
             break;
     }
+    
+    NSLog(@"code %i", code);
     
     return code;
     
@@ -259,7 +263,7 @@
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorPaymentNotFound
                                    userInfo:@{
-                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The payment or transaction was not found", @"Failure message for payment status")
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"This payment did not complete or is not known.", @"Failure message for payment status")
                                               }
                     ];
         }
@@ -272,6 +276,15 @@
                                               }
                     ];
         } break;
+        case PPOErrorPaymentManagerOccupied: {
+            return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                       code:PPOErrorPaymentManagerOccupied
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Payment manager occupied. Please wait until current payment finishes.", @"Failure message for 3D secure payment failure")
+                                              }
+                    ];
+        }
+            break;
             
         default: return nil; break;
     }

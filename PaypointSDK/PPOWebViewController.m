@@ -35,7 +35,7 @@
 
 -(void)viewDidLoad {
     [super viewDidLoad];
-    
+        
     [self.webView loadRequest:self.redirect.request];
     if (!self.redirect.delayTimeInterval) {
         [self delayShow:nil];
@@ -147,7 +147,7 @@
             ) {
             [self.delegate webViewController:self failedWithError:[PPOErrorManager errorForCode:PPOErrorProcessingThreeDSecure]];
         } else {
-            [self.delegate webViewController:self completedWithPaRes:pares forTransactionWithID:self.redirect.transactionID];
+            [self.delegate webViewController:self completedWithPaRes:pares];
         }
     } else if (!self.redirect.termURL) {
         [self.delegate webViewController:self failedWithError:[PPOErrorManager errorForCode:PPOErrorProcessingThreeDSecure]];

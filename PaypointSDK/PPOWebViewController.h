@@ -11,7 +11,7 @@
 
 @class PPOWebViewController;
 @protocol PPOWebViewControllerDelegate <NSObject>
--(void)webViewController:(PPOWebViewController*)controller completedWithPaRes:(NSString*)paRes forTransactionWithID:(NSString*)transID;
+-(void)webViewController:(PPOWebViewController*)controller completedWithPaRes:(NSString*)paRes;
 -(void)webViewControllerUserCancelled:(PPOWebViewController*)controller;
 -(void)webViewController:(PPOWebViewController*)controller failedWithError:(NSError*)error;
 -(void)webViewControllerSessionTimeoutExpired:(PPOWebViewController*)controller;

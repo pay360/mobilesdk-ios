@@ -17,8 +17,8 @@
 #import "PPOURLRequestManager.h"
 
 @interface PPOWebFormManager () <PPOWebViewControllerDelegate>
+@property (nonatomic, copy) void(^webFormOutcomeHandler)(PPOOutcome *, NSError *);
 @property (nonatomic, strong) PPORedirect *redirect;
-@property (nonatomic, copy) void(^outcomeHandler)(PPOOutcome *outcome, NSError *error);
 @property (nonatomic, strong) PPOWebViewController *webController;
 @property (nonatomic, strong) PPOPaymentEndpointManager *endpointManager;
 @property (nonatomic, strong) PPOCredentials *credentials;
@@ -30,16 +30,13 @@
     BOOL _isDismissingWebView;
 }
 
--(instancetype)initWithRedirect:(PPORedirect *)redirect
-                withCredentials:(PPOCredentials*)credentials
-                    withSession:(NSURLSession*)session
-            withEndpointManager:(PPOPaymentEndpointManager*)endpointManager
-                    withOutcome:(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandler {
+-(instancetype)initWithRedirect:(PPORedirect *)redirect withCredentials:(PPOCredentials *)credentials withSession:(NSURLSession *)session withEndpointManager:(PPOPaymentEndpointManager *)endpointManager withOutcome:(void (^)(PPOOutcome *, NSError *))outcomeHandler {
+    
     self = [super init];
     if (self) {
+        _webFormOutcomeHandler = outcomeHandler;
         _credentials = credentials;
         _endpointManager = endpointManager;
-        _outcomeHandler = outcomeHandler;
         _session = session;
         _redirect = redirect;
         [self loadRedirect:redirect];
@@ -50,6 +47,7 @@
 //Loading a webpage requires a webView, but we don't want to show a webview on screen during this time.
 //The webview's delegate will still fire, even if the webview is not displayed on screen.
 -(void)loadRedirect:(PPORedirect*)redirect {
+    NSLog(@"loading redirect");
     self.webController = [[PPOWebViewController alloc] initWithRedirect:redirect withDelegate:self];
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     CGFloat width = [UIScreen mainScreen].bounds.size.width;
@@ -60,15 +58,14 @@
 
 #pragma mark - PPOWebViewController
 
--(void)webViewController:(PPOWebViewController *)controller
-      completedWithPaRes:(NSString *)paRes
-    forTransactionWithID:(NSString *)transID {
+-(void)webViewController:(PPOWebViewController *)controller completedWithPaRes:(NSString *)paRes {
     
     _preventShowWebView = YES;
     
     [PPOPaymentTrackingManager resumeTimeoutForPayment:controller.redirect.payment];
     
     if ([[UIApplication sharedApplication] keyWindow] == self.webController.view.superview) {
+        NSLog(@"removing web form from superview");
         [self.webController.view removeFromSuperview];
     }
     
@@ -79,29 +76,39 @@
         body = [NSJSONSerialization dataWithJSONObject:dictionary options:NSJSONWritingPrettyPrinted error:nil];
     }
     
-    NSURL *url = [self.endpointManager urlForResumePaymentWithInstallationID:self.credentials.installationID transactionID:transID];
+    controller.redirect.threeDSecureResumeBody = body;
+    
+    [self performResumeForRedirect:controller.redirect withCredentials:self.credentials];
+}
+
+-(void)performResumeForRedirect:(PPORedirect*)redirect withCredentials:(PPOCredentials*)credentials {
+    
+    NSURL *url = [self.endpointManager urlForResumePaymentWithInstallationID:credentials.installationID
+                                                               transactionID:redirect.transactionID];
     
     NSURLRequest *request = [PPOURLRequestManager requestWithURL:url
                                                       withMethod:@"POST"
                                                      withTimeout:30.0f
                                                        withToken:self.credentials.token
-                                                        withBody:body
-                                                forPaymentWithID:controller.redirect.payment.identifier];
+                                                        withBody:redirect.threeDSecureResumeBody
+                                                forPaymentWithID:redirect.payment.identifier];
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     
     NSURLSessionDataTask *task = [self.session dataTaskWithRequest:request
-                                                 completionHandler:[self resumeResponseHandlerForPayment:controller.redirect.payment]];
+                                                 completionHandler:[self resumeResponseHandlerForRedirect:redirect]];
     
     [task resume];
     
 }
 
--(void(^)(NSData *, NSURLResponse *, NSError *))resumeResponseHandlerForPayment:(PPOPayment*)payment {
+-(void(^)(NSData *, NSURLResponse *, NSError *))resumeResponseHandlerForRedirect:(PPORedirect*)redirect {
     
     __weak typeof(self) weakSelf = self;
     
     return ^ (NSData *data, NSURLResponse *response, NSError *networkError) {
+        
+        NSLog(@"determining result of resume request");
         
         NSError *invalidJSON;
         
@@ -141,9 +148,7 @@
             
         }
         
-        [PPOPaymentTrackingManager removePayment:payment];
-        
-        [weakSelf completePayment:payment onMainThreadWithOutcome:outcome withError:e];
+        [weakSelf completeRedirect:redirect onMainThreadWithOutcome:outcome withError:e];
     };
 }
 
@@ -185,14 +190,12 @@
 -(void)handleError:(NSError *)error webController:(PPOWebViewController *)webController {
     
     _preventShowWebView = YES;
-    
-    [PPOPaymentTrackingManager removePayment:webController.redirect.payment];
-    
-    [self completePayment:webController.redirect.payment onMainThreadWithOutcome:nil withError:error];
+        
+    [self completeRedirect:webController.redirect onMainThreadWithOutcome:nil withError:error];
     
 }
 
--(void)completePayment:(PPOPayment*)payment onMainThreadWithOutcome:(PPOOutcome*)outcome withError:(NSError*)error {
+-(void)completeRedirect:(PPORedirect*)redirect onMainThreadWithOutcome:(PPOOutcome*)outcome withError:(NSError*)error {
     
     dispatch_async(dispatch_get_main_queue(), ^{
         
@@ -207,15 +210,17 @@
                 
                 _isDismissingWebView = YES;
                 
+                NSLog(@"dismissing web controller");
+                
                 [[[UIApplication sharedApplication] keyWindow].rootViewController dismissViewControllerAnimated:YES completion:^{
+                    
+                    NSLog(@"web controller dismissed");
                     
                     _isDismissingWebView = NO;
                     
-                    if (!error) {
-                        [PPOPaymentTrackingManager resumeTimeoutForPayment:payment];
-                    }
+                    [PPOPaymentTrackingManager resumeTimeoutForPayment:redirect.payment];
                     
-                    self.outcomeHandler(outcome, error);
+                    self.webFormOutcomeHandler(outcome, error);
                     
                     _preventShowWebView = NO;
                     
@@ -225,7 +230,13 @@
             
         } else {
             
-            self.outcomeHandler(outcome, error);
+            if (self.webController) {
+                NSLog(@"nilling web controller");
+            }
+            
+            self.webController = nil;
+            
+            self.webFormOutcomeHandler(outcome, error);
             
             _preventShowWebView = NO;
             

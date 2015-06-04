@@ -13,9 +13,10 @@
 //The payment is weak here. If no other object is using it, we will discard it.
 //The payment tracker will report back with 'non-existent'
 @property (nonatomic, weak) PPOPayment *payment;
+@property (nonatomic) BOOL queryingStatus;
 @property (nonatomic, readonly) NSTimeInterval sessionTimeout;
 @property (nonatomic) PAYMENT_STATE state;
--(instancetype)initWithPayment:(PPOPayment*)payment withTimeout:(NSTimeInterval)timeout;
+-(instancetype)initWithPayment:(PPOPayment *)payment withTimeout:(NSTimeInterval)timeout handler:(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandler;
 -(void)startTimeoutTimer;
 -(void)stopTimeoutTimer;
 -(BOOL)hasTimedout;
@@ -24,16 +25,18 @@
 @interface PPOPaymentTrackingChapperone ()
 @property (nonatomic, readwrite) NSTimeInterval sessionTimeout;
 @property (nonatomic, strong) NSTimer *timer;
+@property (nonatomic, strong) void(^outcomeHandler)(PPOOutcome *outcome, NSError *error);
 @property (nonatomic, copy) void(^timeoutHandler)(void);
 @end
 
 @implementation PPOPaymentTrackingChapperone
 
--(instancetype)initWithPayment:(PPOPayment *)payment withTimeout:(NSTimeInterval)timeout {
+-(instancetype)initWithPayment:(PPOPayment *)payment withTimeout:(NSTimeInterval)timeout handler:(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandler {
     self = [super init];
     if (self) {
         _payment = payment;
         _state = PAYMENT_STATE_READY;
+        _outcomeHandler = outcomeHandler;
         if (timeout < 0.0f) {
             timeout = 0;
         }
@@ -104,9 +107,9 @@
     return _paymentChapperones;
 }
 
-+(void)appendPayment:(PPOPayment*)payment withTimeout:(NSTimeInterval)timeout commenceTimeoutImmediately:(BOOL)begin timeoutHandler:(void(^)(void))handler {
++(void)appendPayment:(PPOPayment*)payment withTimeout:(NSTimeInterval)timeout commenceTimeoutImmediately:(BOOL)begin timeoutHandler:(void(^)(void))handler withOutcomeHandler:(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandler {
     
-    PPOPaymentTrackingChapperone *chapperone = [[PPOPaymentTrackingChapperone alloc] initWithPayment:payment withTimeout:timeout];
+    PPOPaymentTrackingChapperone *chapperone = [[PPOPaymentTrackingChapperone alloc] initWithPayment:payment withTimeout:timeout handler:outcomeHandler];
     chapperone.timeoutHandler = handler;
     
     [PPOPaymentTrackingManager insertPaymentTrackingChapperone:chapperone];
@@ -212,6 +215,46 @@
     
     return (chapperone != nil) ? @(chapperone.sessionTimeout) : nil;
     
+}
+
++(BOOL)allPaymentsComplete {
+    
+    PPOPaymentTrackingManager *manager = [PPOPaymentTrackingManager sharedManager];
+    
+    PPOPaymentTrackingChapperone *chapperone;
+    
+    for (PPOPaymentTrackingChapperone *c in manager.paymentChapperones) {
+        
+        if (c.state != PAYMENT_STATE_NON_EXISTENT) {
+            chapperone = c;
+            break;
+        }
+    }
+    
+    return (chapperone == nil);
+}
+
++(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandlerForPayment:(PPOPayment *)payment {
+    
+    PPOPaymentTrackingChapperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
+    return chapperone.outcomeHandler;
+}
+
++(void)logIsQueryingStatusOfPayment:(PPOPayment*)payment {
+    NSLog(@"logIsQueryingStatusOfPayment");
+    PPOPaymentTrackingChapperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
+    chapperone.queryingStatus = YES;
+}
+
++(void)logIsNotQueryingStatusOfPayment:(PPOPayment*)payment {
+    NSLog(@"logIsNotQueryingStatusOfPayment");
+    PPOPaymentTrackingChapperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
+    chapperone.queryingStatus = NO;
+}
+
++(BOOL)isQueryingStatusOfPayment:(PPOPayment*)payment {
+    PPOPaymentTrackingChapperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
+    return chapperone.queryingStatus;
 }
 
 @end

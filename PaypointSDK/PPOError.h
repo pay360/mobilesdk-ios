@@ -101,6 +101,9 @@ typedef NS_ENUM(NSInteger, PPOErrorCode) {
     PPOErrorPaymentProcessing,
     
     /* The transaction or operation was not found */
-    PPOErrorPaymentNotFound
+    PPOErrorPaymentNotFound,
+    
+    /* A payment currently occupies the payment manager. Only one payment allowed per unit time.*/
+    PPOErrorPaymentManagerOccupied
     
 };

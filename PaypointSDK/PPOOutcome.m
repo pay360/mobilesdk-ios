@@ -31,6 +31,13 @@
 
 @implementation PPOOutcome
 
+-(NSNumber *)isSuccessful {
+    if (_isSuccessful == nil && self.reasonCode != nil) {
+        _isSuccessful = @(_reasonCode.integerValue == 0);
+    }
+    return _isSuccessful;
+}
+
 -(void)setReasonCode:(NSNumber *)reasonCode {
     _reasonCode = reasonCode;
     if (_reasonCode) {

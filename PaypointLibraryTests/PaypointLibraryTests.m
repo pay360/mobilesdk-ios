@@ -334,7 +334,7 @@
                      withCredentials:[self credentialsWithToken:VALID_BEARER_TOKEN]
                          withTimeOut:1.0
                       withCompletion:^(PPOOutcome *outcome, NSError *error) {
-                          if ([error.domain isEqualToString:@"NSURLErrorDomain"] && error.code == kCFURLErrorCancelled) {
+                          if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] && error.code == PPOErrorSessionTimedOut) {
                               [expectation fulfill];
                           }
                       }];
