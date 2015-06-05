@@ -25,12 +25,13 @@ Pod::Spec.new do |s|
   s.platform     = :ios, '7.0'
   s.requires_arc = true
 
-  s.source_files = 'PaypointSDK/*.[mh]'
+
+  s.source_files = ['PaypointSDK/*.[mh]','PaypointLibrary/*.h']
   s.resource_bundles = {
     'PayPointIOSSDK' => ['PaypointResources/*']
   }
 
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
+  s.public_header_files = 'PaypointLibrary/*.h'
+  s.frameworks = 'UIKit', 'SystemConfiguration', 'CoreGraphics'
   # s.dependency 'AFNetworking', '~> 2.3'
 end
