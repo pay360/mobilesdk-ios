@@ -15,17 +15,46 @@
     self = [super init];
     if (self) {
         
-        self.termURL = [self parseURL:[data objectForKey:THREE_D_SECURE_TERMINATION_URL_KEY]];
+        if (!data) {
+            return self;
+        }
         
-        NSString *body = [NSString stringWithFormat:
-                          @"PaReq=%@&MD=%@&TermUrl=%@",
+        id value;
+        
+        value = [data objectForKey:THREE_D_SECURE_TERMINATION_URL_KEY];
+        
+        if (!value || [value isKindOfClass:[NSNull class]]) {
+            return self;
+        }
+        
+        self.termURL = [self parseURL:value];
+        
+        value = [data objectForKey:THREE_D_SECURE_PAREQ_KEY];
+        
+        if (!value || [value isKindOfClass:[NSNull class]]) {
+            return self;
+        }
+        
+        value = [data objectForKey:THREE_D_SECURE_MD_KEY];
+        
+        if (!value || [value isKindOfClass:[NSNull class]]) {
+            return self;
+        }
+        
+        NSString *body = [NSString stringWithFormat:@"PaReq=%@&MD=%@&TermUrl=%@",
                           [self urlencode:[self parseStringParam:[data objectForKey:THREE_D_SECURE_PAREQ_KEY]]],
                           [self urlencode:[self parseStringParam:[data objectForKey:THREE_D_SECURE_MD_KEY]]],
                            self.termURL
                           ];
-                          
+        
+        value = [data objectForKey:THREE_D_SECURE_ACS_URL_KEY];
+        
+        if (!value || [value isKindOfClass:[NSNull class]]) {
+            return self;
+        }
+        
         NSData *bodyData = [body dataUsingEncoding:NSUTF8StringEncoding];
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[self parseURL:[data objectForKey:THREE_D_SECURE_ACS_URL_KEY]]];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[self parseURL:value]];
         [request setHTTPMethod:@"POST"];
         [request setHTTPBody:bodyData];
         self.request = [request copy];
