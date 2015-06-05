@@ -229,7 +229,7 @@
                 if (query) {
                     
                     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-                    outcomeHandler(nil, [PPOErrorManager errorForCode:PPOErrorTransactionProcessingFailed]);
+                    outcomeHandler(nil, [PPOErrorManager errorForCode:PPOErrorTransactionDeclined]);
                     [PPOPaymentTrackingManager removePayment:payment];
                     
                 } else {

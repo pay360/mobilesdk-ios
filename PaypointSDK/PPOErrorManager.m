@@ -36,7 +36,7 @@
         case 2: code = PPOErrorAuthenticationFailed; break;
         case 3: code = PPOErrorClientTokenExpired; break;
         case 4: code = PPOErrorUnauthorisedRequest; break;
-        case 5: code = PPOErrorTransactionProcessingFailed; break;
+        case 5: code = PPOErrorTransactionDeclined; break;
         case 6: code = PPOErrorServerFailure; break;
         case 7: code = PPOErrorTransactionProcessingFailed; break;
         case 8: code = PPOErrorTransactionProcessingFailed; break;
@@ -87,6 +87,16 @@
                                        code:PPOErrorPaymentSuspendedForThreeDSecure
                                    userInfo:@{
                                               NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Payment currently suspended awaiting 3D Secure processing.", @"Feedback message for payment status")
+                                              }
+                    ];
+        }
+            break;
+            
+        case PPOErrorTransactionDeclined: {
+            return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
+                                       code:PPOErrorTransactionDeclined
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Transaction declined.", @"Feedback message for payment status")
                                               }
                     ];
         }

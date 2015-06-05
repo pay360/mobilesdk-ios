@@ -97,6 +97,9 @@ typedef NS_ENUM(NSInteger, PPOErrorCode) {
     /* The payment is currently in flight */
     PPOErrorPaymentProcessing,
     
+    /* The transaction was declined */
+    PPOErrorTransactionDeclined,
+    
     /* The transaction or operation was not found */
     PPOErrorPaymentNotFound,
     
