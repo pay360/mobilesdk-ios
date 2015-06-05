@@ -96,41 +96,41 @@
     return [PPOTimeManager cardExpiryDateExpired:expiry];
 }
 
-+(BOOL)baseURLInvalid:(NSURL*)url withHandler:(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandler {
++(BOOL)baseURLInvalid:(NSURL*)url withCompletion:(void(^)(PPOOutcome *outcome, NSError *error))completion {
     NSError *invalid = [PPOValidator validateBaseURL:url];
     if (invalid) {
-        outcomeHandler(nil, invalid);
+        completion(nil, invalid);
         return YES;
     }
     return NO;
 }
 
-+(BOOL)credentialsInvalid:(PPOCredentials*)credentials withHandler:(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandler {
++(BOOL)credentialsInvalid:(PPOCredentials*)credentials withCompletion:(void(^)(PPOOutcome *outcome, NSError *error))completion {
     
     NSError *invalid = [PPOValidator validateCredentials:credentials];
     if (invalid) {
-        outcomeHandler(nil, invalid);
+        completion(nil, invalid);
         return YES;
     }
     return NO;
 }
 
-+(BOOL)paymentInvalid:(PPOPayment*)payment withHandler:(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandler {
++(BOOL)paymentInvalid:(PPOPayment*)payment withCompletion:(void(^)(PPOOutcome *outcome, NSError *error))completion {
     
     NSError *invalid = [PPOValidator validatePayment:payment];
     if (invalid) {
-        outcomeHandler(nil, invalid);
+        completion(nil, invalid);
         return YES;
     }
     return NO;
 }
 
-+(BOOL)paymentUnderway:(PPOPayment*)payment withHandler:(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandler {
++(BOOL)paymentUnderway:(PPOPayment*)payment withCompletion:(void(^)(PPOOutcome *outcome, NSError *error))completion {
     
     PAYMENT_STATE state = [PPOPaymentTrackingManager stateForPayment:payment];
     
     if (state != PAYMENT_STATE_NON_EXISTENT) {
-        outcomeHandler(nil, [PPOErrorManager errorForCode:PPOErrorPaymentProcessing]);
+        completion(nil, [PPOErrorManager errorForCode:PPOErrorPaymentProcessing]);
         return YES;
     }
     

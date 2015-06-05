@@ -20,8 +20,9 @@
                 withCredentials:(PPOCredentials*)credentials
                     withSession:(NSURLSession*)session
             withEndpointManager:(PPOPaymentEndpointManager*)endpointManager
-                    withOutcome:(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandler;
+                    withCompletion:(void(^)(PPOOutcome *outcome, NSError *error))completion;
 
--(void)performResumeForRedirect:(PPORedirect*)redirect withCredentials:(PPOCredentials*)credentials;
+-(void)performResumeForRedirect:(PPORedirect*)redirect
+                withCredentials:(PPOCredentials*)credentials;
 
 @end

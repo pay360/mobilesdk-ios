@@ -43,8 +43,8 @@
  *  @param credentials Authorisation details for using this service.
  *  @param completion  The outcome handler for the payment. Inspect the error domain PPOPaypointSDKErrorDomain for paypoint specific error cases. Each error code can be found within PPOError.h
  */
--(void)paymentOutcome:(PPOPayment*)payment
-      withCredentials:(PPOCredentials*)credentials
+-(void)queryPayment:(PPOPayment*)payment
+    withCredentials:(PPOCredentials*)credentials
        withCompletion:(void(^)(PPOOutcome *outcome, NSError *error))completion;
 
 -(NSUInteger)trackerCount;

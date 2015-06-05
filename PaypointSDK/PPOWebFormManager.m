@@ -17,7 +17,7 @@
 #import "PPOURLRequestManager.h"
 
 @interface PPOWebFormManager () <PPOWebViewControllerDelegate>
-@property (nonatomic, copy) void(^webFormOutcomeHandler)(PPOOutcome *, NSError *);
+@property (nonatomic, copy) void(^completion)(PPOOutcome *, NSError *);
 @property (nonatomic, strong) PPORedirect *redirect;
 @property (nonatomic, strong) PPOWebViewController *webController;
 @property (nonatomic, strong) PPOPaymentEndpointManager *endpointManager;
@@ -30,11 +30,15 @@
     BOOL _isDismissingWebView;
 }
 
--(instancetype)initWithRedirect:(PPORedirect *)redirect withCredentials:(PPOCredentials *)credentials withSession:(NSURLSession *)session withEndpointManager:(PPOPaymentEndpointManager *)endpointManager withOutcome:(void (^)(PPOOutcome *, NSError *))outcomeHandler {
+-(instancetype)initWithRedirect:(PPORedirect *)redirect
+                withCredentials:(PPOCredentials *)credentials
+                    withSession:(NSURLSession *)session
+            withEndpointManager:(PPOPaymentEndpointManager *)endpointManager
+                 withCompletion:(void (^)(PPOOutcome *, NSError *))completion {
     
     self = [super init];
     if (self) {
-        _webFormOutcomeHandler = outcomeHandler;
+        _completion = completion;
         _credentials = credentials;
         _endpointManager = endpointManager;
         _session = session;
@@ -212,7 +216,7 @@
                     
                     [PPOPaymentTrackingManager resumeTimeoutForPayment:redirect.payment];
                     
-                    self.webFormOutcomeHandler(outcome, error);
+                    self.completion(outcome, error);
                     
                     _preventShowWebView = NO;
                     
@@ -224,7 +228,7 @@
             
             self.webController = nil;
             
-            self.webFormOutcomeHandler(outcome, error);
+            self.completion(outcome, error);
             
             _preventShowWebView = NO;
             

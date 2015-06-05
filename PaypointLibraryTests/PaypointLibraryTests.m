@@ -85,13 +85,13 @@
     PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:[PPOPaymentBaseURLManager baseURLForEnvironment:0]];
     
     [manager makePayment:payment
-                     withCredentials:[self credentialsWithToken:VALID_BEARER_TOKEN]
-                         withTimeOut:60.0f
-                      withCompletion:^(PPOOutcome *outcome, NSError *paymentFailure) {
-                          if (!paymentFailure) {
-                              [expectation fulfill];
-                          }
-                      }];
+         withCredentials:[self credentialsWithToken:VALID_BEARER_TOKEN]
+             withTimeOut:60.0f
+          withCompletion:^(PPOOutcome *outcome, NSError *paymentFailure) {
+              if (!paymentFailure) {
+                  [expectation fulfill];
+              }
+          }];
     
     [self waitForExpectationsWithTimeout:10.0f
                                  handler:^(NSError *error) {
@@ -113,14 +113,13 @@
     PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:[PPOPaymentBaseURLManager baseURLForEnvironment:0]];
     
     [manager makePayment:payment
-                     withCredentials:[self credentialsWithToken:VALID_BEARER_TOKEN]
-                         withTimeOut:60.0f
-                      withCompletion:^(PPOOutcome *outcome, NSError *error) {
-                          if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] &&
-                              error.code == PPOErrorPaymentAmountInvalid) {
-                              [expectation fulfill];
-                          }
-                      }];
+         withCredentials:[self credentialsWithToken:VALID_BEARER_TOKEN]
+             withTimeOut:60.0f
+          withCompletion:^(PPOOutcome *outcome, NSError *error) {
+              if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] && error.code == PPOErrorPaymentAmountInvalid) {
+                  [expectation fulfill];
+              }
+          }];
     
     [self waitForExpectationsWithTimeout:60.0f
                                  handler:^(NSError *error) {
@@ -143,13 +142,13 @@
     PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:[PPOPaymentBaseURLManager baseURLForEnvironment:0]];
     
     [manager makePayment:payment
-                     withCredentials:[self credentialsWithToken:VALID_BEARER_TOKEN]
-                         withTimeOut:60.0f
-                      withCompletion:^(PPOOutcome *outcome, NSError *error) {
-                          if (!error && outcome.customFields.count == 3) {
-                              [expectation fulfill];
-                          }
-                      }];
+         withCredentials:[self credentialsWithToken:VALID_BEARER_TOKEN]
+             withTimeOut:60.0f
+          withCompletion:^(PPOOutcome *outcome, NSError *error) {
+              if (!error && outcome.customFields.count == 3) {
+                  [expectation fulfill];
+              }
+          }];
     
     [self waitForExpectationsWithTimeout:10.0f
                                  handler:^(NSError *error) {
@@ -174,14 +173,13 @@
     PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:[PPOPaymentBaseURLManager baseURLForEnvironment:0]];
     
     [manager makePayment:payment
-                     withCredentials:[self credentialsWithToken:VALID_BEARER_TOKEN]
-                         withTimeOut:60.0f
-                      withCompletion:^(PPOOutcome *outcome, NSError *error) {
-                          if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] &&
-                              error.code == PPOErrorCVVInvalid) {
-                              [expectation fulfill];
-                          }
-                      }];
+         withCredentials:[self credentialsWithToken:VALID_BEARER_TOKEN]
+             withTimeOut:60.0f
+          withCompletion:^(PPOOutcome *outcome, NSError *error) {
+              if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] && error.code == PPOErrorCVVInvalid) {
+                  [expectation fulfill];
+              }
+          }];
     
     [self waitForExpectationsWithTimeout:60.0f
                                  handler:^(NSError *error) {
@@ -202,13 +200,13 @@
     PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:[PPOPaymentBaseURLManager baseURLForEnvironment:0]];
     
     [manager makePayment:payment
-                     withCredentials:[self credentialsWithToken:VALID_BEARER_TOKEN]
-                         withTimeOut:60.0f
-                      withCompletion:^(PPOOutcome *outcome, NSError *error) {
-                          if (!error) {
-                              [expectation fulfill];
-                          }
-                      }];
+         withCredentials:[self credentialsWithToken:VALID_BEARER_TOKEN]
+             withTimeOut:60.0f
+          withCompletion:^(PPOOutcome *outcome, NSError *error) {
+              if (!error) {
+                  [expectation fulfill];
+              }
+          }];
     
     [self waitForExpectationsWithTimeout:60.0f
                                  handler:^(NSError *error) {
@@ -230,14 +228,13 @@
     PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:[PPOPaymentBaseURLManager baseURLForEnvironment:0]];
     
     [manager makePayment:payment
-                     withCredentials:[self credentialsWithToken:EXPIRED_BEARER_TOKEN]
-                         withTimeOut:60.0f
-                      withCompletion:^(PPOOutcome *outcome, NSError *error) {
-                          if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] &&
-                              error.code == PPOErrorClientTokenExpired) {
-                              [expectation fulfill];
-                          }
-                      }];
+         withCredentials:[self credentialsWithToken:EXPIRED_BEARER_TOKEN]
+             withTimeOut:60.0f
+          withCompletion:^(PPOOutcome *outcome, NSError *error) {
+              if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] && error.code == PPOErrorClientTokenExpired) {
+                  [expectation fulfill];
+              }
+          }];
     
     [self waitForExpectationsWithTimeout:60.0f
                                  handler:^(NSError *error) {
@@ -259,14 +256,13 @@
     PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:[PPOPaymentBaseURLManager baseURLForEnvironment:0]];
     
     [manager makePayment:payment
-                     withCredentials:[self credentialsWithToken:UNAUTHORISED_BEARER_TOKEN]
-                         withTimeOut:60.0f
-                      withCompletion:^(PPOOutcome *outcome, NSError *error) {
-                          if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] &&
-                              error.code == PPOErrorUnauthorisedRequest) {
-                              [expectation fulfill];
-                          }
-                      }];
+         withCredentials:[self credentialsWithToken:UNAUTHORISED_BEARER_TOKEN]
+             withTimeOut:60.0f
+          withCompletion:^(PPOOutcome *outcome, NSError *error) {
+              if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] && error.code == PPOErrorUnauthorisedRequest) {
+                  [expectation fulfill];
+              }
+          }];
     
     [self waitForExpectationsWithTimeout:60.0f
                                  handler:^(NSError *error) {
@@ -289,14 +285,13 @@
     PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:[PPOPaymentBaseURLManager baseURLForEnvironment:0]];
     
     [manager makePayment:payment
-                     withCredentials:[self credentialsWithToken:VALID_BEARER_TOKEN]
-                         withTimeOut:60.0f
-                      withCompletion:^(PPOOutcome *outcome, NSError *error) {
-                          if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] &&
-                              error.code == PPOErrorTransactionDeclined) {
-                              [expectation fulfill];
-                          }
-                      }];
+         withCredentials:[self credentialsWithToken:VALID_BEARER_TOKEN]
+             withTimeOut:60.0f
+          withCompletion:^(PPOOutcome *outcome, NSError *error) {
+              if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] && error.code == PPOErrorTransactionDeclined) {
+                  [expectation fulfill];
+              }
+          }];
     
     [self waitForExpectationsWithTimeout:60.0f
                                  handler:^(NSError *error) {
@@ -318,13 +313,13 @@
     PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:[PPOPaymentBaseURLManager baseURLForEnvironment:0]];
     
     [manager makePayment:payment
-                     withCredentials:[self credentialsWithToken:VALID_BEARER_TOKEN]
-                         withTimeOut:60.0f
-                      withCompletion:^(PPOOutcome *outcome, NSError *error) {
-                          if (outcome.customFields.count > 0) {
-                              [expectation fulfill];
-                          }
-                      }];
+         withCredentials:[self credentialsWithToken:VALID_BEARER_TOKEN]
+             withTimeOut:60.0f
+          withCompletion:^(PPOOutcome *outcome, NSError *error) {
+              if (outcome.customFields.count > 0) {
+                  [expectation fulfill];
+              }
+          }];
     
     [self waitForExpectationsWithTimeout:10.0f
                                  handler:^(NSError *error) {
@@ -349,14 +344,13 @@
     PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:[PPOPaymentBaseURLManager baseURLForEnvironment:0]];
     
     [manager makePayment:payment
-                     withCredentials:[self credentialsWithToken:VALID_BEARER_TOKEN]
-                         withTimeOut:1.0
-                      withCompletion:^(PPOOutcome *outcome, NSError *error) {
-                          if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] &&
-                              error.code == PPOErrorSessionTimedOut) {
-                              [expectation fulfill];
-                          }
-                      }];
+         withCredentials:[self credentialsWithToken:VALID_BEARER_TOKEN]
+             withTimeOut:1.0
+          withCompletion:^(PPOOutcome *outcome, NSError *error) {
+              if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] && error.code == PPOErrorSessionTimedOut) {
+                  [expectation fulfill];
+              }
+          }];
     
     [self waitForExpectationsWithTimeout:3.0
                                  handler:^(NSError *error) {
@@ -377,14 +371,13 @@
     PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:[PPOPaymentBaseURLManager baseURLForEnvironment:0]];
     
     [manager makePayment:payment
-                     withCredentials:[self credentialsWithToken:VALID_BEARER_TOKEN]
-                         withTimeOut:60.0f
-                      withCompletion:^(PPOOutcome *outcome, NSError *error) {
-                          if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] &&
-                              error.code == PPOErrorServerFailure) {
-                              [expectation fulfill];
-                          }
-                      }];
+         withCredentials:[self credentialsWithToken:VALID_BEARER_TOKEN]
+             withTimeOut:60.0f
+          withCompletion:^(PPOOutcome *outcome, NSError *error) {
+              if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] && error.code == PPOErrorServerFailure) {
+                  [expectation fulfill];
+              }
+          }];
     
     [self waitForExpectationsWithTimeout:60.0f
                                  handler:^(NSError *error) {

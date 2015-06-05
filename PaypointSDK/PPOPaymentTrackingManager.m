@@ -16,7 +16,7 @@
 @property (nonatomic) BOOL queryingStatus;
 @property (nonatomic, readonly) NSTimeInterval sessionTimeout;
 @property (nonatomic) PAYMENT_STATE state;
--(instancetype)initWithPayment:(PPOPayment *)payment withTimeout:(NSTimeInterval)timeout handler:(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandler;
+-(instancetype)initWithPayment:(PPOPayment *)payment withTimeout:(NSTimeInterval)timeout;
 -(void)startTimeoutTimer;
 -(void)stopTimeoutTimer;
 -(BOOL)hasTimedout;
@@ -31,12 +31,11 @@
 
 @implementation PPOPaymentTrackingChapperone
 
--(instancetype)initWithPayment:(PPOPayment *)payment withTimeout:(NSTimeInterval)timeout handler:(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandler {
+-(instancetype)initWithPayment:(PPOPayment *)payment withTimeout:(NSTimeInterval)timeout {
     self = [super init];
     if (self) {
         _payment = payment;
         _state = PAYMENT_STATE_READY;
-        _outcomeHandler = outcomeHandler;
         if (timeout < 0.0f) {
             timeout = 0;
         }
@@ -107,11 +106,11 @@
     return _paymentChapperones;
 }
 
-+(void)appendPayment:(PPOPayment*)payment withTimeout:(NSTimeInterval)timeout commenceTimeoutImmediately:(BOOL)begin timeoutHandler:(void(^)(void))handler withOutcomeHandler:(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandler {
++(void)appendPayment:(PPOPayment*)payment withTimeout:(NSTimeInterval)timeout commenceTimeoutImmediately:(BOOL)begin timeoutHandler:(void(^)(void))handler {
     
     NSLog(@"Appending payment %@", payment.identifier);
     
-    PPOPaymentTrackingChapperone *chapperone = [[PPOPaymentTrackingChapperone alloc] initWithPayment:payment withTimeout:timeout handler:outcomeHandler];
+    PPOPaymentTrackingChapperone *chapperone = [[PPOPaymentTrackingChapperone alloc] initWithPayment:payment withTimeout:timeout];
     chapperone.timeoutHandler = handler;
     
     [PPOPaymentTrackingManager insertPaymentTrackingChapperone:chapperone];
