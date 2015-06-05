@@ -47,7 +47,6 @@
 //Loading a webpage requires a webView, but we don't want to show a webview on screen during this time.
 //The webview's delegate will still fire, even if the webview is not displayed on screen.
 -(void)loadRedirect:(PPORedirect*)redirect {
-    NSLog(@"loading redirect");
     self.webController = [[PPOWebViewController alloc] initWithRedirect:redirect withDelegate:self];
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     CGFloat width = [UIScreen mainScreen].bounds.size.width;
@@ -65,7 +64,6 @@
     [PPOPaymentTrackingManager resumeTimeoutForPayment:controller.redirect.payment];
     
     if ([[UIApplication sharedApplication] keyWindow] == self.webController.view.superview) {
-        NSLog(@"removing web form from superview");
         [self.webController.view removeFromSuperview];
     }
     
@@ -107,8 +105,6 @@
     __weak typeof(self) weakSelf = self;
     
     return ^ (NSData *data, NSURLResponse *response, NSError *networkError) {
-        
-        NSLog(@"determining result of resume request");
         
         NSError *invalidJSON;
         
@@ -210,11 +206,7 @@
                 
                 _isDismissingWebView = YES;
                 
-                NSLog(@"dismissing web controller");
-                
                 [[[UIApplication sharedApplication] keyWindow].rootViewController dismissViewControllerAnimated:YES completion:^{
-                    
-                    NSLog(@"web controller dismissed");
                     
                     _isDismissingWebView = NO;
                     
@@ -229,10 +221,6 @@
             }
             
         } else {
-            
-            if (self.webController) {
-                NSLog(@"nilling web controller");
-            }
             
             self.webController = nil;
             

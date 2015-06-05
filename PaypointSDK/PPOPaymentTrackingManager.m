@@ -109,6 +109,8 @@
 
 +(void)appendPayment:(PPOPayment*)payment withTimeout:(NSTimeInterval)timeout commenceTimeoutImmediately:(BOOL)begin timeoutHandler:(void(^)(void))handler withOutcomeHandler:(void(^)(PPOOutcome *outcome, NSError *error))outcomeHandler {
     
+    NSLog(@"Appending payment %@", payment.identifier);
+    
     PPOPaymentTrackingChapperone *chapperone = [[PPOPaymentTrackingChapperone alloc] initWithPayment:payment withTimeout:timeout handler:outcomeHandler];
     chapperone.timeoutHandler = handler;
     
@@ -129,6 +131,8 @@
 }
 
 +(void)removePayment:(PPOPayment*)payment {
+    
+    NSLog(@"Removing payment %@", payment.identifier);
     
     PPOPaymentTrackingChapperone *chapperoneToDiscard = [PPOPaymentTrackingManager chapperoneForPayment:payment];
     

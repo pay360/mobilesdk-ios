@@ -45,6 +45,7 @@
 #pragma mark - Local Validation (Good Pan & Good Token)
 
 -(void)testLuhn {
+    
     for (NSString *pan in self.pans) {
         NSAssert([PPOLuhn validateString:pan], @"Luhn check failed");
     }
@@ -292,7 +293,7 @@
                          withTimeOut:60.0f
                       withCompletion:^(PPOOutcome *outcome, NSError *error) {
                           if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] &&
-                              error.code == PPOErrorTransactionProcessingFailed) {
+                              error.code == PPOErrorTransactionDeclined) {
                               [expectation fulfill];
                           }
                       }];
