@@ -94,9 +94,6 @@ typedef NS_ENUM(NSInteger, PPOErrorCode) {
     /* User cancelled 3D Secure */
     PPOErrorUserCancelled,
     
-    /* The payment is ready to begin, but has not started yet*/
-    PPOErrorPaymentReadyNotStarted,
-    
     /* The payment is currently in flight */
     PPOErrorPaymentProcessing,
     

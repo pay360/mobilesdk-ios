@@ -152,15 +152,6 @@
                     ];
         } break;
             
-        case PPOErrorPaymentReadyNotStarted: {
-            return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
-                                       code:PPOErrorPaymentReadyNotStarted
-                                   userInfo:@{
-                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The payment is ready but it has not been sent for processing.", @"Failure message for a card validation check")
-                                              }
-                    ];
-        }
-            break;
         case PPOErrorCardExpiryDateInvalid: {
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
                                        code:PPOErrorCardExpiryDateInvalid

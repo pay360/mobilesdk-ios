@@ -148,7 +148,7 @@
             break;
             
         case PAYMENT_STATE_READY: {
-            outcomeHandler(nil, [PPOErrorManager errorForCode:PPOErrorPaymentReadyNotStarted]);
+            outcomeHandler(nil, [PPOErrorManager errorForCode:PPOErrorPaymentProcessing]);
             return;
         }
             break;
@@ -215,6 +215,7 @@
         id redirectData = [weakSelf redirectData:json];
         
         dispatch_async(dispatch_get_main_queue(), ^{
+            
             if (invalidJSON) {
                 
                 [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
@@ -396,8 +397,6 @@
     if (!payment) return;
     
     NSNumber *sessionTimeoutInterval = [PPOPaymentTrackingManager remainingSessionTimeoutForPayment:payment];
-    
-    NSLog(@"remaining session time: %@", sessionTimeoutInterval);
     
     if (sessionTimeoutInterval) {
         
