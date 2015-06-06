@@ -6,6 +6,8 @@
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
+#define PPO_DEBUG_MODE 1
+
 #define THREE_D_SECURE_MD_KEY @"md"
 #define THREE_D_SECURE_PAREQ_KEY @"pareq"
 #define THREE_D_SECURE_PARES_KEY @"PaRes"

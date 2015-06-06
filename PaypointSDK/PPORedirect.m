@@ -11,13 +11,18 @@
 
 @implementation PPORedirect
 
--(instancetype)initWithData:(NSDictionary *)data {
+-(instancetype)initWithData:(NSDictionary *)data forPayment:(PPOPayment*)payment {
+    
     self = [super init];
     if (self) {
         
         if (!data) {
             return self;
         }
+        
+        data = [self redirectData:data];
+        
+        _payment = payment;
         
         id value;
         
@@ -27,7 +32,7 @@
             return self;
         }
         
-        self.termURL = [self parseURL:value];
+        _termURL = [self parseURL:value];
         
         value = [data objectForKey:THREE_D_SECURE_PAREQ_KEY];
         
@@ -57,11 +62,11 @@
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[self parseURL:value]];
         [request setHTTPMethod:@"POST"];
         [request setHTTPBody:bodyData];
-        self.request = [request copy];
+        _request = [request copy];
         
-        self.sessionTimeoutTimeInterval = [self parseSessionTimeout:[data objectForKey:THREE_D_SECURE_SESSION_TIMEOUT_TIME_KEY]];
+        _sessionTimeoutTimeInterval = [self parseSessionTimeout:[data objectForKey:THREE_D_SECURE_SESSION_TIMEOUT_TIME_KEY]];
         
-        self.delayTimeInterval = [self parseDelayShowTimeout:[data objectForKey:THREE_D_SECURE_DELAYSHOW_TIME_KEY]];
+        _delayTimeInterval = [self parseDelayShowTimeout:[data objectForKey:THREE_D_SECURE_DELAYSHOW_TIME_KEY]];
     }
     return self;
 }
@@ -114,6 +119,27 @@
     if ([value isKindOfClass:[NSNumber class]]) {
         return @((value) ? value.doubleValue/1000 : 5);
     }
+    return nil;
+}
+
+-(NSDictionary*)redirectData:(id)json {
+    
+    NSString *transactionID;
+    
+    id value = [json objectForKey:@"transaction"];
+    
+    if ([value isKindOfClass:[NSDictionary class]]) {
+        transactionID = [value objectForKey:@"transactionId"];
+    }
+    
+    value = [json objectForKey:@"threeDSRedirect"];
+    
+    if ([value isKindOfClass:[NSDictionary class]] && [transactionID isKindOfClass:[NSString class]] && transactionID.length) {
+        NSMutableDictionary *mutable = [value mutableCopy];
+        [mutable setObject:transactionID forKey:@"transactionId"];
+        return [mutable copy];
+    }
+    
     return nil;
 }
 

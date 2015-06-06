@@ -19,6 +19,6 @@
 @property (nonatomic, strong) PPOPayment *payment;
 @property (nonatomic, strong) NSData *threeDSecureResumeBody;
 
--(instancetype)initWithData:(NSDictionary*)data;
+-(instancetype)initWithData:(NSDictionary*)data forPayment:(PPOPayment*)payment;
 
 @end

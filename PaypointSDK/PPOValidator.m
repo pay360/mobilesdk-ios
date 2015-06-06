@@ -96,45 +96,4 @@
     return [PPOTimeManager cardExpiryDateExpired:expiry];
 }
 
-+(BOOL)baseURLInvalid:(NSURL*)url withCompletion:(void(^)(PPOOutcome *outcome, NSError *error))completion {
-    NSError *invalid = [PPOValidator validateBaseURL:url];
-    if (invalid) {
-        completion(nil, invalid);
-        return YES;
-    }
-    return NO;
-}
-
-+(BOOL)credentialsInvalid:(PPOCredentials*)credentials withCompletion:(void(^)(PPOOutcome *outcome, NSError *error))completion {
-    
-    NSError *invalid = [PPOValidator validateCredentials:credentials];
-    if (invalid) {
-        completion(nil, invalid);
-        return YES;
-    }
-    return NO;
-}
-
-+(BOOL)paymentInvalid:(PPOPayment*)payment withCompletion:(void(^)(PPOOutcome *outcome, NSError *error))completion {
-    
-    NSError *invalid = [PPOValidator validatePayment:payment];
-    if (invalid) {
-        completion(nil, invalid);
-        return YES;
-    }
-    return NO;
-}
-
-+(BOOL)paymentUnderway:(PPOPayment*)payment withCompletion:(void(^)(PPOOutcome *outcome, NSError *error))completion {
-    
-    PAYMENT_STATE state = [PPOPaymentTrackingManager stateForPayment:payment];
-    
-    if (state != PAYMENT_STATE_NON_EXISTENT) {
-        completion(nil, [PPOErrorManager errorForCode:PPOErrorPaymentProcessing]);
-        return YES;
-    }
-    
-    return NO;
-}
-
 @end

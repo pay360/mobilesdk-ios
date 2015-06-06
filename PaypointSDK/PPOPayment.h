@@ -13,12 +13,14 @@
 @class PPOCreditCard;
 @class PPOFinancialServices;
 @class PPOCustomer;
+@class PPOCredentials;
 @interface PPOPayment : NSObject
 @property (nonatomic, strong) PPOTransaction *transaction;
 @property (nonatomic, strong) PPOCreditCard *card;
 @property (nonatomic, strong) PPOBillingAddress *address;
 @property (nonatomic, strong) PPOFinancialServices *financialServices;
 @property (nonatomic, strong) PPOCustomer *customer;
+@property (nonatomic, strong) PPOCredentials *credentials;
 @property (nonatomic, strong) NSSet *customFields;
 @property (nonatomic, readonly, copy) NSString *identifier;
 @end

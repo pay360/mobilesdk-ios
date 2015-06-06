@@ -14,6 +14,7 @@
 #import "PPOCredentials.h"
 #import "PPOErrorManager.h"
 #import "PPOPayment.h"
+#import "PPOSDKConstants.h"
 #import "PPOURLRequestManager.h"
 
 @interface PPOWebFormManager () <PPOWebViewControllerDelegate>
@@ -51,6 +52,9 @@
 //Loading a webpage requires a webView, but we don't want to show a webview on screen during this time.
 //The webview's delegate will still fire, even if the webview is not displayed on screen.
 -(void)loadRedirect:(PPORedirect*)redirect {
+    if (PPO_DEBUG_MODE) {
+        NSLog(@"Loading redirect web view hidden for payment with op ref: %@", redirect.payment.identifier);
+    }
     self.webController = [[PPOWebViewController alloc] initWithRedirect:redirect withDelegate:self];
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     CGFloat width = [UIScreen mainScreen].bounds.size.width;
@@ -63,11 +67,16 @@
 
 -(void)webViewController:(PPOWebViewController *)controller completedWithPaRes:(NSString *)paRes {
     
+    if (PPO_DEBUG_MODE) {
+        NSLog(@"Web view concluded for payment with op ref: %@", controller.redirect.payment.identifier);
+    }
+    
     _preventShowWebView = YES;
     
     [PPOPaymentTrackingManager resumeTimeoutForPayment:controller.redirect.payment];
     
     if ([[UIApplication sharedApplication] keyWindow] == self.webController.view.superview) {
+        if (PPO_DEBUG_MODE) NSLog(@"Removing web view for payment with op ref: %@", controller.redirect.payment.identifier);
         [self.webController.view removeFromSuperview];
     }
     
@@ -84,6 +93,10 @@
 }
 
 -(void)performResumeForRedirect:(PPORedirect*)redirect withCredentials:(PPOCredentials*)credentials {
+    
+    if (PPO_DEBUG_MODE) {
+        NSLog(@"Resuming payment with op ref: %@", redirect.payment.identifier);
+    }
     
     NSURL *url = [self.endpointManager urlForResumePaymentWithInstallationID:credentials.installationID
                                                                transactionID:redirect.transactionID];
@@ -168,6 +181,20 @@
         
         UINavigationController *navCon = [[UINavigationController alloc] initWithRootViewController:self.webController];
         
+        /*
+        * Presenting controllers like this or toying with the implementing developers view heirarchy,
+        * without the implementing developer's knowledge of when and how, is risky.
+        * A merchant App may have an interesting animation that won't know when to 
+        * terminate or change e.g. the current pulsing Paypoint logo in the demo merchant App 
+        * has no indication of when to change or cancel before or after the web view is presented/dismissed.
+        * May be upsetting behaviour if the implementing developer is using an interactive transitioning
+        * protocol to present/dismiss the payment scene or a UIPresentationController which is managed by a 
+        * transitioning context provided by the system.
+        * The merchant App may have multiple child view controllers, which may work mostly independently of one another.
+        * Not exposing the webview makes styling of the web view navigation bar or the presentation animation tricky
+        * UIBarButtonItem text is in strings file in embedded resources bundle, for internationalisation
+        * Paypoint have considered these points and are happy to release and get feedback
+         */
         [[[UIApplication sharedApplication] keyWindow].rootViewController presentViewController:navCon
                                                                                        animated:YES
                                                                                      completion:nil];
@@ -236,6 +263,10 @@
         
     });
     
+}
+
+-(void)dealloc {
+    [self.webController.view removeFromSuperview];
 }
 
 @end
