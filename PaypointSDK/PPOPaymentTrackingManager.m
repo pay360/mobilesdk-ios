@@ -14,6 +14,7 @@
 //The payment is weak here. So if no other object is holding it, we don't need to track it.
 @property (nonatomic, readonly, weak) PPOPayment *payment;
 @property (nonatomic, readonly) NSTimeInterval sessionTimeout;
+@property (nonatomic) NSUInteger queryPaymentCount;
 @property (nonatomic) PAYMENT_STATE state;
 -(instancetype)initWithPayment:(PPOPayment *)payment withTimeout:(NSTimeInterval)timeout timeoutHandler:(void(^)(void))timeoutHandler;
 -(void)startTimeoutTimer;
@@ -113,6 +114,7 @@
 
 @interface PPOPaymentTrackingManager ()
 @property (nonatomic, strong) NSMutableSet *paymentChapperones;
+@property (nonatomic, strong) NSArray *queryPaymentTimeIntervals;
 @end
 
 @implementation PPOPaymentTrackingManager
@@ -132,6 +134,13 @@
         _paymentChapperones = [NSMutableSet new];
     }
     return _paymentChapperones;
+}
+
+-(NSArray *)queryPaymentTimeIntervals {
+    if (_queryPaymentTimeIntervals == nil) {
+        _queryPaymentTimeIntervals = @[@(1), @(2), @(2), @(5)];
+    }
+    return _queryPaymentTimeIntervals;
 }
 
 +(void)appendPayment:(PPOPayment*)payment
@@ -274,6 +283,27 @@
     }
     
     return (chapperone == nil);
+}
+
++(NSUInteger)totalRecursiveQueryPaymentAttemptsForPayment:(PPOPayment *)payment {
+    PPOPaymentTrackingChapperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
+    return chapperone.queryPaymentCount;
+}
+
++(void)incrementRecurisiveQueryPaymentAttemptCountForPayment:(PPOPayment *)payment {
+    PPOPaymentTrackingChapperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
+    chapperone.queryPaymentCount++;
+}
+
++(NSTimeInterval)timeIntervalForAttemptCount:(NSUInteger)attempt {
+    NSArray *timeIntervals = [PPOPaymentTrackingManager sharedManager].queryPaymentTimeIntervals;
+    NSNumber *timeInterval;
+    if (attempt <= (timeIntervals.count-1)) {
+        timeInterval = timeIntervals[attempt];
+    } else {
+        timeInterval = timeIntervals.lastObject;
+    }
+    return timeInterval.doubleValue;
 }
 
 @end

@@ -41,6 +41,6 @@
  *  @param completion  The outcome handler for the payment. Inspect the error domain PPOPaypointSDKErrorDomain for paypoint specific error cases. Each error code can be found within PPOError.h
  */
 -(void)queryPayment:(PPOPayment*)payment
-       withCompletion:(void(^)(PPOOutcome *outcome))completion;
-                           
+     withCompletion:(void(^)(PPOOutcome *outcome))completion;
+
 @end

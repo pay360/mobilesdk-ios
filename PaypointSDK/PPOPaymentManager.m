@@ -34,6 +34,7 @@
 @property (nonatomic, strong) NSURLSession *externalURLSession;
 @property (nonatomic, strong) PPODeviceInfo *deviceInfo;
 @property (nonatomic, strong) PPORedirectManager *webformManager;
+@property (nonatomic, strong) dispatch_queue_t r_queue;
 @end
 
 @implementation PPOPaymentManager
@@ -444,13 +445,36 @@
                     isInternalQuery:YES
                      withCompletion:^(PPOOutcome *queryOutcome) {
                          
-                         /*
-                          * Recursively call ourselves. The implementing developer master session
-                          * timeout countdown will abort this recursion, if we do not get a conclusion.
-                          */
-                         [weakSelf handleOutcome:queryOutcome
-                                      forPayment:payment
-                                  withCompletion:completion];
+                         if (self.r_queue == nil) {
+                             self.r_queue = dispatch_queue_create("Dispatch_Recursive_Call", NULL);
+                         }
+                         
+                         NSUInteger attemptCount = [PPOPaymentTrackingManager totalRecursiveQueryPaymentAttemptsForPayment:payment];
+                         NSTimeInterval interval = [PPOPaymentTrackingManager timeIntervalForAttemptCount:attemptCount];
+                         [PPOPaymentTrackingManager incrementRecurisiveQueryPaymentAttemptCountForPayment:payment];
+                         
+                         dispatch_async(self.r_queue, ^{
+                             
+                             /*
+                              * Back off period before calling again. Done any dedicated queue to avoid sleeping the main thread.
+                              */
+                             if (PPO_DEBUG_MODE) {
+                                 NSLog(@"Recursive query call required.");
+                                 NSLog(@"Will sleep the recursive call thread for %f seconds", interval);
+                             }
+                             
+                             sleep(interval);
+                             
+                             /*
+                              * Recursively call ourselves. The implementing developer master session
+                              * timeout countdown will abort this recursion, if we do not get a conclusion.
+                              */
+                             [weakSelf handleOutcome:queryOutcome
+                                          forPayment:payment
+                                      withCompletion:completion];
+                             
+                         });
+                         
                          
                      }];
         
@@ -464,9 +488,20 @@
             outcome.error = [PPOErrorManager errorForCode:PPOErrorMasterSessionTimedOut];
         }
         
-        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-        [PPOPaymentTrackingManager removePayment:payment];
-        completion(outcome);
+        if ([NSThread isMainThread]) {
+            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+            [PPOPaymentTrackingManager removePayment:payment];
+            completion(outcome);
+        } else {
+            /*
+             * We might be on a background thread, if recursive payment queries were required.
+             */
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+                [PPOPaymentTrackingManager removePayment:payment];
+                completion(outcome);
+            });
+        }
     }
     
 }
