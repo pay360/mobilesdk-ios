@@ -11,9 +11,8 @@
 
 @interface PPOErrorManager : NSObject
 
-+(NSString*)errorDomainForReasonCode:(NSInteger)reasonCode;
-+(PPOErrorCode)errorCodeForReasonCode:(NSInteger)reasonCode;
-+(NSError*)errorForCode:(PPOErrorCode)code;
++(PPOPaymentError)parsePaypointReasonCode:(NSInteger)reasonCode;
++(NSError*)paymentErrorForCode:(PPOPaymentError)paymentErrorCode;
 +(BOOL)safeToRetryPaymentWithoutRiskOfDuplication:(NSError*)error;
 
 @end

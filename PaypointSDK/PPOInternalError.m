@@ -9,7 +9,3 @@
 #import "PPOInternalError.h"
 
 NSString *const PPOPrivateErrorDomain = @"com.paypoint.sdk.payment.private.error.domain";
-
-@implementation PPOInternalError
-
-@end

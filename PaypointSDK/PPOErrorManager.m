@@ -7,29 +7,11 @@
 //
 
 #import "PPOErrorManager.h"
+#import "PPOInternalError.h"
 
 @implementation PPOErrorManager
 
-+(NSString*)errorDomainForReasonCode:(NSInteger)reasonCode {
-    
-    NSString *domain;
-    
-    switch (reasonCode) { //A reason code is a Paypoint reason code.
-            
-        case 0: //Success, so should not be considered as needing an 'error domain' at all
-            break;
-            
-        default:
-            domain = PPOPaypointSDKErrorDomain; // Use this domain for everything. Even if reason code is unknown.
-            break;
-    }
-    
-    return domain;
-}
-
-+(PPOErrorCode)errorCodeForReasonCode:(NSInteger)reasonCode {
-    
-    PPOErrorCode code = PPOErrorUnknown;
++(NSError *)parsePaypointReasonCode:(NSInteger)reasonCode {
     
     /*
      * Reason codes 7 and 8 are related to three d secure suspended state.
@@ -38,12 +20,24 @@
      * implementing developer know about this state.
      */
     switch (reasonCode) {
-        case 1: code = PPOErrorBadRequest; break;
-        case 2: code = PPOErrorAuthenticationFailed; break;
-        case 3: code = PPOErrorClientTokenExpired; break;
-        case 4: code = PPOErrorUnauthorisedRequest; break;
-        case 5: code = PPOErrorTransactionDeclined; break;
-        case 6: code = PPOErrorServerFailure; break;
+        case 1: {
+            return [PPOErrorManager errorForPrivateError:PPOPrivateErrorBadRequest];
+        } break;
+        case 2: {
+            return [PPOErrorManager errorForPrivateError:PPOPrivateErrorAuthenticationFailed];
+        } break;
+        case 3: {
+            return [PPOErrorManager errorForPaymentError:PPOPaymentErrorClientTokenExpired];
+        } break;
+        case 4: {
+            return [PPOErrorManager errorForPaymentError:PPOPaymentErrorUnauthorisedRequest];
+        } break;
+        case 5: {
+            return [PPOErrorManager errorForPaymentError:PPOPaymentErrorTransactionDeclined];
+        } break;
+        case 6: {
+            return [PPOErrorManager errorForPaymentError:PPOPaymentErrorServerFailure];
+        } break;
         case 7: code = PPOErrorTransactionProcessingFailed; break;
         case 8: code = PPOErrorTransactionProcessingFailed; break;
         case 9: code = PPOErrorPaymentProcessing; break;
@@ -66,7 +60,19 @@
     
 }
 
-+(NSError*)errorForCode:(PPOErrorCode)code {
++(NSError*)errorForPrivateError:(PPOPrivateError)code {
+    
+    switch (code) {
+            
+        case PPOPrivateErrorNotIntitialised:
+            break;
+            
+        default:
+            break;
+    }
+}
+
++(NSError*)errorForPaymentError:(PPOPaymentError)code {
     
     switch (code) {
         case PPOErrorBadRequest: {

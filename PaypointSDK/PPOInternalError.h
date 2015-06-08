@@ -14,12 +14,16 @@ typedef NS_ENUM(NSInteger, PPOPrivateError) {
     
     PPOPrivateErrorNotIntitialised = -1,
     
-    PPOPaymentErrorBadRequest = 0,
+    PPOPrivateErrorBadRequest = 0,
     
-    PPOErrorProcessingThreeDSecure,
+    PPOPrivateErrorAuthenticationFailed,
     
-    PPOErrorPaymentSuspendedForThreeDSecure,
+    PPOErrorClientTokenExpired,
     
-    PPOErrorThreeDSecureTimedOut,
+    PPOPrivateErrorProcessingThreeDSecure,
+    
+    PPOPrivateErrorPaymentSuspendedForThreeDSecure,
+    
+    PPOPrivateErrorThreeDSecureTimedOut,
     
 };
