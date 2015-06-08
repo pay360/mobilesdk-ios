@@ -66,14 +66,18 @@
     error = [PPOValidator validateBaseURL:self.endpointManager.baseURL];
     if (error) {
         outcome = [[PPOOutcome alloc] initWithError:error];
-        completion(outcome);
+        [self handleOutcome:outcome
+                 forPayment:payment
+             withCompletion:completion];
         return;
     }
     
     error = [PPOValidator validateCredentials:payment.credentials];
     if (error) {
         outcome = [[PPOOutcome alloc] initWithError:error];
-        completion(outcome);
+        [self handleOutcome:outcome
+                 forPayment:payment
+             withCompletion:completion];
         return;
     }
     
@@ -82,7 +86,9 @@
     if (thisPaymentUnderway) {
         error = [PPOErrorManager errorForCode:PPOErrorPaymentProcessing];
         outcome = [[PPOOutcome alloc] initWithError:error];
-        completion(outcome);
+        [self handleOutcome:outcome
+                 forPayment:payment
+             withCompletion:completion];
         return;
     }
     
@@ -95,14 +101,18 @@
     if (anyPaymentUnderway) {
         error = [PPOErrorManager errorForCode:PPOErrorPaymentManagerOccupied];
         outcome = [[PPOOutcome alloc] initWithError:error];
-        completion(outcome);
+        [self handleOutcome:outcome
+                 forPayment:payment
+             withCompletion:completion];
         return;
     }
     
     error = [PPOValidator validatePayment:payment];
     if (error) {
         outcome = [[PPOOutcome alloc] initWithError:error];
-        completion(outcome);
+        [self handleOutcome:outcome
+                 forPayment:payment
+             withCompletion:completion];
         return;
     }
     
@@ -130,16 +140,30 @@
     NSURLSessionDataTask *task = [self.internalURLSession dataTaskWithRequest:request
                                                             completionHandler:completionHandler];
     
-    __weak typeof(task) weakTask = task;
-    [PPOPaymentTrackingManager appendPayment:payment
-                                 withTimeout:timeout
-                                beginTimeout:YES
-                              timeoutHandler:^{
-                                  [weakTask cancel];
-                              }];
-    
-    [task resume];
-    
+    if ([PPOPaymentTrackingManager masterSessionTimeoutHasExpiredForPayment:payment]) {
+        
+        if (PPO_DEBUG_MODE) {
+            NSLog(@"Preventing initial payment request");
+        }
+        
+        outcome = [[PPOOutcome alloc] initWithError:[PPOErrorManager errorForCode:PPOErrorMasterSessionTimedOut]];
+        
+        [self handleOutcome:outcome
+                 forPayment:payment
+             withCompletion:completion];
+        
+    } else {
+        __weak typeof(task) weakTask = task;
+        [PPOPaymentTrackingManager appendPayment:payment
+                                     withTimeout:timeout
+                                    beginTimeout:YES
+                                  timeoutHandler:^{
+                                      [weakTask cancel];
+                                  }];
+        
+        [task resume];
+    }
+
 }
 
 /*

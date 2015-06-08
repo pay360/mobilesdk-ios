@@ -39,7 +39,7 @@
 }
 
 -(instancetype)initWithRedirect:(PPORedirect *)redirect
-                   withDelegate:(id<PPOWebViewControllerDelegate>)delegate {
+                   withDelegate:(id<ThreeDSecureProtocol>)delegate {
     
     self = [super initWithNibName:NSStringFromClass([PPOWebViewController class]) bundle:[PPOResourcesManager resources]];
     
@@ -70,8 +70,8 @@
             NSLog(@"Aborting web view session commencement");
         }
         
-        [weakSelf.delegate webViewController:weakSelf
-                             failedWithError:[PPOErrorManager errorForCode:PPOErrorMasterSessionTimedOut]];
+        [weakSelf.delegate threeDSecureController:weakSelf
+                                  failedWithError:[PPOErrorManager errorForCode:PPOErrorMasterSessionTimedOut]];
         
         return;
         
@@ -88,8 +88,8 @@
             if (weakSelf.webView.isLoading) {
                 [weakSelf.webView stopLoading];
             } else {
-                [weakSelf.delegate webViewController:weakSelf
-                                     failedWithError:[PPOErrorManager errorForCode:PPOErrorMasterSessionTimedOut]];
+                [weakSelf.delegate threeDSecureController:weakSelf
+                                          failedWithError:[PPOErrorManager errorForCode:PPOErrorMasterSessionTimedOut]];
             }
             
         } forPayment:self.redirect.payment];
@@ -236,8 +236,8 @@
         
         _abortSession = YES;
         
-        [weakSelf.delegate webViewController:weakSelf
-                             failedWithError:[PPOErrorManager errorForCode:PPOErrorMasterSessionTimedOut]];
+        [weakSelf.delegate threeDSecureController:weakSelf
+                                  failedWithError:[PPOErrorManager errorForCode:PPOErrorMasterSessionTimedOut]];
         
     } forPayment:self.redirect.payment];
     
@@ -297,13 +297,13 @@
     
     if (problemWithParesOrMD) {
         
-        [self.delegate webViewController:self
-                         failedWithError:[PPOErrorManager errorForCode:PPOErrorProcessingThreeDSecure]];
+        [self.delegate threeDSecureController:self
+                              failedWithError:[PPOErrorManager errorForCode:PPOErrorProcessingThreeDSecure]];
         
     } else {
         
-        [self.delegate webViewController:self
-                      completedWithPaRes:pares];
+        [self.delegate threeDSecureController:self
+                           completedWithPaRes:pares];
         
     }
     
@@ -338,7 +338,7 @@
     
     [self cancelThreeDSecureRelatedTimers];
     
-    [self.delegate webViewController:self failedWithError:e];
+    [self.delegate threeDSecureController:self failedWithError:e];
 }
 
 -(NSString *)extractEmail:(NSURL*)url {
@@ -364,7 +364,7 @@
     
     [self cancelThreeDSecureRelatedTimers];
     
-    [self.delegate webViewControllerSessionTimeoutExpired:self];
+    [self.delegate threeDSecureControllerSessionTimeoutExpired:self];
 }
 
 -(void)delayShowTimeoutExpired:(NSTimer*)timer {
@@ -386,7 +386,7 @@
      * The implementing developers master timeout session is suspended by our delegate, here.
      * Our delegate is our parent and presents us on screen here.
      */
-    [self.delegate webViewControllerDelayShowTimeoutExpired:self];
+    [self.delegate threeDSecureControllerDelayShowTimeoutExpired:self];
     
     /*
      * At this point, start the 3DSecure session timeout.
@@ -427,14 +427,24 @@
 
 -(void)cancelThreeDSecureRelatedTimers {
     
-    if (PPO_DEBUG_MODE) {
-        NSLog(@"Stopping all timers associated with 3DSecure session");
+    if (self.delayShowTimer != nil) {
+        [self.delayShowTimer invalidate];
+        self.delayShowTimer = nil;
+        
+        if (PPO_DEBUG_MODE) {
+            NSLog(@"Stopping 'delay show' timer associated with 3DSecure session");
+        }
     }
     
-    [self.sessionTimeoutTimer invalidate];
-    self.sessionTimeoutTimer = nil;
-    [self.delayShowTimer invalidate];
-    self.delayShowTimer = nil;
+    if (self.sessionTimeoutTimer != nil) {
+        [self.sessionTimeoutTimer invalidate];
+        self.sessionTimeoutTimer = nil;
+        
+        if (PPO_DEBUG_MODE) {
+            NSLog(@"Stopping 'three d secure session' timer");
+        }
+    }
+    
 }
 
 #pragma mark - MFMailComposer
