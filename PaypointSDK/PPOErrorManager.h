@@ -14,5 +14,6 @@
 +(NSString*)errorDomainForReasonCode:(NSInteger)reasonCode;
 +(PPOErrorCode)errorCodeForReasonCode:(NSInteger)reasonCode;
 +(NSError*)errorForCode:(PPOErrorCode)code;
++(BOOL)safeToRetryPaymentWithoutRiskOfDuplication:(NSError*)error;
 
 @end

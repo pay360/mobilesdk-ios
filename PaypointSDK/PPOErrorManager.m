@@ -56,6 +56,16 @@
     
 }
 
++(BOOL)safeToRetryPaymentWithoutRiskOfDuplication:(NSError *)error {
+    
+    //NetworkErrorDuring
+    //TransactionTimeout
+    //ServerError
+    
+    NSArray *acceptable = @[@(PPOErrorBadRequest), @(0)];
+    
+}
+
 +(NSError*)errorForCode:(PPOErrorCode)code {
     
     switch (code) {

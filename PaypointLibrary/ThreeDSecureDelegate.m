@@ -195,10 +195,9 @@
          * May be upsetting behaviour if the implementing developer is using an interactive transitioning
          * protocol to present/dismiss the payment scene or a UIPresentationController which is managed by a
          * transitioning context (provided by the system).
-         * The merchant App may have multiple child view controllers, which may work mostly independently of one another.
-         * Not exposing the webview makes styling of the web view navigation bar or the presentation animation tricky
+         * Not exposing the webview makes styling of the web view navigation bar or the presentation animation tricky.
          * UIBarButtonItem text is in strings file in embedded resources bundle, for internationalisation
-         * Paypoint are aware of these points and are happy to release and get feedback.
+         * I have made Paypoint aware of these points and they are happy to release to customers and get feedback from them first.
          */
         if (PPO_DEBUG_MODE) {
             NSLog(@"Showing web view for op ref: %@", controller.redirect.payment.identifier);

@@ -42,5 +42,5 @@
  */
 -(void)queryPayment:(PPOPayment*)payment
        withCompletion:(void(^)(PPOOutcome *outcome))completion;
-
+                           
 @end

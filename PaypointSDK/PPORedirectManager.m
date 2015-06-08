@@ -71,10 +71,6 @@
         
     } forPayment:self.redirect.payment];
     
-    /*
-     * The PPOWebViewControllerDelegate protocol is set as a 'required' protocol.
-     * This class will handle those callbacks.
-     */
     self.threeDSecureDelegate = [[ThreeDSecureDelegate alloc] initWithSession:self.session
                                                                  withRedirect:redirect
                                                           withEndpointManager:self.endpointManager
