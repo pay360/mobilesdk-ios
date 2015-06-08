@@ -12,9 +12,9 @@
 @class PPOOutcome;
 @class PPOPaymentEndpointManager;
 @class PPOCredentials;
-@class PPOWebFormManager;
+@class PPORedirectManager;
 
-@interface PPOWebFormManager : NSObject
+@interface PPORedirectManager : NSObject
 
 -(instancetype)initWithRedirect:(PPORedirect*)redirect
                     withSession:(NSURLSession*)session

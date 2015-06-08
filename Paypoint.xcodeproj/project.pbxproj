@@ -48,8 +48,8 @@
 		50A93AB21B258C7F00F0B01C /* ThreeDSecureDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 50A93AB01B258C7F00F0B01C /* ThreeDSecureDelegate.m */; };
 		50A93AB61B2591BE00F0B01C /* ThreeDSecureProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 50A93AB51B2591BE00F0B01C /* ThreeDSecureProtocol.h */; };
 		50A93AB81B25923900F0B01C /* ThreeDSecureControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 50A93AB71B25923900F0B01C /* ThreeDSecureControllerProtocol.h */; };
-		50CB92011B1CB83D00A8B39E /* PPOWebFormManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 50CB91FF1B1CB83D00A8B39E /* PPOWebFormManager.h */; };
-		50CB92021B1CB83D00A8B39E /* PPOWebFormManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CB92001B1CB83D00A8B39E /* PPOWebFormManager.m */; };
+		50CB92011B1CB83D00A8B39E /* PPORedirectManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 50CB91FF1B1CB83D00A8B39E /* PPORedirectManager.h */; };
+		50CB92021B1CB83D00A8B39E /* PPORedirectManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CB92001B1CB83D00A8B39E /* PPORedirectManager.m */; };
 		50D494FE1B021061004AD686 /* PaypointEnglish.strings in Resources */ = {isa = PBXBuildFile; fileRef = 50D494FD1B021061004AD686 /* PaypointEnglish.strings */; };
 		50D4950C1B022892004AD686 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50D4950A1B02287A004AD686 /* MessageUI.framework */; };
 		50D4950D1B0228DB004AD686 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50D4950A1B02287A004AD686 /* MessageUI.framework */; };
@@ -167,8 +167,8 @@
 		50A93AB01B258C7F00F0B01C /* ThreeDSecureDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThreeDSecureDelegate.m; sourceTree = "<group>"; };
 		50A93AB51B2591BE00F0B01C /* ThreeDSecureProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreeDSecureProtocol.h; sourceTree = "<group>"; };
 		50A93AB71B25923900F0B01C /* ThreeDSecureControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreeDSecureControllerProtocol.h; sourceTree = "<group>"; };
-		50CB91FF1B1CB83D00A8B39E /* PPOWebFormManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOWebFormManager.h; sourceTree = "<group>"; };
-		50CB92001B1CB83D00A8B39E /* PPOWebFormManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOWebFormManager.m; sourceTree = "<group>"; };
+		50CB91FF1B1CB83D00A8B39E /* PPORedirectManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPORedirectManager.h; sourceTree = "<group>"; };
+		50CB92001B1CB83D00A8B39E /* PPORedirectManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPORedirectManager.m; sourceTree = "<group>"; };
 		50CC9AF51AD41ED300B97F2E /* PPOPaymentManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOPaymentManager.h; sourceTree = "<group>"; };
 		50CC9AF61AD41ED300B97F2E /* PPOPaymentManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOPaymentManager.m; sourceTree = "<group>"; };
 		50CC9AFA1AD4237F00B97F2E /* PPOCreditCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOCreditCard.h; sourceTree = "<group>"; };
@@ -264,7 +264,7 @@
 				509B588D1ADD477D001236CD /* PPOTimeManager */,
 				50ED5D871B1EF7B200D67F48 /* PPOURLRequestManager */,
 				50D5856B1B1CC2FC007AE507 /* PPOValidator */,
-				50CB92031B1CB84000A8B39E /* PPOWebFormManager */,
+				50CB92031B1CB84000A8B39E /* PPORedirectManager */,
 			);
 			name = Managers;
 			path = ../PaypointSDK;
@@ -273,6 +273,7 @@
 		501C8E681AC01D3400CBA25A /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				5056A1B01AD6A7C200AB1276 /* PPOError */,
 				50CC9B031AD4289700B97F2E /* PPOCredentials */,
 				50CC9AFE1AD4238400B97F2E /* PPOCreditCard */,
 				50CC9B081AD42B7900B97F2E /* PPOTransaction */,
@@ -364,7 +365,6 @@
 				5056A1A91AD6A65900AB1276 /* PPOError.m */,
 			);
 			name = PPOError;
-			path = ../PaypointSDK;
 			sourceTree = "<group>";
 		};
 		505AB2EF1B04B9AD001FAD15 /* PPORedirect */ = {
@@ -459,6 +459,16 @@
 			name = PPOPaymentTrackingManager;
 			sourceTree = "<group>";
 		};
+		50A03BCB1B259D6500AEAA31 /* PPOLuhn */ = {
+			isa = PBXGroup;
+			children = (
+				50046ACB1AC2FB0400F23D05 /* PPOLuhn.h */,
+				50046ACC1AC2FB0400F23D05 /* PPOLuhn.m */,
+				50046ACD1AC2FB0400F23D05 /* PPOLuhnReadMe */,
+			);
+			name = PPOLuhn;
+			sourceTree = "<group>";
+		};
 		50A93AB31B258C8300F0B01C /* ThreeDSecureDelegate */ = {
 			isa = PBXGroup;
 			children = (
@@ -488,22 +498,20 @@
 		50AB96CA1AC17C9200323E05 /* ThirdParty */ = {
 			isa = PBXGroup;
 			children = (
-				50046ACB1AC2FB0400F23D05 /* PPOLuhn.h */,
-				50046ACC1AC2FB0400F23D05 /* PPOLuhn.m */,
-				50046ACD1AC2FB0400F23D05 /* PPOLuhnReadMe */,
+				50A03BCB1B259D6500AEAA31 /* PPOLuhn */,
 				50046ACA1AC2FAB500F23D05 /* PPOReachability */,
 			);
 			name = ThirdParty;
 			path = ../PaypointSDK;
 			sourceTree = "<group>";
 		};
-		50CB92031B1CB84000A8B39E /* PPOWebFormManager */ = {
+		50CB92031B1CB84000A8B39E /* PPORedirectManager */ = {
 			isa = PBXGroup;
 			children = (
-				50CB91FF1B1CB83D00A8B39E /* PPOWebFormManager.h */,
-				50CB92001B1CB83D00A8B39E /* PPOWebFormManager.m */,
+				50CB91FF1B1CB83D00A8B39E /* PPORedirectManager.h */,
+				50CB92001B1CB83D00A8B39E /* PPORedirectManager.m */,
 			);
-			name = PPOWebFormManager;
+			name = PPORedirectManager;
 			sourceTree = "<group>";
 		};
 		50CC9AF91AD41ED800B97F2E /* PPOPaymentManager */ = {
@@ -573,12 +581,11 @@
 			isa = PBXGroup;
 			children = (
 				5081F3C31AE7E5D800D41911 /* Paypoint.h */,
-				5056A1B01AD6A7C200AB1276 /* PPOError */,
 				50AB96CA1AC17C9200323E05 /* ThirdParty */,
 				501C8E681AC01D3400CBA25A /* Model */,
-				501C8E5F1AC0198B00CBA25A /* ViewControllers */,
-				50A93AB41B258C8600F0B01C /* Delegates */,
 				50A93AB91B259ACA00F0B01C /* Protocols */,
+				50A93AB41B258C8600F0B01C /* Delegates */,
+				501C8E5F1AC0198B00CBA25A /* ViewControllers */,
 				501C8E671AC01D2700CBA25A /* Managers */,
 				503E19A51AE8EF0600CB4784 /* Supporting Files */,
 			);
@@ -632,7 +639,7 @@
 			files = (
 				5081F3C41AE7E5D800D41911 /* Paypoint.h in Headers */,
 				505AB2F11B04C7DE001FAD15 /* PPOSDKConstants.h in Headers */,
-				50CB92011B1CB83D00A8B39E /* PPOWebFormManager.h in Headers */,
+				50CB92011B1CB83D00A8B39E /* PPORedirectManager.h in Headers */,
 				50DCC1E31AE7CBE400D0FE26 /* PPOWebViewController.h in Headers */,
 				509D61761B18A0D700F62BA7 /* PPOPaymentTrackingManager.h in Headers */,
 				50D495171B023944004AD686 /* PPOResourcesManager.h in Headers */,
@@ -856,7 +863,7 @@
 				503D52BC1B0B31200074CB44 /* PPOFinancialServices.m in Sources */,
 				50DCC1E21AE7CBDD00D0FE26 /* PPOPayment.m in Sources */,
 				505AB2EE1B04B9A8001FAD15 /* PPORedirect.m in Sources */,
-				50CB92021B1CB83D00A8B39E /* PPOWebFormManager.m in Sources */,
+				50CB92021B1CB83D00A8B39E /* PPORedirectManager.m in Sources */,
 				503D52C61B0B74230074CB44 /* PPOCustomField.m in Sources */,
 				50DCC1DC1AE7CBBD00D0FE26 /* PPOTransaction.m in Sources */,
 				509D61771B18A0D700F62BA7 /* PPOPaymentTrackingManager.m in Sources */,

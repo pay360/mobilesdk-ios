@@ -24,7 +24,7 @@
 #import "PPOCustomField.h"
 #import "PPOTimeManager.h"
 #import "PPOPaymentTrackingManager.h"
-#import "PPOWebFormManager.h"
+#import "PPORedirectManager.h"
 #import "PPOValidator.h"
 #import "PPOURLRequestManager.h"
 
@@ -33,7 +33,7 @@
 @property (nonatomic, strong) NSURLSession *internalURLSession;
 @property (nonatomic, strong) NSURLSession *externalURLSession;
 @property (nonatomic, strong) PPODeviceInfo *deviceInfo;
-@property (nonatomic, strong) PPOWebFormManager *webformManager;
+@property (nonatomic, strong) PPORedirectManager *webformManager;
 @end
 
 @implementation PPOPaymentManager
@@ -400,7 +400,7 @@
         
         __weak typeof(self) weakSelf = self;
         
-        self.webformManager = [[PPOWebFormManager alloc] initWithRedirect:redirect
+        self.webformManager = [[PPORedirectManager alloc] initWithRedirect:redirect
                                                               withSession:self.internalURLSession
                                                       withEndpointManager:self.endpointManager
                                                            withCompletion:^(PPOOutcome *outcome) {

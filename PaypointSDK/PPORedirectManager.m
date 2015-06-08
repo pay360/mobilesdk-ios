@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#import "PPOWebFormManager.h"
+#import "PPORedirectManager.h"
 #import "PPOWebViewController.h"
 #import "PPORedirect.h"
 #import "PPOPaymentTrackingManager.h"
@@ -18,7 +18,7 @@
 #import "PPOURLRequestManager.h"
 #import "ThreeDSecureDelegate.h"
 
-@interface PPOWebFormManager ()
+@interface PPORedirectManager ()
 @property (nonatomic, copy) void(^completion)(PPOOutcome *);
 @property (nonatomic, strong) PPORedirect *redirect;
 @property (nonatomic, strong) PPOWebViewController *webController;
@@ -27,7 +27,7 @@
 @property (nonatomic, strong) ThreeDSecureDelegate *threeDSecureDelegate;
 @end
 
-@implementation PPOWebFormManager
+@implementation PPORedirectManager
 
 -(instancetype)initWithRedirect:(PPORedirect *)redirect
                     withSession:(NSURLSession *)session
@@ -88,7 +88,5 @@
     self.webController.view.frame = CGRectMake(-height, -width, width, height);
     [[[UIApplication sharedApplication] keyWindow] addSubview:self.webController.view];
 }
-
-
 
 @end
