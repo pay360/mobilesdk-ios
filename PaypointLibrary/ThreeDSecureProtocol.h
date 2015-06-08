@@ -10,7 +10,7 @@
 #import "ThreeDSecureControllerProtocol.h"
 
 @protocol ThreeDSecureProtocol <NSObject>
--(void)threeDSecureController:(id<ThreeDSecureControllerProtocol>)controller completedWithPaRes:(NSString*)paRes;
+-(void)threeDSecureController:(id<ThreeDSecureControllerProtocol>)controller acquiredPaRes:(NSString*)paRes;
 -(void)threeDSecureControllerUserCancelled:(id<ThreeDSecureControllerProtocol>)controller;
 -(void)threeDSecureController:(id<ThreeDSecureControllerProtocol>)controller failedWithError:(NSError*)error;
 -(void)threeDSecureControllerSessionTimeoutExpired:(id<ThreeDSecureControllerProtocol>)controller;

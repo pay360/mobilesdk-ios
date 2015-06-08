@@ -47,7 +47,7 @@
 }
 
 -(void)threeDSecureController:(id<ThreeDSecureControllerProtocol>)controller
-           completedWithPaRes:(NSString *)paRes {
+                acquiredPaRes:(NSString *)paRes {
     
     if (PPO_DEBUG_MODE) {
         NSLog(@"Web view concluded for payment with op ref: %@", controller.redirect.payment.identifier);

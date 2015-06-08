@@ -476,6 +476,15 @@
 			name = Delegates;
 			sourceTree = "<group>";
 		};
+		50A93AB91B259ACA00F0B01C /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				50A93AB51B2591BE00F0B01C /* ThreeDSecureProtocol.h */,
+				50A93AB71B25923900F0B01C /* ThreeDSecureControllerProtocol.h */,
+			);
+			name = Protocols;
+			sourceTree = "<group>";
+		};
 		50AB96CA1AC17C9200323E05 /* ThirdParty */ = {
 			isa = PBXGroup;
 			children = (
@@ -569,10 +578,9 @@
 				501C8E681AC01D3400CBA25A /* Model */,
 				501C8E5F1AC0198B00CBA25A /* ViewControllers */,
 				50A93AB41B258C8600F0B01C /* Delegates */,
+				50A93AB91B259ACA00F0B01C /* Protocols */,
 				501C8E671AC01D2700CBA25A /* Managers */,
 				503E19A51AE8EF0600CB4784 /* Supporting Files */,
-				50A93AB51B2591BE00F0B01C /* ThreeDSecureProtocol.h */,
-				50A93AB71B25923900F0B01C /* ThreeDSecureControllerProtocol.h */,
 			);
 			name = Paypoint;
 			path = PaypointLibrary;

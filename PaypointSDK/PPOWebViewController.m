@@ -320,7 +320,7 @@
     } else {
         
         [self.delegate threeDSecureController:self
-                           completedWithPaRes:pares];
+                                acquiredPaRes:pares];
         
     }
     
