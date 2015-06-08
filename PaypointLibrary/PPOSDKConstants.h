@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#define PPO_DEBUG_MODE 0
+#define PPO_DEBUG_MODE 1
 
 #define THREE_D_SECURE_KEY @"threeDSRedirect"
 #define THREE_D_SECURE_MD_KEY @"md"

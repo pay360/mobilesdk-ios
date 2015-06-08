@@ -11,6 +11,8 @@
 @protocol ThreeDSecureControllerProtocol <NSObject>
 
 @property (nonatomic, strong) PPORedirect *redirect;
+
+//Uniqued the names with prefix 'root', to avoid synthesis warning.
 @property (nonatomic, strong) UINavigationController *rootNavigationController;
 @property (nonatomic, strong) UIView *rootView;
 

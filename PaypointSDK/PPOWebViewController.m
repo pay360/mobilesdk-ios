@@ -17,6 +17,7 @@
 @interface PPOWebViewController () <UIWebViewDelegate, MFMailComposeViewControllerDelegate, UIAlertViewDelegate>
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
 @property (nonatomic, strong) NSTimer *sessionTimeoutTimer;
+@property (nonatomic) NSTimeInterval sessionTimeout;
 @property (nonatomic, strong) NSTimer *delayShowTimer;
 @end
 
@@ -38,23 +39,6 @@
     BOOL _abortSession; //The master timeout session timeout handler is about to action.
 }
 
-@synthesize rootView = _rootView;
-@synthesize rootNavigationController = _rootNavigationController;
-
--(UIView *)rootView {
-    if (_rootView == nil) {
-        _rootView = self.view;
-    }
-    return _rootView;
-}
-
--(UINavigationController *)rootNavigationController {
-    if (_rootNavigationController == nil) {
-        _rootNavigationController = self.navigationController;
-    }
-    return _rootNavigationController;
-}
-
 -(instancetype)initWithRedirect:(PPORedirect *)redirect
                    withDelegate:(id<ThreeDSecureProtocol>)delegate {
     
@@ -63,6 +47,7 @@
     if (self) {
         _redirect = redirect;
         _delegate = delegate;
+        _sessionTimeout = redirect.sessionTimeoutTimeInterval.doubleValue;
     }
     
     return self;
@@ -166,8 +151,6 @@
     
     if (email && [email isKindOfClass:[NSString class]] && email.length > 0) {
         
-#warning are we on the main queue here ?
-        
         [self showMailComposerForToReceipient:email];
         
         return NO;
@@ -209,27 +192,47 @@
         
         if (controller) {
             
-            [self presentViewController:controller
-                               animated:YES
-                             completion:^{
-                             }];
+            [self stopThreeDSecureTimer];
+            
+            if (self.sessionTimeout > 0) {
+                [self presentViewController:controller animated:YES completion:nil];
+            } else {
+                [self.delegate threeDSecureController:self
+                                      failedWithError:[PPOErrorManager errorForCode:PPOErrorMasterSessionTimedOut]];
+            }
+            
         }
         
     } else {
         
-#warning handle master session or three d secure session timeouts for event where this is on screen
+        [self stopThreeDSecureTimer];
         
-        NSString *title = @"Configuration";
-        NSString *message = @"Please configure an email account in the Settings App.";
-        NSString *dismissButton = @"Dismiss";
-        
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
-                                                            message:message
-                                                           delegate:self
-                                                  cancelButtonTitle:dismissButton
-                                                  otherButtonTitles:nil, nil];
-        
-        [alertView show];
+        if (self.sessionTimeout > 0) {
+            
+            NSString *title = @"Configuration";
+            NSString *message = @"Please configure an email account in the Settings App.";
+            NSString *dismissButton = @"Dismiss";
+            
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
+                                                                           message:message
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+            
+            __weak typeof(self) weakSelf = self;
+            UIAlertAction *action = [UIAlertAction actionWithTitle:dismissButton
+                                                             style:UIAlertActionStyleCancel
+                                                           handler:^(UIAlertAction *action) {
+                                                               [weakSelf dismissViewControllerAnimated:YES
+                                                                                            completion:nil];
+                                                           }];
+            
+            [alert addAction:action];
+            
+            [self presentViewController:alert animated:YES completion:nil];
+            
+        } else {
+            [self.delegate threeDSecureController:self
+                                  failedWithError:[PPOErrorManager errorForCode:PPOErrorMasterSessionTimedOut]];
+        }
         
     }
     
@@ -375,13 +378,20 @@
     return email;
 }
 
--(void)sessionTimedOut:(NSTimer*)timer {
+-(void)sessionTimeoutTimerFired:(NSTimer*)timer {
     
-    [PPOPaymentTrackingManager removePayment:self.redirect.payment];
+    self.sessionTimeout--;
     
-    [self cancelThreeDSecureRelatedTimers];
+    if (self.sessionTimeout <= 0) {
+        
+        [PPOPaymentTrackingManager removePayment:self.redirect.payment];
+        
+        [self cancelThreeDSecureRelatedTimers];
+        
+        [self.delegate threeDSecureControllerSessionTimeoutExpired:self];
+        
+    }
     
-    [self.delegate threeDSecureControllerSessionTimeoutExpired:self];
 }
 
 -(void)delayShowTimeoutExpired:(NSTimer*)timer {
@@ -410,21 +420,30 @@
      */
     if (self.redirect.sessionTimeoutTimeInterval && !self.sessionTimeoutTimer) {
         
-        if (PPO_DEBUG_MODE) {
-            NSLog(@"Will end 3DSecure session in %@ seconds", self.redirect.sessionTimeoutTimeInterval);
-        }
-        
-        self.sessionTimeoutTimer = [NSTimer scheduledTimerWithTimeInterval:self.redirect.sessionTimeoutTimeInterval.doubleValue
-                                                                    target:self
-                                                                  selector:@selector(sessionTimedOut:)
-                                                                  userInfo:nil
-                                                                   repeats:NO];
+        [self resumeThreeDSecureSessionTimer];
         
     } else if (PPO_DEBUG_MODE && !self.redirect.sessionTimeoutTimeInterval && !self.sessionTimeoutTimer) {
         
         NSLog(@"3DSecure session does not have a session timeout for payment with op ref: %@", self.redirect.payment.identifier);
         
     }
+}
+
+-(void)resumeThreeDSecureSessionTimer {
+    
+    if (self.sessionTimeout > 0 && !self.sessionTimeoutTimer) {
+        self.sessionTimeoutTimer = [NSTimer scheduledTimerWithTimeInterval:1
+                                                                    target:self
+                                                                  selector:@selector(sessionTimeoutTimerFired:)
+                                                                  userInfo:nil
+                                                                   repeats:YES];
+        
+        if (PPO_DEBUG_MODE) {
+            NSLog(@"Resuming 3DSecure session timeout with %f seconds remaining", self.sessionTimeout);
+        }
+        
+    }
+    
 }
 
 -(void)cancelButtonPressed:(UIBarButtonItem*)button {
@@ -443,6 +462,11 @@
 }
 
 -(void)cancelThreeDSecureRelatedTimers {
+    [self stopDelayShowTimer];
+    [self stopThreeDSecureTimer];
+}
+
+-(void)stopDelayShowTimer {
     
     if (self.delayShowTimer != nil) {
         [self.delayShowTimer invalidate];
@@ -452,6 +476,10 @@
             NSLog(@"Stopping 'delay show' timer associated with 3DSecure session");
         }
     }
+    
+}
+
+-(void)stopThreeDSecureTimer {
     
     if (self.sessionTimeoutTimer != nil) {
         [self.sessionTimeoutTimer invalidate];
@@ -470,6 +498,8 @@
          didFinishWithResult:(MFMailComposeResult)result
                        error:(NSError *)error {
     
+    __weak typeof(self) weakSelf = self;
+    
     switch (result) {
             
         case MFMailComposeResultSaved: {
@@ -478,13 +508,22 @@
                 NSString *message = @"Message Saved";
                 NSString *dismissButton = @"Dismiss";
                 
-                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
-                                                                    message:message
-                                                                   delegate:self
-                                                          cancelButtonTitle:dismissButton
-                                                          otherButtonTitles:nil, nil];
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
+                                                                               message:message
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
                 
-                [alertView show];
+                UIAlertAction *action = [UIAlertAction actionWithTitle:dismissButton
+                                                                 style:UIAlertActionStyleCancel
+                                                               handler:^(UIAlertAction *action) {
+                                                                   [weakSelf dismissViewControllerAnimated:YES
+                                                                                                completion:^{
+                                                                                                    [weakSelf resumeThreeDSecureSessionTimer];
+                                                                                                }];
+                                                               }];
+                
+                [alert addAction:action];
+                
+                [self presentViewController:alert animated:YES completion:nil];
             }];
         }
             break;
@@ -495,21 +534,52 @@
                 NSString *message = @"Message Sent";
                 NSString *dismissButton = @"Dismiss";
                 
-                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
-                                                                    message:message
-                                                                   delegate:self
-                                                          cancelButtonTitle:dismissButton
-                                                          otherButtonTitles:nil, nil];
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
+                                                                               message:message
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
                 
-                [alertView show];
+                UIAlertAction *action = [UIAlertAction actionWithTitle:dismissButton
+                                                                 style:UIAlertActionStyleCancel
+                                                               handler:^(UIAlertAction *action) {
+                                                                   [weakSelf dismissViewControllerAnimated:YES
+                                                                                                completion:^{
+                                                                                                    [weakSelf resumeThreeDSecureSessionTimer];
+                                                                                                }];
+                                                               }];
+                
+                [alert addAction:action];
+                
+                [self presentViewController:alert animated:YES completion:nil];
             }];
         }
             break;
             
         default:
-            [self dismissViewControllerAnimated:YES completion:nil];
+            [self dismissViewControllerAnimated:YES completion:^{
+                [weakSelf resumeThreeDSecureSessionTimer];
+            }];
             break;
     }
+    
+}
+
+#pragma mark - ThreeDSecureControllerProtocol
+
+@synthesize rootView = _rootView;
+@synthesize rootNavigationController = _rootNavigationController;
+
+-(UIView *)rootView {
+    if (_rootView == nil) {
+        _rootView = self.view;
+    }
+    return _rootView;
+}
+
+-(UINavigationController *)rootNavigationController {
+    if (_rootNavigationController == nil) {
+        _rootNavigationController = self.navigationController;
+    }
+    return _rootNavigationController;
 }
 
 @end
