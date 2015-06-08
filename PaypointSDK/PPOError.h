@@ -32,8 +32,11 @@ typedef NS_ENUM(NSInteger, PPOPaymentError) {
     /* A supplied parameter was invalid. Please use our convenience validation functions before making a payment. */
     PPOPaymentErrorInvalidParameter,
     
-    /* Token Expired. */
+    /* The supplied bearer token has expired. */
     PPOPaymentErrorClientTokenExpired,
+    
+    /* The supplied bearer token is invalid. */
+    PPOPaymentErrorClientTokenInvalid,
     
     /* The supplied token does not have sufficient permissions to access the specified feature. */
     PPOPaymentErrorUnauthorisedRequest,
@@ -92,7 +95,7 @@ typedef NS_ENUM(NSInteger, PPOLocalValidationError) {
     PPOLocalValidationErrorCardExpiryDateInvalid,
     
     /* Specified currency is invalid. */
-    PPOLocalValidationCurrencyInvalid,
+    PPOLocalValidationErrorCurrencyInvalid,
     
     /* The specified amount is invalid */
     PPOLocalValidationErrorPaymentAmountInvalid,

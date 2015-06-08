@@ -18,11 +18,11 @@ typedef NS_ENUM(NSInteger, PPOPrivateError) {
     
     PPOPrivateErrorAuthenticationFailed,
     
-    PPOErrorClientTokenExpired,
+    PPOPrivateErrorPaymentSuspendedForThreeDSecure,
+    
+    PPOPrivateErrorPaymentSuspendedForClientRedirect,
     
     PPOPrivateErrorProcessingThreeDSecure,
-    
-    PPOPrivateErrorPaymentSuspendedForThreeDSecure,
     
     PPOPrivateErrorThreeDSecureTimedOut,
     
