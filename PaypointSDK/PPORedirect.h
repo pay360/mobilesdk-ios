@@ -20,5 +20,6 @@
 @property (nonatomic, strong) NSData *threeDSecureResumeBody;
 
 -(instancetype)initWithData:(NSDictionary*)data forPayment:(PPOPayment*)payment;
++(BOOL)requiresRedirect:(id)json;
 
 @end

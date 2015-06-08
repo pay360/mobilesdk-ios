@@ -18,66 +18,82 @@
 #import "PPOURLRequestManager.h"
 
 @interface PPOWebFormManager () <PPOWebViewControllerDelegate>
-@property (nonatomic, copy) void(^completion)(PPOOutcome *, NSError *);
+@property (nonatomic, copy) void(^completion)(PPOOutcome *);
 @property (nonatomic, strong) PPORedirect *redirect;
 @property (nonatomic, strong) PPOWebViewController *webController;
 @property (nonatomic, strong) PPOPaymentEndpointManager *endpointManager;
-@property (nonatomic, strong) PPOCredentials *credentials;
 @property (nonatomic, strong) NSURLSession *session;
 @end
 
 @implementation PPOWebFormManager  {
     BOOL _preventShowWebView;
     BOOL _isDismissingWebView;
+    BOOL _isPresentingWebView;
+    BOOL _isPerformingWebViewEventFinish;
+    BOOL _hasPerformedWebViewEventFinish;
 }
 
 -(instancetype)initWithRedirect:(PPORedirect *)redirect
-                withCredentials:(PPOCredentials *)credentials
                     withSession:(NSURLSession *)session
             withEndpointManager:(PPOPaymentEndpointManager *)endpointManager
-                 withCompletion:(void (^)(PPOOutcome *, NSError *))completion {
+                 withCompletion:(void (^)(PPOOutcome *))completion {
     
     self = [super init];
     if (self) {
         _completion = completion;
-        _credentials = credentials;
         _endpointManager = endpointManager;
         _session = session;
         _redirect = redirect;
-        [self loadRedirect:redirect];
     }
     return self;
 }
 
-//Loading a webpage requires a webView, but we don't want to show a webview on screen during this time.
-//The webview's delegate will still fire, even if the webview is not displayed on screen.
--(void)loadRedirect:(PPORedirect*)redirect {
+-(void)startRedirect {
+    if (self.redirect) {
+        [self startRedirectWithRedirect:self.redirect];
+    }
+}
+
+/*
+ * Paypoint provide use with a 'delay show webview' timeout, which should count down to zero, before we show
+ * the webview. The ACS may complete with a 'fast redirect'. The idea behind this is to avoid the ugly UI associated 
+ * with an ACS page showing, when it doesn't necessarily have to.
+ * The webview's delegate will still fire, even if the webview is not displayed on screen.
+ */
+-(void)startRedirectWithRedirect:(PPORedirect*)redirect {
+    
     if (PPO_DEBUG_MODE) {
         NSLog(@"Loading redirect web view hidden for payment with op ref: %@", redirect.payment.identifier);
     }
-    self.webController = [[PPOWebViewController alloc] initWithRedirect:redirect withDelegate:self];
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+    
+    [PPOPaymentTrackingManager overrideTimeoutHandler:^{
+        
+        /*
+         * Lets clear this handler so that the web view has time to present itself. The web view controller will pick 
+         * the responsibility in it's 'viewDidLoad' callback.
+         */
+        
+    } forPayment:self.redirect.payment];
+    
+    /*
+     * The PPOWebViewControllerDelegate protocol is set as a 'required' protocol.
+     * This class will handle those callbacks.
+     */
+    self.webController = [[PPOWebViewController alloc] initWithRedirect:redirect
+                                                           withDelegate:self];
+    
     CGFloat width = [UIScreen mainScreen].bounds.size.width;
     CGFloat height = [UIScreen mainScreen].bounds.size.height;
     self.webController.view.frame = CGRectMake(-height, -width, width, height);
     [[[UIApplication sharedApplication] keyWindow] addSubview:self.webController.view];
 }
 
-#pragma mark - PPOWebViewController
+#pragma mark - PPOWebViewController Delegate
 
 -(void)webViewController:(PPOWebViewController *)controller completedWithPaRes:(NSString *)paRes {
     
     if (PPO_DEBUG_MODE) {
         NSLog(@"Web view concluded for payment with op ref: %@", controller.redirect.payment.identifier);
-    }
-    
-    _preventShowWebView = YES;
-    
-    [PPOPaymentTrackingManager resumeTimeoutForPayment:controller.redirect.payment];
-    
-    if ([[UIApplication sharedApplication] keyWindow] == self.webController.view.superview) {
-        if (PPO_DEBUG_MODE) NSLog(@"Removing web view for payment with op ref: %@", controller.redirect.payment.identifier);
-        [self.webController.view removeFromSuperview];
     }
     
     id body;
@@ -89,22 +105,34 @@
     
     controller.redirect.threeDSecureResumeBody = body;
     
-    [self performResumeForRedirect:controller.redirect withCredentials:self.credentials];
+    [self performResumeForRedirect:controller.redirect];
 }
 
--(void)performResumeForRedirect:(PPORedirect*)redirect withCredentials:(PPOCredentials*)credentials {
+-(void)performResumeForRedirect:(PPORedirect*)redirect {
     
-    if (PPO_DEBUG_MODE) {
-        NSLog(@"Resuming payment with op ref: %@", redirect.payment.identifier);
+    BOOL masterSessionTimedOut = [PPOPaymentTrackingManager masterSessionTimeoutHasExpiredForPayment:self.redirect.payment];
+    
+    if (PPO_DEBUG_MODE && !masterSessionTimedOut) {
+        NSLog(@"Performing resume request for payment with op ref: %@", redirect.payment.identifier);
+    } else if (PPO_DEBUG_MODE && masterSessionTimedOut) {
+        NSLog(@"Not attempting resume request for payment with op ref: %@", redirect.payment.identifier);
     }
     
-    NSURL *url = [self.endpointManager urlForResumePaymentWithInstallationID:credentials.installationID
+    if (masterSessionTimedOut) {
+        
+        [self completeRedirect:redirect
+                   withOutcome:[[PPOOutcome alloc] initWithError:[PPOErrorManager errorForCode:PPOErrorMasterSessionTimedOut]]];
+        
+        return;
+    }
+    
+    NSURL *url = [self.endpointManager urlForResumePaymentWithInstallationID:redirect.payment.credentials.installationID
                                                                transactionID:redirect.transactionID];
     
     NSURLRequest *request = [PPOURLRequestManager requestWithURL:url
                                                       withMethod:@"POST"
                                                      withTimeout:30.0f
-                                                       withToken:self.credentials.token
+                                                       withToken:redirect.payment.credentials.token
                                                         withBody:redirect.threeDSecureResumeBody
                                                 forPaymentWithID:redirect.payment.identifier];
     
@@ -113,8 +141,17 @@
     NSURLSessionDataTask *task = [self.session dataTaskWithRequest:request
                                                  completionHandler:[self resumeResponseHandlerForRedirect:redirect]];
     
-    [task resume];
+    __weak typeof(task) weakTask = task;
     
+    [PPOPaymentTrackingManager overrideTimeoutHandler:^{
+        [weakTask cancel];
+    } forPayment:self.redirect.payment];
+    
+    [PPOPaymentTrackingManager resumeTimeoutForPayment:self.redirect.payment];
+    
+    [task resume];
+
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
 }
 
 -(void(^)(NSData *, NSURLResponse *, NSError *))resumeResponseHandlerForRedirect:(PPORedirect*)redirect {
@@ -135,46 +172,47 @@
         
         if (json) {
             outcome = [[PPOOutcome alloc] initWithData:json];
-        }
-        
-        NSError *e;
-        
-        if (invalidJSON) {
-            
-            e = [PPOErrorManager errorForCode:PPOErrorServerFailure];
-            
-        } else if (outcome.isSuccessful != nil && outcome.isSuccessful.boolValue == NO) {
-            
-            e = [PPOErrorManager errorForCode:[PPOErrorManager errorCodeForReasonCode:outcome.reasonCode.integerValue]];
-            
-        } else if (outcome.isSuccessful != nil && outcome.isSuccessful.boolValue == YES) {
-            
-            e = nil;
-            
+        } else if (invalidJSON) {
+            outcome = [[PPOOutcome alloc] initWithError:[PPOErrorManager errorForCode:PPOErrorServerFailure]];
         } else if (networkError) {
-            
-            e = networkError;
-
+            outcome = [[PPOOutcome alloc] initWithError:networkError];
         } else {
-            
-            e = [PPOErrorManager errorForCode:PPOErrorUnknown];
-            
+            outcome = [[PPOOutcome alloc] initWithError:[PPOErrorManager errorForCode:[PPOErrorManager errorCodeForReasonCode:PPOErrorUnknown]]];
         }
         
-        [weakSelf completeRedirect:redirect onMainThreadWithOutcome:outcome withError:e];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf completeRedirect:redirect withOutcome:outcome];
+        });
+        
     };
 }
 
 /**
- *  The delay show mechanism is in place to prevent the web view from presenting itself, when it begins to load.
- *  Once the delay expires, the web view is shown, regardless of it's loading state.
- *  This mechanism is used to show the webview, even when a time value is not provided i.e. timeout value = 0
- *  ensuring that this method is the only method that controls web view presentation.
+ * Once an ACS page is fully loaded, it will either perform a fast re-direct or display fields for user input.
+ * A fast re-direct does not require user input and shows an ugly spinner for a while.
+ * The 'delay show' mechanism is in place to anticipate a fast re-direct, based on statistical historic data,
+ * and prevent the display of an ugly web page. The 'delay show' countdown value is passed to us via a network response.
+ * We begin counting down with this value, once the ACS web page has loaded and started a three d secure
+ * session (fast re-direct or otherwise).
+ * It is therefore very possible that we count down to completetion and display a web view that does not require
+ * user input, and this is understood and accepted. The countdown provided to us is a 'probably requires user input
+ * after this much time has elapsed' kind of value.
  */
 -(void)webViewControllerDelayShowTimeoutExpired:(PPOWebViewController *)controller {
     
-    if (!_preventShowWebView) {
+    /*
+     * We only want to present once, so if we are called twice in error, ignore.
+     */
+    if (!_preventShowWebView && (!_isPresentingWebView || !_isDismissingWebView)) {
         
+        _preventShowWebView = YES;
+        
+        /*
+         * We only suspend the master session timeout here, and not before the delay show timeout has expired.
+         * If we have reached this point then it is likely user input is required on the web view. The 'three d secure session timeout' will
+         * begin, which is a timeout value provided by the redirect response. Once it has expired, it will handle abort. If
+         * three d secure completes without any errors, then we resume the master session timeout countdown downstream.
+         */
         [PPOPaymentTrackingManager suspendTimeoutForPayment:controller.redirect.payment];
         
         [self.webController.view removeFromSuperview];
@@ -189,15 +227,23 @@
         * has no indication of when to change or cancel before or after the web view is presented/dismissed.
         * May be upsetting behaviour if the implementing developer is using an interactive transitioning
         * protocol to present/dismiss the payment scene or a UIPresentationController which is managed by a 
-        * transitioning context provided by the system.
+        * transitioning context (provided by the system).
         * The merchant App may have multiple child view controllers, which may work mostly independently of one another.
         * Not exposing the webview makes styling of the web view navigation bar or the presentation animation tricky
         * UIBarButtonItem text is in strings file in embedded resources bundle, for internationalisation
-        * Paypoint have considered these points and are happy to release and get feedback
+        * Paypoint are aware of these points and are happy to release and get feedback.
          */
+        if (PPO_DEBUG_MODE) {
+            NSLog(@"Showing web view for op ref: %@", controller.redirect.payment.identifier);
+        }
+        
+        _isPresentingWebView = YES;
+        
         [[[UIApplication sharedApplication] keyWindow].rootViewController presentViewController:navCon
                                                                                        animated:YES
-                                                                                     completion:nil];
+                                                                                     completion:^{
+                                                                                         _isPresentingWebView = NO;
+                                                                                     }];
     }
     
 }
@@ -216,57 +262,96 @@
 
 -(void)handleError:(NSError *)error webController:(PPOWebViewController *)webController {
     
+    /*
+     * Let's make sure the web view process is completely arrested.
+     */
     _preventShowWebView = YES;
-        
-    [self completeRedirect:webController.redirect onMainThreadWithOutcome:nil withError:error];
+    
+    NSError *e = error;
+    
+    if (!e) {
+        e = [PPOErrorManager errorForCode:PPOErrorUnknown];
+    }
+    
+    [self completeRedirect:webController.redirect
+               withOutcome:[[PPOOutcome alloc] initWithError:e]];
     
 }
 
--(void)completeRedirect:(PPORedirect*)redirect onMainThreadWithOutcome:(PPOOutcome*)outcome withError:(NSError*)error {
+-(void)completeRedirect:(PPORedirect*)redirect withOutcome:(PPOOutcome*)outcome {
     
-    dispatch_async(dispatch_get_main_queue(), ^{
+    if (_isPerformingWebViewEventFinish) {
+        return;
+    }
+    
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+    
+    [self destroyWebViewWithOutcome:outcome];
+    
+}
+
+-(void)destroyWebViewWithOutcome:(PPOOutcome*)outcome {
+    
+    if (_isPerformingWebViewEventFinish) {
+        return;
+    }
+    
+    id controller = [[UIApplication sharedApplication] keyWindow].rootViewController.presentedViewController;
+    
+    if (controller && controller == self.webController.navigationController) {
         
-        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-        
-        //Depending on the delay show and session timeout timers, we may be currently showing the webview, or not.
-        id controller = [[UIApplication sharedApplication] keyWindow].rootViewController.presentedViewController;
-        
-        if (controller && controller == self.webController.navigationController) {
+        if (!_isDismissingWebView && !_isPresentingWebView) {
             
-            if (!_isDismissingWebView) {
-                
-                _isDismissingWebView = YES;
-                
-                [[[UIApplication sharedApplication] keyWindow].rootViewController dismissViewControllerAnimated:YES completion:^{
-                    
-                    _isDismissingWebView = NO;
-                    
-                    [PPOPaymentTrackingManager resumeTimeoutForPayment:redirect.payment];
-                    
-                    self.completion(outcome, error);
-                    
-                    _preventShowWebView = NO;
-                    
-                }];
-                
-            }
+            _isDismissingWebView = YES;
+            
+            [[[UIApplication sharedApplication] keyWindow].rootViewController dismissViewControllerAnimated:YES
+                                                                                                 completion:[self performWebViewEventFinishResetWithOutcome:outcome]];
             
         } else {
+            [self performWebViewEventFinishResetWithOutcome:outcome];
+        }
+        
+    } else {
+        
+        [self performWebViewEventFinishResetWithOutcome:outcome]();
+        
+    }
+    
+}
+
+-(void(^)(void))performWebViewEventFinishResetWithOutcome:(PPOOutcome*)outcome {
+    
+    __weak typeof(self) weakSelf = self;
+    
+    return ^ {
+        
+        if (_isPerformingWebViewEventFinish) {
+            return;
+        }
+        
+        _isPerformingWebViewEventFinish = YES;
+        
+        _isDismissingWebView = NO;
+        
+        if ([[UIApplication sharedApplication] keyWindow] == weakSelf.webController.view.superview) {
             
-            self.webController = nil;
+            if (PPO_DEBUG_MODE) {
+                NSLog(@"Removing web view for payment with op ref: %@", weakSelf.redirect.payment.identifier);
+            }
             
-            self.completion(outcome, error);
+            [weakSelf.webController.view removeFromSuperview];
             
-            _preventShowWebView = NO;
+            weakSelf.webController = nil;
             
         }
         
-    });
+        if (outcome) {
+            weakSelf.completion(outcome);
+        }
+        
+        _preventShowWebView = NO;
+    };
     
-}
-
--(void)dealloc {
-    [self.webController.view removeFromSuperview];
 }
 
 @end

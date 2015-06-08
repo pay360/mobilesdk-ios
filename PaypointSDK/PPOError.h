@@ -61,8 +61,8 @@ typedef NS_ENUM(NSInteger, PPOErrorCode) {
     /* The date of the expirty for the current card has expired*/
     PPOErrorCardExpiryDateExpired,
     
-    /* The payment session timed out */
-    PPOErrorSessionTimedOut,
+    /* The payment session timed out. This is the timeout that is passed into the payment manager. */
+    PPOErrorMasterSessionTimedOut,
     
     /* Card expiry date is invalid */
     PPOErrorCardExpiryDateInvalid,

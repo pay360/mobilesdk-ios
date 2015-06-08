@@ -18,6 +18,7 @@
 -(instancetype)initWithPayment:(PPOPayment *)payment withTimeout:(NSTimeInterval)timeout timeoutHandler:(void(^)(void))timeoutHandler;
 -(void)startTimeoutTimer;
 -(void)stopTimeoutTimer;
+-(BOOL)masterSessionTimeoutHasExpired;
 @end
 
 @interface PPOPaymentTrackingChapperone ()
@@ -61,16 +62,18 @@
                                                      repeats:YES];
         
         if (PPO_DEBUG_MODE) {
-            NSLog(@"Starting implementing developers timeout for payment with op ref: %@", self.payment.identifier);
+            NSLog(@"Resuming implementing developers timeout for payment with op ref: %@", self.payment.identifier);
         }
     }
     
 }
 
 -(void)stopTimeoutTimer {
-    if (PPO_DEBUG_MODE) {
-        NSLog(@"Stopping implementing developers timeout for payment with op ref: %@ with remaining time %f", self.payment.identifier, self.sessionTimeout);
+    
+    if (PPO_DEBUG_MODE && self.timer && [self.timer isValid] && self.sessionTimeout > 0) {
+        NSLog(@"Stopping implementing developers timeout for payment with op ref: %@ with remaining time: %f", self.payment.identifier, self.sessionTimeout);
     }
+    
     [self.timer invalidate];
     self.timer = nil;
 }
@@ -80,19 +83,30 @@
     if (timer.isValid) {
         
         if (PPO_DEBUG_MODE) {
-            NSLog(@"Session terminates in t-minus %f seconds for payment with op ref %@", self.sessionTimeout, self.payment.identifier);
+            NSString *message = (self.sessionTimeout == 1) ? @"second" : @"seconds";
+            NSLog(@"Implementing developers timeout is %f %@ for payment with op ref %@", self.sessionTimeout, message, self.payment.identifier);
         }
         
         if (self.sessionTimeout <= 0) {
-            [timer invalidate];
-            timer = nil;
+            
             [PPOPaymentTrackingManager removePayment:self.payment];
+            
+            if (PPO_DEBUG_MODE) {
+                NSLog(@"Implementing developers timeout has fired");
+                NSLog(@"Implementing developers timeout is '0'");
+                NSLog(@"Performing currently assigned abort sequence");
+            }
+            
             self.timeoutHandler();
         } else {
             self.sessionTimeout--;
         }
     }
     
+}
+
+-(BOOL)masterSessionTimeoutHasExpired {
+    return self.sessionTimeout <= 0;
 }
 
 @end
@@ -215,10 +229,33 @@
 
 +(void)suspendTimeoutForPayment:(PPOPayment *)payment {
     
+    if (PPO_DEBUG_MODE) {
+        NSLog(@"Suspending implementing developers timeout for payment with op ref: %@", payment.identifier);
+    }
+    
     PPOPaymentTrackingChapperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
     chapperone.state = PAYMENT_STATE_SUSPENDED;
     
     [chapperone stopTimeoutTimer];
+    
+}
+
++(BOOL)masterSessionTimeoutHasExpiredForPayment:(PPOPayment *)payment {
+    
+    PPOPaymentTrackingChapperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
+    
+    BOOL hasTimedOut = [chapperone masterSessionTimeoutHasExpired];
+    
+    if (hasTimedOut) {
+        
+        if (PPO_DEBUG_MODE) {
+            NSLog(@"Inspecting master session timeout");
+            NSLog(@"Implementing developers timeout is '0'");
+        }
+        
+    }
+    
+    return hasTimedOut;
     
 }
 

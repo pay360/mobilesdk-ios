@@ -31,6 +31,12 @@
     
     PPOErrorCode code = PPOErrorUnknown;
     
+    /*
+     * Reason codes 7 and 8 are related to three d secure suspended state.
+     * This conversion table returns processing failed, because we do not want to 
+     * recover a failed payment if it is in this state. Nor do we want to let the 
+     * implementing developer know about this state.
+     */
     switch (reasonCode) {
         case 1: code = PPOErrorBadRequest; break;
         case 2: code = PPOErrorAuthenticationFailed; break;
@@ -72,9 +78,9 @@
                     ];
             break;
             
-        case PPOErrorSessionTimedOut: {
+        case PPOErrorMasterSessionTimedOut: {
             return [NSError errorWithDomain:PPOPaypointSDKErrorDomain
-                                       code:PPOErrorSessionTimedOut
+                                       code:PPOErrorMasterSessionTimedOut
                                    userInfo:@{
                                               NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Payment session timedout", @"Failure message for card validation")
                                               }

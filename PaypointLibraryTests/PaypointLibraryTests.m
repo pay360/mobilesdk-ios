@@ -88,8 +88,8 @@
     
     [manager makePayment:payment
              withTimeOut:60.0f
-          withCompletion:^(PPOOutcome *outcome, NSError *paymentFailure) {
-              if (!paymentFailure) {
+          withCompletion:^(PPOOutcome *outcome) {
+              if (!outcome.error) {
                   [expectation fulfill];
               }
           }];
@@ -117,8 +117,8 @@
     
     [manager makePayment:payment
              withTimeOut:60.0f
-          withCompletion:^(PPOOutcome *outcome, NSError *error) {
-              if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] && error.code == PPOErrorPaymentAmountInvalid) {
+          withCompletion:^(PPOOutcome *outcome) {
+              if ([outcome.error.domain isEqualToString:PPOPaypointSDKErrorDomain] && outcome.error.code == PPOErrorPaymentAmountInvalid) {
                   [expectation fulfill];
               }
           }];
@@ -147,8 +147,8 @@
     
     [manager makePayment:payment
              withTimeOut:60.0f
-          withCompletion:^(PPOOutcome *outcome, NSError *error) {
-              if (!error && outcome.customFields.count == 3) {
+          withCompletion:^(PPOOutcome *outcome) {
+              if (!outcome.error && outcome.customFields.count == 3) {
                   [expectation fulfill];
               }
           }];
@@ -179,8 +179,8 @@
     
     [manager makePayment:payment
              withTimeOut:60.0f
-          withCompletion:^(PPOOutcome *outcome, NSError *error) {
-              if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] && error.code == PPOErrorCVVInvalid) {
+          withCompletion:^(PPOOutcome *outcome) {
+              if ([outcome.error.domain isEqualToString:PPOPaypointSDKErrorDomain] && outcome.error.code == PPOErrorCVVInvalid) {
                   [expectation fulfill];
               }
           }];
@@ -207,8 +207,8 @@
     
     [manager makePayment:payment
              withTimeOut:60.0f
-          withCompletion:^(PPOOutcome *outcome, NSError *error) {
-              if (!error) {
+          withCompletion:^(PPOOutcome *outcome) {
+              if (!outcome.error) {
                   [expectation fulfill];
               }
           }];
@@ -236,8 +236,8 @@
     
     [manager makePayment:payment
              withTimeOut:60.0f
-          withCompletion:^(PPOOutcome *outcome, NSError *error) {
-              if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] && error.code == PPOErrorClientTokenExpired) {
+          withCompletion:^(PPOOutcome *outcome) {
+              if ([outcome.error.domain isEqualToString:PPOPaypointSDKErrorDomain] && outcome.error.code == PPOErrorClientTokenExpired) {
                   [expectation fulfill];
               }
           }];
@@ -265,8 +265,8 @@
     
     [manager makePayment:payment
              withTimeOut:60.0f
-          withCompletion:^(PPOOutcome *outcome, NSError *error) {
-              if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] && error.code == PPOErrorUnauthorisedRequest) {
+          withCompletion:^(PPOOutcome *outcome) {
+              if ([outcome.error.domain isEqualToString:PPOPaypointSDKErrorDomain] && outcome.error.code == PPOErrorUnauthorisedRequest) {
                   [expectation fulfill];
               }
           }];
@@ -295,8 +295,8 @@
     
     [manager makePayment:payment
              withTimeOut:60.0f
-          withCompletion:^(PPOOutcome *outcome, NSError *error) {
-              if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] && error.code == PPOErrorTransactionDeclined) {
+          withCompletion:^(PPOOutcome *outcome) {
+              if ([outcome.error.domain isEqualToString:PPOPaypointSDKErrorDomain] && outcome.error.code == PPOErrorTransactionDeclined) {
                   [expectation fulfill];
               }
           }];
@@ -324,7 +324,7 @@
     
     [manager makePayment:payment
              withTimeOut:60.0f
-          withCompletion:^(PPOOutcome *outcome, NSError *error) {
+          withCompletion:^(PPOOutcome *outcome) {
               if (outcome.customFields.count > 0) {
                   [expectation fulfill];
               }
@@ -356,8 +356,8 @@
     
     [manager makePayment:payment
              withTimeOut:1.0
-          withCompletion:^(PPOOutcome *outcome, NSError *error) {
-              if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] && error.code == PPOErrorSessionTimedOut) {
+          withCompletion:^(PPOOutcome *outcome) {
+              if ([outcome.error.domain isEqualToString:PPOPaypointSDKErrorDomain] && outcome.error.code == PPOErrorMasterSessionTimedOut) {
                   [expectation fulfill];
               }
           }];
@@ -384,8 +384,8 @@
     
     [manager makePayment:payment
              withTimeOut:60.0f
-          withCompletion:^(PPOOutcome *outcome, NSError *error) {
-              if ([error.domain isEqualToString:PPOPaypointSDKErrorDomain] && error.code == PPOErrorServerFailure) {
+          withCompletion:^(PPOOutcome *outcome) {
+              if ([outcome.error.domain isEqualToString:PPOPaypointSDKErrorDomain] && outcome.error.code == PPOErrorServerFailure) {
                   [expectation fulfill];
               }
           }];

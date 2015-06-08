@@ -20,11 +20,18 @@
             return self;
         }
         
-        data = [self redirectData:data];
-        
         _payment = payment;
         
-        id value;
+        id value = [data objectForKey:TRANSACTION_RESPONSE_TRANSACTION_KEY];
+        
+        if ([value isKindOfClass:[NSDictionary class]]) {
+            id transactionID = [value objectForKey:TRANSACTION_RESPONSE_TRANSACTION_ID_KEY];
+            if ([transactionID isKindOfClass:[NSString class]]) {
+                _transactionID = transactionID;
+            }
+        }
+        
+        data = [data objectForKey:THREE_D_SECURE_KEY];
         
         value = [data objectForKey:THREE_D_SECURE_TERMINATION_URL_KEY];
         
@@ -122,25 +129,15 @@
     return nil;
 }
 
--(NSDictionary*)redirectData:(id)json {
++(BOOL)requiresRedirect:(id)json {
     
-    NSString *transactionID;
-    
-    id value = [json objectForKey:@"transaction"];
-    
-    if ([value isKindOfClass:[NSDictionary class]]) {
-        transactionID = [value objectForKey:@"transactionId"];
+    if (!json || ![json isKindOfClass:[NSDictionary class]]) {
+        return NO;
     }
     
-    value = [json objectForKey:@"threeDSRedirect"];
+    id value = [json objectForKey:THREE_D_SECURE_KEY];
+    return (value && [value isKindOfClass:[NSDictionary class]]);
     
-    if ([value isKindOfClass:[NSDictionary class]] && [transactionID isKindOfClass:[NSString class]] && transactionID.length) {
-        NSMutableDictionary *mutable = [value mutableCopy];
-        [mutable setObject:transactionID forKey:@"transactionId"];
-        return [mutable copy];
-    }
-    
-    return nil;
 }
 
 @end

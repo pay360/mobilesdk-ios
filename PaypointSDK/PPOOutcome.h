@@ -16,13 +16,13 @@
 @property (nonatomic, strong, readonly) NSString *merchantRef;
 @property (nonatomic, strong, readonly) NSString *type;
 @property (nonatomic, strong, readonly) NSString *identifier;
-@property (nonatomic, strong, readonly) NSNumber *reasonCode;
 @property (nonatomic, strong, readonly) NSString *lastFour;
 @property (nonatomic, strong, readonly) NSString *cardUsageType;
 @property (nonatomic, strong, readonly) NSString *cardScheme;
 @property (nonatomic, strong, readonly) NSSet *customFields;
-@property (nonatomic, strong, readonly) NSNumber *isSuccessful;
+@property (nonatomic, strong) NSError *error;
 
 -(instancetype)initWithData:(NSDictionary*)data;
+-(instancetype)initWithError:(NSError*)error;
 
 @end
