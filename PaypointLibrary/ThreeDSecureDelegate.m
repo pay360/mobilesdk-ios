@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#import "PPOWebViewControllerDelegate.h"
+#import "ThreeDSecureDelegate.h"
 #import "PPOSDKConstants.h"
 #import "PPOWebViewController.h"
 #import "PPOPayment.h"
@@ -18,14 +18,14 @@
 #import "PPOCredentials.h"
 #import "PPOURLRequestManager.h"
 
-@interface PPOWebViewControllerDelegate ()
+@interface ThreeDSecureDelegate ()
 @property (nonatomic, strong) PPORedirect *redirect;
 @property (nonatomic, strong) PPOPaymentEndpointManager *endpointManager;
 @property (nonatomic, strong) NSURLSession *session;
 @property (nonatomic, copy) void(^completion)(PPOOutcome*);
 @end
 
-@implementation PPOWebViewControllerDelegate {
+@implementation ThreeDSecureDelegate {
     BOOL _preventShowWebView;
     BOOL _isDismissingWebView;
     BOOL _isPresentingWebView;
@@ -46,7 +46,8 @@
     return self;
 }
 
--(void)webViewController:(PPOWebViewController *)controller completedWithPaRes:(NSString *)paRes {
+-(void)threeDSecureController:(id<ThreeDSecureControllerProtocol>)controller
+           completedWithPaRes:(NSString *)paRes {
     
     if (PPO_DEBUG_MODE) {
         NSLog(@"Web view concluded for payment with op ref: %@", controller.redirect.payment.identifier);
@@ -61,10 +62,13 @@
     
     controller.redirect.threeDSecureResumeBody = body;
     
-    [self performResumeForRedirect:controller.redirect forController:controller];
+    [self performResumeForRedirect:controller.redirect
+                     forController:controller];
+    
 }
 
--(void)performResumeForRedirect:(PPORedirect*)redirect forController:(PPOWebViewController*)controller {
+-(void)performResumeForRedirect:(PPORedirect*)redirect
+                  forController:(id<ThreeDSecureControllerProtocol>)controller {
     
     BOOL masterSessionTimedOut = [PPOPaymentTrackingManager masterSessionTimeoutHasExpiredForPayment:self.redirect.payment];
     
@@ -114,7 +118,8 @@
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
 }
 
--(void(^)(NSData *, NSURLResponse *, NSError *))resumeResponseHandlerForRedirect:(PPORedirect*)redirect forController:(PPOWebViewController*)controller {
+-(void(^)(NSData *, NSURLResponse *, NSError *))resumeResponseHandlerForRedirect:(PPORedirect*)redirect
+                                                                   forController:(id<ThreeDSecureControllerProtocol>)controller {
     
     __weak typeof(self) weakSelf = self;
     
@@ -160,8 +165,8 @@
  * user input, and this is understood and accepted. The countdown provided to us is a 'probably requires user input
  * after this much time has elapsed' kind of value.
  */
--(void)webViewControllerDelayShowTimeoutExpired:(PPOWebViewController *)controller {
-    
+
+-(void)threeDSecureControllerDelayShowTimeoutExpired:(id<ThreeDSecureControllerProtocol>)controller {
     /*
      * We only want to present once, so if we are called twice in error, ignore.
      */
@@ -177,9 +182,9 @@
          */
         [PPOPaymentTrackingManager suspendTimeoutForPayment:controller.redirect.payment];
         
-        [controller.view removeFromSuperview];
+        [controller.rootView removeFromSuperview];
         
-        UINavigationController *navCon = [[UINavigationController alloc] initWithRootViewController:controller];
+        UINavigationController *navCon = [[UINavigationController alloc] initWithRootViewController:(UIViewController*)controller];
         
         /*
          * Presenting controllers like this or toying with the implementing developers view heirarchy,
@@ -207,22 +212,23 @@
                                                                                          _isPresentingWebView = NO;
                                                                                      }];
     }
-    
 }
 
--(void)webViewControllerSessionTimeoutExpired:(PPOWebViewController *)webController {
-    [self handleError:[PPOErrorManager errorForCode:PPOErrorThreeDSecureTimedOut] webController:webController];
+-(void)threeDSecureControllerSessionTimeoutExpired:(id<ThreeDSecureControllerProtocol>)controller {
+    [self handleError:[PPOErrorManager errorForCode:PPOErrorThreeDSecureTimedOut]   forController:controller];
 }
 
--(void)webViewController:(PPOWebViewController *)webController failedWithError:(NSError *)error {
-    [self handleError:error webController:webController];
+-(void)threeDSecureController:(id<ThreeDSecureControllerProtocol>)controller failedWithError:(NSError *)error {
+    [self handleError:error forController:controller];
 }
 
--(void)webViewControllerUserCancelled:(PPOWebViewController *)webController {
-    [self handleError:[PPOErrorManager errorForCode:PPOErrorUserCancelled] webController:webController];
+-(void)threeDSecureControllerUserCancelled:(id<ThreeDSecureControllerProtocol>)controller {
+    [self handleError:[PPOErrorManager errorForCode:PPOErrorUserCancelled]
+        forController:controller];
 }
 
--(void)handleError:(NSError *)error webController:(PPOWebViewController *)controller {
+-(void)handleError:(NSError *)error
+     forController:(id<ThreeDSecureControllerProtocol>)controller {
     
     /*
      * Let's make sure the web view process is completely arrested.
@@ -241,7 +247,9 @@
     
 }
 
--(void)completeRedirect:(PPORedirect*)redirect withOutcome:(PPOOutcome*)outcome forController:(PPOWebViewController*)controller {
+-(void)completeRedirect:(PPORedirect*)redirect
+            withOutcome:(PPOOutcome*)outcome
+          forController:(id<ThreeDSecureControllerProtocol>)controller {
     
     if (_isPerformingWebViewEventFinish) {
         return;
@@ -254,7 +262,8 @@
     
 }
 
--(void)destroyWebViewController:(PPOWebViewController*)controller forOutcome:(PPOOutcome*)outcome {
+-(void)destroyWebViewController:(id<ThreeDSecureControllerProtocol>)controller
+                     forOutcome:(PPOOutcome*)outcome {
     
     if (_isPerformingWebViewEventFinish) {
         return;
@@ -262,7 +271,7 @@
     
     id presentedController = [[UIApplication sharedApplication] keyWindow].rootViewController.presentedViewController;
     
-    if (presentedController && presentedController == controller.navigationController) {
+    if (presentedController && presentedController == controller.rootNavigationController) {
         
         if (!_isDismissingWebView && !_isPresentingWebView) {
             
@@ -288,7 +297,8 @@
     
 }
 
--(void(^)(void))performWebViewController:(PPOWebViewController*)controller eventFinishResetWithOutcome:(PPOOutcome*)outcome {
+-(void(^)(void))performWebViewController:(id<ThreeDSecureControllerProtocol>)controller
+             eventFinishResetWithOutcome:(PPOOutcome*)outcome {
     
     __weak typeof(self) weakSelf = self;
     
@@ -301,14 +311,14 @@
         _isPerformingWebViewEventFinish = YES;
         
         _isDismissingWebView = NO;
-        
-        if ([[UIApplication sharedApplication] keyWindow] == controller.view.superview) {
+                
+        if ([[UIApplication sharedApplication] keyWindow] == controller.rootView.superview) {
             
             if (PPO_DEBUG_MODE) {
                 NSLog(@"Removing web view for payment with op ref: %@", weakSelf.redirect.payment.identifier);
             }
             
-            [controller.view removeFromSuperview];
+            [controller.rootView removeFromSuperview];
             
         }
         

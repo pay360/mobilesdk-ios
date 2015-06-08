@@ -7,11 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ThreeDSecureControllerProtocol.h"
 
 @protocol ThreeDSecureProtocol <NSObject>
--(void)threeDSecureController:(UIViewController*)controller completedWithPaRes:(NSString*)paRes;
--(void)webViewControllerUserCancelled:(UIViewController*)controller;
--(void)threeDSecureController:(UIViewController*)controller failedWithError:(NSError*)error;
--(void)threeDSecureControllerSessionTimeoutExpired:(UIViewController*)controller;
--(void)threeDSecureControllerDelayShowTimeoutExpired:(UIViewController*)controller;
+-(void)threeDSecureController:(id<ThreeDSecureControllerProtocol>)controller completedWithPaRes:(NSString*)paRes;
+-(void)threeDSecureControllerUserCancelled:(id<ThreeDSecureControllerProtocol>)controller;
+-(void)threeDSecureController:(id<ThreeDSecureControllerProtocol>)controller failedWithError:(NSError*)error;
+-(void)threeDSecureControllerSessionTimeoutExpired:(id<ThreeDSecureControllerProtocol>)controller;
+-(void)threeDSecureControllerDelayShowTimeoutExpired:(id<ThreeDSecureControllerProtocol>)controller;
 @end

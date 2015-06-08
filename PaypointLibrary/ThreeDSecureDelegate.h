@@ -11,7 +11,7 @@
 @class PPORedirect;
 @class PPOPaymentEndpointManager;
 @class PPOOutcome;
-@interface PPOWebViewControllerDelegate : NSObject
+@interface ThreeDSecureDelegate : NSObject <ThreeDSecureProtocol>
 
 -(instancetype)initWithSession:(NSURLSession*)session
                   withRedirect:(PPORedirect *)redirect

@@ -21,7 +21,7 @@
 @end
 
 @implementation PPOWebViewController {
-    
+
     /*
      * The web view is loaded offscreen, and is presented once a timeout value has expired.
      * The timeout value is sometimes zero, deliberately, depending on if we receive said 
@@ -36,6 +36,23 @@
     BOOL _delayShowTimeoutExpired;
     BOOL _masterSessionTimeoutExpired;
     BOOL _abortSession; //The master timeout session timeout handler is about to action.
+}
+
+@synthesize rootView = _rootView;
+@synthesize rootNavigationController = _rootNavigationController;
+
+-(UIView *)rootView {
+    if (_rootView == nil) {
+        _rootView = self.view;
+    }
+    return _rootView;
+}
+
+-(UINavigationController *)rootNavigationController {
+    if (_rootNavigationController == nil) {
+        _rootNavigationController = self.navigationController;
+    }
+    return _rootNavigationController;
 }
 
 -(instancetype)initWithRedirect:(PPORedirect *)redirect
@@ -422,7 +439,7 @@
     
     _userCancelled = YES;
     [self cancelThreeDSecureRelatedTimers];
-    [self.delegate webViewControllerUserCancelled:self];
+    [self.delegate threeDSecureControllerUserCancelled:self];
 }
 
 -(void)cancelThreeDSecureRelatedTimers {

@@ -11,5 +11,7 @@
 @protocol ThreeDSecureControllerProtocol <NSObject>
 
 @property (nonatomic, strong) PPORedirect *redirect;
+@property (nonatomic, strong) UINavigationController *rootNavigationController;
+@property (nonatomic, strong) UIView *rootView;
 
 @end

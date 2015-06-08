@@ -16,7 +16,7 @@
 #import "PPOPayment.h"
 #import "PPOSDKConstants.h"
 #import "PPOURLRequestManager.h"
-#import "PPOWebViewControllerDelegate.h"
+#import "ThreeDSecureDelegate.h"
 
 @interface PPOWebFormManager ()
 @property (nonatomic, copy) void(^completion)(PPOOutcome *);
@@ -24,7 +24,7 @@
 @property (nonatomic, strong) PPOWebViewController *webController;
 @property (nonatomic, strong) PPOPaymentEndpointManager *endpointManager;
 @property (nonatomic, strong) NSURLSession *session;
-@property (nonatomic, strong) PPOWebViewControllerDelegate *webViewControllerDelegate;
+@property (nonatomic, strong) ThreeDSecureDelegate *threeDSecureDelegate;
 @end
 
 @implementation PPOWebFormManager
@@ -75,13 +75,13 @@
      * The PPOWebViewControllerDelegate protocol is set as a 'required' protocol.
      * This class will handle those callbacks.
      */
-    self.webViewControllerDelegate = [[PPOWebViewControllerDelegate alloc] initWithSession:self.session
-                                                                              withRedirect:redirect
-                                                                       withEndpointManager:self.endpointManager
-                                                                            withCompletion:self.completion];
+    self.threeDSecureDelegate = [[ThreeDSecureDelegate alloc] initWithSession:self.session
+                                                                 withRedirect:redirect
+                                                          withEndpointManager:self.endpointManager
+                                                               withCompletion:self.completion];
     
     self.webController = [[PPOWebViewController alloc] initWithRedirect:redirect
-                                                           withDelegate:self.webViewControllerDelegate];
+                                                           withDelegate:self.threeDSecureDelegate];
     
     CGFloat width = [UIScreen mainScreen].bounds.size.width;
     CGFloat height = [UIScreen mainScreen].bounds.size.height;
