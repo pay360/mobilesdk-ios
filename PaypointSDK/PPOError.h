@@ -53,11 +53,17 @@ typedef NS_ENUM(NSInteger, PPOPaymentError) {
     /* User cancelled 3D Secure */
     PPOPaymentErrorUserCancelledThreeDSecure,
     
+    /* The payment is currently on hold awaiting Three D Secure to complete*/
+    PPOPaymentErrorPaymentSuspendedForThreeDSecure,
+    
     /* The payment is currently in flight */
     PPOPaymentErrorPaymentProcessing,
     
     /* The transaction was declined */
     PPOPaymentErrorTransactionDeclined,
+    
+    /* The presented API token was not valid, or the wrong type of authentication was used */
+    PPOPaymentErrorAuthenticationFailed,
     
     /* The transaction or operation was not found */
     PPOPaymentErrorPaymentNotFound,

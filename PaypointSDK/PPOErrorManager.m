@@ -19,7 +19,7 @@
             error = [PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorBadRequest];
         } break;
         case 2: {
-            error = [PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorAuthenticationFailed];
+            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorAuthenticationFailed];
         } break;
         case 3: {
             error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorClientTokenExpired];
@@ -88,16 +88,6 @@
         }
             break;
             
-        case PPOPrivateErrorAuthenticationFailed: {
-            return [NSError errorWithDomain:PPOPaymentErrorDomain
-                                       code:PPOPrivateErrorAuthenticationFailed
-                                   userInfo:@{
-                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Authentication failed", @"Failure message for authentication")
-                                              }
-                    ];
-        }
-            break;
-            
         case PPOPrivateErrorProcessingThreeDSecure: {
             return [NSError errorWithDomain:PPOPaymentErrorDomain
                                        code:PPOPrivateErrorProcessingThreeDSecure
@@ -134,27 +124,34 @@
                                               NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Payment session timedout", @"Failure message for card validation")
                                               }
                     ];
-        }
-            break;
+        } break;
             
         case PPOPaymentErrorTransactionDeclined: {
             return [NSError errorWithDomain:PPOPaymentErrorDomain
                                        code:PPOPaymentErrorTransactionDeclined
                                    userInfo:@{
-                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Transaction declined.", @"Feedback message for payment status")
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Transaction declined", @"Feedback message for payment status")
                                               }
                     ];
-        }
-            break;
+        } break;
             
-        case PPOPaymentErrorPaymentProcessing:
+        case PPOPaymentErrorAuthenticationFailed: {
+            return [NSError errorWithDomain:PPOPaymentErrorDomain
+                                       code:PPOPaymentErrorAuthenticationFailed
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The presented API token was not valid, or the wrong type of authentication was used", @"Failure message for authentication")
+                                              }
+                    ];
+        } break;
+            
+        case PPOPaymentErrorPaymentProcessing: {
             return [NSError errorWithDomain:PPOPaymentErrorDomain
                                        code:PPOPaymentErrorPaymentProcessing
                                    userInfo:@{
                                               NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Transaction in progress", @"Status message for payment status check")
                                               }
                     ];
-            break;
+        } break;
             
         case PPOPaymentErrorServerFailure: {
             return [NSError errorWithDomain:PPOPaymentErrorDomain
@@ -192,6 +189,15 @@
                     ];
         } break;
             
+        case PPOPaymentErrorPaymentSuspendedForThreeDSecure: {
+            return [NSError errorWithDomain:PPOPaymentErrorDomain
+                                       code:PPOPaymentErrorPaymentSuspendedForThreeDSecure
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The payment is currently on hold awaiting Three D Secure to complete", @"Payment status message.")
+                                              }
+                    ];
+        } break;
+            
         case PPOPaymentErrorTransactionProcessingFailed: {
             return [NSError errorWithDomain:PPOPaymentErrorDomain
                                        code:PPOPaymentErrorTransactionProcessingFailed
@@ -217,8 +223,7 @@
                                               NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"This payment did not complete or is not known.", @"Failure message for payment status")
                                               }
                     ];
-        }
-            break;
+        } break;
             
         case PPOPaymentErrorUserCancelledThreeDSecure: {
             return [NSError errorWithDomain:PPOPaymentErrorDomain
@@ -236,8 +241,7 @@
                                               NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Payment manager occupied. Please wait until current payment finishes.", @"Failure message for 3D secure payment failure")
                                               }
                     ];
-        }
-            break;
+        } break;
             
         default: return nil; break;
     }
@@ -328,6 +332,56 @@
                                               }
                     ];
         } break;
+            
+        default:
+            break;
+    }
+    
+    return nil;
+}
+
++(NSError *)buildCustomerFacingErrorFromError:(NSError *)error {
+    
+    if ([error.domain isEqualToString:PPOPrivateErrorDomain]) {
+        return [PPOErrorManager buildCustomerFacingErrorFromPrivateError:error];
+    } else {
+        return error;
+    }
+    
+    return nil;
+}
+
++(NSError*)buildCustomerFacingErrorFromPrivateError:(NSError*)error {
+    
+    if (![error.domain isEqualToString:PPOPrivateErrorDomain]) {
+        return nil;
+    }
+    
+    switch (error.code) {
+            
+        case PPOPrivateErrorNotIntitialised:
+            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorNotInitialised];
+            break;
+            
+        case PPOPrivateErrorBadRequest:
+            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUnexpected];
+            break;
+            
+        case PPOPrivateErrorPaymentSuspendedForThreeDSecure:
+            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentSuspendedForThreeDSecure];
+            break;
+            
+        case PPOPrivateErrorPaymentSuspendedForClientRedirect:
+            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentSuspendedForThreeDSecure];
+            break;
+            
+        case PPOPrivateErrorProcessingThreeDSecure:
+            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUnexpected];
+            break;
+            
+        case PPOPrivateErrorThreeDSecureTimedOut:
+            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut];
+            break;
             
         default:
             break;

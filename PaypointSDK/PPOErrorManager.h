@@ -20,6 +20,6 @@
 
 +(NSError*)buildErrorForValidationErrorCode:(PPOLocalValidationError)code;
 
-//+(BOOL)safeToRetryPaymentWithoutRiskOfDuplication:(NSError*)error;
++(NSError*)buildCustomerFacingErrorFromError:(NSError*)error;
 
 @end

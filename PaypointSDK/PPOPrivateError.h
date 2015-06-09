@@ -15,9 +15,7 @@ typedef NS_ENUM(NSInteger, PPOPrivateError) {
     PPOPrivateErrorNotIntitialised = -1,
     
     PPOPrivateErrorBadRequest = 0,
-    
-    PPOPrivateErrorAuthenticationFailed,
-    
+        
     PPOPrivateErrorPaymentSuspendedForThreeDSecure,
     
     PPOPrivateErrorPaymentSuspendedForClientRedirect,

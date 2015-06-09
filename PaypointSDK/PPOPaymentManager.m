@@ -436,60 +436,14 @@
           forPayment:(PPOPayment*)payment
       withCompletion:(void(^)(PPOOutcome *))completion {
     
-#warning convert error if needed
-    
     BOOL isNetworkingIssue = [outcome.error.domain isEqualToString:NSURLErrorDomain];
     BOOL sessionTimedOut = isNetworkingIssue && outcome.error.code == NSURLErrorCancelled;
     BOOL isProcessingAtPaypoint = [outcome.error.domain isEqualToString:PPOPaymentErrorDomain] && outcome.error.code == PPOPaymentErrorPaymentProcessing;
     
     if ((isNetworkingIssue && !sessionTimedOut) || isProcessingAtPaypoint) {
-        
-        if (PPO_DEBUG_MODE) {
-            NSLog(@"Not sure if payment made it for op ref: %@", payment.identifier);
-            
-            NSLog(@"Yo server, what's going on with payment for op ref %@", payment.identifier);
-        }
-        
-        __weak typeof(self) weakSelf = self;
-        
-        [self queryServerForPayment:payment
-                    isInternalQuery:YES
-                     withCompletion:^(PPOOutcome *queryOutcome) {
-                         
-                         if (self.r_queue == nil) {
-                             self.r_queue = dispatch_queue_create("Dispatch_Recursive_Call", NULL);
-                         }
-                         
-                         NSUInteger attemptCount = [PPOPaymentTrackingManager totalRecursiveQueryPaymentAttemptsForPayment:payment];
-                         NSTimeInterval interval = [PPOPaymentTrackingManager timeIntervalForAttemptCount:attemptCount];
-                         [PPOPaymentTrackingManager incrementRecurisiveQueryPaymentAttemptCountForPayment:payment];
-                         
-                         dispatch_async(self.r_queue, ^{
-                             
-                             /*
-                              * Back off period before calling again. Done any dedicated queue to avoid sleeping the main thread.
-                              */
-                             if (PPO_DEBUG_MODE) {
-                                 NSLog(@"Recursive query call required.");
-                                 NSLog(@"Will sleep the recursive call thread for %f seconds", interval);
-                             }
-                             
-                             sleep(interval);
-                             
-                             /*
-                              * Recursively call ourselves. The implementing developer master session
-                              * timeout countdown will abort this recursion, if we do not get a conclusion.
-                              */
-                             [weakSelf handleOutcome:queryOutcome
-                                          forPayment:payment
-                                      withCompletion:completion];
-                             
-                         });
-                         
-                         
-                     }];
-        
-    } else {
+        [self checkIfOutcomeHasChangedForPayment:payment withCompletion:completion];
+    }
+    else {
         
         if (PPO_DEBUG_MODE) {
             NSLog(@"Got a conclusion. Let's dance.");
@@ -498,6 +452,8 @@
         if (sessionTimedOut) {
             outcome.error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut];
         }
+        
+        outcome.error = [PPOErrorManager buildCustomerFacingErrorFromError:outcome.error];
         
         //We may be on self.r_queue if we were polling
         if ([NSThread isMainThread]) {
@@ -512,6 +468,56 @@
             });
         }
     }
+    
+}
+
+-(void)checkIfOutcomeHasChangedForPayment:(PPOPayment*)payment withCompletion:(void(^)(PPOOutcome *))completion {
+    
+    if (PPO_DEBUG_MODE) {
+        NSLog(@"Not sure if payment made it for op ref: %@", payment.identifier);
+        
+        NSLog(@"Yo server, what's going on with payment for op ref %@", payment.identifier);
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    
+    [self queryServerForPayment:payment
+                isInternalQuery:YES
+                 withCompletion:^(PPOOutcome *queryOutcome) {
+                     
+                     if (self.r_queue == nil) {
+                         self.r_queue = dispatch_queue_create("Dispatch_Recursive_Call", NULL);
+                     }
+                     
+                     NSUInteger attemptCount = [PPOPaymentTrackingManager totalRecursiveQueryPaymentAttemptsForPayment:payment];
+                     NSTimeInterval interval = [PPOPaymentTrackingManager timeIntervalForAttemptCount:attemptCount];
+                     [PPOPaymentTrackingManager incrementRecurisiveQueryPaymentAttemptCountForPayment:payment];
+                     
+                     dispatch_async(self.r_queue, ^{
+                         
+                         /*
+                          * Back off period before calling again. Done on dedicated queue to avoid sleeping the main thread.
+                          */
+                         if (PPO_DEBUG_MODE) {
+                             NSLog(@"Recursive query call required.");
+                             NSLog(@"Will sleep the recursive call thread for %f seconds", interval);
+                         }
+                         
+#warning how is master session timeout effected by this sleep ?
+                         sleep(interval);
+                         
+                         /*
+                          * Recursively call ourselves. The implementing developer master session
+                          * timeout countdown will abort this recursion, if we do not get a conclusion.
+                          */
+                         [weakSelf handleOutcome:queryOutcome
+                                      forPayment:payment
+                                  withCompletion:completion];
+                         
+                     });
+                     
+                     
+                 }];
     
 }
 
