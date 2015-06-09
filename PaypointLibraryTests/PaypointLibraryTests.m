@@ -44,10 +44,11 @@
 
 #pragma mark - Local Validation (Good Pan & Good Token)
 
--(void)testLuhn {
+-(void)testCardValidation {
     
     for (NSString *pan in self.pans) {
-        NSAssert([PPOLuhn validateString:pan], @"Luhn check failed");
+        NSError *error = [PPOValidator validateCardPan:pan];
+        NSAssert((error == nil), @"Pan validation failed");
     }
 }
 
@@ -118,7 +119,7 @@
     [manager makePayment:payment
              withTimeOut:60.0f
           withCompletion:^(PPOOutcome *outcome) {
-              if ([outcome.error.domain isEqualToString:PPOPaypointSDKErrorDomain] && outcome.error.code == PPOErrorPaymentAmountInvalid) {
+              if ([outcome.error.domain isEqualToString:PPOLocalValidationErrorDomain] && outcome.error.code == PPOLocalValidationErrorPaymentAmountInvalid) {
                   [expectation fulfill];
               }
           }];
@@ -180,7 +181,7 @@
     [manager makePayment:payment
              withTimeOut:60.0f
           withCompletion:^(PPOOutcome *outcome) {
-              if ([outcome.error.domain isEqualToString:PPOPaypointSDKErrorDomain] && outcome.error.code == PPOErrorCVVInvalid) {
+              if ([outcome.error.domain isEqualToString:PPOLocalValidationErrorDomain] && outcome.error.code == PPOLocalValidationErrorCVVInvalid) {
                   [expectation fulfill];
               }
           }];
@@ -237,7 +238,7 @@
     [manager makePayment:payment
              withTimeOut:60.0f
           withCompletion:^(PPOOutcome *outcome) {
-              if ([outcome.error.domain isEqualToString:PPOPaypointSDKErrorDomain] && outcome.error.code == PPOErrorClientTokenExpired) {
+              if ([outcome.error.domain isEqualToString:PPOPaymentErrorDomain] && outcome.error.code == PPOPaymentErrorClientTokenExpired) {
                   [expectation fulfill];
               }
           }];
@@ -266,7 +267,7 @@
     [manager makePayment:payment
              withTimeOut:60.0f
           withCompletion:^(PPOOutcome *outcome) {
-              if ([outcome.error.domain isEqualToString:PPOPaypointSDKErrorDomain] && outcome.error.code == PPOErrorUnauthorisedRequest) {
+              if ([outcome.error.domain isEqualToString:PPOPaymentErrorDomain] && outcome.error.code == PPOPaymentErrorUnauthorisedRequest) {
                   [expectation fulfill];
               }
           }];
@@ -296,7 +297,7 @@
     [manager makePayment:payment
              withTimeOut:60.0f
           withCompletion:^(PPOOutcome *outcome) {
-              if ([outcome.error.domain isEqualToString:PPOPaypointSDKErrorDomain] && outcome.error.code == PPOErrorTransactionDeclined) {
+              if ([outcome.error.domain isEqualToString:PPOPaymentErrorDomain] && outcome.error.code == PPOPaymentErrorTransactionDeclined) {
                   [expectation fulfill];
               }
           }];
@@ -357,7 +358,7 @@
     [manager makePayment:payment
              withTimeOut:1.0
           withCompletion:^(PPOOutcome *outcome) {
-              if ([outcome.error.domain isEqualToString:PPOPaypointSDKErrorDomain] && outcome.error.code == PPOErrorMasterSessionTimedOut) {
+              if ([outcome.error.domain isEqualToString:PPOPaymentErrorDomain] && outcome.error.code == PPOPaymentErrorMasterSessionTimedOut) {
                   [expectation fulfill];
               }
           }];
@@ -385,7 +386,7 @@
     [manager makePayment:payment
              withTimeOut:60.0f
           withCompletion:^(PPOOutcome *outcome) {
-              if ([outcome.error.domain isEqualToString:PPOPaypointSDKErrorDomain] && outcome.error.code == PPOErrorServerFailure) {
+              if ([outcome.error.domain isEqualToString:PPOPaymentErrorDomain] && outcome.error.code == PPOPaymentErrorServerFailure) {
                   [expectation fulfill];
               }
           }];
