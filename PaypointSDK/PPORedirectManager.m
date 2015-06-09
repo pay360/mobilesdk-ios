@@ -12,7 +12,6 @@
 #import "PPOPaymentTrackingManager.h"
 #import "PPOPaymentEndpointManager.h"
 #import "PPOCredentials.h"
-#import "PPOErrorManager.h"
 #import "PPOPayment.h"
 #import "PPOSDKConstants.h"
 #import "PPOURLRequestManager.h"

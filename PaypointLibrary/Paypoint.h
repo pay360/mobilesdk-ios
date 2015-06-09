@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 
 #import <Paypoint/PPOPaymentManager.h>
-#import <Paypoint/PPOLuhn.h>
 #import <Paypoint/PPOPayment.h>
 #import <Paypoint/PPOCreditCard.h>
 #import <Paypoint/PPOCredentials.h>

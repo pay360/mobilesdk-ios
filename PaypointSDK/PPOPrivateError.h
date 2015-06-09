@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "PPOSDKMacros.h"
 
-NSString *const PPOPrivateErrorDomain;
+PPOSDK_EXTERN NSString *const PPOPrivateErrorDomain;
 
 typedef NS_ENUM(NSInteger, PPOPrivateError) {
     

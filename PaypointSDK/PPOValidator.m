@@ -18,12 +18,7 @@
 
 @implementation PPOValidator
 
-+(NSError*)validatePayment:(PPOPayment*)payment {
-    
-    return [self validateTransaction:payment.transaction
-                            withCard:payment.card];
-    
-}
+#pragma mark - Network
 
 +(NSError*)validateBaseURL:(NSURL*)baseURL {
     if (!baseURL) {
@@ -49,11 +44,44 @@
     return nil;
 }
 
-+(NSError*)validateTransaction:(PPOTransaction*)transaction withCard:(PPOCreditCard*)card {
+#pragma mark - Payment 
+
++(NSError*)validatePayment:(PPOPayment*)payment {
+    
+    NSError *error;
+    
+    error = [PPOValidator validateCard:payment.card];
+    if (error) return error;
+    
+    error = [PPOValidator validateTransaction:payment.transaction];
+    if (error) return error;
+    
+    return nil;
+}
+
+#pragma mark - ValidateCard
+
++(NSError *)validateCard:(PPOCreditCard *)card {
+    
+    NSError *error;
+    
+    error = [PPOValidator validateCardPan:card.pan];;
+    if (error) return error;
+    
+    error = [PPOValidator validateCardExpiry:card.expiry];
+    if (error) return error;
+    
+    error = [PPOValidator validateCardCVV:card.cvv];
+    if (error) return error;
+    
+    return error;
+}
+
++(NSError*)validateCardPan:(NSString*)pan {
     
     NSString *strippedValue;
     
-    strippedValue = [card.pan stringByReplacingOccurrencesOfString:@" " withString:@""];
+    strippedValue = [pan stringByReplacingOccurrencesOfString:@" " withString:@""];
     
     BOOL containsLetters = [strippedValue rangeOfCharacterFromSet:[NSCharacterSet letterCharacterSet]].location != NSNotFound;
     
@@ -63,7 +91,14 @@
         return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorCardPanInvalid];
     }
     
-    strippedValue = [card.expiry stringByReplacingOccurrencesOfString:@" " withString:@""];
+    return nil;
+}
+
++(NSError*)validateCardExpiry:(NSString*)expiry {
+    
+    NSString *strippedValue;
+    
+    strippedValue = [expiry stringByReplacingOccurrencesOfString:@" " withString:@""];
     
     if (strippedValue == nil || strippedValue.length != 4) {
         return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorCardExpiryDateInvalid];
@@ -71,27 +106,61 @@
         return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorCardExpiryDateExpired];
     }
     
-    strippedValue = [card.cvv stringByReplacingOccurrencesOfString:@" " withString:@""];
-    
-    if (strippedValue == nil || strippedValue.length < 3 || strippedValue.length > 4) {
-        return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorCVVInvalid];
-    }
-    
-    strippedValue = [transaction.currency stringByReplacingOccurrencesOfString:@" " withString:@""];
-    
-    if (strippedValue == nil || strippedValue.length == 0) {
-        return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorCurrencyInvalid];
-    }
-    
-    if (transaction.amount == nil || transaction.amount.floatValue <= 0.0) {
-        return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorPaymentAmountInvalid];
-    }
-    
     return nil;
 }
 
 +(BOOL)cardExpiryHasExpired:(NSString*)expiry {
     return [PPOTimeManager cardExpiryDateExpired:expiry];
+}
+
++(NSError*)validateCardCVV:(NSString*)cvv {
+    
+    NSString *strippedValue;
+    
+    strippedValue = [cvv stringByReplacingOccurrencesOfString:@" " withString:@""];
+    
+    if (strippedValue == nil || strippedValue.length < 3 || strippedValue.length > 4) {
+        return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorCVVInvalid];
+    }
+    
+    return nil;
+}
+
+#pragma mark - Validate Transaction
+
++(NSError*)validateTransaction:(PPOTransaction*)transaction {
+    
+    NSError *error;
+    
+    error = [PPOValidator validateCurrency:transaction.currency];
+    if (error) return error;
+    
+    error = [PPOValidator validateAmount:transaction.amount];
+    if (error) return error;
+    
+    return error;
+}
+
++(NSError*)validateCurrency:(NSString*)currency {
+    
+    NSString *strippedValue;
+    
+    strippedValue = [currency stringByReplacingOccurrencesOfString:@" " withString:@""];
+    
+    if (strippedValue == nil || strippedValue.length == 0) {
+        return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorCurrencyInvalid];
+    }
+    
+    return nil;
+}
+
++(NSError*)validateAmount:(NSNumber*)amount {
+    
+    if (amount == nil || amount.floatValue <= 0.0) {
+        return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorPaymentAmountInvalid];
+    }
+    
+    return nil;
 }
 
 @end
