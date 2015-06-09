@@ -8,7 +8,7 @@
 
 #import "PPOError.h"
 #import "PPOOutcome.h"
-#import "PPOInternalError.h"
+#import "PPOPrivateError.h"
 
 @interface PPOErrorManager : NSObject
 

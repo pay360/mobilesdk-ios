@@ -7,7 +7,6 @@
 //
 
 #import "PPOErrorManager.h"
-#import "PPOInternalError.h"
 
 @implementation PPOErrorManager
 

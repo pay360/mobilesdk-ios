@@ -1,5 +1,5 @@
 //
-//  PPOInternalError.h
+//  PPOPrivateError.h
 //  Paypoint
 //
 //  Created by Robert Nash on 08/06/2015.
