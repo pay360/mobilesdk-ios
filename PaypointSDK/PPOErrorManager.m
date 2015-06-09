@@ -368,11 +368,11 @@
             break;
             
         case PPOPrivateErrorPaymentSuspendedForThreeDSecure:
-            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentSuspendedForThreeDSecure];
+            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorTransactionProcessingFailed];
             break;
             
         case PPOPrivateErrorPaymentSuspendedForClientRedirect:
-            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentSuspendedForThreeDSecure];
+            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorTransactionProcessingFailed];
             break;
             
         case PPOPrivateErrorProcessingThreeDSecure:
