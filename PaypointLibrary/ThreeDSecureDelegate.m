@@ -81,7 +81,7 @@
     if (masterSessionTimedOut) {
         
         [self completeRedirect:redirect
-                   withOutcome:[[PPOOutcome alloc] initWithError:[PPOErrorManager errorForCode:PPOErrorMasterSessionTimedOut]]
+                   withOutcome:[[PPOOutcome alloc] initWithError:[PPOErrorManager buildErrorForPaymentError:PPOPaymentErrorMasterSessionTimedOut]]
                  forController:controller];
         
         return;
@@ -138,11 +138,11 @@
         if (json) {
             outcome = [[PPOOutcome alloc] initWithData:json];
         } else if (invalidJSON) {
-            outcome = [[PPOOutcome alloc] initWithError:[PPOErrorManager errorForCode:PPOErrorServerFailure]];
+            outcome = [[PPOOutcome alloc] initWithError:[PPOErrorManager buildErrorForPaymentError:PPOPaymentErrorServerFailure]];
         } else if (networkError) {
             outcome = [[PPOOutcome alloc] initWithError:networkError];
         } else {
-            outcome = [[PPOOutcome alloc] initWithError:[PPOErrorManager errorForCode:[PPOErrorManager errorCodeForReasonCode:PPOErrorUnknown]]];
+            outcome = [[PPOOutcome alloc] initWithError:[PPOErrorManager buildErrorForPaymentError:PPOPaymentErrorUnexpected]];
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -214,6 +214,7 @@
 }
 
 -(void)threeDSecureControllerSessionTimeoutExpired:(id<ThreeDSecureControllerProtocol>)controller {
+    [PPOErrorManager buildErrorForPaymentError:ppopaymenterrort]
     [self handleError:[PPOErrorManager errorForCode:PPOErrorThreeDSecureTimedOut]   forController:controller];
 }
 

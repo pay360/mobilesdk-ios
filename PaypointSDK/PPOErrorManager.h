@@ -8,10 +8,15 @@
 
 #import "PPOError.h"
 #import "PPOOutcome.h"
+#import "PPOInternalError.h"
 
 @interface PPOErrorManager : NSObject
 
 +(NSError *)parsePaypointReasonCode:(NSInteger)reasonCode;
+
++(NSError*)buildErrorForPrivateError:(PPOPrivateError)code;
+
++(NSError*)buildErrorForPaymentError:(PPOPaymentError)code;
 
 +(NSError*)buildErrorForValidationError:(PPOLocalValidationError)code;
 
