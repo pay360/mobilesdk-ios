@@ -81,7 +81,7 @@
     if (masterSessionTimedOut) {
         
         [self completeRedirect:redirect
-                   withOutcome:[[PPOOutcome alloc] initWithError:[PPOErrorManager buildErrorForPaymentError:PPOPaymentErrorMasterSessionTimedOut]]
+                   withOutcome:[[PPOOutcome alloc] initWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut]]
                  forController:controller];
         
         return;
@@ -138,11 +138,11 @@
         if (json) {
             outcome = [[PPOOutcome alloc] initWithData:json];
         } else if (invalidJSON) {
-            outcome = [[PPOOutcome alloc] initWithError:[PPOErrorManager buildErrorForPaymentError:PPOPaymentErrorServerFailure]];
+            outcome = [[PPOOutcome alloc] initWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorServerFailure]];
         } else if (networkError) {
             outcome = [[PPOOutcome alloc] initWithError:networkError];
         } else {
-            outcome = [[PPOOutcome alloc] initWithError:[PPOErrorManager buildErrorForPaymentError:PPOPaymentErrorUnexpected]];
+            outcome = [[PPOOutcome alloc] initWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUnexpected]];
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -214,16 +214,17 @@
 }
 
 -(void)threeDSecureControllerSessionTimeoutExpired:(id<ThreeDSecureControllerProtocol>)controller {
-    [PPOErrorManager buildErrorForPaymentError:ppopaymenterrort]
-    [self handleError:[PPOErrorManager errorForCode:PPOErrorThreeDSecureTimedOut]   forController:controller];
+    [self handleError:[PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorThreeDSecureTimedOut]
+        forController:controller];
 }
 
 -(void)threeDSecureController:(id<ThreeDSecureControllerProtocol>)controller failedWithError:(NSError *)error {
-    [self handleError:error forController:controller];
+    [self handleError:error
+        forController:controller];
 }
 
 -(void)threeDSecureControllerUserCancelled:(id<ThreeDSecureControllerProtocol>)controller {
-    [self handleError:[PPOErrorManager errorForCode:PPOErrorUserCancelled]
+    [self handleError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUserCancelledThreeDSecure]
         forController:controller];
 }
 
@@ -238,7 +239,7 @@
     NSError *e = error;
     
     if (!e) {
-        e = [PPOErrorManager errorForCode:PPOErrorUnknown];
+        e = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUnexpected];
     }
     
     [self completeRedirect:controller.redirect

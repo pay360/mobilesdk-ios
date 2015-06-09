@@ -51,7 +51,7 @@ typedef NS_ENUM(NSInteger, PPOPaymentError) {
     PPOPaymentErrorMasterSessionTimedOut,
     
     /* User cancelled 3D Secure */
-    PPOPaymentErrorUserCancelled,
+    PPOPaymentErrorUserCancelledThreeDSecure,
     
     /* The payment is currently in flight */
     PPOPaymentErrorPaymentProcessing,

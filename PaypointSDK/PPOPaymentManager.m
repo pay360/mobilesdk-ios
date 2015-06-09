@@ -85,7 +85,7 @@
     BOOL thisPaymentUnderway = [PPOPaymentTrackingManager stateForPayment:payment] != PAYMENT_STATE_NON_EXISTENT;
     
     if (thisPaymentUnderway) {
-        error = [PPOErrorManager errorForCode:PPOErrorPaymentProcessing];
+        error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentProcessing];
         outcome = [[PPOOutcome alloc] initWithError:error];
         [self handleOutcome:outcome
                  forPayment:payment
@@ -100,7 +100,7 @@
     BOOL anyPaymentUnderway = ![PPOPaymentTrackingManager allPaymentsComplete];
     
     if (anyPaymentUnderway) {
-        error = [PPOErrorManager errorForCode:PPOErrorPaymentManagerOccupied];
+        error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentManagerOccupied];
         outcome = [[PPOOutcome alloc] initWithError:error];
         [self handleOutcome:outcome
                  forPayment:payment
@@ -147,7 +147,7 @@
             NSLog(@"Preventing initial payment request");
         }
         
-        outcome = [[PPOOutcome alloc] initWithError:[PPOErrorManager errorForCode:PPOErrorMasterSessionTimedOut]];
+        outcome = [[PPOOutcome alloc] initWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut]];
         
         [self handleOutcome:outcome
                  forPayment:payment
@@ -185,14 +185,14 @@
     error = [PPOValidator validateBaseURL:self.endpointManager.baseURL];
     if (error) {
         outcome = [[PPOOutcome alloc] initWithError:error];
-        completion(outcome);
+        [self handleOutcome:outcome forPayment:payment withCompletion:completion];
         return;
     }
     
     error = [PPOValidator validateCredentials:payment.credentials];
     if (error) {
         outcome = [[PPOOutcome alloc] initWithError:error];
-        completion(outcome);
+        [self handleOutcome:outcome forPayment:payment withCompletion:completion];
         return;
     }
     
@@ -215,25 +215,25 @@
             break;
             
         case PAYMENT_STATE_READY: {
-            error = [PPOErrorManager errorForCode:PPOErrorPaymentProcessing];
+            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentProcessing];
             outcome = [[PPOOutcome alloc] initWithError:error];
-            completion(outcome);
+            [self handleOutcome:outcome forPayment:payment withCompletion:completion];
             return;
         }
             break;
             
         case PAYMENT_STATE_IN_PROGRESS: {
-            error = [PPOErrorManager errorForCode:PPOErrorPaymentProcessing];
+            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentProcessing];
             outcome = [[PPOOutcome alloc] initWithError:error];
-            completion(outcome);
+            [self handleOutcome:outcome forPayment:payment withCompletion:completion];
             return;
         }
             break;
             
         case PAYMENT_STATE_SUSPENDED: {
-            error = [PPOErrorManager errorForCode:PPOErrorPaymentSuspendedForThreeDSecure];
+            error = [PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorPaymentSuspendedForThreeDSecure];
             outcome = [[PPOOutcome alloc] initWithError:error];
-            completion(outcome);
+            [self handleOutcome:outcome forPayment:payment withCompletion:completion];
             return;
         }
             break;
@@ -266,7 +266,14 @@
                                                         withBody:nil
                                                 forPaymentWithID:nil];
     
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    //We may be on self.r_queue, if we are polling
+    if ([NSThread isMainThread]) {
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    } else {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+        });
+    }
     
     id completionHandler = [self networkCompletionForQuery:payment
                                      withOverallCompletion:completion];
@@ -360,7 +367,7 @@
             if (invalidJSON) {
                 
                 [PPOPaymentTrackingManager removePayment:payment];
-                completion([[PPOOutcome alloc] initWithError:[PPOErrorManager errorForCode:PPOErrorServerFailure]]);
+                completion([[PPOOutcome alloc] initWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorServerFailure]]);
                 
             } else if (redirect) {
                 
@@ -383,7 +390,7 @@
             } else {
                 
                 [PPOPaymentTrackingManager removePayment:payment];
-                completion([[PPOOutcome alloc] initWithError:[PPOErrorManager errorForCode:[PPOErrorManager errorCodeForReasonCode:PPOErrorUnknown]]]);
+                completion([[PPOOutcome alloc] initWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUnexpected]]);
                 
             }
             
@@ -417,7 +424,9 @@
     } else {
         
         [PPOPaymentTrackingManager removePayment:payment];
-        completion([[PPOOutcome alloc] initWithError:[PPOErrorManager errorForCode:PPOErrorProcessingThreeDSecure]]);
+        [self handleOutcome:[[PPOOutcome alloc] initWithError:[PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorProcessingThreeDSecure]]
+                 forPayment:payment
+             withCompletion:completion];
         
     }
     
@@ -427,9 +436,11 @@
           forPayment:(PPOPayment*)payment
       withCompletion:(void(^)(PPOOutcome *))completion {
     
+#warning convert error if needed
+    
     BOOL isNetworkingIssue = [outcome.error.domain isEqualToString:NSURLErrorDomain];
     BOOL sessionTimedOut = isNetworkingIssue && outcome.error.code == NSURLErrorCancelled;
-    BOOL isProcessingAtPaypoint = [outcome.error.domain isEqualToString:PPOPaypointSDKErrorDomain] && outcome.error.code == PPOErrorPaymentProcessing;
+    BOOL isProcessingAtPaypoint = [outcome.error.domain isEqualToString:PPOPaymentErrorDomain] && outcome.error.code == PPOPaymentErrorPaymentProcessing;
     
     if ((isNetworkingIssue && !sessionTimedOut) || isProcessingAtPaypoint) {
         
@@ -485,17 +496,15 @@
         }
         
         if (sessionTimedOut) {
-            outcome.error = [PPOErrorManager errorForCode:PPOErrorMasterSessionTimedOut];
+            outcome.error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut];
         }
         
+        //We may be on self.r_queue if we were polling
         if ([NSThread isMainThread]) {
             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
             [PPOPaymentTrackingManager removePayment:payment];
             completion(outcome);
         } else {
-            /*
-             * We might be on a background thread, if recursive payment queries were required.
-             */
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
                 [PPOPaymentTrackingManager removePayment:payment];

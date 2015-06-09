@@ -94,7 +94,7 @@
         value = [outcome objectForKey:PAYMENT_RESPONSE_OUTCOME_REASON_KEY];
         if ([value isKindOfClass:[NSNumber class]]) {
             if (((NSNumber*)value).integerValue > 0) {
-                self.error = [PPOErrorManager errorForCode:[PPOErrorManager errorCodeForReasonCode:((NSNumber*)value).integerValue]];
+                self.error = [PPOErrorManager parsePaypointReasonCode:((NSNumber*)value).integerValue];
             }
         }
     }

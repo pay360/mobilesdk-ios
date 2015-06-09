@@ -12,13 +12,13 @@
 
 @interface PPOErrorManager : NSObject
 
-+(NSError *)parsePaypointReasonCode:(NSInteger)reasonCode;
++(NSError *)parsePaypointReasonCode:(NSInteger)code;
 
-+(NSError*)buildErrorForPrivateError:(PPOPrivateError)code;
++(NSError*)buildErrorForPrivateErrorCode:(PPOPrivateError)code;
 
-+(NSError*)buildErrorForPaymentError:(PPOPaymentError)code;
++(NSError*)buildErrorForPaymentErrorCode:(PPOPaymentError)code;
 
-+(NSError*)buildErrorForValidationError:(PPOLocalValidationError)code;
++(NSError*)buildErrorForValidationErrorCode:(PPOLocalValidationError)code;
 
 //+(BOOL)safeToRetryPaymentWithoutRiskOfDuplication:(NSError*)error;
 

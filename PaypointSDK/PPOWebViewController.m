@@ -73,7 +73,7 @@
         }
         
         [weakSelf.delegate threeDSecureController:weakSelf
-                                  failedWithError:[PPOErrorManager errorForCode:PPOErrorMasterSessionTimedOut]];
+                                  failedWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut]];
         
         return;
         
@@ -91,7 +91,7 @@
                 [weakSelf.webView stopLoading];
             } else {
                 [weakSelf.delegate threeDSecureController:weakSelf
-                                          failedWithError:[PPOErrorManager errorForCode:PPOErrorMasterSessionTimedOut]];
+                                          failedWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut]];
             }
             
         } forPayment:self.redirect.payment];
@@ -198,7 +198,7 @@
                 [self presentViewController:controller animated:YES completion:nil];
             } else {
                 [self.delegate threeDSecureController:self
-                                      failedWithError:[PPOErrorManager errorForCode:PPOErrorMasterSessionTimedOut]];
+                                      failedWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut]];
             }
             
         }
@@ -231,7 +231,7 @@
             
         } else {
             [self.delegate threeDSecureController:self
-                                  failedWithError:[PPOErrorManager errorForCode:PPOErrorMasterSessionTimedOut]];
+                                  failedWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut]];
         }
         
     }
@@ -257,7 +257,7 @@
         _abortSession = YES;
         
         [weakSelf.delegate threeDSecureController:weakSelf
-                                  failedWithError:[PPOErrorManager errorForCode:PPOErrorMasterSessionTimedOut]];
+                                  failedWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut]];
         
     } forPayment:self.redirect.payment];
     
@@ -318,7 +318,7 @@
     if (problemWithParesOrMD) {
         
         [self.delegate threeDSecureController:self
-                              failedWithError:[PPOErrorManager errorForCode:PPOErrorProcessingThreeDSecure]];
+                              failedWithError:[PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorProcessingThreeDSecure]];
         
     } else {
         
@@ -353,7 +353,7 @@
     NSError *e = error;
     
     if (e.code == NSURLErrorCancelled) {
-        e = [PPOErrorManager errorForCode:PPOErrorMasterSessionTimedOut];
+        e = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut];
     }
     
     [self cancelThreeDSecureRelatedTimers];

@@ -27,7 +27,7 @@
 
 +(NSError*)validateBaseURL:(NSURL*)baseURL {
     if (!baseURL) {
-        return [PPOErrorManager errorForCode:PPOErrorSuppliedBaseURLInvalid];
+        return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorSuppliedBaseURLInvalid];
     }
     return nil;
 }
@@ -35,15 +35,15 @@
 +(NSError*)validateCredentials:(PPOCredentials*)credentials {
     
     if (!credentials) {
-        return [PPOErrorManager errorForCode:PPOErrorCredentialsNotFound];
+        return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorCredentialsNotFound];
     }
     
     if (!credentials.token || credentials.token.length == 0) {
-        return [PPOErrorManager errorForCode:PPOErrorClientTokenInvalid];
+        return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorClientTokenInvalid];
     }
     
     if (!credentials.installationID || credentials.installationID.length == 0) {
-        return [PPOErrorManager errorForCode:PPOErrorInstallationIDInvalid];
+        return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorInstallationIDInvalid];
     }
     
     return nil;
@@ -58,35 +58,33 @@
     BOOL containsLetters = [strippedValue rangeOfCharacterFromSet:[NSCharacterSet letterCharacterSet]].location != NSNotFound;
     
     if (strippedValue.length < 13 || strippedValue.length > 19 || containsLetters) {
-        return [PPOErrorManager errorForCode:PPOErrorCardPanInvalid];
-    }
-    
-    if (![PPOLuhn validateString:strippedValue]) {
-        return [PPOErrorManager errorForCode:PPOErrorLuhnCheckFailed];
+        return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorCardPanInvalid];
+    } else if (![PPOLuhn validateString:strippedValue]) {
+        return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorCardPanInvalid];
     }
     
     strippedValue = [card.expiry stringByReplacingOccurrencesOfString:@" " withString:@""];
     
     if (strippedValue == nil || strippedValue.length != 4) {
-        return [PPOErrorManager errorForCode:PPOErrorCardExpiryDateInvalid];
+        return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorCardExpiryDateInvalid];
     } else if ([PPOValidator cardExpiryHasExpired:strippedValue]) {
-        return [PPOErrorManager errorForCode:PPOErrorCardExpiryDateExpired];
+        return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorCardExpiryDateExpired];
     }
     
     strippedValue = [card.cvv stringByReplacingOccurrencesOfString:@" " withString:@""];
     
     if (strippedValue == nil || strippedValue.length < 3 || strippedValue.length > 4) {
-        return [PPOErrorManager errorForCode:PPOErrorCVVInvalid];
+        return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorCVVInvalid];
     }
     
     strippedValue = [transaction.currency stringByReplacingOccurrencesOfString:@" " withString:@""];
     
     if (strippedValue == nil || strippedValue.length == 0) {
-        return [PPOErrorManager errorForCode:PPOErrorCurrencyInvalid];
+        return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorCurrencyInvalid];
     }
     
     if (transaction.amount == nil || transaction.amount.floatValue <= 0.0) {
-        return [PPOErrorManager errorForCode:PPOErrorPaymentAmountInvalid];
+        return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorPaymentAmountInvalid];
     }
     
     return nil;

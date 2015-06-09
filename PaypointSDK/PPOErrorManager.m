@@ -11,40 +11,40 @@
 
 @implementation PPOErrorManager
 
-+(NSError *)parsePaypointReasonCode:(NSInteger)reasonCode {
++(NSError *)parsePaypointReasonCode:(NSInteger)code {
     
     NSError *error;
     
-    switch (reasonCode) {
+    switch (code) {
         case 1: {
-            error = [PPOErrorManager buildErrorForPrivateError:PPOPrivateErrorBadRequest];
+            error = [PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorBadRequest];
         } break;
         case 2: {
-            error = [PPOErrorManager buildErrorForPrivateError:PPOPrivateErrorAuthenticationFailed];
+            error = [PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorAuthenticationFailed];
         } break;
         case 3: {
-            error = [PPOErrorManager buildErrorForPaymentError:PPOPaymentErrorClientTokenExpired];
+            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorClientTokenExpired];
         } break;
         case 4: {
-            error = [PPOErrorManager buildErrorForPaymentError:PPOPaymentErrorUnauthorisedRequest];
+            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUnauthorisedRequest];
         } break;
         case 5: {
-            error = [PPOErrorManager buildErrorForPaymentError:PPOPaymentErrorTransactionDeclined];
+            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorTransactionDeclined];
         } break;
         case 6: {
-            error = [PPOErrorManager buildErrorForPaymentError:PPOPaymentErrorServerFailure];
+            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorServerFailure];
         } break;
         case 7: {
-            error = [PPOErrorManager buildErrorForPrivateError:PPOPrivateErrorPaymentSuspendedForThreeDSecure];
+            error = [PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorPaymentSuspendedForThreeDSecure];
         } break;
         case 8: {
-            error = [PPOErrorManager buildErrorForPrivateError:PPOPrivateErrorPaymentSuspendedForClientRedirect];
+            error = [PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorPaymentSuspendedForClientRedirect];
         } break;
         case 9: {
-            error = [PPOErrorManager buildErrorForPaymentError:PPOPaymentErrorPaymentProcessing];
+            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentProcessing];
         } break;
         case 10: {
-            error = [PPOErrorManager buildErrorForPaymentError:PPOPaymentErrorPaymentNotFound];
+            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentNotFound];
         } break;
             
         default:
@@ -55,7 +55,7 @@
     
 }
 
-+(NSError*)buildErrorForPrivateError:(PPOPrivateError)code {
++(NSError*)buildErrorForPrivateErrorCode:(PPOPrivateError)code {
     
     switch (code) {
             
@@ -124,7 +124,7 @@
     return nil;
 }
 
-+(NSError*)buildErrorForPaymentError:(PPOPaymentError)code {
++(NSError*)buildErrorForPaymentErrorCode:(PPOPaymentError)code {
     
     switch (code) {
             
@@ -221,9 +221,9 @@
         }
             break;
             
-        case PPOPaymentErrorUserCancelled: {
+        case PPOPaymentErrorUserCancelledThreeDSecure: {
             return [NSError errorWithDomain:PPOPaymentErrorDomain
-                                       code:PPOPaymentErrorUserCancelled
+                                       code:PPOPaymentErrorUserCancelledThreeDSecure
                                    userInfo:@{
                                               NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"User cancelled 3D secure.", @"Failure message for 3D secure payment failure")
                                               }
@@ -245,7 +245,7 @@
     
 }
 
-+(NSError*)buildErrorForValidationError:(PPOLocalValidationError)code {
++(NSError*)buildErrorForValidationErrorCode:(PPOLocalValidationError)code {
     
     switch (code) {
             
