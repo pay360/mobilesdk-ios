@@ -295,6 +295,11 @@
     chapperone.queryPaymentCount++;
 }
 
++(void (^)(void))timeoutHandlerForPayment:(PPOPayment *)payment {
+    PPOPaymentTrackingChapperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
+    return chapperone.timeoutHandler;
+}
+
 +(NSTimeInterval)timeIntervalForAttemptCount:(NSUInteger)attempt {
     NSArray *timeIntervals = [PPOPaymentTrackingManager sharedManager].queryPaymentTimeIntervals;
     NSNumber *timeInterval;

@@ -10,7 +10,7 @@
 
 @implementation PPOErrorManager
 
-+(NSError *)parsePaypointReasonCode:(NSInteger)code {
++(NSError*)parsePaypointReasonCode:(NSInteger)code {
     
     NSError *error;
     
@@ -340,7 +340,7 @@
     return nil;
 }
 
-+(NSError *)buildCustomerFacingErrorFromError:(NSError *)error {
++(NSError*)buildCustomerFacingErrorFromError:(NSError *)error {
     
     if ([error.domain isEqualToString:PPOPrivateErrorDomain]) {
         return [PPOErrorManager buildCustomerFacingErrorFromPrivateError:error];

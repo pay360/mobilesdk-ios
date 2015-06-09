@@ -33,6 +33,7 @@ typedef enum : NSUInteger {
 +(BOOL)allPaymentsComplete;
 +(NSUInteger)totalRecursiveQueryPaymentAttemptsForPayment:(PPOPayment*)payment;
 +(void)incrementRecurisiveQueryPaymentAttemptCountForPayment:(PPOPayment*)payment;
++(void(^)(void))timeoutHandlerForPayment:(PPOPayment*)payment;
 +(NSTimeInterval)timeIntervalForAttemptCount:(NSUInteger)attempt;
 
 @end

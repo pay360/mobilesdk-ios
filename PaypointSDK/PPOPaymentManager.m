@@ -276,6 +276,7 @@
     }
     
     id completionHandler = [self networkCompletionForQuery:payment
+                                           isInternalQuery:internalQuery
                                      withOverallCompletion:completion];
     
     /*
@@ -304,6 +305,7 @@
 }
 
 -(void(^)(NSData *, NSURLResponse *, NSError *))networkCompletionForQuery:(PPOPayment*)payment
+                                                          isInternalQuery:(BOOL)isInternal
                                                     withOverallCompletion:(void(^)(PPOOutcome *))completion {
     
     return ^ (NSData *data, NSURLResponse *response, NSError *networkError) {
@@ -322,6 +324,18 @@
             outcome = [[PPOOutcome alloc] initWithData:json];
         } else if (networkError) {
             outcome = [[PPOOutcome alloc] initWithError:networkError];
+        }
+        
+        if (!isInternal) {
+            
+            if (PPO_DEBUG_MODE) {
+                NSLog(@"EXTERNAL QUERY: Established error with domain: %@ with code: %li", outcome.error.domain, (long)outcome.error.code);
+            }
+            outcome.error = [PPOErrorManager buildCustomerFacingErrorFromError:outcome.error];
+            if (PPO_DEBUG_MODE) {
+                NSLog(@"EXTERNAL QUERY: Converted error to customer friendly error with domain: %@ with code: %li", outcome.error.domain, (long)outcome.error.code);
+            }
+            
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -471,7 +485,8 @@
     
 }
 
--(void)checkIfOutcomeHasChangedForPayment:(PPOPayment*)payment withCompletion:(void(^)(PPOOutcome *))completion {
+-(void)checkIfOutcomeHasChangedForPayment:(PPOPayment*)payment
+                           withCompletion:(void(^)(PPOOutcome *))completion {
     
     if (PPO_DEBUG_MODE) {
         NSLog(@"Not sure if payment made it for op ref: %@", payment.identifier);
@@ -493,31 +508,62 @@
                      NSTimeInterval interval = [PPOPaymentTrackingManager timeIntervalForAttemptCount:attemptCount];
                      [PPOPaymentTrackingManager incrementRecurisiveQueryPaymentAttemptCountForPayment:payment];
                      
-                     dispatch_async(self.r_queue, ^{
-                         
-                         /*
-                          * Back off period before calling again. Done on dedicated queue to avoid sleeping the main thread.
-                          */
-                         if (PPO_DEBUG_MODE) {
-                             NSLog(@"Recursive query call required.");
-                             NSLog(@"Will sleep the recursive call thread for %f seconds", interval);
-                         }
-                         
-#warning how is master session timeout effected by this sleep ?
-                         sleep(interval);
-                         
-                         /*
-                          * Recursively call ourselves. The implementing developer master session
-                          * timeout countdown will abort this recursion, if we do not get a conclusion.
-                          */
-                         [weakSelf handleOutcome:queryOutcome
-                                      forPayment:payment
-                                  withCompletion:completion];
-                         
-                     });
+                     void(^checkAgainHandler)(void) = [weakSelf checkAgainIfOutcomeHasChanged:queryOutcome
+                                                                          withBackoffInterval:interval
+                                                                                   forPayment:payment
+                                                                               withCompletion:completion];
+                     
+                     /*
+                      * Back off period before calling again done on dedicated queue to avoid sleeping the main thread.
+                      */
+                     dispatch_async(self.r_queue, checkAgainHandler);
                      
                      
                  }];
+    
+}
+
+-(void(^)(void))checkAgainIfOutcomeHasChanged:(PPOOutcome*)outcome
+                          withBackoffInterval:(NSTimeInterval)interval
+                                   forPayment:(PPOPayment*)payment
+                               withCompletion:(void(^)(PPOOutcome*))completion {
+    
+    __weak typeof(self) weakSelf = self;
+    
+    return ^ {
+        
+        if (PPO_DEBUG_MODE) {
+            NSLog(@"Recursive query call required.");
+            NSLog(@"Will sleep the recursive call thread for %f seconds", interval);
+        }
+        
+        //Keep handler around...
+        void(^timeoutHandler)(void) = [PPOPaymentTrackingManager timeoutHandlerForPayment:payment];
+        
+        [PPOPaymentTrackingManager overrideTimeoutHandler:^{
+            //...whilst we clear the handler (just in case it fires when this thread is sleeping)...
+        } forPayment:payment];
+        
+        sleep(interval);
+        
+        //...then re-insert the handler, if countdown hasn't already expired.
+        if ([PPOPaymentTrackingManager masterSessionTimeoutHasExpiredForPayment:payment]) {
+            [weakSelf handleOutcome:[[PPOOutcome alloc] initWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut]]
+                         forPayment:payment
+                     withCompletion:completion];
+            return;
+        } else {
+            [PPOPaymentTrackingManager overrideTimeoutHandler:timeoutHandler forPayment:payment];
+        }
+        
+        /*
+         * Recursively call ourselves. The implementing developer master session
+         * timeout countdown will abort this recursion, if we do not get a conclusion.
+         */
+        [weakSelf handleOutcome:outcome
+                     forPayment:payment
+                 withCompletion:completion];
+    };
     
 }
 

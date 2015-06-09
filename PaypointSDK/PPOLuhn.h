@@ -20,7 +20,7 @@ typedef NS_ENUM(NSInteger, LuhnOLCreditCardType) {
 };
 
 @interface PPOLuhn : NSObject
-#warning consider not making this public
+
 +(LuhnOLCreditCardType)typeFromString:(NSString *)string;
 +(BOOL)validateString:(NSString *)string forType:(LuhnOLCreditCardType)type;
 +(BOOL)validateString:(NSString *)string;
