@@ -6,7 +6,6 @@
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
 #import "ThreeDSecureControllerProtocol.h"
 
 @protocol ThreeDSecureProtocol <NSObject>

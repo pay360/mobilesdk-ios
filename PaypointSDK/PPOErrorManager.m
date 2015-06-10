@@ -422,18 +422,15 @@
         return NO;
     }
     
-    switch (error.code) {
-        case 0:
-            
-            break;
-            
-        default:
-            break;
-    }
-    
-#warning finish this.
-    
-    return NO;
+    return [@[
+              @(PPOPaymentErrorClientTokenExpired),
+              @(PPOPaymentErrorClientTokenInvalid),
+              @(PPOPaymentErrorUnauthorisedRequest),
+              @(PPOPaymentErrorTransactionDeclined),
+              @(PPOPaymentErrorAuthenticationFailed),
+              @(PPOPaymentErrorPaymentNotFound)
+              ] containsObject:@(error.code)];
+
 }
 
 @end
