@@ -8,7 +8,7 @@
 #
 
 Pod::Spec.new do |s|
-  s.name             = "PayPointIOSSDK"
+  s.name             = "PayPointPayments"
   s.version          = "1.0.0-BETA"
   s.summary          = "PayPoint IOS SDK"
   s.description      = <<-DESC
