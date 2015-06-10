@@ -83,6 +83,10 @@
             
             _abortSession = YES;
             
+            if (PPO_DEBUG_MODE) {
+                NSLog(@"Performing currently assigned abort sequence");
+            }
+            
             [weakSelf cancelThreeDSecureRelatedTimers];
             
             _preventShow = YES;
@@ -256,6 +260,10 @@
         
         _abortSession = YES;
         
+        if (PPO_DEBUG_MODE) {
+            NSLog(@"Performing currently assigned abort sequence");
+        }
+        
         [weakSelf.delegate threeDSecureController:weakSelf
                                   failedWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut]];
         
@@ -338,6 +346,10 @@
      * for resetting it (and will check if it has not already fired).
      */
     [PPOPaymentTrackingManager overrideTimeoutHandler:^{
+        
+        if (PPO_DEBUG_MODE) {
+            NSLog(@"Attempted to perform abort sequence, but it has been deliberately cleared.");
+        }
         
     } forPayment:self.redirect.payment];
     

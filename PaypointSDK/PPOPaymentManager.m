@@ -290,7 +290,13 @@
     if (internalQuery) {
         __weak typeof(task) weakTask = task;
         [PPOPaymentTrackingManager overrideTimeoutHandler:^{
+            
+            if (PPO_DEBUG_MODE) {
+                NSLog(@"Performing currently assigned abort sequence");
+            }
+            
             [weakTask cancel];
+            
         } forPayment:payment];
     }
     
@@ -460,18 +466,9 @@
         
         outcome.error = [PPOErrorManager buildCustomerFacingErrorFromError:outcome.error];
         
-        //We may be on self.r_queue if we were polling
-        if ([NSThread isMainThread]) {
-            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-            [PPOPaymentTrackingManager removePayment:outcome.payment];
-            completion(outcome);
-        } else {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-                [PPOPaymentTrackingManager removePayment:outcome.payment];
-                completion(outcome);
-            });
-        }
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+        [PPOPaymentTrackingManager removePayment:outcome.payment];
+        completion(outcome);
     }
     
 }
@@ -499,8 +496,22 @@
                      NSTimeInterval interval = [PPOPaymentTrackingManager timeIntervalForAttemptCount:attemptCount];
                      [PPOPaymentTrackingManager incrementRecurisiveQueryPaymentAttemptCountForPayment:outcome.payment];
                      
+                     //Keep handler around...
+                     void(^timeoutHandler)(void) = [PPOPaymentTrackingManager timeoutHandlerForPayment:outcome.payment];
+                     
+                     [PPOPaymentTrackingManager overrideTimeoutHandler:^{
+                         //...whilst we clear the handler (just in case it fires when this thread is sleeping)...
+                         
+                         if (PPO_DEBUG_MODE) {
+                             NSLog(@"Attempted to perform abort sequence, but it has been deliberately cleared.");
+                         }
+                         
+                     } forPayment:outcome.payment];
+                     
+                     //...then pass timeout handler in here, so that we can re-assign it later
                      void(^checkAgainHandler)(void) = [weakSelf checkAgainIfOutcomeHasChanged:queryOutcome
                                                                           withBackoffInterval:interval
+                                                                           withTimeoutHandler:timeoutHandler
                                                                                withCompletion:completion];
                      
                      /*
@@ -515,51 +526,45 @@
 
 -(void(^)(void))checkAgainIfOutcomeHasChanged:(PPOOutcome*)outcome
                           withBackoffInterval:(NSTimeInterval)interval
+                           withTimeoutHandler:(void(^)(void))timeoutHandler
                                withCompletion:(void(^)(PPOOutcome*))completion {
     
     __weak typeof(self) weakSelf = self;
     
     return ^ {
         
-        PPOPayment *payment = outcome.payment;
-        
         if (PPO_DEBUG_MODE) {
             NSLog(@"Recursive query call required.");
             NSLog(@"Will sleep the recursive call thread for %f seconds", interval);
         }
         
-        //Keep handler around...
-        void(^timeoutHandler)(void) = [PPOPaymentTrackingManager timeoutHandlerForPayment:payment];
-        
-        [PPOPaymentTrackingManager overrideTimeoutHandler:^{
-            //...whilst we clear the handler (just in case it fires when this thread is sleeping)...
-        } forPayment:payment];
-        
         sleep(interval);
         
-        //...then re-insert the handler, if countdown hasn't already expired.
-        if ([PPOPaymentTrackingManager masterSessionTimeoutHasExpiredForPayment:payment]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            //...then re-insert the handler, if countdown hasn't already expired.
+            if ([PPOPaymentTrackingManager masterSessionTimeoutHasExpiredForPayment:outcome.payment]) {
+                
+                PPOOutcome *oc = [[PPOOutcome alloc] initWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut]
+                                                        forPayment:outcome.payment];
+                
+                [weakSelf handleOutcome:oc
+                         withCompletion:completion];
+                
+                return;
+                
+            }
+            else {
+                [PPOPaymentTrackingManager overrideTimeoutHandler:timeoutHandler forPayment:outcome.payment];
+            }
             
-            PPOOutcome *oc = [[PPOOutcome alloc] initWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut]
-                                                    forPayment:payment];
-            
-            [weakSelf handleOutcome:oc
+            /*
+             * This call may lead us back here recursively, if a satisfactory outcome is not met.
+             * The implementing developer master session timeout countdown will abort this recursion,
+             * if we do not get a conclusion.
+             */
+            [weakSelf handleOutcome:outcome
                      withCompletion:completion];
-            
-            return;
-            
-        }
-        else {
-            [PPOPaymentTrackingManager overrideTimeoutHandler:timeoutHandler forPayment:payment];
-        }
-        
-        /*
-         * This call may lead us back here recursively, if a satisfactory outcome is not met. 
-         * The implementing developer master session timeout countdown will abort this recursion, 
-         * if we do not get a conclusion.
-         */
-        [weakSelf handleOutcome:outcome
-                 withCompletion:completion];
+        });
         
     };
     

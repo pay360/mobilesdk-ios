@@ -68,6 +68,10 @@
          * the responsibility in it's 'viewDidLoad' callback.
          */
         
+        if (PPO_DEBUG_MODE) {
+            NSLog(@"Attempted to perform abort sequence, but it has been deliberately cleared.");
+        }
+        
     } forPayment:self.redirect.payment];
     
     self.threeDSecureDelegate = [[ThreeDSecureDelegate alloc] initWithSession:self.session

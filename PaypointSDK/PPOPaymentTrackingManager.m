@@ -89,13 +89,9 @@
         }
         
         if (self.sessionTimeout <= 0) {
-            
-            [PPOPaymentTrackingManager removePayment:self.payment];
-            
+        
             if (PPO_DEBUG_MODE) {
-                NSLog(@"Implementing developers timeout has fired");
-                NSLog(@"Implementing developers timeout is '0'");
-                NSLog(@"Performing currently assigned abort sequence");
+                NSLog(@"Implementing developers timeout has expired");
             }
             
             self.timeoutHandler();

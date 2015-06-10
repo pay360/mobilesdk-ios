@@ -111,7 +111,13 @@
     __weak typeof(task) weakTask = task;
     
     [PPOPaymentTrackingManager overrideTimeoutHandler:^{
+        
+        if (PPO_DEBUG_MODE) {
+            NSLog(@"Performing currently assigned abort sequence");
+        }
+        
         [weakTask cancel];
+        
     } forPayment:self.redirect.payment];
     
     [PPOPaymentTrackingManager resumeTimeoutForPayment:self.redirect.payment];
