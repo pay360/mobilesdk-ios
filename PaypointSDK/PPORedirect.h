@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @class PPOPayment;
 @interface PPORedirect : NSObject
@@ -19,6 +19,7 @@
 @property (nonatomic, strong) PPOPayment *payment;
 @property (nonatomic, strong) NSData *threeDSecureResumeBody;
 
--(instancetype)initWithData:(NSDictionary*)data;
+-(instancetype)initWithData:(NSDictionary*)data forPayment:(PPOPayment*)payment;
++(BOOL)requiresRedirect:(id)json;
 
 @end

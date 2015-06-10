@@ -6,22 +6,14 @@
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import "PPORedirect.h"
+#import "ThreeDSecureControllerProtocol.h"
+#import "ThreeDSecureProtocol.h"
 
-@class PPOWebViewController;
-@protocol PPOWebViewControllerDelegate <NSObject>
--(void)webViewController:(PPOWebViewController*)controller completedWithPaRes:(NSString*)paRes;
--(void)webViewControllerUserCancelled:(PPOWebViewController*)controller;
--(void)webViewController:(PPOWebViewController*)controller failedWithError:(NSError*)error;
--(void)webViewControllerSessionTimeoutExpired:(PPOWebViewController*)controller;
--(void)webViewControllerDelayShowTimeoutExpired:(PPOWebViewController*)controller;
-@end
-
-@interface PPOWebViewController : UIViewController
-@property (nonatomic, strong) id <PPOWebViewControllerDelegate> delegate; //Holding strongly here
+@interface PPOWebViewController : UIViewController <ThreeDSecureControllerProtocol>
+@property (nonatomic, strong) id <ThreeDSecureProtocol> delegate; //Holding strongly here
 @property (nonatomic, strong) PPORedirect *redirect;
 
--(instancetype)initWithRedirect:(PPORedirect*)redirect withDelegate:(id<PPOWebViewControllerDelegate>)delegate;
+-(instancetype)initWithRedirect:(PPORedirect*)redirect
+                   withDelegate:(id<ThreeDSecureProtocol>)delegate;
 
 @end

@@ -22,16 +22,11 @@
 }
 
 -(BOOL)isEqual:(id)object {
-    
-    if (self == object) {
-        return YES;
+    PPOPayment *payment;
+    if ([object isKindOfClass:[PPOPayment class]]) {
+        payment = object;
     }
-    
-    return [self isEqualToPayment:object];
-}
-
--(BOOL)isEqualToPayment:(PPOPayment*)payment {
-    return (payment && [payment isKindOfClass:[PPOPayment class]] && [self.identifier isEqualToString:payment.identifier]);
+    return (payment && [self.identifier isEqualToString:payment.identifier]);
 }
 
 -(NSUInteger)hash {

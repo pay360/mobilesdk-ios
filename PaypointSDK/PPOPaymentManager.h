@@ -27,26 +27,29 @@
 /*!
  * @discussion Makes a payment using the supplied information
  * @param payment Details of the payment.
- * @param credentials Authorisation details for using this service.
  * @param timeout 60.0 seconds is the minimum recommended, to lower the risk of failed payments.
  * @param completion The outcome handler for the payment. Inspect the completion block error domain PPOPaypointSDKErrorDomain for paypoint specific error cases. Each error code can be found within PPOError.h
  */
 -(void)makePayment:(PPOPayment*)payment
-   withCredentials:(PPOCredentials*)credentials
        withTimeOut:(NSTimeInterval)timeout
-    withCompletion:(void(^)(PPOOutcome *outcome, NSError *error))completion;
+    withCompletion:(void(^)(PPOOutcome *outcome))completion;
 
 /**
  *  Determines the outcome of an existing payment. If a payment is currently in progress or suspended, 'outcome' will be nil and an error description returned.
  *
  *  @param payment     Details of the payment.
- *  @param credentials Authorisation details for using this service.
  *  @param completion  The outcome handler for the payment. Inspect the error domain PPOPaypointSDKErrorDomain for paypoint specific error cases. Each error code can be found within PPOError.h
  */
 -(void)queryPayment:(PPOPayment*)payment
-    withCredentials:(PPOCredentials*)credentials
-       withCompletion:(void(^)(PPOOutcome *outcome, NSError *error))completion;
+     withCompletion:(void(^)(PPOOutcome *outcome))completion;
 
--(NSUInteger)trackerCount;
+/**
+ *  Determines if a payment can be re-attempted without risk of a duplicate payment being made. If there is any chance of duplciation, this method returns NO.
+ *
+ *  @param outcome The completion of the payment.
+ *
+ *  @return An boolean indication that it is safe to re-attempt a payment.
+ */
++(BOOL)isSafeToRetryPaymentWithOutcome:(PPOOutcome*)outcome;
 
 @end

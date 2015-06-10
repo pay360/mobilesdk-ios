@@ -11,7 +11,8 @@
 
 @implementation PPORedirect
 
--(instancetype)initWithData:(NSDictionary *)data {
+-(instancetype)initWithData:(NSDictionary *)data forPayment:(PPOPayment*)payment {
+    
     self = [super init];
     if (self) {
         
@@ -19,7 +20,18 @@
             return self;
         }
         
-        id value;
+        _payment = payment;
+        
+        id value = [data objectForKey:TRANSACTION_RESPONSE_TRANSACTION_KEY];
+        
+        if ([value isKindOfClass:[NSDictionary class]]) {
+            id transactionID = [value objectForKey:TRANSACTION_RESPONSE_TRANSACTION_ID_KEY];
+            if ([transactionID isKindOfClass:[NSString class]]) {
+                _transactionID = transactionID;
+            }
+        }
+        
+        data = [data objectForKey:THREE_D_SECURE_KEY];
         
         value = [data objectForKey:THREE_D_SECURE_TERMINATION_URL_KEY];
         
@@ -27,7 +39,7 @@
             return self;
         }
         
-        self.termURL = [self parseURL:value];
+        _termURL = [self parseURL:value];
         
         value = [data objectForKey:THREE_D_SECURE_PAREQ_KEY];
         
@@ -57,11 +69,11 @@
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[self parseURL:value]];
         [request setHTTPMethod:@"POST"];
         [request setHTTPBody:bodyData];
-        self.request = [request copy];
+        _request = [request copy];
         
-        self.sessionTimeoutTimeInterval = [self parseSessionTimeout:[data objectForKey:THREE_D_SECURE_SESSION_TIMEOUT_TIME_KEY]];
+        _sessionTimeoutTimeInterval = [self parseSessionTimeout:[data objectForKey:THREE_D_SECURE_SESSION_TIMEOUT_TIME_KEY]];
         
-        self.delayTimeInterval = [self parseDelayShowTimeout:[data objectForKey:THREE_D_SECURE_DELAYSHOW_TIME_KEY]];
+        _delayTimeInterval = [self parseDelayShowTimeout:[data objectForKey:THREE_D_SECURE_DELAYSHOW_TIME_KEY]];
     }
     return self;
 }
@@ -115,6 +127,17 @@
         return @((value) ? value.doubleValue/1000 : 5);
     }
     return nil;
+}
+
++(BOOL)requiresRedirect:(id)json {
+    
+    if (!json || ![json isKindOfClass:[NSDictionary class]]) {
+        return NO;
+    }
+    
+    id value = [json objectForKey:THREE_D_SECURE_KEY];
+    return (value && [value isKindOfClass:[NSDictionary class]]);
+    
 }
 
 @end

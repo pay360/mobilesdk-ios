@@ -54,13 +54,13 @@
     
     if (_modelFamily == nil) {
         
-        if ([self.model containsString:@"iPod"]) {
+        if ([self.model rangeOfString:@"iPod"].location != NSNotFound) {
             _modelFamily = @"iPod";
-        } else if ([self.model containsString:@"iPad"]) {
+        } else if ([self.model rangeOfString:@"iPad"].location != NSNotFound) {
             _modelFamily = @"iPad";
-        } else if ([self.model containsString:@"iPhone"]) {
+        } else if ([self.model rangeOfString:@"iPhone"].location != NSNotFound) {
             _modelFamily = @"iPhone";
-        } else if ([self.model containsString:@"Simulator"]) {
+        } else if ([self.model rangeOfString:@"Simulator"].location != NSNotFound) {
             _modelFamily = @"Simulator";
         }
         

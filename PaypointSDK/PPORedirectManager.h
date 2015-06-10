@@ -12,17 +12,15 @@
 @class PPOOutcome;
 @class PPOPaymentEndpointManager;
 @class PPOCredentials;
-@class PPOWebFormManager;
+@class PPORedirectManager;
 
-@interface PPOWebFormManager : NSObject
+@interface PPORedirectManager : NSObject
 
 -(instancetype)initWithRedirect:(PPORedirect*)redirect
-                withCredentials:(PPOCredentials*)credentials
                     withSession:(NSURLSession*)session
             withEndpointManager:(PPOPaymentEndpointManager*)endpointManager
-                    withCompletion:(void(^)(PPOOutcome *outcome, NSError *error))completion;
+                 withCompletion:(void(^)(PPOOutcome *outcome))completion;
 
--(void)performResumeForRedirect:(PPORedirect*)redirect
-                withCredentials:(PPOCredentials*)credentials;
+-(void)startRedirect;
 
 @end

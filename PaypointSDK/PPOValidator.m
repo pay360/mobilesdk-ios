@@ -18,16 +18,11 @@
 
 @implementation PPOValidator
 
-+(NSError*)validatePayment:(PPOPayment*)payment {
-    
-    return [self validateTransaction:payment.transaction
-                            withCard:payment.card];
-    
-}
+#pragma mark - Network
 
 +(NSError*)validateBaseURL:(NSURL*)baseURL {
     if (!baseURL) {
-        return [PPOErrorManager errorForCode:PPOErrorSuppliedBaseURLInvalid];
+        return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorSuppliedBaseURLInvalid];
     }
     return nil;
 }
@@ -35,58 +30,80 @@
 +(NSError*)validateCredentials:(PPOCredentials*)credentials {
     
     if (!credentials) {
-        return [PPOErrorManager errorForCode:PPOErrorCredentialsNotFound];
+        return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorCredentialsNotFound];
     }
     
     if (!credentials.token || credentials.token.length == 0) {
-        return [PPOErrorManager errorForCode:PPOErrorClientTokenInvalid];
+        return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorClientTokenInvalid];
     }
     
     if (!credentials.installationID || credentials.installationID.length == 0) {
-        return [PPOErrorManager errorForCode:PPOErrorInstallationIDInvalid];
+        return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorInstallationIDInvalid];
     }
     
     return nil;
 }
 
-+(NSError*)validateTransaction:(PPOTransaction*)transaction withCard:(PPOCreditCard*)card {
+#pragma mark - Payment 
+
++(NSError*)validatePayment:(PPOPayment*)payment {
+    
+    NSError *error;
+    
+    error = [PPOValidator validateCard:payment.card];
+    if (error) return error;
+    
+    error = [PPOValidator validateTransaction:payment.transaction];
+    if (error) return error;
+    
+    return nil;
+}
+
+#pragma mark - ValidateCard
+
++(NSError *)validateCard:(PPOCreditCard *)card {
+    
+    NSError *error;
+    
+    error = [PPOValidator validateCardPan:card.pan];;
+    if (error) return error;
+    
+    error = [PPOValidator validateCardExpiry:card.expiry];
+    if (error) return error;
+    
+    error = [PPOValidator validateCardCVV:card.cvv];
+    if (error) return error;
+    
+    return error;
+}
+
++(NSError*)validateCardPan:(NSString*)pan {
     
     NSString *strippedValue;
     
-    strippedValue = [card.pan stringByReplacingOccurrencesOfString:@" " withString:@""];
+    strippedValue = [pan stringByReplacingOccurrencesOfString:@" " withString:@""];
     
     BOOL containsLetters = [strippedValue rangeOfCharacterFromSet:[NSCharacterSet letterCharacterSet]].location != NSNotFound;
     
     if (strippedValue.length < 13 || strippedValue.length > 19 || containsLetters) {
-        return [PPOErrorManager errorForCode:PPOErrorCardPanInvalid];
+        return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorCardPanInvalid];
+    } else if (![PPOLuhn validateString:strippedValue]) {
+        return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorCardPanInvalid];
     }
     
-    if (![PPOLuhn validateString:strippedValue]) {
-        return [PPOErrorManager errorForCode:PPOErrorLuhnCheckFailed];
-    }
+    return nil;
+}
+
++(NSError*)validateCardExpiry:(NSString*)expiry {
     
-    strippedValue = [card.expiry stringByReplacingOccurrencesOfString:@" " withString:@""];
+    NSString *strippedValue;
+    
+    strippedValue = [expiry stringByReplacingOccurrencesOfString:@" " withString:@""];
     
     if (strippedValue == nil || strippedValue.length != 4) {
-        return [PPOErrorManager errorForCode:PPOErrorCardExpiryDateInvalid];
+        return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorCardExpiryDateInvalid];
     } else if ([PPOValidator cardExpiryHasExpired:strippedValue]) {
-        return [PPOErrorManager errorForCode:PPOErrorCardExpiryDateExpired];
-    }
-    
-    strippedValue = [card.cvv stringByReplacingOccurrencesOfString:@" " withString:@""];
-    
-    if (strippedValue == nil || strippedValue.length < 3 || strippedValue.length > 4) {
-        return [PPOErrorManager errorForCode:PPOErrorCVVInvalid];
-    }
-    
-    strippedValue = [transaction.currency stringByReplacingOccurrencesOfString:@" " withString:@""];
-    
-    if (strippedValue == nil || strippedValue.length == 0) {
-        return [PPOErrorManager errorForCode:PPOErrorCurrencyInvalid];
-    }
-    
-    if (transaction.amount == nil || transaction.amount.floatValue <= 0.0) {
-        return [PPOErrorManager errorForCode:PPOErrorPaymentAmountInvalid];
+        return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorCardExpiryDateExpired];
     }
     
     return nil;
@@ -96,45 +113,54 @@
     return [PPOTimeManager cardExpiryDateExpired:expiry];
 }
 
-+(BOOL)baseURLInvalid:(NSURL*)url withCompletion:(void(^)(PPOOutcome *outcome, NSError *error))completion {
-    NSError *invalid = [PPOValidator validateBaseURL:url];
-    if (invalid) {
-        completion(nil, invalid);
-        return YES;
++(NSError*)validateCardCVV:(NSString*)cvv {
+    
+    NSString *strippedValue;
+    
+    strippedValue = [cvv stringByReplacingOccurrencesOfString:@" " withString:@""];
+    
+    if (strippedValue == nil || strippedValue.length < 3 || strippedValue.length > 4) {
+        return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorCVVInvalid];
     }
-    return NO;
+    
+    return nil;
 }
 
-+(BOOL)credentialsInvalid:(PPOCredentials*)credentials withCompletion:(void(^)(PPOOutcome *outcome, NSError *error))completion {
+#pragma mark - Validate Transaction
+
++(NSError*)validateTransaction:(PPOTransaction*)transaction {
     
-    NSError *invalid = [PPOValidator validateCredentials:credentials];
-    if (invalid) {
-        completion(nil, invalid);
-        return YES;
-    }
-    return NO;
+    NSError *error;
+    
+    error = [PPOValidator validateCurrency:transaction.currency];
+    if (error) return error;
+    
+    error = [PPOValidator validateAmount:transaction.amount];
+    if (error) return error;
+    
+    return error;
 }
 
-+(BOOL)paymentInvalid:(PPOPayment*)payment withCompletion:(void(^)(PPOOutcome *outcome, NSError *error))completion {
++(NSError*)validateCurrency:(NSString*)currency {
     
-    NSError *invalid = [PPOValidator validatePayment:payment];
-    if (invalid) {
-        completion(nil, invalid);
-        return YES;
+    NSString *strippedValue;
+    
+    strippedValue = [currency stringByReplacingOccurrencesOfString:@" " withString:@""];
+    
+    if (strippedValue == nil || strippedValue.length == 0) {
+        return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorCurrencyInvalid];
     }
-    return NO;
+    
+    return nil;
 }
 
-+(BOOL)paymentUnderway:(PPOPayment*)payment withCompletion:(void(^)(PPOOutcome *outcome, NSError *error))completion {
++(NSError*)validateAmount:(NSNumber*)amount {
     
-    PAYMENT_STATE state = [PPOPaymentTrackingManager stateForPayment:payment];
-    
-    if (state != PAYMENT_STATE_NON_EXISTENT) {
-        completion(nil, [PPOErrorManager errorForCode:PPOErrorPaymentProcessing]);
-        return YES;
+    if (amount == nil || amount.floatValue <= 0.0) {
+        return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorPaymentAmountInvalid];
     }
     
-    return NO;
+    return nil;
 }
 
 @end
