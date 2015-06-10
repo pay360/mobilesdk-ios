@@ -80,8 +80,11 @@
     
     if (masterSessionTimedOut) {
         
+        PPOOutcome *outcome = [[PPOOutcome alloc] initWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut]
+                                                     forPayment:redirect.payment];
+        
         [self completeRedirect:redirect
-                   withOutcome:[[PPOOutcome alloc] initWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut]]
+                   withOutcome:outcome
                  forController:controller];
         
         return;
@@ -136,13 +139,13 @@
         PPOOutcome *outcome;
         
         if (json) {
-            outcome = [[PPOOutcome alloc] initWithData:json];
+            outcome = [[PPOOutcome alloc] initWithData:json forPayment:redirect.payment];
         } else if (invalidJSON) {
-            outcome = [[PPOOutcome alloc] initWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorServerFailure]];
+            outcome = [[PPOOutcome alloc] initWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorServerFailure] forPayment:redirect.payment];
         } else if (networkError) {
-            outcome = [[PPOOutcome alloc] initWithError:networkError];
+            outcome = [[PPOOutcome alloc] initWithError:networkError forPayment:redirect.payment];
         } else {
-            outcome = [[PPOOutcome alloc] initWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUnexpected]];
+            outcome = [[PPOOutcome alloc] initWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUnexpected] forPayment:redirect.payment];
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -228,8 +231,7 @@
         forController:controller];
 }
 
--(void)handleError:(NSError *)error
-     forController:(id<ThreeDSecureControllerProtocol>)controller {
+-(void)handleError:(NSError *)error forController:(id<ThreeDSecureControllerProtocol>)controller {
     
     /*
      * Let's make sure the web view process is completely arrested.
@@ -243,7 +245,7 @@
     }
     
     [self completeRedirect:controller.redirect
-               withOutcome:[[PPOOutcome alloc] initWithError:e]
+               withOutcome:[[PPOOutcome alloc] initWithError:e forPayment:controller.redirect.payment]
              forController:controller];
     
 }

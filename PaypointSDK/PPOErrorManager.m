@@ -135,6 +135,16 @@
                     ];
         } break;
             
+        case PPOPaymentErrorThreeDSecureTransactionProcessingFailed: {
+            return [NSError errorWithDomain:PPOPaymentErrorDomain
+                                       code:PPOPaymentErrorThreeDSecureTransactionProcessingFailed
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Payment abandoned as failed to complete 3D Secure.", @"Feedback message for payment status")
+                                              }
+                    ];
+        }
+            break;
+            
         case PPOPaymentErrorAuthenticationFailed: {
             return [NSError errorWithDomain:PPOPaymentErrorDomain
                                        code:PPOPaymentErrorAuthenticationFailed
@@ -194,15 +204,6 @@
                                        code:PPOPaymentErrorPaymentSuspendedForThreeDSecure
                                    userInfo:@{
                                               NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The payment is currently on hold awaiting Three D Secure to complete", @"Payment status message.")
-                                              }
-                    ];
-        } break;
-            
-        case PPOPaymentErrorTransactionProcessingFailed: {
-            return [NSError errorWithDomain:PPOPaymentErrorDomain
-                                       code:PPOPaymentErrorTransactionProcessingFailed
-                                   userInfo:@{
-                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The transaction failed to process correctly", @"Failure message for payment failure")
                                               }
                     ];
         } break;
@@ -368,11 +369,11 @@
             break;
             
         case PPOPrivateErrorPaymentSuspendedForThreeDSecure:
-            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorTransactionProcessingFailed];
+            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorThreeDSecureTransactionProcessingFailed];
             break;
             
         case PPOPrivateErrorPaymentSuspendedForClientRedirect:
-            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorTransactionProcessingFailed];
+            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorThreeDSecureTransactionProcessingFailed];
             break;
             
         case PPOPrivateErrorProcessingThreeDSecure:
@@ -388,6 +389,51 @@
     }
     
     return nil;
+}
+
++(BOOL)isSafeToRetryPaymentWithError:(NSError *)error {
+    
+    if ([error.domain isEqualToString:PPOLocalValidationErrorDomain]) {
+        
+        return YES;
+        
+    } else if ([error.domain isEqualToString:PPOPrivateErrorDomain]) {
+        
+        /*
+         * Should never get to this point. If we do, then there is a bug in the SDK.
+         * Errors with this domain name should never reach the implementing developer of our
+         * SDK. We only arrive here if the implementing developer has called us, via the payment
+         * manager.
+        */
+        return NO;
+        
+    } else if ([error.domain isEqualToString:PPOPaymentErrorDomain]) {
+        
+        return [PPOErrorManager isSafeToRetryPaymentWithPaymentError:error];
+        
+    }
+    
+    return NO;
+}
+
++(BOOL)isSafeToRetryPaymentWithPaymentError:(NSError*)error {
+    
+    if (![error.domain isEqualToString:PPOPaymentErrorDomain]) {
+        return NO;
+    }
+    
+    switch (error.code) {
+        case 0:
+            
+            break;
+            
+        default:
+            break;
+    }
+    
+#warning finish this.
+    
+    return NO;
 }
 
 @end

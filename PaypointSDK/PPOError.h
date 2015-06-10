@@ -29,9 +29,6 @@ typedef NS_ENUM(NSInteger, PPOPaymentError) {
     /*! Represents an unknown error. */
     PPOPaymentErrorUnexpected = -1,
     
-    /* A supplied parameter was invalid. Please use our convenience validation functions before making a payment. */
-    PPOPaymentErrorInvalidParameter,
-    
     /* The supplied bearer token has expired. */
     PPOPaymentErrorClientTokenExpired,
     
@@ -41,8 +38,8 @@ typedef NS_ENUM(NSInteger, PPOPaymentError) {
     /* The supplied token does not have sufficient permissions to access the specified feature. */
     PPOPaymentErrorUnauthorisedRequest,
     
-    /* The transaction was successfully submitted but failed to be processed correctly. */
-    PPOPaymentErrorTransactionProcessingFailed,
+    /* The transaction was successfully submitted but did not complete three D secure validation. */
+    PPOPaymentErrorThreeDSecureTransactionProcessingFailed,
     
     /* An internal server error occurred at paypoint */
     PPOPaymentErrorServerFailure,

@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+@class PPOPayment;
 @interface PPOOutcome : NSObject
 
+@property (nonatomic, strong, readonly) PPOPayment *payment;
 @property (nonatomic, strong, readonly) NSNumber *amount;
 @property (nonatomic, strong, readonly) NSString *currency;
 @property (nonatomic, strong, readonly) NSDate *date;
@@ -22,7 +24,7 @@
 @property (nonatomic, strong, readonly) NSSet *customFields;
 @property (nonatomic, strong) NSError *error;
 
--(instancetype)initWithData:(NSDictionary*)data;
--(instancetype)initWithError:(NSError*)error;
+-(instancetype)initWithData:(NSDictionary*)data forPayment:(PPOPayment*)payment;
+-(instancetype)initWithError:(NSError*)error forPayment:(PPOPayment*)payment;
 
 @end

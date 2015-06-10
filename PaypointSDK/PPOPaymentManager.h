@@ -43,4 +43,13 @@
 -(void)queryPayment:(PPOPayment*)payment
      withCompletion:(void(^)(PPOOutcome *outcome))completion;
 
+/**
+ *  Determines if a payment can be re-attempted without risk of a duplicate payment being made. If there is any chance of duplciation, this method returns NO.
+ *
+ *  @param outcome The completion of the payment.
+ *
+ *  @return An boolean indication that it is safe to re-attempt a payment.
+ */
++(BOOL)isSafeToRetryPaymentWithOutcome:(PPOOutcome*)outcome;
+
 @end

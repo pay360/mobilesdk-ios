@@ -35,7 +35,7 @@
     return _timeManager;
 }
 
--(instancetype)initWithData:(NSDictionary*)data {
+-(instancetype)initWithData:(NSDictionary*)data forPayment:(PPOPayment *)payment {
     
     if (!data) return nil;
     
@@ -44,6 +44,8 @@
     if (self) {
         
         if (data) {
+            
+            _payment = payment;
             
             [self parseCustomFields:[data objectForKey:PAYMENT_RESPONSE_CUSTOM_FIELDS]];
             
@@ -62,10 +64,11 @@
     return self;
 }
 
--(instancetype)initWithError:(NSError *)error {
+-(instancetype)initWithError:(NSError *)error forPayment:(PPOPayment *)payment {
     self = [super init];
     if (self) {
         _error = error;
+        _payment = payment;
     }
     return self;
 }
