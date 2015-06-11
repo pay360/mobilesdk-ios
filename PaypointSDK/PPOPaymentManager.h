@@ -48,7 +48,7 @@
  *
  *  @param outcome The completion of the payment.
  *
- *  @return An boolean indication that it is safe to re-attempt a payment.
+ *  @return A boolean indication that it is safe to re-attempt a payment.
  */
 +(BOOL)isSafeToRetryPaymentWithOutcome:(PPOOutcome*)outcome;
 

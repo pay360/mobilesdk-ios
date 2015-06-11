@@ -37,6 +37,8 @@
         _state = PAYMENT_STATE_READY;
         if (timeout < 0.0f) {
             timeout = 0;
+        } else if (timeout >= 1) {
+            timeout = (timeout -1);
         }
         _sessionTimeout = timeout;
         _timeoutHandler = timeoutHandler;
@@ -61,19 +63,15 @@
                                                     selector:@selector(timeoutTimerFired:)
                                                     userInfo:nil
                                                      repeats:YES];
-        
-        if (PPO_DEBUG_MODE) {
-            NSLog(@"Resuming master session timeout for payment with op ref: %@", self.payment.identifier);
-        }
     }
     
 }
 
 -(void)stopTimeoutTimer {
     
-    if (PPO_DEBUG_MODE && self.timer && [self.timer isValid] && self.sessionTimeout > 0) {
-        NSLog(@"Stopping master session timeout for payment with op ref: %@ with remaining time: %f", self.payment.identifier, self.sessionTimeout);
-    }
+//    if (PPO_DEBUG_MODE && self.timer && [self.timer isValid] && self.sessionTimeout > 0) {
+//        NSLog(@"Stopping master session timeout for payment with op ref: %@", self.payment.identifier);
+//    }
     
     [self.timer invalidate];
     self.timer = nil;
@@ -245,11 +243,14 @@
     
 }
 
-+(BOOL)masterSessionTimeoutHasExpiredForPayment:(PPOPayment *)payment {
++(BOOL)paymentIsBeingTracked:(PPOPayment*)payment {
     
-    if (PPO_DEBUG_MODE) {
-        NSLog(@"Inspecting master session timeout");
-    }
+    PPOPaymentTrackingChapperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
+    
+    return (chapperone != nil);
+}
+
++(BOOL)masterSessionTimeoutHasExpiredForPayment:(PPOPayment *)payment {
     
     PPOPaymentTrackingChapperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
     
@@ -258,7 +259,7 @@
     if (hasTimedOut) {
         
         if (PPO_DEBUG_MODE) {
-            NSLog(@"Master session timeout is '0'");
+            NSLog(@"Master session has fully counted down to zero");
         }
         
     }

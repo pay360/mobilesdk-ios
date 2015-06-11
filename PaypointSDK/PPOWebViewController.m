@@ -83,17 +83,23 @@
             
             _abortSession = YES;
             
-            if (PPO_DEBUG_MODE) {
-                NSLog(@"Performing currently assigned abort sequence");
-            }
-            
             [weakSelf cancelThreeDSecureRelatedTimers];
             
             _preventShow = YES;
             
             if (weakSelf.webView.isLoading) {
+                
+                if (PPO_DEBUG_MODE) {
+                    NSLog(@"Stopping web view completing load");
+                }
+                
                 [weakSelf.webView stopLoading];
             } else {
+                
+                if (PPO_DEBUG_MODE) {
+                    NSLog(@"Preventing web view controller continuing with 3DSecure session");
+                }
+                
                 [weakSelf.delegate threeDSecureController:weakSelf
                                           failedWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut]];
             }
@@ -261,7 +267,7 @@
         _abortSession = YES;
         
         if (PPO_DEBUG_MODE) {
-            NSLog(@"Performing currently assigned abort sequence");
+            NSLog(@"Preventing web view controller continuing with 3DSecure session");
         }
         
         [weakSelf.delegate threeDSecureController:weakSelf
@@ -278,8 +284,7 @@
     if (_initialWebViewLoadComplete && self.redirect.delayTimeInterval && !self.delayShowTimer && !_delayShowTimeoutExpired) {
         
         if (PPO_DEBUG_MODE) {
-            NSLog(@"Delay show countdown found with value %@ seconds", self.redirect.delayTimeInterval);
-            NSLog(@"Web view loaded. Starting delay show countdown now.");
+            NSLog(@"Web view loaded so starting 'delay show webview' countdown with a starting value of %@ seconds", self.redirect.delayTimeInterval);
         }
         
         self.delayShowTimer = [NSTimer scheduledTimerWithTimeInterval:self.redirect.delayTimeInterval.doubleValue
@@ -485,7 +490,7 @@
         self.delayShowTimer = nil;
         
         if (PPO_DEBUG_MODE) {
-            NSLog(@"Stopping 'delay show' timer associated with 3DSecure session");
+            NSLog(@"Stopping 'delay show webview' countdown");
         }
     }
     

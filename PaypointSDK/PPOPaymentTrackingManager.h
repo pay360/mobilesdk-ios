@@ -31,6 +31,7 @@ typedef enum : NSUInteger {
 +(void)overrideTimeoutHandler:(void(^)(void))handler forPayment:(PPOPayment*)payment;
 +(BOOL)masterSessionTimeoutHasExpiredForPayment:(PPOPayment*)payment;
 +(BOOL)allPaymentsComplete;
++(BOOL)paymentIsBeingTracked:(PPOPayment*)payment;
 +(NSUInteger)totalRecursiveQueryPaymentAttemptsForPayment:(PPOPayment*)payment;
 +(void)incrementRecurisiveQueryPaymentAttemptCountForPayment:(PPOPayment*)payment;
 +(void(^)(void))timeoutHandlerForPayment:(PPOPayment*)payment;

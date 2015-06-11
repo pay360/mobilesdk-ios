@@ -136,28 +136,15 @@
     NSURLSessionDataTask *task = [self.internalURLSession dataTaskWithRequest:request
                                                             completionHandler:completionHandler];
     
-    if ([PPOPaymentTrackingManager masterSessionTimeoutHasExpiredForPayment:payment]) {
-        
-        if (PPO_DEBUG_MODE) {
-            NSLog(@"Preventing initial payment request");
-        }
-        
-        outcome = [[PPOOutcome alloc] initWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut] forPayment:payment];
-        
-        [self handleOutcome:outcome
-             withCompletion:completion];
-        
-    } else {
-        __weak typeof(task) weakTask = task;
-        [PPOPaymentTrackingManager appendPayment:payment
-                                     withTimeout:timeout
-                                    beginTimeout:YES
-                                  timeoutHandler:^{
-                                      [weakTask cancel];
-                                  }];
-        
-        [task resume];
-    }
+    __weak typeof(task) weakTask = task;
+    [PPOPaymentTrackingManager appendPayment:payment
+                                 withTimeout:timeout
+                                beginTimeout:YES
+                              timeoutHandler:^{
+                                  [weakTask cancel];
+                              }];
+    
+    [task resume];
 
 }
 
@@ -282,10 +269,11 @@
      */
     if (internalQuery) {
         __weak typeof(task) weakTask = task;
+        
         [PPOPaymentTrackingManager overrideTimeoutHandler:^{
             
             if (PPO_DEBUG_MODE) {
-                NSLog(@"Performing currently assigned abort sequence");
+                NSLog(@"Cancelling internal query with task %@", weakTask);
             }
             
             [weakTask cancel];
@@ -444,6 +432,11 @@
     BOOL sessionTimedOut = isNetworkingIssue && outcome.error.code == NSURLErrorCancelled;
     BOOL isProcessingAtPaypoint = [outcome.error.domain isEqualToString:PPOPaymentErrorDomain] && outcome.error.code == PPOPaymentErrorPaymentProcessing;
     
+    if (sessionTimedOut) {
+        //We don't want to pass back an NSURLErrorCode for this, so let's build our own.
+        outcome.error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut];
+    }
+    
     if ((isNetworkingIssue && !sessionTimedOut) || isProcessingAtPaypoint) {
         
         [self checkIfOutcomeHasChanged:outcome withCompletion:completion];
@@ -453,10 +446,6 @@
         
         if (PPO_DEBUG_MODE) {
             NSLog(@"Got a conclusion. Let's dance.");
-        }
-        
-        if (sessionTimedOut) {
-            outcome.error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut];
         }
         
         outcome.error = [PPOErrorManager buildCustomerFacingErrorFromError:outcome.error];
@@ -472,51 +461,71 @@
                  withCompletion:(void(^)(PPOOutcome *))completion {
     
     if (PPO_DEBUG_MODE) {
-        NSLog(@"Not sure if payment made it");
+        NSLog(@"The outcome is not satisfactory");
         
-        NSLog(@"Yo server, what's going on with payment for op ref %@", outcome.payment.identifier);
+        NSLog(@"The query monkey is being dispatched to the server to query payment with op ref %@", outcome.payment.identifier);
+    }
+    
+    PPOPayment *payment = outcome.payment;
+    
+    NSUInteger attemptCount = [PPOPaymentTrackingManager totalRecursiveQueryPaymentAttemptsForPayment:payment];
+    NSTimeInterval interval = [PPOPaymentTrackingManager timeIntervalForAttemptCount:attemptCount];
+    
+    [PPOPaymentTrackingManager incrementRecurisiveQueryPaymentAttemptCountForPayment:payment];
+    
+    if (self.r_queue == nil) {
+        self.r_queue = dispatch_queue_create("QueryMonkeyQ", NULL);
     }
     
     __weak typeof(self) weakSelf = self;
     
-    [self queryServerForPayment:outcome.payment
-                isInternalQuery:YES
-                 withCompletion:^(PPOOutcome *queryOutcome) {
-                     
-                     if (self.r_queue == nil) {
-                         self.r_queue = dispatch_queue_create("Dispatch_Recursive_Call", NULL);
-                     }
-                     
-                     NSUInteger attemptCount = [PPOPaymentTrackingManager totalRecursiveQueryPaymentAttemptsForPayment:outcome.payment];
-                     NSTimeInterval interval = [PPOPaymentTrackingManager timeIntervalForAttemptCount:attemptCount];
-                     [PPOPaymentTrackingManager incrementRecurisiveQueryPaymentAttemptCountForPayment:outcome.payment];
-                     
-                     dispatch_async(self.r_queue, ^ {
-                         
-                         if (PPO_DEBUG_MODE) {
-                             NSLog(@"Will sleep before performing the query for %f seconds", interval);
-                         }
-                         
-                         sleep(interval);
-                         
-                         dispatch_async(dispatch_get_main_queue(), ^{
-                             
-                             /*
-                              * We now call this again and start over.
-                              */
-                             
-                             if (![PPOPaymentTrackingManager masterSessionTimeoutHasExpiredForPayment:outcome.payment]) {
+    [PPOPaymentTrackingManager overrideTimeoutHandler:^{
+        NSError *error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut];
+        PPOOutcome *timeoutOutcome = [[PPOOutcome alloc] initWithError:error forPayment:payment];
+        [weakSelf handleOutcome:timeoutOutcome withCompletion:completion];
+    } forPayment:payment];
+    
+    dispatch_async(self.r_queue, ^ {
+        
+        if (PPO_DEBUG_MODE) {
+            NSString *message = (interval == 1) ? @"second" : @"seconds";
+            NSLog(@"The query monkey will take a nap for %f %@ before heading to the server", interval, message);
+        }
+        
+        sleep(interval);
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            if (PPO_DEBUG_MODE) {
+                NSLog(@"The query monkey just woke up and jumped on the main queue");
+            }
+            
+            if (![PPOPaymentTrackingManager paymentIsBeingTracked:payment] || [PPOPaymentTrackingManager masterSessionTimeoutHasExpiredForPayment:payment]) {
+                
+                if (PPO_DEBUG_MODE) {
+                    NSLog(@"The payment has concluded so the query monkey is being shot.");
+                }
+                
+            } else {
+                
+                if (PPO_DEBUG_MODE) {
+                    NSLog(@"Query monkey is heading to the server now.");
+                }
+                
+                [self queryServerForPayment:payment
+                            isInternalQuery:YES
+                             withCompletion:^(PPOOutcome *queryOutcome) {
                                  
-                                 [weakSelf handleOutcome:outcome withCompletion:completion];
+                                 [weakSelf handleOutcome:queryOutcome withCompletion:completion];
                                  
-                             }
-
-                         });
-                         
-                     });
-                     
-                     
-                 }];
+                             }];
+            }
+            
+        });
+        
+        
+        
+    });
     
 }
 

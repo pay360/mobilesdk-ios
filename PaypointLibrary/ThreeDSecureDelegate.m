@@ -113,7 +113,7 @@
     [PPOPaymentTrackingManager overrideTimeoutHandler:^{
         
         if (PPO_DEBUG_MODE) {
-            NSLog(@"Performing currently assigned abort sequence");
+            NSLog(@"Cancelling resume request");
         }
         
         [weakTask cancel];
