@@ -10,7 +10,7 @@
 #import "PPOPayment.h"
 #import "PPOSDKConstants.h"
 
-@interface PPOPaymentTrackingChapperone : NSObject
+@interface PPOPaymentTrackingChaperone : NSObject
 //The payment is weak here. So if no other object is holding it, we don't need to track it.
 @property (nonatomic, readonly, weak) PPOPayment *payment;
 @property (nonatomic, readonly) NSTimeInterval sessionTimeout;
@@ -22,13 +22,13 @@
 -(BOOL)masterSessionTimeoutHasExpired;
 @end
 
-@interface PPOPaymentTrackingChapperone ()
+@interface PPOPaymentTrackingChaperone ()
 @property (nonatomic, readwrite) NSTimeInterval sessionTimeout;
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, copy) void(^timeoutHandler)(void);
 @end
 
-@implementation PPOPaymentTrackingChapperone
+@implementation PPOPaymentTrackingChaperone
 
 -(instancetype)initWithPayment:(PPOPayment *)payment withTimeout:(NSTimeInterval)timeout timeoutHandler:(void(^)(void))timeoutHandler {
     self = [super init];
@@ -47,8 +47,8 @@
 }
 
 -(BOOL)isEqual:(id)object {
-    PPOPaymentTrackingChapperone *chapperone;
-    if ([object isKindOfClass:[PPOPaymentTrackingChapperone class]]) {
+    PPOPaymentTrackingChaperone *chapperone;
+    if ([object isKindOfClass:[PPOPaymentTrackingChaperone class]]) {
         chapperone = chapperone;
     }
     return (chapperone && [self.payment isEqual:chapperone.payment]);
@@ -68,11 +68,6 @@
 }
 
 -(void)stopTimeoutTimer {
-    
-//    if (PPO_DEBUG_MODE && self.timer && [self.timer isValid] && self.sessionTimeout > 0) {
-//        NSLog(@"Stopping master session timeout for payment with op ref: %@", self.payment.identifier);
-//    }
-    
     [self.timer invalidate];
     self.timer = nil;
 }
@@ -146,7 +141,7 @@
         return;
     }
     
-    PPOPaymentTrackingChapperone *chapperone = [[PPOPaymentTrackingChapperone alloc] initWithPayment:payment
+    PPOPaymentTrackingChaperone *chapperone = [[PPOPaymentTrackingChaperone alloc] initWithPayment:payment
                                                                                          withTimeout:timeout
                                                                                       timeoutHandler:handler];
     
@@ -161,14 +156,14 @@
 
 +(void)overrideTimeoutHandler:(void(^)(void))handler forPayment:(PPOPayment*)payment {
     
-    PPOPaymentTrackingChapperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
+    PPOPaymentTrackingChaperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
     chapperone.timeoutHandler = handler;
     
 }
 
 +(void)removePayment:(PPOPayment*)payment {
     
-    PPOPaymentTrackingChapperone *chapperoneToDiscard = [PPOPaymentTrackingManager chapperoneForPayment:payment];
+    PPOPaymentTrackingChaperone *chapperoneToDiscard = [PPOPaymentTrackingManager chapperoneForPayment:payment];
     
     [chapperoneToDiscard stopTimeoutTimer];
     
@@ -176,13 +171,13 @@
     
 }
 
-+(PPOPaymentTrackingChapperone*)chapperoneForPayment:(PPOPayment*)payment {
++(PPOPaymentTrackingChaperone*)chapperoneForPayment:(PPOPayment*)payment {
     
     PPOPaymentTrackingManager *manager = [PPOPaymentTrackingManager sharedManager];
     
-    PPOPaymentTrackingChapperone *chapperone;
+    PPOPaymentTrackingChaperone *chapperone;
     
-    for (PPOPaymentTrackingChapperone *c in manager.paymentChapperones) {
+    for (PPOPaymentTrackingChaperone *c in manager.paymentChapperones) {
         
         if ([c.payment isEqual:payment]) {
             chapperone = c;
@@ -197,13 +192,13 @@
 
 +(PAYMENT_STATE)stateForPayment:(PPOPayment*)payment {
     
-    PPOPaymentTrackingChapperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
+    PPOPaymentTrackingChaperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
     
     return (chapperone == nil || chapperone.payment == nil) ? PAYMENT_STATE_NON_EXISTENT : chapperone.state;
     
 }
 
-+(void)insertPaymentTrackingChapperone:(PPOPaymentTrackingChapperone*)chapperone {
++(void)insertPaymentTrackingChapperone:(PPOPaymentTrackingChaperone*)chapperone {
     
     PPOPaymentTrackingManager *manager = [PPOPaymentTrackingManager sharedManager];
     
@@ -211,7 +206,7 @@
     
 }
 
-+(void)removePaymentChapperone:(PPOPaymentTrackingChapperone*)chapperone {
++(void)removePaymentChapperone:(PPOPaymentTrackingChaperone*)chapperone {
     
     PPOPaymentTrackingManager *manager = [PPOPaymentTrackingManager sharedManager];
     
@@ -223,7 +218,7 @@
 
 +(void)resumeTimeoutForPayment:(PPOPayment *)payment {
     
-    PPOPaymentTrackingChapperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
+    PPOPaymentTrackingChaperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
     chapperone.state = PAYMENT_STATE_IN_PROGRESS;
     
     [chapperone startTimeoutTimer];
@@ -236,7 +231,7 @@
         NSLog(@"Suspending master session timeout for payment with op ref: %@", payment.identifier);
     }
     
-    PPOPaymentTrackingChapperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
+    PPOPaymentTrackingChaperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
     chapperone.state = PAYMENT_STATE_SUSPENDED;
     
     [chapperone stopTimeoutTimer];
@@ -245,14 +240,14 @@
 
 +(BOOL)paymentIsBeingTracked:(PPOPayment*)payment {
     
-    PPOPaymentTrackingChapperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
+    PPOPaymentTrackingChaperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
     
     return (chapperone != nil);
 }
 
 +(BOOL)masterSessionTimeoutHasExpiredForPayment:(PPOPayment *)payment {
     
-    PPOPaymentTrackingChapperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
+    PPOPaymentTrackingChaperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
     
     BOOL hasTimedOut = [chapperone masterSessionTimeoutHasExpired];
     
@@ -272,9 +267,9 @@
     
     PPOPaymentTrackingManager *manager = [PPOPaymentTrackingManager sharedManager];
     
-    PPOPaymentTrackingChapperone *chapperone;
+    PPOPaymentTrackingChaperone *chapperone;
     
-    for (PPOPaymentTrackingChapperone *c in manager.paymentChapperones) {
+    for (PPOPaymentTrackingChaperone *c in manager.paymentChapperones) {
         
         if (c.state != PAYMENT_STATE_NON_EXISTENT) {
             chapperone = c;
@@ -286,17 +281,17 @@
 }
 
 +(NSUInteger)totalRecursiveQueryPaymentAttemptsForPayment:(PPOPayment *)payment {
-    PPOPaymentTrackingChapperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
+    PPOPaymentTrackingChaperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
     return chapperone.queryPaymentCount;
 }
 
 +(void)incrementRecurisiveQueryPaymentAttemptCountForPayment:(PPOPayment *)payment {
-    PPOPaymentTrackingChapperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
+    PPOPaymentTrackingChaperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
     chapperone.queryPaymentCount++;
 }
 
 +(void (^)(void))timeoutHandlerForPayment:(PPOPayment *)payment {
-    PPOPaymentTrackingChapperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
+    PPOPaymentTrackingChaperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
     return chapperone.timeoutHandler;
 }
 

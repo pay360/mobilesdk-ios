@@ -61,7 +61,9 @@ If you choose to validate an instance of PPOCredentials at this stage, there is 
 
 Build a representation of your payment, by instantiating an instance of **PPOPayment**.  This requires three parameters, each of which require information about your payment.
 
-There is also the opportunity to provide custom fields here, which may be helpful.
+There is also the opportunity to provide custom fields or details of financial services.
+
+When 'isDeferred' is set to 'YES' the payment will be an Authorisation.
 
     PPOBillingAddress *address = [PPOBillingAddress new];
     address.line1 = @"House name";
@@ -75,7 +77,7 @@ There is also the opportunity to provide custom fields here, which may be helpfu
     transaction.amount = @100;
     transaction.transactionDescription = @"description";
     transaction.merchantRef = @"dk93kl320";
-    transaction.isDeferred = @false;
+    transaction.isDeferred = @NO;
         
     PPOCreditCard *card = [PPOCreditCard new];
     card.pan = @"9900000000005159";
@@ -102,12 +104,19 @@ There is also the opportunity to provide custom fields here, which may be helpfu
     customField.isTransient = @YES;
     
     [collector addObject:customField];    
+
+    PPOFinancialServices *financialServices = [PPOFinancialServices new];
+    financialServices.dateOfBirth = @"19870818";
+    financialServices.surname = @"Smith";
+    financialServices.accountNumber = @"123ABC";
+    financialServices.postCode = @"BS20";
     
     PPOPayment *payment = [PPOPayment new];
     payment.transaction = transaction;
     payment.card = card;
     payment.address = address;
     payment.customFields = [collector copy];
+    payment.financialServices = payment.financialServices;
 
 To trigger a payment, set up an instance of  **PPOPaymentManager**, with a suitable baseURL.  A custom baseURL can be used, or a subset of pre-defined baseURL's can be found in **PPOPaymentBaseURLManager**, as follows:
 
@@ -130,7 +139,7 @@ Trigger a payment by passing an instance of **PPOPayment** and an instance of **
                           
                       }];
 
-Some payments can sometimes take ~60 seconds to process, but the option to use a quicker timeout is available here, should you want to.  
+Some payments can sometimes take ~60 seconds to process, but the option to use a custom timeout is available here, should you want to provide a different value.  
 
 # License & Acknowledgements 
 
@@ -139,8 +148,6 @@ TBD: { correct attributions and licenses}
 
 LUHN.h : MIT (c) Max Kramer 
 Reachability.h : https://developer.apple.com/library/ios/samplecode/Reachability/Listings/Reachability_Reachability_h.html
-
-
 
 # Testing your application in the MITE environment
 

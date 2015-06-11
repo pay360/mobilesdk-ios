@@ -36,7 +36,6 @@
 
 /**
  *  Determines the outcome of an existing payment. If a payment is currently in progress or suspended, 'outcome' will be nil and an error description returned.
- *
  *  @param payment     Details of the payment.
  *  @param completion  The outcome handler for the payment. Inspect the error domain PPOPaypointSDKErrorDomain for paypoint specific error cases. Each error code can be found within PPOError.h
  */
@@ -45,9 +44,7 @@
 
 /**
  *  Determines if a payment can be re-attempted without risk of a duplicate payment being made. If there is any chance of duplciation, this method returns NO.
- *
  *  @param outcome The completion of the payment.
- *
  *  @return A boolean indication that it is safe to re-attempt a payment.
  */
 +(BOOL)isSafeToRetryPaymentWithOutcome:(PPOOutcome*)outcome;
