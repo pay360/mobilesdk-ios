@@ -31,7 +31,7 @@ Pod::Spec.new do |s|
     'PayPointPayments' => ['PaypointResources/*']
   }
 
-  s.public_header_files = 'PaypointLibrary/*.h'
+  s.public_header_files = ['PaypointLibrary/*.h','PaypointSDK/PPO*.h'] 
   s.frameworks = 'UIKit', 'SystemConfiguration', 'CoreGraphics'
   # s.dependency 'AFNetworking', '~> 2.3'
 end
