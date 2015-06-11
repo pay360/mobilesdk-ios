@@ -10,13 +10,13 @@
 * UIKit.framework  
 * SystemConfiguration.framework  
 * CoreGraphics.framework  
+* MessageUI.framework
 
 # Installation
 
 ## Installing via CocoaPods
 
 [CocoPods](https://cocoapods.org) is a dependency manager for Cocoa projects.  You can install it with the following command:
-
 
     $ gem install cocoapods
 
@@ -34,12 +34,17 @@ Then run the following command:
 ## Manual installation   
 If you prefer not to use the aforementioned dependency managers, you can integrate this SDK into your project manually.
 
-* Download the Paypoint SDK.
+* Download the Paypoint Payments iOS SDK.
 * Enter Xcode and select "*File > Add Files to Project*".  Navigate to the directory where 'Paypoint.framework' was saved and select it.
 * In Xcode, navigate to the target configuration window by clicking on the blue project icon, and selecting the application target under the "Targets" heading in the sidebar.
 * Under the tab 'General', navigate to 'Linked Frameworks and Libraries'.
 	* Ensure 'the 'Paypoint.framework' is listed there.  If not, select the '+' icon at the bottom of the list and select Paypoint.framework.  
 	* Select the '+' icon at the bottom of this list and select each of the native iOS frameworks listed in the 'dependecies' section above.
+* Under the tab 'Build Phases' locate the 'Copy Bundle Reesources' build phase.
+* In the finder App, navigate to your App's project directory.
+    * Locate Paypoint.framework. 
+    * Navigate within Paypoint.framework and locate PaypointResources.bundle.
+* Drag and drop 'PaypointResourced.bundle' into your 'Copy Bundle Resources' build phase.
 
 # Usage
 
@@ -143,7 +148,6 @@ Some payments can sometimes take ~60 seconds to process, but the option to use a
 
 # License & Acknowledgements 
 
-
 TBD: { correct attributions and licenses} 
 
 LUHN.h : MIT (c) Max Kramer 
@@ -159,7 +163,7 @@ Instructions for doing this are available here:
 
 TBD:  {TODO: placeholder for server-side authoriseClient call}
 
-For convenience we provide a mock REST api which supplies these tokens for your test installations which can be used for prpotyping your app in our MITE environment: 
+For convenience we provide a mock REST api which supplies these tokens for your test installations which can be used for prototyping your app in our MITE environment: 
 
 TBD: {TODO: Instructions for getting access token from test endpoint} 
 
