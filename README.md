@@ -35,16 +35,17 @@ Then run the following command:
 If you prefer not to use the aforementioned dependency managers, you can integrate this SDK into your project manually.
 
 * Download the Paypoint Payments iOS SDK.
-* Enter Xcode and select "*File > Add Files to Project*".  Navigate to the directory where 'Paypoint.framework' was saved and select it.
+* Enter Xcode and select "*File > Add Files to Project*".  
+    * Navigate to 'Paypoint.framework' and select it.
 * In Xcode, navigate to the target configuration window by clicking on the blue project icon, and selecting the application target under the "Targets" heading in the sidebar.
-* Under the tab 'General', navigate to 'Linked Frameworks and Libraries'.
-	* Ensure 'the 'Paypoint.framework' is listed there.  If not, select the '+' icon at the bottom of the list and select Paypoint.framework.  
+* Under the tab '**General**', navigate to 'Linked Frameworks and Libraries'.
+	* Ensure 'Paypoint.framework' is listed there.  If not, select the '+' icon at the bottom of the list and select Paypoint.framework.  
 	* Select the '+' icon at the bottom of this list and select each of the native iOS frameworks listed in the 'dependecies' section above.
-* Under the tab 'Build Phases' locate the 'Copy Bundle Reesources' build phase.
+* Under the tab '**Build Phases**' locate the 'Copy Bundle Resources' build phase.
 * In the finder App, navigate to your App's project directory.
     * Locate Paypoint.framework. 
     * Navigate within Paypoint.framework and locate PaypointResources.bundle.
-* Drag and drop 'PaypointResourced.bundle' into your 'Copy Bundle Resources' build phase.
+* Drag and drop 'PaypointResources.bundle' into your 'Copy Bundle Resources' build phase.
 
 # Usage
 
