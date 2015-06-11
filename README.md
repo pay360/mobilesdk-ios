@@ -38,10 +38,10 @@ If you prefer not to use the aforementioned dependency managers, you can integra
 * Enter Xcode and select "*File > Add Files to Project*".  
     * Navigate to 'Paypoint.framework' and select it.
 * In Xcode, navigate to the target configuration window by clicking on the blue project icon, and selecting the application target under the "Targets" heading in the sidebar.
-* Under the tab '**General**', navigate to 'Linked Frameworks and Libraries'.
+* Under the tab **General**, navigate to 'Linked Frameworks and Libraries'.
 	* Ensure 'Paypoint.framework' is listed there.  If not, select the '+' icon at the bottom of the list and select Paypoint.framework.  
 	* Select the '+' icon at the bottom of this list and select each of the native iOS frameworks listed in the 'dependecies' section above.
-* Under the tab '**Build Phases**' locate the 'Copy Bundle Resources' build phase.
+* Under the tab **Build Phases** locate the 'Copy Bundle Resources' build phase.
 * In the finder App, navigate to your App's project directory.
     * Locate Paypoint.framework. 
     * Navigate within Paypoint.framework and locate PaypointResources.bundle.
@@ -49,7 +49,7 @@ If you prefer not to use the aforementioned dependency managers, you can integra
 
 # Usage
 
-Each and every payment request must be coupled with a bearer token.  Please set up a means of acquiring a bearer token from Paypoint, before continuing on to a payment request.
+Each and every payment request must be coupled with a client access token.  Please set up a means of acquiring a client access token from Paypoint, before continuing on to a payment request.
 
 ## Making a Payment 
 
@@ -57,9 +57,9 @@ An instance of **PPOCredentials** is required for each payment request.  To make
 
     PPOCredentials *credentials = [PPOCredentials new];
     credentials.installationID = INSTALLATION_ID;
-    credentials.token = bearerToken;
+    credentials.token = clientAccessToken;
 
-The PaypointSDK will thoroughly evaluate all parameters injected into a payment for their presence and validity.  However, you may want to validate your parameters incrementally, espeically if you are building UI elements that response to an incorrect card number, for example.
+The PaypointSDK will evaluate all parameters injected into a payment for their presence and validity.  These methods are exposed as public API and are available if you want to validate inline with the UI.
 
 If you choose to validate an instance of PPOCredentials at this stage, there is public API available, which looks like the following:
 
