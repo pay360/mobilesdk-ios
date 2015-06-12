@@ -10,13 +10,13 @@
 * UIKit.framework  
 * SystemConfiguration.framework  
 * CoreGraphics.framework  
+* MessageUI.framework
 
 # Installation
 
 ## Installing via CocoaPods
 
 [CocoPods](https://cocoapods.org) is a dependency manager for Cocoa projects.  You can install it with the following command:
-
 
     $ gem install cocoapods
 
@@ -34,16 +34,22 @@ Then run the following command:
 ## Manual installation   
 If you prefer not to use the aforementioned dependency managers, you can integrate this SDK into your project manually.
 
-* Download the Paypoint SDK.
-* Enter Xcode and select "*File > Add Files to Project*".  Navigate to the directory where 'Paypoint.framework' was saved and select it.
+* Download the Paypoint Payments iOS SDK.
+* Enter Xcode and select "*File > Add Files to Project*".  
+    * Navigate to 'Paypoint.framework' and select it.
 * In Xcode, navigate to the target configuration window by clicking on the blue project icon, and selecting the application target under the "Targets" heading in the sidebar.
-* Under the tab 'General', navigate to 'Linked Frameworks and Libraries'.
-	* Ensure 'the 'Paypoint.framework' is listed there.  If not, select the '+' icon at the bottom of the list and select Paypoint.framework.  
+* Under the tab **General**, navigate to 'Linked Frameworks and Libraries'.
+	* Ensure 'Paypoint.framework' is listed there.  If not, select the '+' icon at the bottom of the list and select Paypoint.framework.  
 	* Select the '+' icon at the bottom of this list and select each of the native iOS frameworks listed in the 'dependecies' section above.
+* Under the tab **Build Phases** locate the 'Copy Bundle Resources' build phase.
+* In the finder App, navigate to your App's project directory.
+    * Locate Paypoint.framework. 
+    * Navigate within Paypoint.framework and locate PaypointResources.bundle.
+* Drag and drop 'PaypointResources.bundle' into your 'Copy Bundle Resources' build phase.
 
 # Usage
 
-Each and every payment request must be coupled with a bearer token.  Please set up a means of acquiring a bearer token from Paypoint, before continuing on to a payment request.
+Each and every payment request must be coupled with a client access token.  Please set up a means of acquiring a client access token from Paypoint, before continuing on to a payment request.
 
 ## Making a Payment 
 
@@ -51,9 +57,9 @@ An instance of **PPOCredentials** is required for each payment request.  To make
 
     PPOCredentials *credentials = [PPOCredentials new];
     credentials.installationID = INSTALLATION_ID;
-    credentials.token = bearerToken;
+    credentials.token = clientAccessToken;
 
-The PaypointSDK will thoroughly evaluate all parameters injected into a payment for their presence and validity.  However, you may want to validate your parameters incrementally, espeically if you are building UI elements that response to an incorrect card number, for example.
+The PaypointSDK will evaluate all parameters injected into a payment for their presence and validity.  These methods are exposed as public API and are available if you want to validate inline with the UI.
 
 If you choose to validate an instance of PPOCredentials at this stage, there is public API available, which looks like the following:
 
@@ -61,7 +67,9 @@ If you choose to validate an instance of PPOCredentials at this stage, there is 
 
 Build a representation of your payment, by instantiating an instance of **PPOPayment**.  This requires three parameters, each of which require information about your payment.
 
-There is also the opportunity to provide custom fields here, which may be helpful.
+There is also the opportunity to provide custom fields or details of financial services.
+
+When 'isDeferred' is set to 'YES' the payment will be an Authorisation.
 
     PPOBillingAddress *address = [PPOBillingAddress new];
     address.line1 = @"House name";
@@ -75,7 +83,7 @@ There is also the opportunity to provide custom fields here, which may be helpfu
     transaction.amount = @100;
     transaction.transactionDescription = @"description";
     transaction.merchantRef = @"dk93kl320";
-    transaction.isDeferred = @false;
+    transaction.isDeferred = @NO;
         
     PPOCreditCard *card = [PPOCreditCard new];
     card.pan = @"9900000000005159";
@@ -102,12 +110,19 @@ There is also the opportunity to provide custom fields here, which may be helpfu
     customField.isTransient = @YES;
     
     [collector addObject:customField];    
+
+    PPOFinancialServices *financialServices = [PPOFinancialServices new];
+    financialServices.dateOfBirth = @"19870818";
+    financialServices.surname = @"Smith";
+    financialServices.accountNumber = @"123ABC";
+    financialServices.postCode = @"BS20";
     
     PPOPayment *payment = [PPOPayment new];
     payment.transaction = transaction;
     payment.card = card;
     payment.address = address;
     payment.customFields = [collector copy];
+    payment.financialServices = payment.financialServices;
 
 To trigger a payment, set up an instance of  **PPOPaymentManager**, with a suitable baseURL.  A custom baseURL can be used, or a subset of pre-defined baseURL's can be found in **PPOPaymentBaseURLManager**, as follows:
 
@@ -130,17 +145,14 @@ Trigger a payment by passing an instance of **PPOPayment** and an instance of **
                           
                       }];
 
-Some payments can sometimes take ~60 seconds to process, but the option to use a quicker timeout is available here, should you want to.  
+Some payments can sometimes take ~60 seconds to process, but the option to use a custom timeout is available here, should you want to provide a different value.  
 
 # License & Acknowledgements 
-
 
 TBD: { correct attributions and licenses} 
 
 LUHN.h : MIT (c) Max Kramer 
 Reachability.h : https://developer.apple.com/library/ios/samplecode/Reachability/Listings/Reachability_Reachability_h.html
-
-
 
 # Testing your application in the MITE environment
 
@@ -152,7 +164,7 @@ Instructions for doing this are available here:
 
 TBD:  {TODO: placeholder for server-side authoriseClient call}
 
-For convenience we provide a mock REST api which supplies these tokens for your test installations which can be used for prpotyping your app in our MITE environment: 
+For convenience we provide a mock REST api which supplies these tokens for your test installations which can be used for prototyping your app in our MITE environment: 
 
 TBD: {TODO: Instructions for getting access token from test endpoint} 
 

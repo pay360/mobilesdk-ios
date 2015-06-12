@@ -27,6 +27,7 @@
      * The web view is loaded offscreen, and is presented once a timeout value has expired.
      * The timeout value is sometimes zero, deliberately, depending on if we receive said 
      * value from a network response.
+     *
      * This is not exactly a convential way to use a webView and I have noticed some strange 
      * behaviour sometimes; such as webViewDidFinishLoad: firing once offscreen, then once after 
      * viewDidAppear: for the same request. Thus setting state flags here for peace of mind.
@@ -83,17 +84,23 @@
             
             _abortSession = YES;
             
-            if (PPO_DEBUG_MODE) {
-                NSLog(@"Performing currently assigned abort sequence");
-            }
-            
             [weakSelf cancelThreeDSecureRelatedTimers];
             
             _preventShow = YES;
             
             if (weakSelf.webView.isLoading) {
+                
+                if (PPO_DEBUG_MODE) {
+                    NSLog(@"Stopping web view completing load");
+                }
+                
                 [weakSelf.webView stopLoading];
             } else {
+                
+                if (PPO_DEBUG_MODE) {
+                    NSLog(@"Preventing web view controller continuing with 3DSecure session");
+                }
+                
                 [weakSelf.delegate threeDSecureController:weakSelf
                                           failedWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut]];
             }
@@ -261,7 +268,7 @@
         _abortSession = YES;
         
         if (PPO_DEBUG_MODE) {
-            NSLog(@"Performing currently assigned abort sequence");
+            NSLog(@"Preventing web view controller continuing with 3DSecure session");
         }
         
         [weakSelf.delegate threeDSecureController:weakSelf
@@ -278,8 +285,8 @@
     if (_initialWebViewLoadComplete && self.redirect.delayTimeInterval && !self.delayShowTimer && !_delayShowTimeoutExpired) {
         
         if (PPO_DEBUG_MODE) {
-            NSLog(@"Delay show countdown found with value %@ seconds", self.redirect.delayTimeInterval);
-            NSLog(@"Web view loaded. Starting delay show countdown now.");
+            NSString *message = (self.redirect.delayTimeInterval.integerValue == 1) ? @"second" : @"seconds";
+            NSLog(@"Web view loaded so starting 'delay show webview' countdown with a starting value of %@ %@", self.redirect.delayTimeInterval, message);
         }
         
         self.delayShowTimer = [NSTimer scheduledTimerWithTimeInterval:self.redirect.delayTimeInterval.doubleValue
@@ -451,7 +458,8 @@
                                                                    repeats:YES];
         
         if (PPO_DEBUG_MODE) {
-            NSLog(@"Resuming 3DSecure session timeout with %f seconds remaining", self.sessionTimeout);
+            NSString *message = (self.sessionTimeout == 1) ? @"second" : @"seconds";
+            NSLog(@"Resuming 3DSecure session timeout with %f %@ remaining", self.sessionTimeout, message);
         }
         
     }
@@ -485,7 +493,7 @@
         self.delayShowTimer = nil;
         
         if (PPO_DEBUG_MODE) {
-            NSLog(@"Stopping 'delay show' timer associated with 3DSecure session");
+            NSLog(@"Stopping 'delay show webview' countdown");
         }
     }
     

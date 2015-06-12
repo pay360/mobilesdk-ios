@@ -12,7 +12,7 @@
 #import "PPOPayment.h"
 #import "PPOPaymentTrackingManager.h"
 #import "PPORedirect.h"
-#import "PPOOutcome.h"
+#import "PPOOutcomeBuilder.h"
 #import "PPOErrorManager.h"
 #import "PPOPaymentEndpointManager.h"
 #import "PPOCredentials.h"
@@ -25,6 +25,11 @@
 @property (nonatomic, copy) void(^completion)(PPOOutcome*);
 @end
 
+/*
+ * This is not exactly a convential way to use a webView and I have noticed some strange
+ * behaviour sometimes; such as webViewDidFinishLoad: firing once offscreen, then once after
+ * viewDidAppear: for the same request. Thus setting state flags here for peace of mind.
+ */
 @implementation ThreeDSecureDelegate {
     BOOL _preventShowWebView;
     BOOL _isDismissingWebView;
@@ -50,7 +55,7 @@
                 acquiredPaRes:(NSString *)paRes {
     
     if (PPO_DEBUG_MODE) {
-        NSLog(@"Web view concluded for payment with op ref: %@", controller.redirect.payment.identifier);
+        NSLog(@"Building resume body for payment with op ref: %@", controller.redirect.payment.identifier);
     }
     
     id body;
@@ -80,8 +85,9 @@
     
     if (masterSessionTimedOut) {
         
-        PPOOutcome *outcome = [[PPOOutcome alloc] initWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut]
-                                                     forPayment:redirect.payment];
+        PPOOutcome *outcome = [PPOOutcomeBuilder outcomeWithData:nil
+                                                       withError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut]
+                                                      forPayment:redirect.payment];
         
         [self completeRedirect:redirect
                    withOutcome:outcome
@@ -113,7 +119,7 @@
     [PPOPaymentTrackingManager overrideTimeoutHandler:^{
         
         if (PPO_DEBUG_MODE) {
-            NSLog(@"Performing currently assigned abort sequence");
+            NSLog(@"Cancelling resume request");
         }
         
         [weakTask cancel];
@@ -145,13 +151,21 @@
         PPOOutcome *outcome;
         
         if (json) {
-            outcome = [[PPOOutcome alloc] initWithData:json forPayment:redirect.payment];
+            outcome = [PPOOutcomeBuilder outcomeWithData:json
+                                               withError:nil
+                                              forPayment:redirect.payment];
         } else if (invalidJSON) {
-            outcome = [[PPOOutcome alloc] initWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorServerFailure] forPayment:redirect.payment];
+            outcome = [PPOOutcomeBuilder outcomeWithData:nil
+                                               withError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorServerFailure]
+                                              forPayment:redirect.payment];
         } else if (networkError) {
-            outcome = [[PPOOutcome alloc] initWithError:networkError forPayment:redirect.payment];
+            outcome = [PPOOutcomeBuilder outcomeWithData:nil
+                                               withError:networkError
+                                              forPayment:redirect.payment];
         } else {
-            outcome = [[PPOOutcome alloc] initWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUnexpected] forPayment:redirect.payment];
+            outcome = [PPOOutcomeBuilder outcomeWithData:nil
+                                               withError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUnexpected]
+                                              forPayment:redirect.payment];
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -164,15 +178,11 @@
 }
 
 /**
- * Once an ACS page is fully loaded, it will either perform a fast re-direct or display fields for user input.
+ * Once an ACS page is fully loaded, it will either perform a fast re-direct or display entry fields for user input.
  * A fast re-direct does not require user input and shows an ugly spinner for a while.
- * The 'delay show' mechanism is in place to anticipate a fast re-direct, based on statistical historic data,
- * and prevent the display of an ugly web page. The 'delay show' countdown value is passed to us via a network response.
- * We begin counting down with this value, once the ACS web page has loaded and started a three d secure
- * session (fast re-direct or otherwise).
- * It is therefore very possible that we count down to completetion and display a web view that does not require
- * user input, and this is understood and accepted. The countdown provided to us is a 'probably requires user input
- * after this much time has elapsed' kind of value.
+ * The 'delay show' countdown value is passed to us via a network response.
+ * The countdown provided to us is a 'probably requires user input
+ * after this much time has elapsed so present the web view now' kind of value.
  */
 
 -(void)threeDSecureControllerDelayShowTimeoutExpired:(id<ThreeDSecureControllerProtocol>)controller {
@@ -185,7 +195,7 @@
         
         /*
          * We only suspend the master session timeout here, and not before the delay show timeout has expired.
-         * If we have reached this point then it is likely user input is required on the web view. The 'three d secure session timeout' will
+         * If we have reached this point then it is likely that user input is required on the web view. The 'three d secure session timeout' will
          * begin, which is a timeout value provided by the redirect response. Once it has expired, it will handle abort. If
          * three d secure completes without any errors, then we resume the master session timeout countdown downstream.
          */
@@ -198,15 +208,18 @@
         /*
          * Presenting controllers like this or toying with the implementing developers view heirarchy,
          * without the implementing developer's knowledge of when and how, is risky.
-         * A merchant App may have an interesting animation that won't know when to
-         * terminate or change e.g. the current pulsing Paypoint logo in the demo merchant App
-         * has no indication of when to change or cancel before or after the web view is presented/dismissed.
-         * May be upsetting behaviour if the implementing developer is using an interactive transitioning
-         * protocol to present/dismiss the payment scene or a UIPresentationController which is managed by a
-         * transitioning context (provided by the system).
-         * Not exposing the webview makes styling of the web view navigation bar or the presentation animation tricky.
-         * UIBarButtonItem text is in strings file in embedded resources bundle, for internationalisation
-         * I have made Paypoint aware of these points and they are happy to release to customers and get feedback from them first.
+         *
+         * 1) Conforming to any of the adaptive api's will be impossible.
+         *
+         * 2) NavBar customisations or customisation of the web view controller presentation animation, will be tricky, if not impossible.
+         *
+         * 3) May be upsetting behaviour if the implementing developer is conforming to an animated transitioning
+         *    protocol or using a UIPresentationController.
+         *
+         * 4) There may be an animation that won't know when to terminate or change before the web view is shown
+         *    e.g. the current pulsing Paypoint logo in the demo merchant App has no idea and just keeps pulsing.
+         *
+         * Paypoint are aware of these points and they are happy to release to customers and get feedback from them first.
          */
         if (PPO_DEBUG_MODE) {
             NSLog(@"Showing web view for op ref: %@", controller.redirect.payment.identifier);
@@ -250,8 +263,12 @@
         e = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUnexpected];
     }
     
+    PPOOutcome *outcome = [PPOOutcomeBuilder outcomeWithData:nil
+                                                   withError:e
+                                                  forPayment:controller.redirect.payment];
+    
     [self completeRedirect:controller.redirect
-               withOutcome:[[PPOOutcome alloc] initWithError:e forPayment:controller.redirect.payment]
+               withOutcome:outcome
              forController:controller];
     
 }
