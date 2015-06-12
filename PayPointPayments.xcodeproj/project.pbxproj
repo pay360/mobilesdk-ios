@@ -22,11 +22,16 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		1A1E9BBD1B28B8D000659979 /* PPOSDKConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A1E9BBC1B28B8D000659979 /* PPOSDKConstants.h */; };
-		1A1E9BC31B28B8FB00659979 /* ThreeDSecureControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A1E9BBF1B28B8FB00659979 /* ThreeDSecureControllerProtocol.h */; };
-		1A1E9BC61B28B8FB00659979 /* ThreeDSecureProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A1E9BC21B28B8FB00659979 /* ThreeDSecureProtocol.h */; };
-		1A1E9BC91B28B9B500659979 /* ThreeDSecureDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A1E9BC71B28B9B500659979 /* ThreeDSecureDelegate.h */; };
-		1A1E9BCA1B28B9B500659979 /* ThreeDSecureDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1E9BC81B28B9B500659979 /* ThreeDSecureDelegate.m */; };
+		1A1E9BBD1B28B8D000659979 /* (null) in Headers */ = {isa = PBXBuildFile; };
+		1A1E9BC31B28B8FB00659979 /* (null) in Headers */ = {isa = PBXBuildFile; };
+		1A1E9BC61B28B8FB00659979 /* (null) in Headers */ = {isa = PBXBuildFile; };
+		1A1E9BC91B28B9B500659979 /* (null) in Headers */ = {isa = PBXBuildFile; };
+		1A1E9BCA1B28B9B500659979 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		1AF1B2E81B2B10AA000404AF /* ThreeDSecureDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AF1B2E61B2B10AA000404AF /* ThreeDSecureDelegate.h */; };
+		1AF1B2E91B2B10AA000404AF /* ThreeDSecureDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF1B2E71B2B10AA000404AF /* ThreeDSecureDelegate.m */; };
+		1AF1B2EC1B2B10C1000404AF /* ThreeDSecureControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AF1B2EA1B2B10C1000404AF /* ThreeDSecureControllerProtocol.h */; };
+		1AF1B2ED1B2B10C1000404AF /* ThreeDSecureProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AF1B2EB1B2B10C1000404AF /* ThreeDSecureProtocol.h */; };
+		1AF1B2EF1B2B112A000404AF /* PPOSDKConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AF1B2EE1B2B112A000404AF /* PPOSDKConstants.h */; };
 		503D52BB1B0B31200074CB44 /* PPOFinancialServices.h in Headers */ = {isa = PBXBuildFile; fileRef = 503D52B91B0B31200074CB44 /* PPOFinancialServices.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		503D52BC1B0B31200074CB44 /* PPOFinancialServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 503D52BA1B0B31200074CB44 /* PPOFinancialServices.m */; };
 		503D52C01B0B32A90074CB44 /* PPOCustomer.h in Headers */ = {isa = PBXBuildFile; fileRef = 503D52BE1B0B32A90074CB44 /* PPOCustomer.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -120,6 +125,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1AF1B2E61B2B10AA000404AF /* ThreeDSecureDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ThreeDSecureDelegate.h; path = PaypointSDK/ThreeDSecureDelegate.h; sourceTree = SOURCE_ROOT; };
+		1AF1B2E71B2B10AA000404AF /* ThreeDSecureDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ThreeDSecureDelegate.m; path = PaypointSDK/ThreeDSecureDelegate.m; sourceTree = SOURCE_ROOT; };
+		1AF1B2EA1B2B10C1000404AF /* ThreeDSecureControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ThreeDSecureControllerProtocol.h; path = PaypointSDK/ThreeDSecureControllerProtocol.h; sourceTree = SOURCE_ROOT; };
+		1AF1B2EB1B2B10C1000404AF /* ThreeDSecureProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ThreeDSecureProtocol.h; path = PaypointSDK/ThreeDSecureProtocol.h; sourceTree = SOURCE_ROOT; };
+		1AF1B2EE1B2B112A000404AF /* PPOSDKConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPOSDKConstants.h; path = PaypointSDK/PPOSDKConstants.h; sourceTree = SOURCE_ROOT; };
 		50046ACB1AC2FB0400F23D05 /* PPOLuhn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOLuhn.h; sourceTree = "<group>"; };
 		50046ACC1AC2FB0400F23D05 /* PPOLuhn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOLuhn.m; sourceTree = "<group>"; };
 		501B7CBC1AC40B3000F44193 /* PPOWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOWebViewController.h; sourceTree = "<group>"; };
@@ -222,15 +232,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		50046ACA1AC2FAB500F23D05 /* PPOReachability */ = {
-			isa = PBXGroup;
-			children = (
-				50046AC61AC2FAB000F23D05 /* PPOReachability.h */,
-				50046AC71AC2FAB000F23D05 /* PPOReachability.m */,
-			);
-			name = PPOReachability;
-			sourceTree = "<group>";
-		};
 		501B7CC21AC40B3300F44193 /* PPOWebViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -319,7 +320,7 @@
 		503E19A51AE8EF0600CB4784 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				1A1E9BBC1B28B8D000659979 /* PPOSDKConstants.h */,
+				1AF1B2EE1B2B112A000404AF /* PPOSDKConstants.h */,
 				5081F3AE1AE7D28000D41911 /* Framework.sh */,
 				5081F3B81AE7D45600D41911 /* MultiPlatformFramework.sh */,
 				5056A1A51AD68B1400AB1276 /* PPOSDKMacros.h */,
@@ -488,8 +489,8 @@
 		50A93AB31B258C8300F0B01C /* ThreeDSecureDelegate */ = {
 			isa = PBXGroup;
 			children = (
-				1A1E9BC71B28B9B500659979 /* ThreeDSecureDelegate.h */,
-				1A1E9BC81B28B9B500659979 /* ThreeDSecureDelegate.m */,
+				1AF1B2E61B2B10AA000404AF /* ThreeDSecureDelegate.h */,
+				1AF1B2E71B2B10AA000404AF /* ThreeDSecureDelegate.m */,
 			);
 			name = ThreeDSecureDelegate;
 			sourceTree = "<group>";
@@ -505,8 +506,8 @@
 		50A93AB91B259ACA00F0B01C /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
-				1A1E9BC21B28B8FB00659979 /* ThreeDSecureProtocol.h */,
-				1A1E9BBF1B28B8FB00659979 /* ThreeDSecureControllerProtocol.h */,
+				1AF1B2EA1B2B10C1000404AF /* ThreeDSecureControllerProtocol.h */,
+				1AF1B2EB1B2B10C1000404AF /* ThreeDSecureProtocol.h */,
 			);
 			name = Protocols;
 			sourceTree = "<group>";
@@ -655,28 +656,32 @@
 				5081F3C41AE7E5D800D41911 /* Paypoint.h in Headers */,
 				50CB92011B1CB83D00A8B39E /* PPORedirectManager.h in Headers */,
 				50DCC1E31AE7CBE400D0FE26 /* PPOWebViewController.h in Headers */,
-				1A1E9BC31B28B8FB00659979 /* ThreeDSecureControllerProtocol.h in Headers */,
+				1A1E9BC31B28B8FB00659979 /* (null) in Headers */,
 				509D61761B18A0D700F62BA7 /* PPOPaymentTrackingManager.h in Headers */,
+				1AF1B2EF1B2B112A000404AF /* PPOSDKConstants.h in Headers */,
 				50D495171B023944004AD686 /* PPOResourcesManager.h in Headers */,
 				50DCC1F31AE7CC4100D0FE26 /* PPOSDKMacros.h in Headers */,
 				50DCC1EF1AE7CC2900D0FE26 /* PPOPaymentManager.h in Headers */,
 				505AB2ED1B04B9A8001FAD15 /* PPORedirect.h in Headers */,
-				1A1E9BC91B28B9B500659979 /* ThreeDSecureDelegate.h in Headers */,
+				1A1E9BC91B28B9B500659979 /* (null) in Headers */,
 				50DCC1C31AE7CAF000D0FE26 /* PPOError.h in Headers */,
 				50DCC1E71AE7CBFF00D0FE26 /* PPOTimeManager.h in Headers */,
 				50DCC1D91AE7CBAE00D0FE26 /* PPOCreditCard.h in Headers */,
 				50DCC1DB1AE7CBB900D0FE26 /* PPOTransaction.h in Headers */,
-				1A1E9BC61B28B8FB00659979 /* ThreeDSecureProtocol.h in Headers */,
+				1AF1B2ED1B2B10C1000404AF /* ThreeDSecureProtocol.h in Headers */,
+				1A1E9BC61B28B8FB00659979 /* (null) in Headers */,
 				50D585691B1CC2D3007AE507 /* PPOValidator.h in Headers */,
 				50DCC1E11AE7CBD800D0FE26 /* PPOPayment.h in Headers */,
 				50DCC1C41AE7CB0100D0FE26 /* PPOLuhn.h in Headers */,
+				1AF1B2EC1B2B10C1000404AF /* ThreeDSecureControllerProtocol.h in Headers */,
 				50DCC1DF1AE7CBCE00D0FE26 /* PPOOutcome.h in Headers */,
 				50DCC1E51AE7CBF500D0FE26 /* PPOErrorManager.h in Headers */,
 				503D52BB1B0B31200074CB44 /* PPOFinancialServices.h in Headers */,
 				50DCC1E91AE7CC0900D0FE26 /* PPOPaymentBaseURLManager.h in Headers */,
-				1A1E9BBD1B28B8D000659979 /* PPOSDKConstants.h in Headers */,
+				1A1E9BBD1B28B8D000659979 /* (null) in Headers */,
 				50DCC1DD1AE7CBC400D0FE26 /* PPOBillingAddress.h in Headers */,
 				50ED5D851B1EF7AE00D67F48 /* PPOURLRequestManager.h in Headers */,
+				1AF1B2E81B2B10AA000404AF /* ThreeDSecureDelegate.h in Headers */,
 				50DCC1EB1AE7CC1300D0FE26 /* PPOPaymentEndpointManager.h in Headers */,
 				503D52C51B0B74230074CB44 /* PPOCustomField.h in Headers */,
 				50475D751B26E2190005DB9D /* PPOPrivateError.h in Headers */,
@@ -867,6 +872,7 @@
 				50DCC1F01AE7CC3000D0FE26 /* PPOPaymentManager.m in Sources */,
 				50DCC1EA1AE7CC0D00D0FE26 /* PPOPaymentBaseURLManager.m in Sources */,
 				50DCC1E81AE7CC0200D0FE26 /* PPOTimeManager.m in Sources */,
+				1AF1B2E91B2B10AA000404AF /* ThreeDSecureDelegate.m in Sources */,
 				50ED5D861B1EF7AE00D67F48 /* PPOURLRequestManager.m in Sources */,
 				50DCC1D81AE7CBA900D0FE26 /* PPOCredentials.m in Sources */,
 				50D495181B023944004AD686 /* PPOResourcesManager.m in Sources */,
@@ -876,7 +882,7 @@
 				503D52BC1B0B31200074CB44 /* PPOFinancialServices.m in Sources */,
 				50DCC1E21AE7CBDD00D0FE26 /* PPOPayment.m in Sources */,
 				505AB2EE1B04B9A8001FAD15 /* PPORedirect.m in Sources */,
-				1A1E9BCA1B28B9B500659979 /* ThreeDSecureDelegate.m in Sources */,
+				1A1E9BCA1B28B9B500659979 /* (null) in Sources */,
 				50CB92021B1CB83D00A8B39E /* PPORedirectManager.m in Sources */,
 				50475D761B26E2190005DB9D /* PPOPrivateError.m in Sources */,
 				503D52C61B0B74230074CB44 /* PPOCustomField.m in Sources */,
