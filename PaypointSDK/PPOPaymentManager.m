@@ -493,7 +493,7 @@
     else {
         
         if (PPO_DEBUG_MODE) {
-            NSLog(@"Got a conclusion. Let's dance.");
+            NSLog(@"Got a conclusion.");
         }
         
         outcome.error = [PPOErrorManager buildCustomerFacingErrorFromError:outcome.error];
