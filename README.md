@@ -12,13 +12,7 @@
 * CoreGraphics.framework  
 * MessageUI.framework
 
-# Installation
-
-## Installing via CocoaPods
-
-[CocoPods](https://cocoapods.org) is a dependency manager for Cocoa projects.  You can install it with the following command:
-
-    $ gem install cocoapods
+# Installation with CocoaPods
 
 To integrate the Paypoint Payments iOS SDK into your project using CocoaPods, specify it in your Podfile:
 
@@ -31,21 +25,6 @@ Then run the following command:
 
     $ pod install
 
-## Manual installation   
-If you prefer not to use the aforementioned dependency managers, you can integrate this SDK into your project manually.
-
-* Download the Paypoint Payments iOS SDK.
-* Enter Xcode and select "*File > Add Files to Project*".  
-    * Navigate to 'Paypoint.framework' and select it.
-* In Xcode, navigate to the target configuration window by clicking on the blue project icon, and selecting the application target under the "Targets" heading in the sidebar.
-* Under the tab **General**, navigate to 'Linked Frameworks and Libraries'.
-	* Ensure 'Paypoint.framework' is listed there.  If not, select the '+' icon at the bottom of the list and select Paypoint.framework.  
-	* Select the '+' icon at the bottom of this list and select each of the native iOS frameworks listed in the 'dependecies' section above.
-* Under the tab **Build Phases** locate the 'Copy Bundle Resources' build phase.
-* In the finder App, navigate to your App's project directory.
-    * Locate Paypoint.framework. 
-    * Navigate within Paypoint.framework and locate PaypointResources.bundle.
-* Drag and drop 'PaypointResources.bundle' into your 'Copy Bundle Resources' build phase.
 
 # Usage
 
@@ -147,12 +126,6 @@ Trigger a payment by passing an instance of **PPOPayment** and an instance of **
 
 Some payments can sometimes take ~60 seconds to process, but the option to use a custom timeout is available here, should you want to provide a different value.  
 
-# License & Acknowledgements 
-
-TBD: { correct attributions and licenses} 
-
-LUHN.h : MIT (c) Max Kramer 
-Reachability.h : https://developer.apple.com/library/ios/samplecode/Reachability/Listings/Reachability_Reachability_h.html
 
 # Testing your application in the MITE environment
 
