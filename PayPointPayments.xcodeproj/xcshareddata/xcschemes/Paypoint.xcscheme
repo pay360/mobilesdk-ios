@@ -9,15 +9,29 @@
          <BuildActionEntry
             buildForTesting = "YES"
             buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "50DCC1A91AE7CAAA00D0FE26"
+               BuildableName = "libPayPointPayments.a"
+               BlueprintName = "PayPointPayments"
+               ReferencedContainer = "container:PayPointPayments.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
             buildForProfiling = "NO"
             buildForArchiving = "NO"
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "50DCC1B31AE7CAAA00D0FE26"
-               BuildableName = "PaypointTests.xctest"
-               BlueprintName = "PaypointTests"
-               ReferencedContainer = "container:Paypoint.xcodeproj">
+               BuildableName = "PayPointPaymentsTests.xctest"
+               BlueprintName = "PayPointPaymentsTests"
+               ReferencedContainer = "container:PayPointPayments.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,19 +47,19 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "50DCC1B31AE7CAAA00D0FE26"
-               BuildableName = "PaypointTests.xctest"
-               BlueprintName = "PaypointTests"
-               ReferencedContainer = "container:Paypoint.xcodeproj">
+               BuildableName = "PayPointPaymentsTests.xctest"
+               BlueprintName = "PayPointPaymentsTests"
+               ReferencedContainer = "container:PayPointPayments.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "50DCC1B31AE7CAAA00D0FE26"
-            BuildableName = "PaypointTests.xctest"
-            BlueprintName = "PaypointTests"
-            ReferencedContainer = "container:Paypoint.xcodeproj">
+            BlueprintIdentifier = "50DCC1A91AE7CAAA00D0FE26"
+            BuildableName = "libPayPointPayments.a"
+            BlueprintName = "PayPointPayments"
+            ReferencedContainer = "container:PayPointPayments.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -61,10 +75,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "50DCC1B31AE7CAAA00D0FE26"
-            BuildableName = "PaypointTests.xctest"
-            BlueprintName = "PaypointTests"
-            ReferencedContainer = "container:Paypoint.xcodeproj">
+            BlueprintIdentifier = "50DCC1A91AE7CAAA00D0FE26"
+            BuildableName = "libPayPointPayments.a"
+            BlueprintName = "PayPointPayments"
+            ReferencedContainer = "container:PayPointPayments.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -79,10 +93,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "50DCC1B31AE7CAAA00D0FE26"
-            BuildableName = "PaypointTests.xctest"
-            BlueprintName = "PaypointTests"
-            ReferencedContainer = "container:Paypoint.xcodeproj">
+            BlueprintIdentifier = "50DCC1A91AE7CAAA00D0FE26"
+            BuildableName = "libPayPointPayments.a"
+            BlueprintName = "PayPointPayments"
+            ReferencedContainer = "container:PayPointPayments.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>
