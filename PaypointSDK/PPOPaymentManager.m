@@ -26,6 +26,7 @@
 #import "PPOPaymentTrackingManager.h"
 #import "PPORedirectManager.h"
 #import "PPOValidator.h"
+#import "PPOOutcomeBuilder.h"
 #import "PPOURLRequestManager.h"
 
 @interface PPOPaymentManager () <NSURLSessionTaskDelegate>
@@ -66,7 +67,9 @@
     
     error = [PPOValidator validateBaseURL:self.endpointManager.baseURL];
     if (error) {
-        outcome = [[PPOOutcome alloc] initWithError:error forPayment:payment];
+        outcome = [PPOOutcomeBuilder outcomeWithData:nil
+                                           withError:error
+                                          forPayment:payment];
         [self handleOutcome:outcome
              withCompletion:completion];
         return;
@@ -74,7 +77,9 @@
     
     error = [PPOValidator validateCredentials:payment.credentials];
     if (error) {
-        outcome = [[PPOOutcome alloc] initWithError:error forPayment:payment];
+        outcome = [PPOOutcomeBuilder outcomeWithData:nil
+                                           withError:error
+                                          forPayment:payment];
         [self handleOutcome:outcome
              withCompletion:completion];
         return;
@@ -84,7 +89,9 @@
     
     if (thisPaymentUnderway) {
         error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentProcessing];
-        outcome = [[PPOOutcome alloc] initWithError:error forPayment:payment];
+        outcome = [PPOOutcomeBuilder outcomeWithData:nil
+                                           withError:error
+                                          forPayment:payment];
         [self handleOutcome:outcome
              withCompletion:completion];
         return;
@@ -98,7 +105,9 @@
     
     if (anyPaymentUnderway) {
         error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentManagerOccupied];
-        outcome = [[PPOOutcome alloc] initWithError:error forPayment:payment];
+        outcome = [PPOOutcomeBuilder outcomeWithData:nil
+                                           withError:error
+                                          forPayment:payment];
         [self handleOutcome:outcome
              withCompletion:completion];
         return;
@@ -106,7 +115,9 @@
     
     error = [PPOValidator validatePayment:payment];
     if (error) {
-        outcome = [[PPOOutcome alloc] initWithError:error forPayment:payment];
+        outcome = [PPOOutcomeBuilder outcomeWithData:nil
+                                           withError:error
+                                          forPayment:payment];
         [self handleOutcome:outcome
              withCompletion:completion];
         return;
@@ -165,15 +176,21 @@
     
     error = [PPOValidator validateBaseURL:self.endpointManager.baseURL];
     if (error) {
-        outcome = [[PPOOutcome alloc] initWithError:error forPayment:payment];
-        [self handleOutcome:outcome withCompletion:completion];
+        outcome = [PPOOutcomeBuilder outcomeWithData:nil
+                                           withError:error
+                                          forPayment:payment];
+        [self handleOutcome:outcome
+             withCompletion:completion];
         return;
     }
     
     error = [PPOValidator validateCredentials:payment.credentials];
     if (error) {
-        outcome = [[PPOOutcome alloc] initWithError:error forPayment:payment];
-        [self handleOutcome:outcome withCompletion:completion];
+        outcome = [PPOOutcomeBuilder outcomeWithData:nil
+                                           withError:error
+                                          forPayment:payment];
+        [self handleOutcome:outcome
+             withCompletion:completion];
         return;
     }
     
@@ -197,24 +214,33 @@
             
         case PAYMENT_STATE_READY: {
             error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentProcessing];
-            outcome = [[PPOOutcome alloc] initWithError:error forPayment:payment];
-            [self handleOutcome:outcome withCompletion:completion];
+            outcome = [PPOOutcomeBuilder outcomeWithData:nil
+                                               withError:error
+                                              forPayment:payment];
+            [self handleOutcome:outcome
+                 withCompletion:completion];
             return;
         }
             break;
             
         case PAYMENT_STATE_IN_PROGRESS: {
             error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentProcessing];
-            outcome = [[PPOOutcome alloc] initWithError:error forPayment:payment];
-            [self handleOutcome:outcome withCompletion:completion];
+            outcome = [PPOOutcomeBuilder outcomeWithData:nil
+                                               withError:error
+                                              forPayment:payment];
+            [self handleOutcome:outcome
+                 withCompletion:completion];
             return;
         }
             break;
             
         case PAYMENT_STATE_SUSPENDED: {
             error = [PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorPaymentSuspendedForThreeDSecure];
-            outcome = [[PPOOutcome alloc] initWithError:error forPayment:payment];
-            [self handleOutcome:outcome withCompletion:completion];
+            outcome = [PPOOutcomeBuilder outcomeWithData:nil
+                                               withError:error
+                                              forPayment:payment];
+            [self handleOutcome:outcome
+                 withCompletion:completion];
             return;
         }
             break;
@@ -302,9 +328,13 @@
         PPOOutcome *outcome;
         
         if (!networkError && json) {
-            outcome = [[PPOOutcome alloc] initWithData:json forPayment:payment];
+            outcome = [PPOOutcomeBuilder outcomeWithData:json
+                                               withError:nil
+                                              forPayment:payment];
         } else if (networkError) {
-            outcome = [[PPOOutcome alloc] initWithError:networkError forPayment:payment];
+            outcome = [PPOOutcomeBuilder outcomeWithData:nil
+                                               withError:networkError
+                                              forPayment:payment];
         }
         
         if (!isInternal) {
@@ -362,7 +392,11 @@
             if (invalidJSON) {
                 
                 [PPOPaymentTrackingManager removePayment:payment];
-                completion([[PPOOutcome alloc] initWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorServerFailure] forPayment:payment]);
+                
+                PPOOutcome *outcome = [PPOOutcomeBuilder outcomeWithData:nil
+                                                               withError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorServerFailure]
+                                                              forPayment:payment];
+                completion(outcome);
                 
             } else if (redirect) {
                 
@@ -371,18 +405,31 @@
                 
             } else if (json) {
                 
-                [weakSelf handleOutcome:[[PPOOutcome alloc] initWithData:json forPayment:payment]
+                PPOOutcome *outcome = [PPOOutcomeBuilder outcomeWithData:json
+                                                               withError:nil
+                                                              forPayment:payment];
+                
+                [weakSelf handleOutcome:outcome
                          withCompletion:completion];
                 
             } else if (networkError) {
                 
-                [weakSelf handleOutcome:[[PPOOutcome alloc] initWithError:networkError forPayment:payment]
+                PPOOutcome *outcome = [PPOOutcomeBuilder outcomeWithData:nil
+                                                               withError:networkError
+                                                              forPayment:payment];
+                
+                [weakSelf handleOutcome:outcome
                          withCompletion:completion];
                 
             } else {
                 
+                PPOOutcome *outcome = [PPOOutcomeBuilder outcomeWithData:nil
+                                                               withError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUnexpected]
+                                                              forPayment:payment];
+                
                 [PPOPaymentTrackingManager removePayment:payment];
-                completion([[PPOOutcome alloc] initWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUnexpected] forPayment:payment]);
+                
+                completion(outcome);
                 
             }
             
@@ -415,8 +462,9 @@
         
         [PPOPaymentTrackingManager removePayment:redirect.payment];
         
-        PPOOutcome *outcome = [[PPOOutcome alloc] initWithError:[PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorProcessingThreeDSecure]
-                                                     forPayment:redirect.payment];
+        PPOOutcome *outcome = [PPOOutcomeBuilder outcomeWithData:nil
+                                                       withError:[PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorProcessingThreeDSecure]
+                                                      forPayment:redirect.payment];
         
         [self handleOutcome:outcome
              withCompletion:completion];
@@ -481,8 +529,14 @@
     
     [PPOPaymentTrackingManager overrideTimeoutHandler:^{
         NSError *error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut];
-        PPOOutcome *timeoutOutcome = [[PPOOutcome alloc] initWithError:error forPayment:payment];
-        [weakSelf handleOutcome:timeoutOutcome withCompletion:completion];
+        
+        PPOOutcome *timeoutOutcome = [PPOOutcomeBuilder outcomeWithData:nil
+                                                              withError:error
+                                                             forPayment:payment];
+        
+        [weakSelf handleOutcome:timeoutOutcome
+                 withCompletion:completion];
+        
     } forPayment:payment];
     
     dispatch_async(self.r_queue, ^ {

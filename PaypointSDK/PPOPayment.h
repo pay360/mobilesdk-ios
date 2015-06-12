@@ -14,6 +14,11 @@
 @class PPOFinancialServices;
 @class PPOCustomer;
 @class PPOCredentials;
+
+
+/**
+ *  A PPOPayment object represents a payment. Each instance of this class generates it's own unique identifier, for traceability during and after a payment is processed.
+ */
 @interface PPOPayment : NSObject
 @property (nonatomic, strong) PPOTransaction *transaction;
 @property (nonatomic, strong) PPOCreditCard *card;

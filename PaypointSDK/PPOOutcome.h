@@ -9,22 +9,21 @@
 #import <UIKit/UIKit.h>
 
 @class PPOPayment;
+
+/**
+ *  An instance of PPOOutcome represents the completion of a payment event, or the completion of a query made about an existing payment. A failed or incomplete payment will have an associated NSError. Any error found should have it's error domain and error code examined.
+ */
 @interface PPOOutcome : NSObject
-
-@property (nonatomic, strong, readonly) PPOPayment *payment;
-@property (nonatomic, strong, readonly) NSNumber *amount;
-@property (nonatomic, strong, readonly) NSString *currency;
-@property (nonatomic, strong, readonly) NSDate *date;
-@property (nonatomic, strong, readonly) NSString *merchantRef;
-@property (nonatomic, strong, readonly) NSString *type;
-@property (nonatomic, strong, readonly) NSString *identifier;
-@property (nonatomic, strong, readonly) NSString *lastFour;
-@property (nonatomic, strong, readonly) NSString *cardUsageType;
-@property (nonatomic, strong, readonly) NSString *cardScheme;
-@property (nonatomic, strong, readonly) NSSet *customFields;
+@property (nonatomic, strong) PPOPayment *payment;
+@property (nonatomic, strong) NSNumber *amount;
+@property (nonatomic, strong) NSString *currency;
+@property (nonatomic, strong) NSDate *date;
+@property (nonatomic, strong) NSString *merchantRef;
+@property (nonatomic, strong) NSString *type;
+@property (nonatomic, strong) NSString *identifier;
+@property (nonatomic, strong) NSString *lastFour;
+@property (nonatomic, strong) NSString *cardUsageType;
+@property (nonatomic, strong) NSString *cardScheme;
+@property (nonatomic, strong) NSSet *customFields;
 @property (nonatomic, strong) NSError *error;
-
--(instancetype)initWithData:(NSDictionary*)data forPayment:(PPOPayment*)payment;
--(instancetype)initWithError:(NSError*)error forPayment:(PPOPayment*)payment;
-
 @end

@@ -12,7 +12,7 @@
 #import "PPOPayment.h"
 #import "PPOPaymentTrackingManager.h"
 #import "PPORedirect.h"
-#import "PPOOutcome.h"
+#import "PPOOutcomeBuilder.h"
 #import "PPOErrorManager.h"
 #import "PPOPaymentEndpointManager.h"
 #import "PPOCredentials.h"
@@ -85,8 +85,9 @@
     
     if (masterSessionTimedOut) {
         
-        PPOOutcome *outcome = [[PPOOutcome alloc] initWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut]
-                                                     forPayment:redirect.payment];
+        PPOOutcome *outcome = [PPOOutcomeBuilder outcomeWithData:nil
+                                                       withError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut]
+                                                      forPayment:redirect.payment];
         
         [self completeRedirect:redirect
                    withOutcome:outcome
@@ -150,13 +151,21 @@
         PPOOutcome *outcome;
         
         if (json) {
-            outcome = [[PPOOutcome alloc] initWithData:json forPayment:redirect.payment];
+            outcome = [PPOOutcomeBuilder outcomeWithData:json
+                                               withError:nil
+                                              forPayment:redirect.payment];
         } else if (invalidJSON) {
-            outcome = [[PPOOutcome alloc] initWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorServerFailure] forPayment:redirect.payment];
+            outcome = [PPOOutcomeBuilder outcomeWithData:nil
+                                               withError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorServerFailure]
+                                              forPayment:redirect.payment];
         } else if (networkError) {
-            outcome = [[PPOOutcome alloc] initWithError:networkError forPayment:redirect.payment];
+            outcome = [PPOOutcomeBuilder outcomeWithData:nil
+                                               withError:networkError
+                                              forPayment:redirect.payment];
         } else {
-            outcome = [[PPOOutcome alloc] initWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUnexpected] forPayment:redirect.payment];
+            outcome = [PPOOutcomeBuilder outcomeWithData:nil
+                                               withError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUnexpected]
+                                              forPayment:redirect.payment];
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -254,8 +263,12 @@
         e = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUnexpected];
     }
     
+    PPOOutcome *outcome = [PPOOutcomeBuilder outcomeWithData:nil
+                                                   withError:e
+                                                  forPayment:controller.redirect.payment];
+    
     [self completeRedirect:controller.redirect
-               withOutcome:[[PPOOutcome alloc] initWithError:e forPayment:controller.redirect.payment]
+               withOutcome:outcome
              forController:controller];
     
 }
