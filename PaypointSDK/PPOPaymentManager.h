@@ -6,14 +6,7 @@
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#import "PPOError.h"
 #import "PPOOutcome.h"
-
-@class PPOPayment;
-@class PPOCredentials;
-@class PPOTransaction;
-@class PPOBillingAddress;
-@class PPOCreditCard;
 
 /**
  * @discussion A PPOPaymentManager object lets you make payments, with a convenient completion block callback. Each payment session can be configured with a time limit, which ensures the payment takes a limited time to complete.

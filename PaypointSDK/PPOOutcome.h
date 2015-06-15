@@ -6,9 +6,8 @@
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-
-@class PPOPayment;
+#import "PPOError.h"
+#import "PPOPayment.h"
 
 /**
  *  An instance of PPOOutcome represents the completion of a payment event, or the completion of a query made about an existing payment. A failed or incomplete payment will have an associated NSError. Any error found should have it's error domain and error code examined.

@@ -6,15 +6,12 @@
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-
-@class PPOTransaction;
-@class PPOBillingAddress;
-@class PPOCreditCard;
-@class PPOFinancialServices;
-@class PPOCustomer;
-@class PPOCredentials;
-
+#import "PPOTransaction.h"
+#import "PPOBillingAddress.h"
+#import "PPOCreditCard.h"
+#import "PPOCredentials.h"
+#import "PPOFinancialServices.h"
+#import "PPOCustomer.h"
 
 /**
  *  A PPOPayment object represents a payment. Each instance of this class generates it's own unique identifier, for traceability during and after a payment is processed.
