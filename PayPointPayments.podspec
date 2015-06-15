@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
 
   s.source_files = ['PaypointSDK/*.[mh]','PaypointLibrary/*.h']
   s.resource_bundles = {
-    'PayPointPayments' => ['PaypointResources/*']
+    'PayPointPayments' => ['PaypointResources/*','PaypointLibrary/PPOWebViewController.xib']
   }
 
   s.public_header_files = ['PaypointLibrary/*.h','PaypointSDK/PPO*.h'] 
