@@ -57,9 +57,9 @@
  */
 -(void)startRedirectWithRedirect:(PPORedirect*)redirect {
     
-    if (PPO_DEBUG_MODE) {
-        NSLog(@"Loading redirect web view hidden for payment with op ref: %@", redirect.payment.identifier);
-    }
+#if PPO_DEBUG_MODE
+    NSLog(@"Loading redirect web view hidden for payment with op ref: %@", redirect.payment.identifier);
+#endif
     
     [PPOPaymentTrackingManager overrideTimeoutHandler:^{
         
@@ -68,9 +68,9 @@
          * the responsibility in it's 'viewDidLoad' callback.
          */
         
-        if (PPO_DEBUG_MODE) {
-            NSLog(@"Attempted to perform abort sequence, but it has been deliberately cleared.");
-        }
+#if PPO_DEBUG_MODE
+    NSLog(@"Attempted to perform abort sequence, but it has been deliberately cleared.");
+#endif
         
     } forPayment:self.redirect.payment];
     

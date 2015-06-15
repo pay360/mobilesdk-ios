@@ -76,16 +76,16 @@
     
     if (timer.isValid) {
         
-        if (PPO_DEBUG_MODE) {
-            NSString *message = (self.sessionTimeout == 1) ? @"second" : @"seconds";
-            NSLog(@"Master session timeout is %f %@ for payment with op ref %@", self.sessionTimeout, message, self.payment.identifier);
-        }
+#if PPO_DEBUG_MODE
+        NSString *message = (self.sessionTimeout == 1) ? @"second" : @"seconds";
+        NSLog(@"Master session timeout is %f %@ for payment with op ref %@", self.sessionTimeout, message, self.payment.identifier);
+#endif
         
         if (self.sessionTimeout <= 0) {
         
-            if (PPO_DEBUG_MODE) {
-                NSLog(@"Master session timeout has expired");
-            }
+#if PPO_DEBUG_MODE
+    NSLog(@"Master session timeout has expired");
+#endif
             
             self.timeoutHandler();
         } else {
@@ -227,9 +227,9 @@
 
 +(void)suspendTimeoutForPayment:(PPOPayment *)payment {
     
-    if (PPO_DEBUG_MODE) {
-        NSLog(@"Suspending master session timeout for payment with op ref: %@", payment.identifier);
-    }
+#if PPO_DEBUG_MODE
+    NSLog(@"Suspending master session timeout for payment with op ref: %@", payment.identifier);
+#endif
     
     PPOPaymentTrackingChaperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
     chapperone.state = PAYMENT_STATE_SUSPENDED;
@@ -253,9 +253,9 @@
     
     if (hasTimedOut) {
         
-        if (PPO_DEBUG_MODE) {
-            NSLog(@"Master session has fully counted down to zero");
-        }
+#if PPO_DEBUG_MODE
+    NSLog(@"Master session has fully counted down to zero");
+#endif
         
     }
     

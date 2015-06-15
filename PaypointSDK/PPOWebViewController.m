@@ -69,9 +69,9 @@
         
         _abortSession = YES;
         
-        if (PPO_DEBUG_MODE) {
-            NSLog(@"Aborting web view session commencement");
-        }
+#if PPO_DEBUG_MODE
+    NSLog(@"Aborting web view session commencement");
+#endif
         
         [weakSelf.delegate threeDSecureController:weakSelf
                                   failedWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut]];
@@ -90,16 +90,16 @@
             
             if (weakSelf.webView.isLoading) {
                 
-                if (PPO_DEBUG_MODE) {
-                    NSLog(@"Stopping web view completing load");
-                }
+#if PPO_DEBUG_MODE
+    NSLog(@"Stopping web view completing load");
+#endif
                 
                 [weakSelf.webView stopLoading];
             } else {
-                
-                if (PPO_DEBUG_MODE) {
-                    NSLog(@"Preventing web view controller continuing with 3DSecure session");
-                }
+
+#if PPO_DEBUG_MODE
+    NSLog(@"Preventing web view controller continuing with 3DSecure session");
+#endif
                 
                 [weakSelf.delegate threeDSecureController:weakSelf
                                           failedWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut]];
@@ -117,9 +117,9 @@
     
     if (!self.redirect.delayTimeInterval) {
         
-        if (PPO_DEBUG_MODE) {
-            NSLog(@"Delay show timeout not provided in redirect.");
-        }
+#if PPO_DEBUG_MODE
+    NSLog(@"Delay show timeout not provided in redirect.");
+#endif
         
         /*
          * No timeout provided, so fire the conclusion for it immediately.
@@ -267,9 +267,9 @@
         
         _abortSession = YES;
         
-        if (PPO_DEBUG_MODE) {
-            NSLog(@"Preventing web view controller continuing with 3DSecure session");
-        }
+#if PPO_DEBUG_MODE
+    NSLog(@"Preventing web view controller continuing with 3DSecure session");
+#endif
         
         [weakSelf.delegate threeDSecureController:weakSelf
                                   failedWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut]];
@@ -284,10 +284,10 @@
     
     if (_initialWebViewLoadComplete && self.redirect.delayTimeInterval && !self.delayShowTimer && !_delayShowTimeoutExpired) {
         
-        if (PPO_DEBUG_MODE) {
-            NSString *message = (self.redirect.delayTimeInterval.integerValue == 1) ? @"second" : @"seconds";
-            NSLog(@"Web view loaded so starting 'delay show webview' countdown with a starting value of %@ %@", self.redirect.delayTimeInterval, message);
-        }
+#if PPO_DEBUG_MODE
+        NSString *message = (self.redirect.delayTimeInterval.integerValue == 1) ? @"second" : @"seconds";
+        NSLog(@"Web view loaded so starting 'delay show webview' countdown with a starting value of %@ %@", self.redirect.delayTimeInterval, message);
+#endif
         
         self.delayShowTimer = [NSTimer scheduledTimerWithTimeInterval:self.redirect.delayTimeInterval.doubleValue
                                                                target:self
@@ -354,9 +354,9 @@
      */
     [PPOPaymentTrackingManager overrideTimeoutHandler:^{
         
-        if (PPO_DEBUG_MODE) {
-            NSLog(@"Attempted to perform abort sequence, but it has been deliberately cleared.");
-        }
+#if PPO_DEBUG_MODE
+    NSLog(@"Attempted to perform abort sequence, but it has been deliberately cleared.");
+#endif
         
     } forPayment:self.redirect.payment];
     
@@ -441,11 +441,14 @@
         
         [self resumeThreeDSecureSessionTimer];
         
-    } else if (PPO_DEBUG_MODE && !self.redirect.sessionTimeoutTimeInterval && !self.sessionTimeoutTimer) {
-        
-        NSLog(@"3DSecure session does not have a session timeout for payment with op ref: %@", self.redirect.payment.identifier);
-        
     }
+    
+#if PPO_DEBUG_MODE
+    if (!self.redirect.sessionTimeoutTimeInterval && !self.sessionTimeoutTimer) {
+        NSLog(@"3DSecure session does not have a session timeout for payment with op ref: %@", self.redirect.payment.identifier);
+    }
+#endif
+    
 }
 
 -(void)resumeThreeDSecureSessionTimer {
@@ -457,10 +460,10 @@
                                                                   userInfo:nil
                                                                    repeats:YES];
         
-        if (PPO_DEBUG_MODE) {
-            NSString *message = (self.sessionTimeout == 1) ? @"second" : @"seconds";
-            NSLog(@"Resuming 3DSecure session timeout with %f %@ remaining", self.sessionTimeout, message);
-        }
+#if PPO_DEBUG_MODE
+        NSString *message = (self.sessionTimeout == 1) ? @"second" : @"seconds";
+        NSLog(@"Resuming 3DSecure session timeout with %f %@ remaining", self.sessionTimeout, message);
+#endif
         
     }
     
@@ -472,9 +475,9 @@
         return;
     }
     
-    if (PPO_DEBUG_MODE) {
-        NSLog(@"Cancel button pressed");
-    }
+#if PPO_DEBUG_MODE
+    NSLog(@"Cancel button pressed");
+#endif
     
     _userCancelled = YES;
     [self cancelThreeDSecureRelatedTimers];
@@ -492,9 +495,10 @@
         [self.delayShowTimer invalidate];
         self.delayShowTimer = nil;
         
-        if (PPO_DEBUG_MODE) {
-            NSLog(@"Stopping 'delay show webview' countdown");
-        }
+#if PPO_DEBUG_MODE
+    NSLog(@"Stopping 'delay show webview' countdown");
+#endif
+        
     }
     
 }
@@ -505,9 +509,10 @@
         [self.sessionTimeoutTimer invalidate];
         self.sessionTimeoutTimer = nil;
         
-        if (PPO_DEBUG_MODE) {
-            NSLog(@"Stopping 'three d secure session' timer");
-        }
+#if PPO_DEBUG_MODE
+    NSLog(@"Stopping 'three d secure session' timer");
+#endif
+        
     }
     
 }

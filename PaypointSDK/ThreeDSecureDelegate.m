@@ -54,9 +54,9 @@
 -(void)threeDSecureController:(id<ThreeDSecureControllerProtocol>)controller
                 acquiredPaRes:(NSString *)paRes {
     
-    if (PPO_DEBUG_MODE) {
-        NSLog(@"Building resume body for payment with op ref: %@", controller.redirect.payment.identifier);
-    }
+#if PPO_DEBUG_MODE
+    NSLog(@"Building resume body for payment with op ref: %@", controller.redirect.payment.identifier);
+#endif
     
     id body;
     
@@ -77,11 +77,13 @@
     
     BOOL masterSessionTimedOut = [PPOPaymentTrackingManager masterSessionTimeoutHasExpiredForPayment:self.redirect.payment];
     
-    if (PPO_DEBUG_MODE && !masterSessionTimedOut) {
+#if PPO_DEBUG_MODE
+    if (!masterSessionTimeOut) {
         NSLog(@"Performing resume request for payment with op ref: %@", redirect.payment.identifier);
-    } else if (PPO_DEBUG_MODE && masterSessionTimedOut) {
+    } else {
         NSLog(@"Not attempting resume request for payment with op ref: %@", redirect.payment.identifier);
     }
+#endif
     
     if (masterSessionTimedOut) {
         
@@ -118,9 +120,9 @@
     
     [PPOPaymentTrackingManager overrideTimeoutHandler:^{
         
-        if (PPO_DEBUG_MODE) {
-            NSLog(@"Cancelling resume request");
-        }
+#if PPO_DEBUG_MODE
+    NSLog(@"Cancelling resume request");
+#endif
         
         [weakTask cancel];
         
@@ -221,9 +223,9 @@
          *
          * Paypoint are aware of these points and they are happy to release to customers and get feedback from them first.
          */
-        if (PPO_DEBUG_MODE) {
-            NSLog(@"Showing web view for op ref: %@", controller.redirect.payment.identifier);
-        }
+#if PPO_DEBUG_MODE
+    NSLog(@"Showing web view for op ref: %@", controller.redirect.payment.identifier);
+#endif
         
         _isPresentingWebView = YES;
         
@@ -339,10 +341,10 @@
         _isDismissingWebView = NO;
                 
         if ([[UIApplication sharedApplication] keyWindow] == controller.rootView.superview) {
-            
-            if (PPO_DEBUG_MODE) {
-                NSLog(@"Removing web view for payment with op ref: %@", weakSelf.redirect.payment.identifier);
-            }
+           
+#if PPO_DEBUG_MODE
+        NSLog(@"Removing web view for payment with op ref: %@", weakSelf.redirect.payment.identifier);
+#endif
             
             [controller.rootView removeFromSuperview];
             
