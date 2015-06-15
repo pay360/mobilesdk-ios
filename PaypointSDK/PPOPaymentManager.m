@@ -19,7 +19,7 @@
 #import "PPOSDKConstants.h"
 #import "PPODeviceInfo.h"
 #import "PPOResourcesManager.h"
-#import "PPOFinancialServices.h"
+#import "PPOFinancialService.h"
 #import "PPOCustomer.h"
 #import "PPOCustomField.h"
 #import "PPOTimeManager.h"

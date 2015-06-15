@@ -8,12 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
+/**
+ *  @discussion An instance of this class represents a custom field.
+ */
 @interface PPOCustomField : NSObject
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) NSString *value;
-@property (nonatomic, strong) NSNumber *isTransient; //Bool
+@property (nonatomic, strong) NSNumber *isTransient;
 
 -(NSDictionary*)jsonObjectRepresentation;
--(instancetype)initWithData:(NSDictionary*)data;
 
 @end

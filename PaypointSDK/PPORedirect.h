@@ -6,11 +6,9 @@
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "PPOPayment.h"
 
-@class PPOPayment;
 @interface PPORedirect : NSObject
-
 @property (nonatomic, strong) NSURLRequest *request;
 @property (nonatomic, strong) NSNumber *sessionTimeoutTimeInterval;
 @property (nonatomic, strong) NSNumber *delayTimeInterval;
@@ -19,7 +17,9 @@
 @property (nonatomic, strong) PPOPayment *payment;
 @property (nonatomic, strong) NSData *threeDSecureResumeBody;
 
--(instancetype)initWithData:(NSDictionary*)data forPayment:(PPOPayment*)payment;
+-(instancetype)initWithData:(NSDictionary*)data
+                 forPayment:(PPOPayment*)payment;
+
 +(BOOL)requiresRedirect:(id)json;
 
 @end

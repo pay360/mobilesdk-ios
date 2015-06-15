@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+/**
+ *  @discussion An instance of this class represents a billing address.
+ */
 @interface PPOBillingAddress : NSObject
 @property (nonatomic, strong) NSString *line1;
 @property (nonatomic, strong) NSString *line2;

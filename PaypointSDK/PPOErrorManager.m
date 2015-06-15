@@ -199,15 +199,6 @@
                     ];
         } break;
             
-        case PPOPaymentErrorPaymentSuspendedForThreeDSecure: {
-            return [NSError errorWithDomain:PPOPaymentErrorDomain
-                                       code:PPOPaymentErrorPaymentSuspendedForThreeDSecure
-                                   userInfo:@{
-                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The payment is currently on hold awaiting Three D Secure to complete", @"Payment status message.")
-                                              }
-                    ];
-        } break;
-            
         case PPOPaymentErrorUnexpected: {
             return [NSError errorWithDomain:PPOPaymentErrorDomain
                                        code:PPOPaymentErrorUnexpected

@@ -15,7 +15,7 @@
 #import "PPOPayment.h"
 #import "PPOResourcesManager.h"
 #import "PPOBillingAddress.h"
-#import "PPOFinancialServices.h"
+#import "PPOFinancialService.h"
 #import "PPOCustomer.h"
 #import "PPOCustomField.h"
 #import "PPOSDKConstants.h"

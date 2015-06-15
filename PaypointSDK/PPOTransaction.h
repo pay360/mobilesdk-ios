@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+/**
+ * @discussion An instance of this class represents a transaction. Set 'isDeferred' to 'YES' for pre-authentication.
+ */
 @interface PPOTransaction : NSObject
 @property (nonatomic, strong) NSString *currency;
 @property (nonatomic, strong) NSNumber *amount;

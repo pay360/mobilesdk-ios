@@ -11,6 +11,7 @@
 #import "PPOSDKConstants.h"
 #import "PPOCustomField.h"
 #import "PPOErrorManager.h"
+#import "PPOCustomFieldBuilder.h"
 
 @interface PPOOutcomeBuilder ()
 @end
@@ -52,7 +53,7 @@
         PPOCustomField *field;
         for (id object in fieldState) {
             if ([object isKindOfClass:[NSDictionary class]]) {
-                field = [[PPOCustomField alloc] initWithData:object];
+                field = [PPOCustomFieldBuilder customFieldWithData:object];
                 [collector addObject:field];
             }
         }

@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+/**
+ *  @discussion An instance of this class represents a customer.
+ */
 @interface PPOCustomer : NSObject
 @property (nonatomic, copy) NSString *email;
 @property (nonatomic, copy) NSString *dateOfBirth;

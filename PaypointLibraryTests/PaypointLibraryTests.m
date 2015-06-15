@@ -419,8 +419,8 @@
     return card;
 }
 
--(PPOFinancialServices*)financialServices {
-    PPOFinancialServices *financialServices = [PPOFinancialServices new];
+-(PPOFinancialService*)financialServices {
+    PPOFinancialService *financialServices = [PPOFinancialService new];
     financialServices.dateOfBirth = @"19870818";
     financialServices.surname = @"Smith";
     financialServices.accountNumber = @"123ABC";

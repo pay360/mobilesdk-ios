@@ -12,11 +12,11 @@
 
 +(NSURL*)baseURLForEnvironment:(PPOEnvironment)environment {
     
-    //api.mite.paypoint.net:2443
+    //
 
     switch (environment) {
         case PPOEnvironmentMerchantIntegrationTestingEnvironment:
-            return [NSURL URLWithString:@"http://localhost:5000"];
+            return [NSURL URLWithString:@"https://api.mite.paypoint.net:2443"];
             break;
             
         default:

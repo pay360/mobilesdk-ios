@@ -17,43 +17,32 @@
     
     if (self.name) {
         id name = ([self cleanString:self.name]) ?: [NSNull null];
-        [mutableObject setValue:name forKey:CUSTOM_FIELD_NAME];
+        [mutableObject setValue:name
+                         forKey:CUSTOM_FIELD_NAME];
     }
     
     if (self.value) {
         id value = ([self cleanString:self.value]) ?: [NSNull null];
-        [mutableObject setValue:value forKey:CUSTOM_FIELD_VALUE];
+        [mutableObject setValue:value
+                         forKey:CUSTOM_FIELD_VALUE];
     }
     
-    if (self.isTransient) {
-        [mutableObject setValue:self.isTransient forKey:CUSTOM_FIELD_TRANSIENT];
+    id transient = (self.isTransient) ?: [NSNull null];
+    
+    NSNumber *isTransient = transient;
+    
+    if ([isTransient isKindOfClass:[NSNumber class]] && isTransient.integerValue > 1) {
+        isTransient = @NO;
     }
+    
+    [mutableObject setValue:isTransient
+                     forKey:CUSTOM_FIELD_TRANSIENT];
     
     return [mutableObject copy];
 }
 
 -(NSString*)cleanString:(NSString*)string {
     return [string stringByReplacingOccurrencesOfString:@" " withString:@""];
-}
-
--(instancetype)initWithData:(NSDictionary *)data {
-    self = [super init];
-    if (self) {
-        id value;
-        value = [data objectForKey:CUSTOM_FIELD_NAME];
-        if ([value isKindOfClass:[NSString class]]) {
-            self.name = value;
-        }
-        value = [data objectForKey:CUSTOM_FIELD_VALUE];
-        if ([value isKindOfClass:[NSString class]]) {
-            self.value = value;
-        }
-        value = [data objectForKey:CUSTOM_FIELD_TRANSIENT];
-        if ([value isKindOfClass:[NSNumber class]]) {
-            self.isTransient = value;
-        }
-    }
-    return self;
 }
 
 @end

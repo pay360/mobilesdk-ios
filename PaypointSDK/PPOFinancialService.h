@@ -1,5 +1,5 @@
 //
-//  PPOFinancialServices.h
+//  PPOFinancialService.h
 //  Paypoint
 //
 //  Created by Robert Nash on 19/05/2015.
@@ -8,7 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-@interface PPOFinancialServices : NSObject
+/**
+ *  @discussion An instance of this class represents a financial service.
+ */
+@interface PPOFinancialService : NSObject
 @property (nonatomic, copy) NSString *dateOfBirth;
 @property (nonatomic, copy) NSString *surname;
 @property (nonatomic, copy) NSString *accountNumber;

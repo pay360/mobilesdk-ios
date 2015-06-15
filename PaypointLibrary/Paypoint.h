@@ -18,7 +18,7 @@
 #import <PayPointPayments/PPOOutcome.h>
 #import <PayPointPayments/PPOPaymentBaseURLManager.h>
 #import <PayPointPayments/PPOResourcesManager.h>
-#import <PayPointPayments/PPOFinancialServices.h>
+#import <PayPointPayments/PPOFinancialService.h>
 #import <PayPointPayments/PPOCustomer.h>
 #import <PayPointPayments/PPOCustomField.h>
 #import <PayPointPayments/PPOValidator.h>

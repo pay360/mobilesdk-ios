@@ -8,108 +8,120 @@
 
 #import "PPOSDKMacros.h"
 
-/*!
- The NSError domain of all errors returned by the Paypoint SDK.
- */
 PPOSDK_EXTERN NSString *const PPOPaymentErrorDomain;
 PPOSDK_EXTERN NSString *const PPOLocalValidationErrorDomain;
 
 /*!
- @typedef NS_ENUM (NSUInteger, PPOPaymentError)
- @abstract Error codes returned by the Paypoint SDK in NSError.
- 
- @discussion
- Valid only in the scope of PPOPaymentErrorDomain.
+ * @typedef PPOPaymentError
+ * @brief Errors relating to a payment.
+ * @constant PPOPaymentErrorNotInitialised Error not yet initialised.
+ * @constant PPOPaymentErrorUnexpected Represents an unexpected error.
+ * @constant PPOPaymentErrorClientTokenExpired The supplied bearer token has expired.
+ * @constant PPOPaymentErrorClientTokenInvalid The supplied bearer token is invalid.
+ * @constant PPOPaymentErrorUnauthorisedRequest The supplied token does not have sufficient permissions to access the specified feature.
+ * @constant PPOPaymentErrorThreeDSecureTransactionProcessingFailed The transaction was successfully submitted but did not complete three D secure validation.
+ * @constant PPOPaymentErrorServerFailure An internal server error occurred at paypoint.
+ * @constant PPOPaymentErrorMasterSessionTimedOut The payment session timed out. This is the timeout that is passed into the payment manager.
+ * @constant PPOPaymentErrorUserCancelledThreeDSecure User cancelled 3D Secure.
+ * @constant PPOPaymentErrorPaymentProcessing The payment is currently in flight.
+ * @constant PPOPaymentErrorTransactionDeclined The transaction was declined.
+ * @constant PPOPaymentErrorAuthenticationFailed The presented API token was not valid the wrong type of authentication was used.
+ * @constant PPOPaymentErrorPaymentNotFound The transaction or operation was not found.
+ * @constant PPOPaymentErrorPaymentManagerOccupied A payment currently occupies the payment manager. Only one payment allowed per unit time.
  */
-typedef NS_ENUM(NSInteger, PPOPaymentError) {
+typedef enum {
+    ///Error not yet initialised.
+    PPOPaymentErrorNotInitialised,
     
-    /*! Error not initialised yet. */
-    PPOPaymentErrorNotInitialised = -2,
+    ///Represents an unexpected error.
+    PPOPaymentErrorUnexpected,
     
-    /*! Represents an unknown error. */
-    PPOPaymentErrorUnexpected = -1,
-    
-    /* The supplied bearer token has expired. */
+    ///The supplied bearer token has expired.
     PPOPaymentErrorClientTokenExpired,
     
-    /* The supplied bearer token is invalid. */
+    ///The supplied bearer token is invalid.
     PPOPaymentErrorClientTokenInvalid,
     
-    /* The supplied token does not have sufficient permissions to access the specified feature. */
+    ///The supplied token does not have sufficient permissions to access the specified feature.
     PPOPaymentErrorUnauthorisedRequest,
     
-    /* The transaction was successfully submitted but did not complete three D secure validation. */
+    ///The transaction was successfully submitted but did not complete three D secure validation.
     PPOPaymentErrorThreeDSecureTransactionProcessingFailed,
     
-    /* An internal server error occurred at paypoint */
+    ///An internal server error occurred at paypoint.
     PPOPaymentErrorServerFailure,
     
-    /* The payment session timed out. This is the timeout that is passed into the payment manager. */
+    ///The payment session timed out. This is the timeout that is passed into the payment manager.
     PPOPaymentErrorMasterSessionTimedOut,
     
-    /* User cancelled 3D Secure */
+    ///User cancelled 3D Secure.
     PPOPaymentErrorUserCancelledThreeDSecure,
     
-    /* The payment is currently on hold awaiting Three D Secure to complete*/
-    PPOPaymentErrorPaymentSuspendedForThreeDSecure,
-    
-    /* The payment is currently in flight */
+    ///The payment is currently in flight.
     PPOPaymentErrorPaymentProcessing,
     
-    /* The transaction was declined */
+    ///The transaction was declined.
     PPOPaymentErrorTransactionDeclined,
     
-    /* The presented API token was not valid, or the wrong type of authentication was used */
+    ///The presented API token was not valid the wrong type of authentication was used.
     PPOPaymentErrorAuthenticationFailed,
     
-    /* The transaction or operation was not found */
+    ///The transaction or operation was not found.
     PPOPaymentErrorPaymentNotFound,
     
-    /* A payment currently occupies the payment manager. Only one payment allowed per unit time.*/
+    ///A payment currently occupies the payment manager. Only one payment allowed per unit time.
     PPOPaymentErrorPaymentManagerOccupied
     
-};
+} PPOPaymentError;
 
 /*!
- @typedef NS_ENUM (NSUInteger, PPOLocalValidationError)
- @abstract Error codes returned by the Paypoint SDK during a payment.
- 
- @discussion
- Valid only in the scope of PPOLocalValidationError.
+ * @typedef PPOLocalValidationError
+ * @brief Errors relating to local validation.
+ * @constant PPOLocalValidationErrorNotInitialised Error not initialised yet.
+ * @constant PPOLocalValidationErrorClientTokenInvalid A client token has not been provided.
+ * @constant PPOLocalValidationErrorCardPanInvalid Pan card invalid.
+ * @constant PPOLocalValidationErrorCVVInvalid CVV card security code invalid.
+ * @constant PPOLocalValidationErrorCardExpiryDateExpired The date of the expirty for the current card has expired.
+ * @constant PPOLocalValidationErrorCardExpiryDateInvalid Card expiry date is invalid.
+ * @constant PPOLocalValidationErrorCurrencyInvalid Specified currency is invalid.
+ * @constant PPOLocalValidationErrorPaymentAmountInvalid The specified amount is invalid.
+ * @constant PPOLocalValidationErrorInstallationIDInvalid The provided installation ID is invalid.
+ * @constant PPOLocalValidationErrorSuppliedBaseURLInvalid The base URL configured within the payment manager is invalid.
+ * @constant PPOLocalValidationErrorCredentialsNotFound Credentials have not been set in the payment manager.
  */
-typedef NS_ENUM(NSInteger, PPOLocalValidationError) {
+typedef enum {
     
-    /*! Error not initialised yet. */
-    PPOLocalValidationErrorNotInitialised = -1,
+    ///Error not initialised yet.
+    PPOLocalValidationErrorNotInitialised,
     
-    /* A client token has not been provided.*/
+    ///A client token has not been provided.
     PPOLocalValidationErrorClientTokenInvalid,
     
-    /* Pan card invalid */
+    ///Pan card invalid.
     PPOLocalValidationErrorCardPanInvalid,
     
-    /* CVV card security code invalid */
+    ///CVV card security code invalid.
     PPOLocalValidationErrorCVVInvalid,
     
-    /* The date of the expirty for the current card has expired*/
+    ///The date of the expirty for the current card has expired.
     PPOLocalValidationErrorCardExpiryDateExpired,
     
-    /* Card expiry date is invalid. */
+    ///Card expiry date is invalid.
     PPOLocalValidationErrorCardExpiryDateInvalid,
     
-    /* Specified currency is invalid. */
+    ///Specified currency is invalid.
     PPOLocalValidationErrorCurrencyInvalid,
     
-    /* The specified amount is invalid */
+    ///The specified amount is invalid.
     PPOLocalValidationErrorPaymentAmountInvalid,
     
-    /* The provided installation ID is invalid*/
+    ///The provided installation ID is invalid.
     PPOLocalValidationErrorInstallationIDInvalid,
     
-    /* The base URL configured within the payment manager, is invalid*/
+    ///The base URL configured within the payment manager is invalid.
     PPOLocalValidationErrorSuppliedBaseURLInvalid,
     
-    /* Credentials have not been set in the payment manager*/
+    ///Credentials have not been set in the payment manager.
     PPOLocalValidationErrorCredentialsNotFound,
     
-};
+} PPOLocalValidationError;

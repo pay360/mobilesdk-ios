@@ -1,14 +1,14 @@
 //
-//  PPOFinancialServices.m
+//  PPOFinancialService.m
 //  Paypoint
 //
 //  Created by Robert Nash on 19/05/2015.
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#import "PPOFinancialServices.h"
+#import "PPOFinancialService.h"
 
-@implementation PPOFinancialServices
+@implementation PPOFinancialService
 
 -(NSDictionary*)jsonObjectRepresentation {
     id dateOfBirth = ([self cleanString:self.dateOfBirth]) ?: [NSNull null];

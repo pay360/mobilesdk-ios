@@ -17,12 +17,18 @@
     id reference = (self.merchantRef) ?: [NSNull null];
     id deferred = (self.isDeferred) ?: [NSNull null];
     
+    NSNumber *isDeferred = deferred;
+    
+    if ([deferred isKindOfClass:[NSNumber class]] && isDeferred.integerValue > 1) {
+        isDeferred = @NO;
+    }
+    
     return @{
              @"currency": currency,
              @"amount": amount,
              @"description": description,
              @"merchantRef": reference,
-             @"deferred": deferred,
+             @"deferred": isDeferred
              };
 }
 

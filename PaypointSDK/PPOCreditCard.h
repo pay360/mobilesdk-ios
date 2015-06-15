@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+/**
+ *  @discussion An instance of this class represents a credit card.
+ */
 @interface PPOCreditCard : NSObject
 @property (nonatomic, strong) NSString *pan;
 @property (nonatomic, strong) NSString *cvv;
