@@ -34,8 +34,8 @@
 @property (nonatomic, strong) NSURLSession *internalURLSession;
 @property (nonatomic, strong) NSURLSession *externalURLSession;
 @property (nonatomic, strong) PPODeviceInfo *deviceInfo;
-@property (nonatomic, strong) PPORedirectManager *webformManager;
-@property (nonatomic, strong) dispatch_queue_t r_queue;
+@property (nonatomic, strong) PPORedirectManager *redirectManager;
+@property (nonatomic, strong) dispatch_queue_t q_queue;
 @end
 
 @implementation PPOPaymentManager
@@ -56,6 +56,18 @@
         _externalURLSession = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:q];
     }
     return self;
+}
+
++(BOOL)isSafeToRetryPaymentWithOutcome:(PPOOutcome *)outcome {
+    
+    if (!outcome) return NO;
+    
+    NSError *error = outcome.error;
+    
+    if (!error) return NO;
+    
+    return [PPOErrorManager isSafeToRetryPaymentWithError:error];
+    
 }
 
 -(void)makePayment:(PPOPayment*)payment
@@ -250,8 +262,9 @@
 
 /*
  * The SDK may call this method to determine the state of a payment and establish an outcome.
- * If the outcome is 'still processing' the SDK will poll this method recursively until the state changes
- * or the master session timeout timer, times out.
+ * If the outcome is 'still processing' or we suffered with a network interuption, then the 
+ * SDK will call this method recursively, until a more conclusive outcome is established
+ * or the master session timeout timer fires.
  */
 -(void)queryServerForPayment:(PPOPayment*)payment
              isInternalQuery:(BOOL)internalQuery
@@ -280,7 +293,7 @@
                                      withOverallCompletion:completion];
     
     /*
-     * If the SDK is trying to recover, then internalQuery is set to 'YES'
+     * If the SDK is trying to establish a more conclusive outcome for a payment, then internalQuery is set to 'YES' here.
      */
     NSURLSession *session = (internalQuery) ? self.internalURLSession : self.externalURLSession;
     
@@ -288,10 +301,7 @@
                                             completionHandler:completionHandler];
     
     /*
-     * We override the payment tracker's timeout handler so that if the SDK has progressed beyend the initial make payment phase
-     * i.e. the payment has concluded with 'error' and we are querying the state. At this point, the timeout handler should cancel 
-     * the query networking task that is doing the query. 
-     * When the network completion handler finishes, the outcome should be 'handled' with the 'handleOutcome:' method below.
+     * Cancelling the task like this triggers an NSURL 'cancel' in the network completion handler.
      */
     if (internalQuery) {
         __weak typeof(task) weakTask = task;
@@ -332,12 +342,16 @@
                                                withError:nil
                                               forPayment:payment];
         } else if (networkError) {
+            
+            /*
+             * Potentially 'NSURLErrorCancel', if the master session timeout fired.
+             */
             outcome = [PPOOutcomeBuilder outcomeWithData:nil
                                                withError:networkError
                                               forPayment:payment];
         }
         
-        if (!isInternal) {
+        if (isInternal == NO) {
             
             if (PPO_DEBUG_MODE) {
                 NSLog(@"EXTERNAL QUERY: Established error with domain: %@ with code: %li", outcome.error.domain, (long)outcome.error.code);
@@ -446,17 +460,17 @@
         
         __weak typeof(self) weakSelf = self;
         
-        self.webformManager = [[PPORedirectManager alloc] initWithRedirect:redirect
-                                                              withSession:self.internalURLSession
-                                                      withEndpointManager:self.endpointManager
-                                                           withCompletion:^(PPOOutcome *outcome) {
+        self.redirectManager = [[PPORedirectManager alloc] initWithRedirect:redirect
+                                                                withSession:self.internalURLSession
+                                                        withEndpointManager:self.endpointManager
+                                                             withCompletion:^(PPOOutcome *outcome) {
                                                                
-                                                               [weakSelf handleOutcome:outcome
-                                                                        withCompletion:completion];
+                                                                 [weakSelf handleOutcome:outcome
+                                                                          withCompletion:completion];
                                                                
-                                                           }];
+                                                             }];
         
-        [self.webformManager startRedirect];
+        [self.redirectManager startRedirect];
         
     } else {
         
@@ -480,14 +494,10 @@
     BOOL sessionTimedOut = isNetworkingIssue && outcome.error.code == NSURLErrorCancelled;
     BOOL isProcessingAtPaypoint = [outcome.error.domain isEqualToString:PPOPaymentErrorDomain] && outcome.error.code == PPOPaymentErrorPaymentProcessing;
     
-    if (sessionTimedOut) {
-        //We don't want to pass back an NSURLErrorCode for this, so let's build our own.
-        outcome.error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut];
-    }
-    
     if ((isNetworkingIssue && !sessionTimedOut) || isProcessingAtPaypoint) {
         
-        [self checkIfOutcomeHasChanged:outcome withCompletion:completion];
+        [self attemptToEstablishAMoreConclusiveOutcome:outcome
+                                        withCompletion:completion];
         
     }
     else {
@@ -501,49 +511,60 @@
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         [PPOPaymentTrackingManager removePayment:outcome.payment];
         completion(outcome);
+        
     }
     
 }
 
--(void)checkIfOutcomeHasChanged:(PPOOutcome*)outcome
-                 withCompletion:(void(^)(PPOOutcome *))completion {
+-(void)attemptToEstablishAMoreConclusiveOutcome:(PPOOutcome*)outcome
+                                 withCompletion:(void(^)(PPOOutcome *))completion {
+    
+    /*
+     * Before we query the server, we back off for a while by sleeping the thread.
+     * We may call this method recursively, if continue to get an unsatisfactory outcome.
+     */
+    
+    PPOPayment *payment = outcome.payment;
     
     if (PPO_DEBUG_MODE) {
         NSLog(@"The outcome is not satisfactory");
         
-        NSLog(@"The query monkey is being dispatched to the server to query payment with op ref %@", outcome.payment.identifier);
+        NSLog(@"A query is being prepared for payment with op ref %@", payment.identifier);
     }
     
-    PPOPayment *payment = outcome.payment;
-    
-    NSUInteger attemptCount = [PPOPaymentTrackingManager totalRecursiveQueryPaymentAttemptsForPayment:payment];
+    NSUInteger attemptCount = [PPOPaymentTrackingManager totalQueryPaymentAttemptsForPayment:payment];
     NSTimeInterval interval = [PPOPaymentTrackingManager timeIntervalForAttemptCount:attemptCount];
     
-    [PPOPaymentTrackingManager incrementRecurisiveQueryPaymentAttemptCountForPayment:payment];
+    [PPOPaymentTrackingManager incrementQueryPaymentAttemptCountForPayment:payment];
     
-    if (self.r_queue == nil) {
-        self.r_queue = dispatch_queue_create("QueryMonkeyQ", NULL);
+    /*
+     * A dedicated queue is used, for the sole purposes of calling 'sleep', to avoid sleeping the main queue.
+     * There is an edge case where the master session timeout might fire, whilst q_queue is sleeping.
+     * In this case the master session timeout handler is inspected before we commit to a query.
+     */
+    if (self.q_queue == nil) {
+        self.q_queue = dispatch_queue_create("QueryQ", NULL);
     }
+    
+    void(^block)(void) = [self sleepBeforeQueryingPayment:payment
+                                         forSleepInterval:interval
+                                           withCompletion:completion];
+    
+    dispatch_async(self.q_queue, block);
+    
+}
+
+-(void(^)(void))sleepBeforeQueryingPayment:(PPOPayment*)payment
+                          forSleepInterval:(NSTimeInterval)interval
+                            withCompletion:(void(^)(PPOOutcome*))completion {
     
     __weak typeof(self) weakSelf = self;
     
-    [PPOPaymentTrackingManager overrideTimeoutHandler:^{
-        NSError *error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut];
-        
-        PPOOutcome *timeoutOutcome = [PPOOutcomeBuilder outcomeWithData:nil
-                                                              withError:error
-                                                             forPayment:payment];
-        
-        [weakSelf handleOutcome:timeoutOutcome
-                 withCompletion:completion];
-        
-    } forPayment:payment];
-    
-    dispatch_async(self.r_queue, ^ {
+    return ^ {
         
         if (PPO_DEBUG_MODE) {
             NSString *message = (interval == 1) ? @"second" : @"seconds";
-            NSLog(@"The query monkey will take a nap for %f %@ before heading to the server", interval, message);
+            NSLog(@"The query will take a nap for %f %@ before heading to the server", interval, message);
         }
         
         sleep(interval);
@@ -551,48 +572,38 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             
             if (PPO_DEBUG_MODE) {
-                NSLog(@"The query monkey just woke up and jumped on the main queue");
+                NSLog(@"The query just woke up and jumped on the main queue");
             }
             
             if (![PPOPaymentTrackingManager paymentIsBeingTracked:payment] || [PPOPaymentTrackingManager masterSessionTimeoutHasExpiredForPayment:payment]) {
                 
-                if (PPO_DEBUG_MODE) {
-                    NSLog(@"The payment has concluded so the query monkey is being shot.");
-                }
+                PPOOutcome *outcome = [PPOOutcomeBuilder outcomeWithData:nil
+                                                               withError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut]
+                                                              forPayment:payment];
+                
+                [weakSelf handleOutcome:outcome
+                         withCompletion:completion];
                 
             } else {
                 
                 if (PPO_DEBUG_MODE) {
-                    NSLog(@"Query monkey is heading to the server now.");
+                    NSLog(@"Query is heading to the server now.");
                 }
                 
-                [self queryServerForPayment:payment
-                            isInternalQuery:YES
-                             withCompletion:^(PPOOutcome *queryOutcome) {
+                [weakSelf queryServerForPayment:payment
+                                isInternalQuery:YES
+                                 withCompletion:^(PPOOutcome *queryOutcome) {
                                  
-                                 [weakSelf handleOutcome:queryOutcome withCompletion:completion];
+                                     [weakSelf handleOutcome:queryOutcome
+                                              withCompletion:completion];
                                  
-                             }];
+                                 }];
             }
             
         });
         
-        
-        
-    });
+    };
     
-}
-
-+(BOOL)isSafeToRetryPaymentWithOutcome:(PPOOutcome *)outcome {
-    
-    if (!outcome) return NO;
-    
-    NSError *error = outcome.error;
-    
-    if (!error) return NO;
-    
-    return [PPOErrorManager isSafeToRetryPaymentWithError:error];
-
 }
 
 @end

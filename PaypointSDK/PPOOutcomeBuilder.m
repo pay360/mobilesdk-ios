@@ -23,20 +23,22 @@
     outcome.payment = payment;
     outcome.error = error;
     
-    [PPOOutcomeBuilder parseCustomFields:[data objectForKey:PAYMENT_RESPONSE_CUSTOM_FIELDS]
-                              forOutcome:outcome];
-    
-    [PPOOutcomeBuilder parseOutcome:[data objectForKey:PAYMENT_RESPONSE_OUTCOME_KEY]
-                         forOutcome:outcome];
-    
-    [PPOOutcomeBuilder parseTransaction:[data objectForKey:TRANSACTION_RESPONSE_TRANSACTION_KEY]
+    if (data) {
+        [PPOOutcomeBuilder parseCustomFields:[data objectForKey:PAYMENT_RESPONSE_CUSTOM_FIELDS]
+                                  forOutcome:outcome];
+        
+        [PPOOutcomeBuilder parseOutcome:[data objectForKey:PAYMENT_RESPONSE_OUTCOME_KEY]
                              forOutcome:outcome];
-    
-    id paymentMethod = [data objectForKey:TRANSACTION_RESPONSE_METHOD_KEY];
-    
-    if ([paymentMethod isKindOfClass:[NSDictionary class]]) {
-        [PPOOutcomeBuilder parseCard:[paymentMethod objectForKey:TRANSACTION_RESPONSE_METHOD_CARD_KEY]
-                          forOutcome:outcome];
+        
+        [PPOOutcomeBuilder parseTransaction:[data objectForKey:TRANSACTION_RESPONSE_TRANSACTION_KEY]
+                                 forOutcome:outcome];
+        
+        id paymentMethod = [data objectForKey:TRANSACTION_RESPONSE_METHOD_KEY];
+        
+        if ([paymentMethod isKindOfClass:[NSDictionary class]]) {
+            [PPOOutcomeBuilder parseCard:[paymentMethod objectForKey:TRANSACTION_RESPONSE_METHOD_CARD_KEY]
+                              forOutcome:outcome];
+        }
     }
     
     return outcome;

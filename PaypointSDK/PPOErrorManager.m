@@ -345,8 +345,23 @@
     
     if ([error.domain isEqualToString:PPOPrivateErrorDomain]) {
         return [PPOErrorManager buildCustomerFacingErrorFromPrivateError:error];
+    } else if ([error.domain isEqualToString:NSURLErrorDomain]) {
+        return [PPOErrorManager buildCustomerFacingErrorFromNSURLError:error];
     } else {
         return error;
+    }
+    
+    return nil;
+}
+
++(NSError*)buildCustomerFacingErrorFromNSURLError:(NSError*)error {
+    
+    if (![error.domain isEqualToString:NSURLErrorDomain]) {
+        return nil;
+    }
+    
+    if (error.code == NSURLErrorCancelled) {
+        return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut];
     }
     
     return nil;

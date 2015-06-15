@@ -280,12 +280,12 @@
     return (chapperone == nil);
 }
 
-+(NSUInteger)totalRecursiveQueryPaymentAttemptsForPayment:(PPOPayment *)payment {
++(NSUInteger)totalQueryPaymentAttemptsForPayment:(PPOPayment *)payment {
     PPOPaymentTrackingChaperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
     return chapperone.queryPaymentCount;
 }
 
-+(void)incrementRecurisiveQueryPaymentAttemptCountForPayment:(PPOPayment *)payment {
++(void)incrementQueryPaymentAttemptCountForPayment:(PPOPayment *)payment {
     PPOPaymentTrackingChaperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
     chapperone.queryPaymentCount++;
 }
