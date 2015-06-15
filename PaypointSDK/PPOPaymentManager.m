@@ -74,6 +74,10 @@
        withTimeOut:(NSTimeInterval)timeout
     withCompletion:(void(^)(PPOOutcome *))completion {
     
+#if PPO_DEBUG_MODEE
+    NSLog(@"It worked");
+#endif
+    
     PPOOutcome *outcome;
     NSError *error;
     
