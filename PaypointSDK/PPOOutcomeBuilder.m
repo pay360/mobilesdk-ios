@@ -66,7 +66,9 @@
     id value;
     if ([outcomeData isKindOfClass:[NSDictionary class]]) {
         value = [outcomeData objectForKey:PAYMENT_RESPONSE_OUTCOME_REASON_KEY];
-        if ([value isKindOfClass:[NSNumber class]]) {
+        
+        //Number on stub, string on mite. This will be raised as a change soon.
+        if ([value isKindOfClass:[NSNumber class]] || [value isKindOfClass:[NSString class]]) {
             if (((NSNumber*)value).integerValue > 0) {
                 outcome.error = [PPOErrorManager parsePaypointReasonCode:((NSNumber*)value).integerValue];
             }
