@@ -78,7 +78,7 @@
     BOOL masterSessionTimedOut = [PPOPaymentTrackingManager masterSessionTimeoutHasExpiredForPayment:self.redirect.payment];
     
 #if PPO_DEBUG_MODE
-    if (!masterSessionTimeOut) {
+    if (!masterSessionTimedOut) {
         NSLog(@"Performing resume request for payment with op ref: %@", redirect.payment.identifier);
     } else {
         NSLog(@"Not attempting resume request for payment with op ref: %@", redirect.payment.identifier);
