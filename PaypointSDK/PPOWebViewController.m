@@ -95,6 +95,14 @@
 #endif
                 
                 [weakSelf.webView stopLoading];
+                
+                [weakSelf clearMasterSessionTimeoutHandler];
+                
+                [weakSelf cancelThreeDSecureRelatedTimers];
+                
+                [weakSelf.delegate threeDSecureController:self
+                                          failedWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut]];
+                
             } else {
 
 #if PPO_DEBUG_MODE
@@ -364,20 +372,21 @@
 
 -(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
     
-    [self clearMasterSessionTimeoutHandler];
-    
-    //NSURL *url = [error.userInfo objectForKey:@"NSErrorFailingURLKey"];
-    //NSString *email = [self extractEmail:url];
-    
-    NSError *e = error;
-    
-    if (e.code == NSURLErrorCancelled) {
-        e = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut];
+    /*
+     * The ACS test page in MITE is triggering an error 'NSURLErrorCancelled', and
+     * it is not understood why.
+     */
+    if (error.code != NSURLErrorCancelled) {
+        
+        [self clearMasterSessionTimeoutHandler];
+        
+        [self cancelThreeDSecureRelatedTimers];
+        
+        [self.delegate threeDSecureController:self
+                              failedWithError:error];
+        
     }
     
-    [self cancelThreeDSecureRelatedTimers];
-    
-    [self.delegate threeDSecureController:self failedWithError:e];
 }
 
 -(NSString *)extractEmail:(NSURL*)url {
