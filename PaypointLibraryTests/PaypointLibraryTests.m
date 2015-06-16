@@ -61,8 +61,13 @@
         baseURL = [PPOPaymentBaseURLManager baseURLForEnvironment:e];
         
         switch (e) {
+                
             case PPOEnvironmentMerchantIntegrationTestingEnvironment:
-                NSAssert([baseURL.absoluteString isEqualToString:@"http://localhost:5000"], @"Base URL unexpected");
+                NSAssert([baseURL.absoluteString isEqualToString:@"https://api.mite.paypoint.net:2443"], @"Base URL unexpected");
+                break;
+                
+            case PPOEnvironmentMerchantIntegrationProductionEnvironment:
+                NSAssert([baseURL.absoluteString isEqualToString:@"https://api.paypoint.net"], @"Base URL unexpected");
                 break;
                 
             default:
