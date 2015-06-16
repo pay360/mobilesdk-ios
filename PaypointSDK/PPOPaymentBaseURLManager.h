@@ -14,7 +14,8 @@
  * @constant PPOEnvironmentMerchantIntegrationTestingEnvironment A testing environment.
  */
 typedef enum {
-    PPOEnvironmentMerchantIntegrationTestingEnvironment = 0,
+    PPOEnvironmentMerchantIntegrationTestingEnvironment,
+    PPOEnvironmentMerchantIntegrationProductionEnvironment,
     PPOEnvironmentTotalCount
 } PPOEnvironment;
 
