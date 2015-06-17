@@ -19,7 +19,7 @@
 #define DECLINE_PAN @"9900000000005282"
 #define DELAY_AUTHORISED_PAN @"9900000000000168"
 #define SERVER_ERROR_PAN @"9900000000010407"
-#define INSTALLATION_ID @"5300302"
+#define INSTALLATION_ID @"5300311"
 
 @interface PaypointLibraryTests : XCTestCase
 @property (nonatomic, strong) NSArray *pans;
