@@ -40,7 +40,7 @@ For convenience we provide a mock REST api which supplies these tokens for your 
 
 ## Mock Authorise Client Call
 
-***TBD more detail here***
+***TBD more detail about sign up here ?***
 
 Perform a Get requests using the following URL. At this point, you should have your InstallationID ready. If you do not, please head over to the Paypoint Explorer page and sign up.
 
