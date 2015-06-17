@@ -109,6 +109,7 @@ payment.card = card;
 payment.address = address;
 payment.customFields = [collector copy];
 payment.financialServices = payment.financialServices;
+payment.credentials = credentials;
 ```
 
 To trigger a payment, set up an instance of  **PPOPaymentManager**, with a suitable baseURL.  A custom baseURL can be used, or a subset of pre-defined baseURL's can be found in **PPOPaymentBaseURLManager**, as follows:
