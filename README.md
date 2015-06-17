@@ -140,17 +140,34 @@ Some payments can sometimes take ~60 seconds to process, but the option to use a
 
 # Testing your application in the MITE environment
 
-PayPoint provide a merchant integration and testing environment (MITE) which lets you test your payment applications. 
+PayPoint provide a Merchant Integration and Testing Environment (MITE), which lets you test your payment applications. 
 
-In order to make test payments your server must obtain a client access token for your app from our API. 
+In order to make test payments your server must obtain a client access token for your app, from our API. 
 
-Instructions for doing this are available here: 
+Instructions for doing this are available here:
 
 TBD:  {TODO: placeholder for server-side authoriseClient call}
 
 For convenience we provide a mock REST api which supplies these tokens for your test installations which can be used for prototyping your app in our MITE environment: 
 
-TBD: {TODO: Instructions for getting access token from test endpoint} 
+## Mock Authorise Client Call
+
+Perform a Get requests using the following URL. At this point, you should have your InstallationID ready.
+
+```objective-c
+NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://developer.paypoint.com/payments/explore/rest/mockmobilemerchant/getToken/%@", INSTALLATION_ID]];
+```
+
+Inspect the response for HTTP Status code '200' and parse the JSON data that is returned in the response payload. Extract the string value for key "accessToken" and build an intance of PPOCredentials, as follows.
+
+```objective-c
+PPOCredentials *credentials = [PPOCredentials new];
+credentials.installationID = INSTALLATION_ID;
+credentials.token = token;
+```
+
+Using this instance of PPOCredentials, you can now make a payment in our MITE testing environment.
+
 
 ## Test Cards
 
