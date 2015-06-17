@@ -49,7 +49,7 @@ If you choose to validate an instance of PPOCredentials at this stage, there is 
 NSError *invalidCredentials = [PPOPaymentValidator validateCredentials:credentials];
 ```
 
-Build a representation of your payment, by instantiating an instance of **PPOPayment**.  This requires three parameters, each of which require information about your payment.
+Build a representation of your payment, by instantiating an instance of **PPOPayment**.
 
 There is also the opportunity to provide custom fields or details of financial services.
 
