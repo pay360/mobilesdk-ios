@@ -28,11 +28,7 @@ Then run the following command:
 
 # Testing your application in the MITE environment
 
-PayPoint provide a Merchant Integration and Testing Environment (MITE), which lets you test your payment applications. 
-
-In order to make test payments your server must obtain a client access token for your app, from our API. 
-
-Instructions for doing this are available here:
+PayPoint provide a Merchant Integration and Testing Environment (MITE), which lets you test your payment applications. In order to make test payments your server must obtain a client access token for your app, from our API. Instructions for doing this are available here:
 
 TBD:  {TODO: placeholder for server-side authoriseClient call}
 
