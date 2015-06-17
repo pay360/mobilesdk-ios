@@ -121,12 +121,11 @@ PPOPaymentManager *paymentManager = [[PPOPaymentManager alloc] initWithBaseURL:b
 Trigger a payment by passing an instance of **PPOPayment** and an instance of **PPOCredentials**, as follows:
 
 ```objective-c    
-self.paymentManager makePayment:payment
-     withCredentials:credentials
-            withTimeOut:60.0f
-                withCompletion:^(PPOOutcome *outcome, NSError *paymentFailure) {
+self.paymentManager makePayment:payment 
+                    withTimeOut:60.0f
+                 withCompletion:^(PPOOutcome *outcome) {
                         
-                          if (paymentFailure) {
+                          if (outcome.error) {
                               //Handle failure
                           } else {
                               // Handle success
