@@ -26,30 +26,49 @@ Then run the following command:
     $ pod install
 
 
-# Usage
+# Testing your application in the MITE environment
 
-Each and every payment request must be coupled with a client access token.  Please set up a means of acquiring a client access token from Paypoint, before continuing on to a payment request.
+PayPoint provide a Merchant Integration and Testing Environment (MITE), which lets you test your payment applications. 
 
-## Making a Payment 
+In order to make test payments your server must obtain a client access token for your app, from our API. 
 
-An instance of **PPOCredentials** is required for each payment request.  To make a simple payment, first build an instance of PPOCredentials.
+Instructions for doing this are available here:
+
+TBD:  {TODO: placeholder for server-side authoriseClient call}
+
+For convenience we provide a mock REST api which supplies these tokens for your test installations which can be used for prototyping your app in our MITE environment: 
+
+## Mock Authorise Client Call
+
+***TBD more detail here***
+
+Perform a Get requests using the following URL. At this point, you should have your InstallationID ready. If you do not, please head over to the Paypoint Explorer page and sign up.
+
+```objective-c
+NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://developer.paypoint.com/payments/explore/rest/mockmobilemerchant/getToken/%@", INSTALLATION_ID]];
+```
+
+Your should receive a HTTP Status code '200', indicating the call was successful. Parse the JSON data that is returned in the response payload. Extract the string value for key "accessToken" and build an intance of PPOCredentials, as follows.
 
 ```objective-c
 PPOCredentials *credentials = [PPOCredentials new];
 credentials.installationID = INSTALLATION_ID;
-credentials.token = clientAccessToken;
+credentials.token = token;
 ```
 
+Using this instance of PPOCredentials, you can now make a payment in our MITE testing environment.
+
+## Making a Payment 
 
 The PaypointSDK will evaluate all parameters injected into a payment for their presence and validity.  These methods are exposed as public API and are available if you want to validate inline with the UI.
 
-If you choose to validate an instance of PPOCredentials at this stage, there is public API available, which looks like the following:
+At this point, you should have an instance of PPOCredentials ready. If you do not, please see 'Mock Authorise Client Call' above. If you choose to validate an instance of PPOCredentials at this stage, there is public API available, which looks like the following:
 
 ```objective-c
 NSError *invalidCredentials = [PPOPaymentValidator validateCredentials:credentials];
 ```
 
-Build a representation of your payment, by instantiating an instance of **PPOPayment**.
+Build a representation of your payment, by preparing an instance of **PPOPayment**.
 
 ```objective-c
 PPOPayment *payment = [PPOPayment new];
@@ -155,37 +174,6 @@ self.paymentManager makePayment:payment
 
 
 Some payments can sometimes take ~60 seconds to process, but the option to use a custom timeout is available here, should you want to provide a different value.  
-
-
-# Testing your application in the MITE environment
-
-PayPoint provide a Merchant Integration and Testing Environment (MITE), which lets you test your payment applications. 
-
-In order to make test payments your server must obtain a client access token for your app, from our API. 
-
-Instructions for doing this are available here:
-
-TBD:  {TODO: placeholder for server-side authoriseClient call}
-
-For convenience we provide a mock REST api which supplies these tokens for your test installations which can be used for prototyping your app in our MITE environment: 
-
-## Mock Authorise Client Call
-
-Perform a Get requests using the following URL. At this point, you should have your InstallationID ready.
-
-```objective-c
-NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://developer.paypoint.com/payments/explore/rest/mockmobilemerchant/getToken/%@", INSTALLATION_ID]];
-```
-
-Your should receive a HTTP Status code '200', indicating the call was successful. Parse the JSON data that is returned in the response payload. Extract the string value for key "accessToken" and build an intance of PPOCredentials, as follows.
-
-```objective-c
-PPOCredentials *credentials = [PPOCredentials new];
-credentials.installationID = INSTALLATION_ID;
-credentials.token = token;
-```
-
-Using this instance of PPOCredentials, you can now make a payment in our MITE testing environment.
 
 
 ## Test Cards
