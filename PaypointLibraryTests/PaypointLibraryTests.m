@@ -19,10 +19,12 @@
 #define DECLINE_PAN @"9900000000005282"
 #define DELAY_AUTHORISED_PAN @"9900000000000168"
 #define SERVER_ERROR_PAN @"9900000000010407"
+#define INSTALLATION_ID @"5300302"
 
 @interface PaypointLibraryTests : XCTestCase
 @property (nonatomic, strong) NSArray *pans;
 @property (nonatomic) PPOEnvironment currentEnvironment;
+@property (nonatomic, strong) NSURL *baseURL;
 @end
 
 @implementation PaypointLibraryTests
@@ -36,6 +38,8 @@
                   DELAY_AUTHORISED_PAN,
                   SERVER_ERROR_PAN
                   ];
+    
+    self.baseURL = [NSURL URLWithString:@"http://localhost:5000"];
 }
 
 - (void)tearDown {
@@ -88,7 +92,7 @@
     payment.customer = [self customer];
     payment.financialServices = [self financialServices];
     
-    PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:[PPOPaymentBaseURLManager baseURLForEnvironment:0]];
+    PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:self.baseURL];
     
     payment.credentials = [self credentialsWithToken:VALID_BEARER_TOKEN];
     
@@ -117,7 +121,7 @@
     payment.transaction = [self transactionWithAmount:nil];
     payment.card = [self creditCardWithPan:AUTHORISED_PAN];
     
-    PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:[PPOPaymentBaseURLManager baseURLForEnvironment:0]];
+    PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:self.baseURL];
     
     payment.credentials = [self credentialsWithToken:VALID_BEARER_TOKEN];
     
@@ -147,7 +151,7 @@
     payment.card = [self creditCardWithPan:AUTHORISED_PAN];
     payment.customFields = [self customFields];
     
-    PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:[PPOPaymentBaseURLManager baseURLForEnvironment:0]];
+    PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:self.baseURL];
     
     payment.credentials = [self credentialsWithToken:VALID_BEARER_TOKEN];
     
@@ -179,7 +183,7 @@
     payment.transaction = [self transactionWithAmount:@100];
     payment.card = card;
     
-    PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:[PPOPaymentBaseURLManager baseURLForEnvironment:0]];
+    PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:self.baseURL];
     
     payment.credentials = [self credentialsWithToken:VALID_BEARER_TOKEN];
     
@@ -207,7 +211,7 @@
     payment.transaction = [self transactionWithAmount:@100];
     payment.card = [self creditCardWithPan:AUTHORISED_PAN];
     
-    PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:[PPOPaymentBaseURLManager baseURLForEnvironment:0]];
+    PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:self.baseURL];
     
     payment.credentials = [self credentialsWithToken:VALID_BEARER_TOKEN];
     
@@ -236,7 +240,7 @@
     payment.transaction = [self transactionWithAmount:@100];
     payment.card = [self creditCardWithPan:AUTHORISED_PAN];
     
-    PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:[PPOPaymentBaseURLManager baseURLForEnvironment:0]];
+    PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:self.baseURL];
     
     payment.credentials = [self credentialsWithToken:EXPIRED_BEARER_TOKEN];
     
@@ -265,7 +269,7 @@
     payment.transaction = [self transactionWithAmount:@100];
     payment.card = [self creditCardWithPan:AUTHORISED_PAN];
     
-    PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:[PPOPaymentBaseURLManager baseURLForEnvironment:0]];
+    PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:self.baseURL];
     
     payment.credentials = [self credentialsWithToken:UNAUTHORISED_BEARER_TOKEN];
     
@@ -295,7 +299,7 @@
     payment.transaction = [self transactionWithAmount:@100];
     payment.card = [self creditCardWithPan:DECLINE_PAN];
     
-    PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:[PPOPaymentBaseURLManager baseURLForEnvironment:0]];
+    PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:self.baseURL];
     
     payment.credentials = [self credentialsWithToken:VALID_BEARER_TOKEN];
     
@@ -324,7 +328,7 @@
     payment.card = [self creditCardWithPan:DECLINE_PAN];
     payment.customFields = [self customFields];
     
-    PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:[PPOPaymentBaseURLManager baseURLForEnvironment:0]];
+    PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:self.baseURL];
     
     payment.credentials = [self credentialsWithToken:VALID_BEARER_TOKEN];
     
@@ -356,7 +360,7 @@
     payment.transaction = [self transactionWithAmount:@100];
     payment.card = [self creditCardWithPan:DELAY_AUTHORISED_PAN];
     
-    PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:[PPOPaymentBaseURLManager baseURLForEnvironment:0]];
+    PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:self.baseURL];
     
     payment.credentials = [self credentialsWithToken:VALID_BEARER_TOKEN];
     
@@ -384,7 +388,7 @@
     payment.transaction = [self transactionWithAmount:@100];
     payment.card = [self creditCardWithPan:SERVER_ERROR_PAN];
     
-    PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:[PPOPaymentBaseURLManager baseURLForEnvironment:0]];
+    PPOPaymentManager *manager = [[PPOPaymentManager alloc] initWithBaseURL:self.baseURL];
     
     payment.credentials = [self credentialsWithToken:VALID_BEARER_TOKEN];
     
@@ -444,6 +448,7 @@
 -(PPOCredentials*)credentialsWithToken:(NSString*)token {
     PPOCredentials *credentials = [PPOCredentials new];
     credentials.token = token;
+    credentials.installationID = INSTALLATION_ID;
     return credentials;
 }
 
