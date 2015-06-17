@@ -51,10 +51,33 @@ NSError *invalidCredentials = [PPOPaymentValidator validateCredentials:credentia
 
 Build a representation of your payment, by instantiating an instance of **PPOPayment**.
 
-There is also the opportunity to provide custom fields or details of financial services.
+```objective-c
+PPOPayment *payment = [PPOPayment new];
+payment.credentials = credentials;
+```
 
-When 'isDeferred' is set to 'YES' the payment will be an Authorisation.
+Prepare an instance of your transaction and card details, by preparing an instance of PPOTransaction and PPOCreditCard, like so (When 'isDeferred' is set to 'YES' the payment will be an Authorisation.)
 
+```ojective-c
+PPOTransaction *transaction = [PPOTransaction new];
+transaction.currency = @"GBP";
+transaction.amount = @100;
+transaction.transactionDescription = @"description";
+transaction.merchantRef = @"dk93kl320";
+transaction.isDeferred = @NO;
+
+payment.transaction = transaction;
+
+PPOCreditCard *card = [PPOCreditCard new];
+card.pan = @"9900000000005159";
+card.cvv = @"123";
+card.expiry = @"0117";
+card.cardHolderName = @"Bob Jones";
+
+payment.card = card;
+```
+
+You may also want to provide a billing address, by providing an instance of PPOBillingAddress, like so.
 
 ```objective-c
 PPOBillingAddress *address = [PPOBillingAddress new];
@@ -64,19 +87,13 @@ address.city = @"Bristol";
 address.region = @"Somerset";
 address.postcode = @"BS32";
 
-PPOTransaction *transaction = [PPOTransaction new];
-transaction.currency = @"GBP";
-transaction.amount = @100;
-transaction.transactionDescription = @"description";
-transaction.merchantRef = @"dk93kl320";
-transaction.isDeferred = @NO;
+payment.address = address;
+```
 
-PPOCreditCard *card = [PPOCreditCard new];
-card.pan = @"9900000000005159";
-card.cvv = @"123";
-card.expiry = @"0117";
-card.cardHolderName = @"Bob Jones";
+You may also want to provide custom fields, by building instances of PPOCustomField, like so.
 
+
+```objective-c
 NSMutableSet *collector = [NSMutableSet new];
 
 customField = [PPOCustomField new];
@@ -97,20 +114,21 @@ customField.isTransient = @YES;
 
 [collector addObject:customField];
 
+payment.customFields = [collector copy];
+```
+
+You may also want to provide financial services details, by building an instance of PPOFinancialServices, like so.
+
+```objective-c
 PPOFinancialServices *financialServices = [PPOFinancialServices new];
 financialServices.dateOfBirth = @"19870818";
 financialServices.surname = @"Smith";
 financialServices.accountNumber = @"123ABC";
 financialServices.postCode = @"BS20";
 
-PPOPayment *payment = [PPOPayment new];
-payment.transaction = transaction;
-payment.card = card;
-payment.address = address;
-payment.customFields = [collector copy];
-payment.financialServices = payment.financialServices;
-payment.credentials = credentials;
+payment.financialServices = financialServices;
 ```
+
 
 To trigger a payment, set up an instance of  **PPOPaymentManager**, with a suitable baseURL.  A custom baseURL can be used, or a subset of pre-defined baseURL's can be found in **PPOPaymentBaseURLManager**, as follows:
 
