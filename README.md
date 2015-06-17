@@ -158,7 +158,7 @@ Perform a Get requests using the following URL. At this point, you should have y
 NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://developer.paypoint.com/payments/explore/rest/mockmobilemerchant/getToken/%@", INSTALLATION_ID]];
 ```
 
-Inspect the response for HTTP Status code '200' and parse the JSON data that is returned in the response payload. Extract the string value for key "accessToken" and build an intance of PPOCredentials, as follows.
+Your should receive a HTTP Status code '200', indicating the call was successful. Parse the JSON data that is returned in the response payload. Extract the string value for key "accessToken" and build an intance of PPOCredentials, as follows.
 
 ```objective-c
 PPOCredentials *credentials = [PPOCredentials new];
