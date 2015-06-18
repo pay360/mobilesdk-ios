@@ -17,6 +17,10 @@ typedef enum : NSUInteger {
 
 @class PPOPayment;
 @class PPOOutcome;
+
+/*!
+ *  This class is not thread safe.
+ */
 @interface PPOPaymentTrackingManager : NSObject
 
 +(void)appendPayment:(PPOPayment*)payment

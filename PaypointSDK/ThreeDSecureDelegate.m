@@ -75,7 +75,7 @@
 -(void)performResumeForRedirect:(PPORedirect*)redirect
                   forController:(id<ThreeDSecureControllerProtocol>)controller {
     
-    BOOL masterSessionTimedOut = [PPOPaymentTrackingManager masterSessionTimeoutHasExpiredForPayment:self.redirect.payment];
+    BOOL masterSessionTimedOut = ![PPOPaymentTrackingManager paymentIsBeingTracked:redirect.payment] || [PPOPaymentTrackingManager masterSessionTimeoutHasExpiredForPayment:redirect.payment];
     
 #if PPO_DEBUG_MODE
     if (!masterSessionTimedOut) {
@@ -95,44 +95,46 @@
                    withOutcome:outcome
                  forController:controller];
         
-        return;
+    } else {
+        
+        NSURL *url = [self.endpointManager urlForResumePaymentWithInstallationID:redirect.payment.credentials.installationID
+                                                                   transactionID:redirect.transactionID];
+        
+        NSURLRequest *request = [PPOURLRequestManager requestWithURL:url
+                                                          withMethod:@"POST"
+                                                         withTimeout:30.0f
+                                                           withToken:redirect.payment.credentials.token
+                                                            withBody:redirect.threeDSecureResumeBody
+                                                    forPaymentWithID:redirect.payment.identifier];
+        
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+        
+        id completionHandler = [self resumeResponseHandlerForRedirect:redirect
+                                                        forController:controller];
+        
+        NSURLSessionDataTask *task = [self.session dataTaskWithRequest:request
+                                                     completionHandler:completionHandler];
+        
+        __weak typeof(task) weakTask = task;
+        
+        [PPOPaymentTrackingManager overrideTimeoutHandler:^{
+            
+#if PPO_DEBUG_MODE
+NSLog(@"Cancelling resume request");
+#endif
+            
+            [weakTask cancel];
+            
+        } forPayment:redirect.payment];
+        
+        [PPOPaymentTrackingManager resumeTimeoutForPayment:redirect.payment];
+        
+        [task resume];
+        
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+        
     }
     
-    NSURL *url = [self.endpointManager urlForResumePaymentWithInstallationID:redirect.payment.credentials.installationID
-                                                               transactionID:redirect.transactionID];
-    
-    NSURLRequest *request = [PPOURLRequestManager requestWithURL:url
-                                                      withMethod:@"POST"
-                                                     withTimeout:30.0f
-                                                       withToken:redirect.payment.credentials.token
-                                                        withBody:redirect.threeDSecureResumeBody
-                                                forPaymentWithID:redirect.payment.identifier];
-    
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-    
-    id completionHandler = [self resumeResponseHandlerForRedirect:redirect
-                                                    forController:controller];
-    
-    NSURLSessionDataTask *task = [self.session dataTaskWithRequest:request
-                                                 completionHandler:completionHandler];
-    
-    __weak typeof(task) weakTask = task;
-    
-    [PPOPaymentTrackingManager overrideTimeoutHandler:^{
-        
-#if PPO_DEBUG_MODE
-    NSLog(@"Cancelling resume request");
-#endif
-        
-        [weakTask cancel];
-        
-    } forPayment:self.redirect.payment];
-    
-    [PPOPaymentTrackingManager resumeTimeoutForPayment:self.redirect.payment];
-    
-    [task resume];
-    
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
 }
 
 -(void(^)(NSData *, NSURLResponse *, NSError *))resumeResponseHandlerForRedirect:(PPORedirect*)redirect
@@ -196,7 +198,6 @@
         _preventShowWebView = YES;
         
         /*
-         * We only suspend the master session timeout here, and not before the delay show timeout has expired.
          * If we have reached this point then it is likely that user input is required on the web view. The 'three d secure session timeout' will
          * begin, which is a timeout value provided by the redirect response. Once it has expired, it will handle abort. If
          * three d secure completes without any errors, then we resume the master session timeout countdown downstream.
@@ -207,22 +208,6 @@
         
         UINavigationController *navCon = [[UINavigationController alloc] initWithRootViewController:(UIViewController*)controller];
         
-        /*
-         * Presenting controllers like this or toying with the implementing developers view heirarchy,
-         * without the implementing developer's knowledge of when and how, is risky.
-         *
-         * 1) Conforming to any of the adaptive api's will be impossible.
-         *
-         * 2) NavBar customisations or customisation of the web view controller presentation animation, will be tricky, if not impossible.
-         *
-         * 3) May be upsetting behaviour if the implementing developer is conforming to an animated transitioning
-         *    protocol or using a UIPresentationController.
-         *
-         * 4) There may be an animation that won't know when to terminate or change before the web view is shown
-         *    e.g. the current pulsing Paypoint logo in the demo merchant App has no idea and just keeps pulsing.
-         *
-         * Paypoint are aware of these points and they are happy to release to customers and get feedback from them first.
-         */
 #if PPO_DEBUG_MODE
     NSLog(@"Showing web view for op ref: %@", controller.redirect.payment.identifier);
 #endif
@@ -343,7 +328,7 @@
         if ([[UIApplication sharedApplication] keyWindow] == controller.rootView.superview) {
            
 #if PPO_DEBUG_MODE
-        NSLog(@"Removing web view for payment with op ref: %@", weakSelf.redirect.payment.identifier);
+NSLog(@"Removing web view for payment with op ref: %@", weakSelf.redirect.payment.identifier);
 #endif
             
             [controller.rootView removeFromSuperview];

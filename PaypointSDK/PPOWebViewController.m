@@ -65,7 +65,7 @@
      * Therefore, we are now responsible for responding to a master session timeout event, should it have already fired by now.
      * If it hasn't, then lets assign a new timeout handler.
      */
-    if ([PPOPaymentTrackingManager masterSessionTimeoutHasExpiredForPayment:self.redirect.payment]) {
+    if (![PPOPaymentTrackingManager paymentIsBeingTracked:self.redirect.payment] || [PPOPaymentTrackingManager masterSessionTimeoutHasExpiredForPayment:self.redirect.payment]) {
         
         _abortSession = YES;
         
