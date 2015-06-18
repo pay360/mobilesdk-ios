@@ -177,9 +177,29 @@ Some payments can sometimes take ~60 seconds to process, but the option to use a
 
 ## Error handling
 
+An instance of PPOPayment carries a unique identifier. If a payment fails and the state of the transaction is ambiguous you should query the state, by passing the instance in question into your payment manager.
 
+```objective-c
+self.paymentManager queryPayment:payment 
+                  withCompletion:^(PPOOutcome *outcome) {
+                        
+                          if (outcome.error) {
+                              //Handle failure
+                          } else {
+                              // Handle success
+                          }
+                          
+                      }];
+```
 
-## Query transation
+Calling makePayment again, when an error is ambigous may result in a duplicate payment. For peace of mind, a convenience method is available which returns a boolean value indicating if it is safe to repeat the payment, without risk of duplication.
+
+```objective-c
+if ([PPOPaymentManager isSafeToRetryPaymentWithOutcome:outcome]) {
+    [self makePayment:payment];
+}
+```
+
 
 ## Test Cards
 
