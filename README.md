@@ -60,15 +60,17 @@ Using this instance of PPOCredentials, you can now make a payment in our MITE te
 
 ## Making a Payment 
 
-The PaypointSDK will evaluate all parameters injected into a payment for their presence and validity.  These methods are exposed as public API and are available if you want to validate inline with your UI.
+If a payment requires 3D Secure, a scene is automatically presented modally, full screen, from the root view controller of UIWindow. This scene will consists of a form that the user is expected to complete. Once the user completes this process the scene will dismiss and the payment will proceed.
 
-At this point, you should have an instance of PPOCredentials ready. If you do not, please see 'Mock Authorise Client Call' above. If you choose to validate an instance of PPOCredentials at this stage, there is public API available, which looks like the following:
+When making a payment, you should have an instance of **PPOCredentials** ready. If you do not, please see 'Mock Authorise Client Call' above. 
+
+If you choose to validate an instance of PPOCredentials at this stage, there is public API available, which looks like the following:
 
 ```objective-c
 NSError *invalidCredentials = [PPOPaymentValidator validateCredentials:credentials];
 ```
 
-If a payment requires 3D Secure, a scene is presented modally from the root view controller of UIWindow, so that the user has access to a web based form.
+There are several validation methods available in **PPOValidator**, inline with your UI, such as the card pan for example.
 
 To proceed with making a payment, build a representation of your payment, by preparing an instance of **PPOPayment**.
 
@@ -78,7 +80,9 @@ PPOPayment *payment = [PPOPayment new];
 payment.credentials = credentials;
 ```
 
-Prepare an instance of your transaction and card details, by preparing an instance of PPOTransaction and PPOCreditCard, like so (When 'isDeferred' is set to 'YES' the payment will be an Authorisation.)
+Prepare an instance of your transaction and card details, by preparing an instance of **PPOTransaction** and **PPOCard**, like so: 
+
+When 'isDeferred' is set to 'YES' the payment will be an Authorisation.
 
 ```ojective-c
 PPOTransaction *transaction = [PPOTransaction new];
@@ -99,7 +103,7 @@ card.cardHolderName = @"Bob Jones";
 payment.card = card;
 ```
 
-You may also want to provide a billing address, by providing an instance of PPOBillingAddress, like so.
+You may also want to provide a billing address, by providing an instance of **PPOBillingAddress**, like so.
 
 ```objective-c
 PPOBillingAddress *address = [PPOBillingAddress new];
@@ -112,7 +116,7 @@ address.postcode = @"BS32";
 payment.address = address;
 ```
 
-You may also want to provide custom fields, by building instances of PPOCustomField, like so.
+You may also want to provide custom fields, by building instances of **PPOCustomField**, like so.
 
 
 ```objective-c
@@ -139,7 +143,7 @@ customField.isTransient = @YES;
 payment.customFields = [collector copy];
 ```
 
-You may also want to provide financial services details, by building an instance of PPOFinancialServices, like so.
+You may also want to provide financial services details, by building an instance of **PPOFinancialServices**, like so.
 
 ```objective-c
 PPOFinancialServices *financialServices = [PPOFinancialServices new];
@@ -159,7 +163,7 @@ NSURL *baseURL = [PPOPaymentBaseURLManager baseURLForEnvironment:PPOEnvironmentM
 PPOPaymentManager *paymentManager = [[PPOPaymentManager alloc] initWithBaseURL:baseURL];
 ```
 
-Trigger a payment by passing an instance of **PPOPayment** and an instance of **PPOCredentials**, as follows:
+Trigger a payment by passing an instance of **PPOPayment** as follows:
 
 ```objective-c    
 self.paymentManager makePayment:payment 
@@ -195,7 +199,7 @@ self.paymentManager queryPayment:payment
                       }];
 ```
 
-Calling makePayment again, when an error is ambigous may result in a duplicate payment. For peace of mind, a convenience method is available which returns a boolean value indicating if it is safe to repeat the payment, without risk of duplication.
+Calling makePayment again, when an error is ambigous, may result in a duplicate payment. For peace of mind, a convenience method is available which returns a boolean value, indicating if it is safe to repeat the payment, without the risk of duplication.
 
 ```objective-c
 if ([PPOPaymentManager isSafeToRetryPaymentWithOutcome:outcome]) {
@@ -209,4 +213,6 @@ if ([PPOPaymentManager isSafeToRetryPaymentWithOutcome:outcome]) {
 In the MITE environment you can use the standard test PANs for testing your applications (including 3DS test cards): 
 [MITE test cards](https://developer.paypoint.com/payments/docs/#getting_started/test_cards)
 
-## Apple Docs
+## Documentation
+
+The in depth documentation can be found [here](https://developer.paypoint.com)
