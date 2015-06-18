@@ -30,14 +30,14 @@
      *
      * This is not exactly a convential way to use a webView and I have noticed some strange 
      * behaviour sometimes; such as webViewDidFinishLoad: firing once offscreen, then once after 
-     * viewDidAppear: for the same request. Thus setting state flags here for peace of mind.
+     * viewDidAppear: for the same request. Thus, setting state flags here for peace of mind.
      */
     BOOL _initialWebViewLoadComplete;
     BOOL _userCancelled;
     BOOL _preventShow;
     BOOL _delayShowTimeoutExpired;
     BOOL _masterSessionTimeoutExpired;
-    BOOL _abortSession; //The master timeout session timeout handler is about to action.
+    BOOL _abortSession; //The master timeout handler has fired.
 }
 
 -(instancetype)initWithRedirect:(PPORedirect *)redirect
@@ -372,10 +372,6 @@
 
 -(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
     
-    /*
-     * The ACS test page in MITE is triggering an error 'NSURLErrorCancelled', and
-     * it is not understood why.
-     */
     if (error.code != NSURLErrorCancelled) {
         
         [self clearMasterSessionTimeoutHandler];

@@ -1,14 +1,14 @@
 //
-//  PPOCreditCard.m
+//  PPOCard.m
 //  Paypoint
 //
 //  Created by Robert Nash on 07/04/2015.
 //  Copyright (c) 2015 Paypoint. All rights reserved.
 //
 
-#import "PPOCreditCard.h"
+#import "PPOCard.h"
 
-@implementation PPOCreditCard
+@implementation PPOCard
 
 -(NSDictionary*)jsonObjectRepresentation {
     id pan = ([self cleanString:self.pan]) ?: [NSNull null];

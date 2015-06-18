@@ -11,7 +11,7 @@
 #import "PPOErrorManager.h"
 #import "PPOTimeManager.h"
 #import "PPOCredentials.h"
-#import "PPOCreditCard.h"
+#import "PPOCard.h"
 #import "PPOLuhn.h"
 #import "PPOTransaction.h"
 #import "PPOPaymentTrackingManager.h"
@@ -61,7 +61,7 @@
 
 #pragma mark - ValidateCard
 
-+(NSError *)validateCard:(PPOCreditCard *)card {
++(NSError *)validateCard:(PPOCard *)card {
     
     NSError *error;
     

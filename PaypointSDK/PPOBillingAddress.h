@@ -8,10 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-/**
- *  @discussion An instance of this class represents a billing address.
+/*!
+@class PPOBillingAddress
+@discussion An instance of this class represents a billing address.
  */
 @interface PPOBillingAddress : NSObject
+
 @property (nonatomic, strong) NSString *line1;
 @property (nonatomic, strong) NSString *line2;
 @property (nonatomic, strong) NSString *line3;
@@ -21,6 +23,10 @@
 @property (nonatomic, strong) NSString *postcode;
 @property (nonatomic, strong) NSString *countryCode;
 
+/*!
+@discussion A convenience method for building a plist of assigned values.
+@return A plist of assigned values. The NSDictionary instance will be valid for JSON serialisation using the NSJSONSerialization parser in Foundation.framework.
+ */
 -(NSDictionary*)jsonObjectRepresentation;
 
 @end

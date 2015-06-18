@@ -8,25 +8,26 @@
 
 #import "PPOTransaction.h"
 #import "PPOBillingAddress.h"
-#import "PPOCreditCard.h"
+#import "PPOCard.h"
 #import "PPOCredentials.h"
 #import "PPOFinancialService.h"
 #import "PPOCustomer.h"
 
-/**
- * @discussion A PPOPayment object represents a payment.
+/*!
+@class PPOPayment
+@discussion A PPOPayment object represents a payment.
  */
 @interface PPOPayment : NSObject
 @property (nonatomic, strong) PPOTransaction *transaction;
-@property (nonatomic, strong) PPOCreditCard *card;
+@property (nonatomic, strong) PPOCard *card;
 @property (nonatomic, strong) PPOBillingAddress *address;
 @property (nonatomic, strong) PPOFinancialService *financialServices;
 @property (nonatomic, strong) PPOCustomer *customer;
 @property (nonatomic, strong) PPOCredentials *credentials;
 @property (nonatomic, strong) NSSet *customFields;
 
-/**
- *  A unique identifier for traceability.
+/*!
+@discussion A unique identifier for traceability.
  */
 @property (nonatomic, readonly, copy) NSString *identifier;
 @end

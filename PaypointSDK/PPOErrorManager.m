@@ -405,12 +405,6 @@
         
     } else if ([error.domain isEqualToString:PPOPrivateErrorDomain]) {
         
-        /*
-         * Should never get to this point. If we do, then there is a bug in the SDK.
-         * Errors with this domain name should never reach the implementing developer of our
-         * SDK. We only arrive here if the implementing developer has called us, via the payment
-         * manager.
-        */
         return NO;
         
     } else if ([error.domain isEqualToString:PPOPaymentErrorDomain]) {

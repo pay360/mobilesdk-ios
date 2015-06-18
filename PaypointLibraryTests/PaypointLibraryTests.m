@@ -176,7 +176,7 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Simple payment card cvv invalid"];
     
-    PPOCreditCard *card = [self creditCardWithPan:AUTHORISED_PAN];
+    PPOCard *card = [self creditCardWithPan:AUTHORISED_PAN];
     card.cvv = nil;
     
     PPOPayment *payment = [PPOPayment new];
@@ -419,8 +419,8 @@
     return transaction;
 }
 
--(PPOCreditCard*)creditCardWithPan:(NSString*)pan {
-    PPOCreditCard *card = [PPOCreditCard new];
+-(PPOCard*)creditCardWithPan:(NSString*)pan {
+    PPOCard *card = [PPOCard new];
     card.pan = pan;
     card.cvv = @"123";
     card.expiry = @"0116";

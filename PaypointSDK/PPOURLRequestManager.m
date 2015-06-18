@@ -10,7 +10,7 @@
 #import "PPOPayment.h"
 #import "PPOTransaction.h"
 //#import "PPOCredentials.h"
-#import "PPOCreditCard.h"
+#import "PPOCard.h"
 #import "PPODeviceInfo.h"
 #import "PPOPayment.h"
 #import "PPOResourcesManager.h"

@@ -10,7 +10,7 @@
 #import "PPOBillingAddress.h"
 #import "PPOPayment.h"
 #import "PPOErrorManager.h"
-#import "PPOCreditCard.h"
+#import "PPOCard.h"
 #import "PPOLuhn.h"
 #import "PPOCredentials.h"
 #import "PPOTransaction.h"
@@ -136,6 +136,11 @@
     }
     
     NSURL *url = [self.endpointManager urlForSimplePayment:payment.credentials.installationID];
+    
+#if PPO_DEBUG_MODE
+    NSLog(@"Making payment with op ref %@", payment.identifier);
+    NSLog(@"URL to be used for payment: %@", url);
+#endif
     
     NSData *body = [PPOURLRequestManager buildPostBodyWithPayment:payment
                                                    withDeviceInfo:self.deviceInfo];

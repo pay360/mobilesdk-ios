@@ -10,14 +10,13 @@
 
 #import <PayPointPayments/PPOPaymentManager.h>
 #import <PayPointPayments/PPOPayment.h>
-#import <PayPointPayments/PPOCreditCard.h>
+#import <PayPointPayments/PPOCard.h>
 #import <PayPointPayments/PPOCredentials.h>
 #import <PayPointPayments/PPOTransaction.h>
 #import <PayPointPayments/PPOBillingAddress.h>
 #import <PayPointPayments/PPOError.h>
 #import <PayPointPayments/PPOOutcome.h>
 #import <PayPointPayments/PPOPaymentBaseURLManager.h>
-#import <PayPointPayments/PPOResourcesManager.h>
 #import <PayPointPayments/PPOFinancialService.h>
 #import <PayPointPayments/PPOCustomer.h>
 #import <PayPointPayments/PPOCustomField.h>

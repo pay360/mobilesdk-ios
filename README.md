@@ -1,4 +1,4 @@
-# Paypoint Payments iOS SDK
+# Paypoint Advanced Payments iOS SDK
 
 ## Requirements
 
@@ -26,6 +26,12 @@ Then run the following command:
     $ pod install
 
 
+# Register
+
+Register for an account at [PayPoint Explorer](https://developer.paypoint.com/payments/explore/#/register)
+This will provide installation ids for Hosted Cashier and Cashier API, either can be used with the Mobile SDK.
+Payments made through the Mobile SDK can be tracked in the [Portal](https://portal.mite.paypoint.net:3443/portal-client/#/en_gb/log_in)
+
 # Testing your application in the MITE environment
 
 PayPoint provide a Merchant Integration and Testing Environment (MITE), which lets you test your payment applications. In order to make test payments your server must obtain a client access token for your app, from our API. Instructions for doing this are available here:
@@ -36,9 +42,7 @@ For convenience we provide a mock REST api which supplies these tokens for your 
 
 ## Mock Authorise Client Call
 
-***TBD more detail about sign up here ?***
-
-Perform a Get requests using the following URL. At this point, you should have your InstallationID ready. If you do not, please head over to the Paypoint Explorer page and sign up.
+Perform a Get requests using the following URL. At this point, you should have your InstallationID ready.
 
 ```objective-c
 NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://developer.paypoint.com/payments/explore/rest/mockmobilemerchant/getToken/%@", INSTALLATION_ID]];
@@ -83,7 +87,7 @@ transaction.isDeferred = @NO;
 
 payment.transaction = transaction;
 
-PPOCreditCard *card = [PPOCreditCard new];
+PPOCard *card = [PPOCard new];
 card.pan = @"9900000000005159";
 card.cvv = @"123";
 card.expiry = @"0117";
@@ -171,8 +175,15 @@ self.paymentManager makePayment:payment
 
 Some payments can sometimes take ~60 seconds to process, but the option to use a custom timeout is available here, should you want to provide a different value.  
 
+## Error handling
+
+
+
+## Query transation
 
 ## Test Cards
 
 In the MITE environment you can use the standard test PANs for testing your applications (including 3DS test cards): 
 [MITE test cards](https://developer.paypoint.com/payments/docs/#getting_started/test_cards)
+
+## Apple Docs
