@@ -19,8 +19,8 @@
 @property (nonatomic, copy) NSString *postCode;
 
 /*!
- A convenience method for building an instance of NSDictionary that represents the data structure and property values currently assigned to an instance of this class.
- @return A plist of assigned values. The NSDictionary instance will be valid for JSON serialisation using the NSJSONSerialization parser in Foundation.framework.
+@discussion A convenience method for building a plist of assigned values.
+@return A plist of assigned values. The NSDictionary instance will be valid for JSON serialisation using the NSJSONSerialization parser in Foundation.framework.
  */
 -(NSDictionary*)jsonObjectRepresentation;
 

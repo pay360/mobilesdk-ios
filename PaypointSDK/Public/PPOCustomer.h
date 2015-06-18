@@ -18,8 +18,8 @@
 @property (nonatomic, copy) NSString *telephone;
 
 /*!
- A convenience method for building a plist of assigned values.
- @return A plist of assigned values. The NSDictionary instance will be valid for JSON serialisation using the NSJSONSerialization parser in Foundation.framework.
+@discussion A convenience method for building a plist of assigned values.
+@return A plist of assigned values. The NSDictionary instance will be valid for JSON serialisation using the NSJSONSerialization parser in Foundation.framework.
  */
 -(NSDictionary*)jsonObjectRepresentation;
 

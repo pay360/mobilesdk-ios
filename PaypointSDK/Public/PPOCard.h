@@ -14,7 +14,15 @@
  */
 @interface PPOCard : NSObject
 @property (nonatomic, strong) NSString *pan;
+
+/*!
+@discussion Must be 3 or 4 digits.
+ */
 @property (nonatomic, strong) NSString *cvv;
+
+/*!
+ @discussion Must be expressed as 'MM YY'
+ */
 @property (nonatomic, strong) NSString *expiry;
 @property (nonatomic, strong) NSString *cardHolderName;
 
