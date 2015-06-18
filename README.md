@@ -167,7 +167,7 @@ self.paymentManager makePayment:payment
                  withCompletion:^(PPOOutcome *outcome) {
                         
                           if (outcome.error) {
-                              //Handle failure
+                              //Inspect payment status in error code for the corresponding error domain.
                           } else {
                               // Handle success
                           }
@@ -187,9 +187,9 @@ self.paymentManager queryPayment:payment
                   withCompletion:^(PPOOutcome *outcome) {
                         
                           if (outcome.error) {
-                              //Handle failure
+                              //Inspect payment status in error code for the corresponding error domain.
                           } else {
-                              // Handle success
+                              //Status is payment success
                           }
                           
                       }];
