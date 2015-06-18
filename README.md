@@ -68,7 +68,7 @@ At this point, you should have an instance of PPOCredentials ready. If you do no
 NSError *invalidCredentials = [PPOPaymentValidator validateCredentials:credentials];
 ```
 
-One you make a payment, if a payment requires a 3D Secure step, a scene is presented modally from the root view controller of UIWindow, so that the user has access to a web based form.
+If a payment requires 3D Secure, a scene is presented modally from the root view controller of UIWindow, so that the user has access to a web based form.
 
 To proceed with making a payment, build a representation of your payment, by preparing an instance of **PPOPayment**.
 
