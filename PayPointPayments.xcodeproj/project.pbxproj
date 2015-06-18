@@ -75,7 +75,6 @@
 		50DCC1C51AE7CB0700D0FE26 /* PPOLuhn.m in Sources */ = {isa = PBXBuildFile; fileRef = 50046ACC1AC2FB0400F23D05 /* PPOLuhn.m */; };
 		50DCC1D71AE7CBA300D0FE26 /* PPOCredentials.h in Headers */ = {isa = PBXBuildFile; fileRef = 50CC9AFF1AD4289300B97F2E /* PPOCredentials.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		50DCC1D81AE7CBA900D0FE26 /* PPOCredentials.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CC9B001AD4289300B97F2E /* PPOCredentials.m */; };
-		50DCC1D91AE7CBAE00D0FE26 /* PPOCard.h in Headers */ = {isa = PBXBuildFile; fileRef = 50CC9AFA1AD4237F00B97F2E /* PPOCard.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		50DCC1DA1AE7CBB300D0FE26 /* PPOCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CC9AFB1AD4237F00B97F2E /* PPOCard.m */; };
 		50DCC1DB1AE7CBB900D0FE26 /* PPOTransaction.h in Headers */ = {isa = PBXBuildFile; fileRef = 50CC9B041AD42B7500B97F2E /* PPOTransaction.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		50DCC1DC1AE7CBBD00D0FE26 /* PPOTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CC9B051AD42B7500B97F2E /* PPOTransaction.m */; };
@@ -182,7 +181,6 @@
 		50CB92001B1CB83D00A8B39E /* PPORedirectManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPORedirectManager.m; sourceTree = "<group>"; };
 		50CC9AF51AD41ED300B97F2E /* PPOPaymentManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPOPaymentManager.h; path = Public/PPOPaymentManager.h; sourceTree = "<group>"; };
 		50CC9AF61AD41ED300B97F2E /* PPOPaymentManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOPaymentManager.m; sourceTree = "<group>"; };
-		50CC9AFA1AD4237F00B97F2E /* PPOCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPOCard.h; path = Public/PPOCard.h; sourceTree = "<group>"; };
 		50CC9AFB1AD4237F00B97F2E /* PPOCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOCard.m; sourceTree = "<group>"; };
 		50CC9AFF1AD4289300B97F2E /* PPOCredentials.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPOCredentials.h; path = Public/PPOCredentials.h; sourceTree = "<group>"; };
 		50CC9B001AD4289300B97F2E /* PPOCredentials.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOCredentials.m; sourceTree = "<group>"; };
@@ -556,7 +554,6 @@
 		50CC9AFE1AD4238400B97F2E /* PPOCard */ = {
 			isa = PBXGroup;
 			children = (
-				50CC9AFA1AD4237F00B97F2E /* PPOCard.h */,
 				50CC9AFB1AD4237F00B97F2E /* PPOCard.m */,
 			);
 			name = PPOCard;
@@ -681,7 +678,6 @@
 				1A1E9BC91B28B9B500659979 /* (null) in Headers */,
 				50DCC1C31AE7CAF000D0FE26 /* PPOError.h in Headers */,
 				50DCC1E71AE7CBFF00D0FE26 /* PPOTimeManager.h in Headers */,
-				50DCC1D91AE7CBAE00D0FE26 /* PPOCard.h in Headers */,
 				50DCC1DB1AE7CBB900D0FE26 /* PPOTransaction.h in Headers */,
 				1AF1B2ED1B2B10C1000404AF /* ThreeDSecureProtocol.h in Headers */,
 				1A1E9BC61B28B8FB00659979 /* (null) in Headers */,
