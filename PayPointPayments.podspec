@@ -16,12 +16,12 @@ Pod::Spec.new do |s|
   s.platform     = :ios, '7.0'
   s.requires_arc = true
 
-  s.source_files = ['PaypointSDK/*.[mh]','PaypointLibrary/*.h']
+  s.source_files = ['PaypointSDK/*.[mh]','PaypointSDK/*.h','PaypointSDK/Public/*.h']
   s.resource_bundles = {
-    'PayPointPayments' => ['PaypointResources/*','PaypointLibrary/PPOWebViewController.xib', 'Framework/Info.plist']
+    'PayPointPayments' => ['PaypointResources/*','PaypointLibrary/PPOWebViewController.xib','Framework/Info.plist']
   }
 
-  s.public_header_files = ['PaypointLibrary/*.h','PaypointSDK/PPO*.h'] 
+  s.public_header_files = ['PaypointSDK/Public/*.h'] 
   s.frameworks = 'UIKit', 'SystemConfiguration', 'CoreGraphics'
 
 end

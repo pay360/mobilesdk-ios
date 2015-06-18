@@ -96,10 +96,10 @@
 		50DCC1EC1AE7CC1900D0FE26 /* PPOPaymentEndpointManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 506D55B21AE5326700D71180 /* PPOPaymentEndpointManager.m */; };
 		50DCC1EF1AE7CC2900D0FE26 /* PPOPaymentManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 50CC9AF51AD41ED300B97F2E /* PPOPaymentManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		50DCC1F01AE7CC3000D0FE26 /* PPOPaymentManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CC9AF61AD41ED300B97F2E /* PPOPaymentManager.m */; };
-		50DCC1F31AE7CC4100D0FE26 /* PPOSDKMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 5056A1A51AD68B1400AB1276 /* PPOSDKMacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		50ED5D851B1EF7AE00D67F48 /* PPOURLRequestManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 50ED5D831B1EF7AE00D67F48 /* PPOURLRequestManager.h */; };
 		50ED5D861B1EF7AE00D67F48 /* PPOURLRequestManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50ED5D841B1EF7AE00D67F48 /* PPOURLRequestManager.m */; };
-		50FC53AD1B32CF020018A7FD /* PPOCard.h in Headers */ = {isa = PBXBuildFile; fileRef = 50FC53AC1B32CF020018A7FD /* PPOCard.h */; };
+		50FC53AF1B32D3D70018A7FD /* PPOCard.h in Headers */ = {isa = PBXBuildFile; fileRef = 50FC53AE1B32D3D70018A7FD /* PPOCard.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		50FC53B11B32D3E70018A7FD /* PPOSDKMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 50FC53B01B32D3E70018A7FD /* PPOSDKMacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -146,7 +146,6 @@
 		503E19A11AE8E3D800CB4784 /* PaypointLibraryTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PaypointLibraryTests.m; sourceTree = "<group>"; };
 		50475D731B26E2190005DB9D /* PPOPrivateError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOPrivateError.h; sourceTree = "<group>"; };
 		50475D741B26E2190005DB9D /* PPOPrivateError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOPrivateError.m; sourceTree = "<group>"; };
-		5056A1A51AD68B1400AB1276 /* PPOSDKMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPOSDKMacros.h; path = ../PaypointSDK/PPOSDKMacros.h; sourceTree = "<group>"; };
 		5056A1A71AD68B2B00AB1276 /* PPOError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPOError.h; path = Public/PPOError.h; sourceTree = "<group>"; };
 		5056A1A91AD6A65900AB1276 /* PPOError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOError.m; sourceTree = "<group>"; };
 		5056A1AB1AD6A75200AB1276 /* PPOErrorManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOErrorManager.h; sourceTree = "<group>"; };
@@ -171,7 +170,7 @@
 		5081F3BD1AE7E56300D41911 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		5081F3BF1AE7E58500D41911 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		5081F3C11AE7E58900D41911 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		5081F3C31AE7E5D800D41911 /* Paypoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Paypoint.h; sourceTree = "<group>"; };
+		5081F3C31AE7E5D800D41911 /* Paypoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Paypoint.h; path = ../PaypointSDK/Public/Paypoint.h; sourceTree = "<group>"; };
 		5092F3551AFA1E8F004FFF62 /* PayPointPaymentsResources.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PayPointPaymentsResources.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		5092F36F1AFA4D9F004FFF62 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Framework/Info.plist; sourceTree = "<group>"; };
 		509B58891ADD477A001236CD /* PPOTimeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOTimeManager.h; sourceTree = "<group>"; };
@@ -202,7 +201,8 @@
 		50E3E6631AE1127700DA61E8 /* PPOPaymentBaseURLManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOPaymentBaseURLManager.m; sourceTree = "<group>"; };
 		50ED5D831B1EF7AE00D67F48 /* PPOURLRequestManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOURLRequestManager.h; sourceTree = "<group>"; };
 		50ED5D841B1EF7AE00D67F48 /* PPOURLRequestManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOURLRequestManager.m; sourceTree = "<group>"; };
-		50FC53AC1B32CF020018A7FD /* PPOCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPOCard.h; path = Public/PPOCard.h; sourceTree = "<group>"; };
+		50FC53AE1B32D3D70018A7FD /* PPOCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPOCard.h; path = Public/PPOCard.h; sourceTree = "<group>"; };
+		50FC53B01B32D3E70018A7FD /* PPOSDKMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPOSDKMacros.h; path = PaypointSDK/Public/PPOSDKMacros.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -325,10 +325,10 @@
 		503E19A51AE8EF0600CB4784 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				50FC53B01B32D3E70018A7FD /* PPOSDKMacros.h */,
 				1AF1B2EE1B2B112A000404AF /* PPOSDKConstants.h */,
 				5081F3AE1AE7D28000D41911 /* Framework.sh */,
 				5081F3B81AE7D45600D41911 /* MultiPlatformFramework.sh */,
-				5056A1A51AD68B1400AB1276 /* PPOSDKMacros.h */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -556,7 +556,7 @@
 		50CC9AFE1AD4238400B97F2E /* PPOCard */ = {
 			isa = PBXGroup;
 			children = (
-				50FC53AC1B32CF020018A7FD /* PPOCard.h */,
+				50FC53AE1B32D3D70018A7FD /* PPOCard.h */,
 				50CC9AFB1AD4237F00B97F2E /* PPOCard.m */,
 			);
 			name = PPOCard;
@@ -668,7 +668,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				5081F3C41AE7E5D800D41911 /* Paypoint.h in Headers */,
-				50FC53AD1B32CF020018A7FD /* PPOCard.h in Headers */,
 				50CB92011B1CB83D00A8B39E /* PPORedirectManager.h in Headers */,
 				50DCC1E31AE7CBE400D0FE26 /* PPOWebViewController.h in Headers */,
 				1A1E9BC31B28B8FB00659979 /* (null) in Headers */,
@@ -676,8 +675,8 @@
 				507924A21B2EE1D9004402B4 /* PPOCustomFieldBuilder.h in Headers */,
 				1AF1B2EF1B2B112A000404AF /* PPOSDKConstants.h in Headers */,
 				50D495171B023944004AD686 /* PPOResourcesManager.h in Headers */,
-				50DCC1F31AE7CC4100D0FE26 /* PPOSDKMacros.h in Headers */,
 				50DCC1EF1AE7CC2900D0FE26 /* PPOPaymentManager.h in Headers */,
+				50FC53B11B32D3E70018A7FD /* PPOSDKMacros.h in Headers */,
 				505AB2ED1B04B9A8001FAD15 /* PPORedirect.h in Headers */,
 				1A1E9BC91B28B9B500659979 /* (null) in Headers */,
 				50DCC1C31AE7CAF000D0FE26 /* PPOError.h in Headers */,
@@ -697,6 +696,7 @@
 				50DCC1DD1AE7CBC400D0FE26 /* PPOBillingAddress.h in Headers */,
 				50ED5D851B1EF7AE00D67F48 /* PPOURLRequestManager.h in Headers */,
 				1AF1B2E81B2B10AA000404AF /* ThreeDSecureDelegate.h in Headers */,
+				50FC53AF1B32D3D70018A7FD /* PPOCard.h in Headers */,
 				50DCC1EB1AE7CC1300D0FE26 /* PPOPaymentEndpointManager.h in Headers */,
 				503D52C51B0B74230074CB44 /* PPOCustomField.h in Headers */,
 				50475D751B26E2190005DB9D /* PPOPrivateError.h in Headers */,
