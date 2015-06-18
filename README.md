@@ -60,7 +60,7 @@ Using this instance of PPOCredentials, you can now make a payment in our MITE te
 
 ## Making a Payment 
 
-The PaypointSDK will evaluate all parameters injected into a payment for their presence and validity.  These methods are exposed as public API and are available if you want to validate inline with the UI.
+The PaypointSDK will evaluate all parameters injected into a payment for their presence and validity.  These methods are exposed as public API and are available if you want to validate inline with your UI.
 
 At this point, you should have an instance of PPOCredentials ready. If you do not, please see 'Mock Authorise Client Call' above. If you choose to validate an instance of PPOCredentials at this stage, there is public API available, which looks like the following:
 
@@ -68,7 +68,10 @@ At this point, you should have an instance of PPOCredentials ready. If you do no
 NSError *invalidCredentials = [PPOPaymentValidator validateCredentials:credentials];
 ```
 
-Build a representation of your payment, by preparing an instance of **PPOPayment**.
+One you make a payment, if a payment requires a 3D Secure step, a scene is presented modally from the root view controller of UIWindow, so that the user has access to a web based form.
+
+To proceed with making a payment, build a representation of your payment, by preparing an instance of **PPOPayment**.
+
 
 ```objective-c
 PPOPayment *payment = [PPOPayment new];
@@ -173,7 +176,7 @@ self.paymentManager makePayment:payment
 ```
 
 
-Some payments can sometimes take ~60 seconds to process, but the option to use a custom timeout is available here, should you want to provide a different value.  
+Some payments can sometimes take ~60 seconds to process, but the option to use a custom timeout is available here, should you want to provide a different value.
 
 ## Error handling
 
