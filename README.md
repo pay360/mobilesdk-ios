@@ -203,7 +203,7 @@ Calling makePayment again, when an error is ambigous, may result in a duplicate 
 
 ```objective-c
 if ([PPOPaymentManager isSafeToRetryPaymentWithOutcome:outcome]) {
-    [self makePayment:payment];
+    [self makePayment:outcome.payment];
 }
 ```
 
