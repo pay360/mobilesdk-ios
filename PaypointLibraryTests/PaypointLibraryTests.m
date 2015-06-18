@@ -22,7 +22,6 @@
 #define INSTALLATION_ID @"5300311"
 
 @interface PaypointLibraryTests : XCTestCase
-/*
 @property (nonatomic, strong) NSArray *pans;
 @property (nonatomic) PPOEnvironment currentEnvironment;
 @property (nonatomic, strong) NSURL *baseURL;
@@ -349,9 +348,6 @@
                                  }];
 }
 
- */
-
-/*
 -(void)testSessionTimeout {
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Simple payment timedout"];
@@ -476,6 +472,5 @@
     
     return [collector copy];
 }
-*/
 
 @end
