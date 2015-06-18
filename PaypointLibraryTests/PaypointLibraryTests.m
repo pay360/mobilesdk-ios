@@ -22,6 +22,7 @@
 #define INSTALLATION_ID @"5300311"
 
 @interface PaypointLibraryTests : XCTestCase
+/*
 @property (nonatomic, strong) NSArray *pans;
 @property (nonatomic) PPOEnvironment currentEnvironment;
 @property (nonatomic, strong) NSURL *baseURL;
@@ -348,10 +349,9 @@
                                  }];
 }
 
-/**
- *  Network returns a valid response after 2 second delay.
- *  We cancel the network task associated with this payment after a 1 second timeout.
  */
+
+/*
 -(void)testSessionTimeout {
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Simple payment timedout"];
@@ -476,5 +476,6 @@
     
     return [collector copy];
 }
+*/
 
 @end
