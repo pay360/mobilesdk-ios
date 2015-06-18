@@ -99,6 +99,7 @@
 		50DCC1F31AE7CC4100D0FE26 /* PPOSDKMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 5056A1A51AD68B1400AB1276 /* PPOSDKMacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		50ED5D851B1EF7AE00D67F48 /* PPOURLRequestManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 50ED5D831B1EF7AE00D67F48 /* PPOURLRequestManager.h */; };
 		50ED5D861B1EF7AE00D67F48 /* PPOURLRequestManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50ED5D841B1EF7AE00D67F48 /* PPOURLRequestManager.m */; };
+		50FC53AD1B32CF020018A7FD /* PPOCard.h in Headers */ = {isa = PBXBuildFile; fileRef = 50FC53AC1B32CF020018A7FD /* PPOCard.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -201,6 +202,7 @@
 		50E3E6631AE1127700DA61E8 /* PPOPaymentBaseURLManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOPaymentBaseURLManager.m; sourceTree = "<group>"; };
 		50ED5D831B1EF7AE00D67F48 /* PPOURLRequestManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOURLRequestManager.h; sourceTree = "<group>"; };
 		50ED5D841B1EF7AE00D67F48 /* PPOURLRequestManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOURLRequestManager.m; sourceTree = "<group>"; };
+		50FC53AC1B32CF020018A7FD /* PPOCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPOCard.h; path = Public/PPOCard.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -554,6 +556,7 @@
 		50CC9AFE1AD4238400B97F2E /* PPOCard */ = {
 			isa = PBXGroup;
 			children = (
+				50FC53AC1B32CF020018A7FD /* PPOCard.h */,
 				50CC9AFB1AD4237F00B97F2E /* PPOCard.m */,
 			);
 			name = PPOCard;
@@ -665,6 +668,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5081F3C41AE7E5D800D41911 /* Paypoint.h in Headers */,
+				50FC53AD1B32CF020018A7FD /* PPOCard.h in Headers */,
 				50CB92011B1CB83D00A8B39E /* PPORedirectManager.h in Headers */,
 				50DCC1E31AE7CBE400D0FE26 /* PPOWebViewController.h in Headers */,
 				1A1E9BC31B28B8FB00659979 /* (null) in Headers */,
