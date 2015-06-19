@@ -139,7 +139,7 @@
     
 #if PPO_DEBUG_MODE
     NSLog(@"Making payment with op ref %@", payment.identifier);
-    NSLog(@"URL to be used for payment: %@", url);
+    NSLog(@"Making payment at URL: %@", url);
 #endif
     
     NSData *body = [PPOURLRequestManager buildPostBodyWithPayment:payment
@@ -153,10 +153,6 @@
                                                 forPaymentWithID:payment.identifier];
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-
-#if PPO_DEBUG_MODE
-    NSLog(@"Making payment with op ref %@", payment.identifier);
-#endif
     
     id completionHandler = [self networkCompletionForPayment:payment
                                        withOverallCompletion:completion];
@@ -444,7 +440,8 @@ NSLog(@"EXTERNAL QUERY: Converted error to customer friendly error with domain: 
     
 }
 
--(void)performRedirect:(PPORedirect*)redirect withCompletion:(void(^)(PPOOutcome*))completion {
+-(void)performRedirect:(PPORedirect*)redirect
+        withCompletion:(void(^)(PPOOutcome*))completion {
     
     if (redirect.request) {
         
@@ -479,7 +476,10 @@ NSLog(@"EXTERNAL QUERY: Converted error to customer friendly error with domain: 
       withCompletion:(void(^)(PPOOutcome *))completion {
     
     BOOL isNetworkingIssue = [outcome.error.domain isEqualToString:NSURLErrorDomain];
-    BOOL sessionTimedOut = isNetworkingIssue && outcome.error.code == NSURLErrorCancelled;
+    
+    BOOL sessionTimedOut =  (isNetworkingIssue && outcome.error.code == NSURLErrorCancelled) ||
+                            ([outcome.error.domain isEqualToString:PPOPaymentErrorDomain] && outcome.error.code == PPOPaymentErrorMasterSessionTimedOut);
+    
     BOOL isProcessingAtPaypoint = [outcome.error.domain isEqualToString:PPOPaymentErrorDomain] && outcome.error.code == PPOPaymentErrorPaymentProcessing;
     
     if ((isNetworkingIssue && !sessionTimedOut) || isProcessingAtPaypoint) {
