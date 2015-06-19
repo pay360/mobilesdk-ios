@@ -124,6 +124,10 @@
         if ([value isKindOfClass:[NSString class]]) {
             outcome.cardScheme = value;
         }
+        value = [card objectForKey:TRANSACTION_RESPONSE_METHOD_CARD_MASKED_PAN_KEY];
+        if ([value isKindOfClass:[NSString class]]) {
+            outcome.maskedPan = value;
+        }
     }
 }
 

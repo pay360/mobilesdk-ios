@@ -22,6 +22,7 @@
 @property (nonatomic, strong) NSString *type;
 @property (nonatomic, strong) NSString *identifier;
 @property (nonatomic, strong) NSString *lastFour;
+@property (nonatomic, strong) NSString *maskedPan;
 @property (nonatomic, strong) NSString *cardUsageType;
 @property (nonatomic, strong) NSString *cardScheme;
 @property (nonatomic, strong) NSSet *customFields;
