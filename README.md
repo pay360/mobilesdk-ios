@@ -28,27 +28,25 @@ Then run the following command:
 
 # Register
 
-Register for an account at [PayPoint Explorer](https://developer.paypoint.com/payments/explore/#/register)
-This will provide installation ids for Hosted Cashier and Cashier API, either can be used with the Mobile SDK.
-Payments made through the Mobile SDK can be tracked in the [Portal](https://portal.mite.paypoint.net:3443/portal-client/#/en_gb/log_in)
+You can sign up for a [PayPoint Explorer](https://developer.paypoint.com/payments/explore/#/register). This will give you access to a number of PayPoint products including the Mobile SDK in our MITE environment. MITE - Merchant Integration Test Environment - is a dedicated environment for merchants to explore our products and build their integration before go-live.  We'll send you an Installation ID for Cashier API once you have signed up which can be used with the Mobile SDK. Payments made through the Mobile SDK can be tracked in our MITE [Portal](https://portal.mite.paypoint.net:3443/portal-client/#/en_gb/log_in)
 
 # Testing your application in the MITE environment
 
-PayPoint provide a Merchant Integration and Testing Environment (MITE), which lets you test your payment applications. In order to make test payments your server must obtain a client access token for your app, from our API. Instructions for doing this are available here:
-
-TBD:  {TODO: placeholder for server-side authoriseClient call}
+In order to make payments in MITE your server must obtain a client access token.  The client access token will be used by your app to submit payments. Instructions for doing this are available here:
+TBD: {TODO: placeholder for server-side authoriseClient call}
+For convenience we provide a mock REST api which supplies these tokens for your MITE installations which can be used for prototyping your app:
 
 For convenience we provide a mock REST api which supplies these tokens for your test installations which can be used for prototyping your app in our MITE environment: 
 
 ## Mock Authorise Client Call
 
-Perform a Get requests using the following URL. At this point, you should have your InstallationID ready.
+Perform a a Get request using the following URL. At this point, you should have your InstallationID ready.
 
 ```objective-c
 NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://developer.paypoint.com/payments/explore/rest/mockmobilemerchant/getToken/%@", INSTALLATION_ID]];
 ```
 
-Your should receive a HTTP Status code '200', indicating the call was successful. Parse the JSON data that is returned in the response payload. Extract the string value for key "accessToken" and build an intance of PPOCredentials, as follows.
+You should receive a HTTP Status code '200', indicating the call was successful. Parse the JSON data that is returned in the response payload. Extract the string value for key "accessToken" and build an intance of PPOCredentials, as follows.
 
 ```objective-c
 PPOCredentials *credentials = [PPOCredentials new];
@@ -59,8 +57,6 @@ credentials.token = token;
 Using this instance of PPOCredentials, you can now make a payment in our MITE testing environment.
 
 ## Making a Payment 
-
-If a payment requires 3D Secure, a scene is automatically presented modally, full screen, from the root view controller of UIWindow. This scene will consists of a form that the user is expected to complete. Once the user completes this process the scene will dismiss and the payment will proceed.
 
 When making a payment, you should have an instance of **PPOCredentials** ready. If you do not, please see 'Mock Authorise Client Call' above. 
 
@@ -82,7 +78,7 @@ payment.credentials = credentials;
 
 Prepare an instance of your transaction and card details, by preparing an instance of **PPOTransaction** and **PPOCard**, like so: 
 
-When 'isDeferred' is set to 'YES' the payment will be an Authorisation.
+When 'isDeferred' is set to 'YES' the payment will be processed as Authorisation.
 
 ```ojective-c
 PPOTransaction *transaction = [PPOTransaction new];
@@ -179,8 +175,9 @@ self.paymentManager makePayment:payment
                       }];
 ```
 
+NOTE - the SDK will always callback within a set timeout period. Care should be taken when setting this value as short timeouts might not allow enough time for the payment to be authorised. This timeout does not include any delays resulting from the user being redirected to 3D Secure.
 
-Some payments can sometimes take ~60 seconds to process, but the option to use a custom timeout is available here, should you want to provide a different value.
+If a payment requires 3D Secure, a scene is automatically presented modally, full screen, from the root view controller of UIWindow. This scene will consists of a form that the user is expected to complete. Once the user completes this process the scene will dismiss and the payment will proceed.
 
 ## Error handling
 
@@ -199,7 +196,7 @@ self.paymentManager queryPayment:payment
                       }];
 ```
 
-Calling makePayment again, when an error is ambigous, may result in a duplicate payment. For peace of mind, a convenience method is available which returns a boolean value, indicating if it is safe to repeat the payment, without the risk of duplication.
+Calling makePayment again, when an error is ambiguous, may result in a duplicate payment. For peace of mind, a convenience method is available which returns a boolean value, indicating if it is safe to repeat the payment, without the risk of duplication.
 
 ```objective-c
 if ([PPOPaymentManager isSafeToRetryPaymentWithOutcome:outcome]) {
@@ -210,7 +207,7 @@ if ([PPOPaymentManager isSafeToRetryPaymentWithOutcome:outcome]) {
 
 ## Test Cards
 
-In the MITE environment you can use the standard test PANs for testing your applications (including 3DS test cards): 
+A set of test cards for MITE are available here:
 [MITE test cards](https://developer.paypoint.com/payments/docs/#getting_started/test_cards)
 
 ## Documentation
