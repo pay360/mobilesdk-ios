@@ -160,6 +160,15 @@
         return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorPaymentAmountInvalid];
     }
     
+    NSString *stringAmount = [NSString stringWithFormat:@"%@", amount];
+    NSArray *components = [stringAmount componentsSeparatedByString:@"."];
+    if (components.count > 1) {
+        NSString *last = components.lastObject;
+        if (last.length > 2) {
+            return [PPOErrorManager buildErrorForValidationErrorCode:PPOLocalValidationErrorPaymentAmountInvalid];
+        }
+    }
+    
     return nil;
 }
 
