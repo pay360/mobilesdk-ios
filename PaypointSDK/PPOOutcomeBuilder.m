@@ -47,6 +47,10 @@
 
 +(void)parseCustomFields:(NSDictionary*)customFields forOutcome:(PPOOutcome*)outcome {
     
+    if (!customFields || ![customFields isKindOfClass:[NSDictionary class]]) {
+        return;
+    }
+    
     NSArray *fieldState = [customFields objectForKey:PAYMENT_RESPONSE_CUSTOM_FIELDS_STATE];
     if ([fieldState isKindOfClass:[NSArray class]]) {
         NSMutableSet *collector = [NSMutableSet new];
@@ -63,6 +67,11 @@
 }
 
 +(void)parseOutcome:(NSDictionary*)outcomeData forOutcome:(PPOOutcome*)outcome {
+    
+    if (!outcomeData || ![outcomeData isKindOfClass:[NSDictionary class]]) {
+        return;
+    }
+    
     id value;
     if ([outcomeData isKindOfClass:[NSDictionary class]]) {
         value = [outcomeData objectForKey:PAYMENT_RESPONSE_OUTCOME_REASON_KEY];
@@ -78,56 +87,63 @@
 
 +(void)parseTransaction:(NSDictionary*)transaction forOutcome:(PPOOutcome*)outcome {
     id value;
-    if ([transaction isKindOfClass:[NSDictionary class]]) {
-        
-        PPOTimeManager *manager = [PPOTimeManager new];
-        
-        value = [transaction objectForKey:TRANSACTION_RESPONSE_TRANSACTION_AMOUNT_KEY];
-        if ([value isKindOfClass:[NSNumber class]]) {
-            outcome.amount = value;
-        }
-        value = [transaction objectForKey:TRANSACTION_RESPONSE_TRANSACTION_CURRENCY_KEY];
-        if ([value isKindOfClass:[NSString class]]) {
-            outcome.currency = value;
-        }
-        value = [transaction objectForKey:TRANSACTION_RESPONSE_TRANSACTION_TIME_KEY];
-        if ([value isKindOfClass:[NSString class]]) {
-            outcome.date = [manager dateFromString:value];
-        }
-        value = [transaction objectForKey:TRANSACTION_RESPONSE_TRANSACTION_MERCH_REF_KEY];
-        if ([value isKindOfClass:[NSString class]]) {
-            outcome.merchantRef = value;
-        }
-        value = [transaction objectForKey:TRANSACTION_RESPONSE_TRANSACTION_TYPE_KEY];
-        if ([value isKindOfClass:[NSString class]]) {
-            outcome.type = value;
-        }
-        value = [transaction objectForKey:TRANSACTION_RESPONSE_TRANSACTION_ID_KEY];
-        if ([value isKindOfClass:[NSString class]]) {
-            outcome.identifier = value;
-        }
+    
+    if (!transaction || ![transaction isKindOfClass:[NSDictionary class]]) {
+        return;
     }
+    
+    PPOTimeManager *manager = [PPOTimeManager new];
+    
+    value = [transaction objectForKey:TRANSACTION_RESPONSE_TRANSACTION_AMOUNT_KEY];
+    if ([value isKindOfClass:[NSNumber class]]) {
+        outcome.amount = value;
+    }
+    value = [transaction objectForKey:TRANSACTION_RESPONSE_TRANSACTION_CURRENCY_KEY];
+    if ([value isKindOfClass:[NSString class]]) {
+        outcome.currency = value;
+    }
+    value = [transaction objectForKey:TRANSACTION_RESPONSE_TRANSACTION_TIME_KEY];
+    if ([value isKindOfClass:[NSString class]]) {
+        outcome.date = [manager dateFromString:value];
+    }
+    value = [transaction objectForKey:TRANSACTION_RESPONSE_TRANSACTION_MERCH_REF_KEY];
+    if ([value isKindOfClass:[NSString class]]) {
+        outcome.merchantRef = value;
+    }
+    value = [transaction objectForKey:TRANSACTION_RESPONSE_TRANSACTION_TYPE_KEY];
+    if ([value isKindOfClass:[NSString class]]) {
+        outcome.type = value;
+    }
+    value = [transaction objectForKey:TRANSACTION_RESPONSE_TRANSACTION_ID_KEY];
+    if ([value isKindOfClass:[NSString class]]) {
+        outcome.identifier = value;
+    }
+    
 }
 
 +(void)parseCard:(NSDictionary*)card forOutcome:(PPOOutcome*)outcome {
+    
+    if (!card || ![card isKindOfClass:[NSDictionary class]]) {
+        return;
+    }
+    
     id value;
-    if ([card isKindOfClass:[NSDictionary class]]) {
-        value = [card objectForKey:TRANSACTION_RESPONSE_METHOD_CARD_LAST_FOUR_KEY];
-        if ([value isKindOfClass:[NSString class]]) {
-            outcome.lastFour = value;
-        }
-        value = [card objectForKey:TRANSACTION_RESPONSE_METHOD_CARD_USER_TYPE_KEY];
-        if ([value isKindOfClass:[NSString class]]) {
-            outcome.cardUsageType = value;
-        }
-        value = [card objectForKey:TRANSACTION_RESPONSE_METHOD_CARD_SCHEME_KEY];
-        if ([value isKindOfClass:[NSString class]]) {
-            outcome.cardScheme = value;
-        }
-        value = [card objectForKey:TRANSACTION_RESPONSE_METHOD_CARD_MASKED_PAN_KEY];
-        if ([value isKindOfClass:[NSString class]]) {
-            outcome.maskedPan = value;
-        }
+    
+    value = [card objectForKey:TRANSACTION_RESPONSE_METHOD_CARD_LAST_FOUR_KEY];
+    if ([value isKindOfClass:[NSString class]]) {
+        outcome.lastFour = value;
+    }
+    value = [card objectForKey:TRANSACTION_RESPONSE_METHOD_CARD_USER_TYPE_KEY];
+    if ([value isKindOfClass:[NSString class]]) {
+        outcome.cardUsageType = value;
+    }
+    value = [card objectForKey:TRANSACTION_RESPONSE_METHOD_CARD_SCHEME_KEY];
+    if ([value isKindOfClass:[NSString class]]) {
+        outcome.cardScheme = value;
+    }
+    value = [card objectForKey:TRANSACTION_RESPONSE_METHOD_CARD_MASKED_PAN_KEY];
+    if ([value isKindOfClass:[NSString class]]) {
+        outcome.maskedPan = value;
     }
 }
 
