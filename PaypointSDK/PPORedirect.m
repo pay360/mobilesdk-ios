@@ -16,7 +16,7 @@
     self = [super init];
     if (self) {
         
-        if (!data) {
+        if (!data || ![data isKindOfClass:[NSDictionary class]]) {
             return self;
         }
         

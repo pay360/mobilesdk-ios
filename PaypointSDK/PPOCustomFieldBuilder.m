@@ -13,6 +13,10 @@
 
 +(PPOCustomField *)customFieldWithData:(NSDictionary *)data {
     
+    if (!data || ![data isKindOfClass:[NSDictionary class]]) {
+        return nil;
+    }
+    
     PPOCustomField *customField = [PPOCustomField new];
     
     id value;
