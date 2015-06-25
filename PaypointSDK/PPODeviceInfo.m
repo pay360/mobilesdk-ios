@@ -99,7 +99,7 @@
     return _screenRes;
 }
 
--(NSString*)dpi {
+-(NSNumber*)dpi {
     
     CGFloat scale = 1;
     if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)]) {
@@ -107,7 +107,7 @@
     }
     CGFloat dpi = 160 * scale;
     
-    return [NSString stringWithFormat:@"%f", dpi];
+    return @(dpi);
     
 }
 
