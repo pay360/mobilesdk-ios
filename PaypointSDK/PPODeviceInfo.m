@@ -85,10 +85,16 @@
 -(NSString *)screenRes {
     if (_screenRes == nil) {
         CGFloat scale = [UIScreen mainScreen].scale;
-        NSString *screenWidth = [NSString stringWithFormat:@"%.0f", [UIScreen mainScreen].bounds.size.width*scale];
-        NSString *screenHeight = [NSString stringWithFormat:@"%.0f", [UIScreen mainScreen].bounds.size.height*scale];
-        _screenRes = [NSString stringWithFormat:@"%@x%@", screenWidth, screenHeight];
-        //http://www.paintcodeapp.com/news/ultimate-guide-to-iphone-resolutions
+        
+        NSString *value1 = [NSString stringWithFormat:@"%.0f", [UIScreen mainScreen].bounds.size.width*scale];
+        NSString *value2 = [NSString stringWithFormat:@"%.0f", [UIScreen mainScreen].bounds.size.height*scale];
+        
+        if (value1.floatValue > value2.floatValue) {
+            _screenRes = [NSString stringWithFormat:@"%@x%@", value2, value1];
+        } else {
+            _screenRes = [NSString stringWithFormat:@"%@x%@", value1, value2];
+        }
+        
     }
     return _screenRes;
 }
