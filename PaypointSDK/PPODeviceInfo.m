@@ -93,7 +93,17 @@
     return _screenRes;
 }
 
-
+-(NSString*)dpi {
+    
+    CGFloat scale = 1;
+    if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)]) {
+        scale = [[UIScreen mainScreen] scale];
+    }
+    CGFloat dpi = 160 * scale;
+    
+    return [NSString stringWithFormat:@"%f", dpi];
+    
+}
 
 +(NSDictionary*)infoPlist {
     NSString *path = [[NSBundle mainBundle] pathForResource:@"Info" ofType:@"plist"];
@@ -109,6 +119,7 @@
     id manufacturer = @"Apple";
     id type = self.type;
     id screenRes = self.screenRes;
+    id screenDPI = [self dpi];
     
     return @{
              @"sdkInstallId" : uniqueIdentifier,
@@ -118,7 +129,8 @@
              @"modelFamily" : modelFamily,
              @"manufacturer" : manufacturer,
              @"type" : type,
-             @"screenRes" : screenRes
+             @"screenRes" : screenRes,
+             @"screenDpi" : screenDPI
              };
 }
 
