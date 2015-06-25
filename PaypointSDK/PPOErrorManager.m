@@ -12,45 +12,52 @@
 
 +(NSError*)parsePaypointReasonCode:(NSInteger)code {
     
-    NSError *error;
-    
     switch (code) {
-        case 1: {
-            error = [PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorBadRequest];
-        } break;
-        case 2: {
-            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorAuthenticationFailed];
-        } break;
-        case 3: {
-            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorClientTokenExpired];
-        } break;
-        case 4: {
-            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUnauthorisedRequest];
-        } break;
-        case 5: {
-            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorTransactionDeclined];
-        } break;
-        case 6: {
-            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorServerFailure];
-        } break;
-        case 7: {
-            error = [PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorPaymentSuspendedForThreeDSecure];
-        } break;
-        case 8: {
-            error = [PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorPaymentSuspendedForClientRedirect];
-        } break;
-        case 9: {
-            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentProcessing];
-        } break;
-        case 10: {
-            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentNotFound];
-        } break;
+            
+        case 1:
+            return [PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorBadRequest];
+            break;
+            
+        case 2:
+            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorAuthenticationFailed];
+            break;
+            
+        case 3:
+            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorClientTokenExpired];
+            break;
+            
+        case 4:
+            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUnauthorisedRequest];
+            break;
+            
+        case 5:
+            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorTransactionDeclined];
+            break;
+            
+        case 6:
+            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorServerFailure];
+            break;
+            
+        case 7:
+            return [PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorPaymentSuspendedForThreeDSecure];
+            break;
+            
+        case 8:
+            return [PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorPaymentSuspendedForClientRedirect];
+            break;
+            
+        case 9:
+            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentProcessing];
+            break;
+            
+        case 10:
+            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentNotFound];
+            break;
             
         default:
+            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUnexpected];
             break;
     }
-        
-    return error;
     
 }
 
@@ -106,11 +113,9 @@
                     ];
         } break;
             
-        default:
-            break;
+        default: return nil; break;
     }
     
-    return nil;
 }
 
 +(NSError*)buildErrorForPaymentErrorCode:(PPOPaymentError)code {
@@ -325,11 +330,9 @@
                     ];
         } break;
             
-        default:
-            break;
+        default: return nil; break;
     }
-    
-    return nil;
+
 }
 
 +(NSError*)buildCustomerFacingErrorFromError:(NSError *)error {
@@ -366,10 +369,6 @@
     
     switch (error.code) {
             
-        case PPOPrivateErrorNotIntitialised:
-            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorNotInitialised];
-            break;
-            
         case PPOPrivateErrorBadRequest:
             return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUnexpected];
             break;
@@ -391,7 +390,9 @@
             break;
             
         default:
+            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUnexpected];
             break;
+            
     }
     
     return nil;
