@@ -71,9 +71,9 @@
 
 -(NSString *)type {
     if (_type == nil) {
-        if ([self.modelFamily isEqualToString:@"iPad"]) {
+        if ([self.modelFamily rangeOfString:@"iPad"].location != NSNotFound) {
             _type = @"TABLET";
-        } else if ([self.modelFamily isEqualToString:@"iPhone"]) {
+        } else if ([self.modelFamily rangeOfString:@"iPhone"].location != NSNotFound) {
             _type = @"SMARTPHONE";
         } else {
             _type = @"OTHER";
