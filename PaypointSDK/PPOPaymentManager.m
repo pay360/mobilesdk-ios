@@ -82,8 +82,7 @@
         outcome = [PPOOutcomeBuilder outcomeWithData:nil
                                            withError:error
                                           forPayment:payment];
-        [self handleOutcome:outcome
-             withCompletion:completion];
+        completion(outcome);
         return;
     }
     
@@ -92,20 +91,18 @@
         outcome = [PPOOutcomeBuilder outcomeWithData:nil
                                            withError:error
                                           forPayment:payment];
-        [self handleOutcome:outcome
-             withCompletion:completion];
+        completion(outcome);
         return;
     }
     
     BOOL thisPaymentUnderway = [PPOPaymentTrackingManager stateForPayment:payment] != PAYMENT_STATE_NON_EXISTENT;
     
     if (thisPaymentUnderway) {
-        error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentProcessing];
+        error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentManagerOccupied];
         outcome = [PPOOutcomeBuilder outcomeWithData:nil
                                            withError:error
                                           forPayment:payment];
-        [self handleOutcome:outcome
-             withCompletion:completion];
+        completion(outcome);
         return;
     }
     
@@ -120,8 +117,7 @@
         outcome = [PPOOutcomeBuilder outcomeWithData:nil
                                            withError:error
                                           forPayment:payment];
-        [self handleOutcome:outcome
-             withCompletion:completion];
+        completion(outcome);
         return;
     }
     
@@ -130,8 +126,7 @@
         outcome = [PPOOutcomeBuilder outcomeWithData:nil
                                            withError:error
                                           forPayment:payment];
-        [self handleOutcome:outcome
-             withCompletion:completion];
+        completion(outcome);
         return;
     }
     
@@ -169,16 +164,16 @@
                               }];
     
     [task resume];
-
+    
 }
 
 /*
  * The implementing developer may call this if he/she wants to discover the state of a payment
  * that is currently underway, or a historic payment. This call may happen whilst the SDK is busy
  * handling a payment. The primary reason for distinguishing internal and external,
- * queries is to ensure that the master session timeout handler only cancels networking tasks that are 
- * associated with an ongoing payment. The secondary reason is so that we can assign network tasks to one 
- * of two dedicated NSURLSession instances. This allows for a cancel feature, should we want to implement 
+ * queries is to ensure that the master session timeout handler only cancels networking tasks that are
+ * associated with an ongoing payment. The secondary reason is so that we can assign network tasks to one
+ * of two dedicated NSURLSession instances. This allows for a cancel feature, should we want to implement
  * that feature in the future.
  */
 -(void)queryPayment:(PPOPayment*)payment
@@ -240,12 +235,12 @@
         }
             break;
     }
-
+    
 }
 
 /*
  * The SDK may call this method to determine the state of a payment and establish an outcome.
- * If the outcome is 'still processing' or we suffered with a network interuption, then the 
+ * If the outcome is 'still processing' or we suffered with a network interuption, then the
  * SDK will call this method recursively, until a more conclusive outcome is established
  * or the master session timeout timer fires.
  */
@@ -258,9 +253,9 @@
      */
     
 #if PPO_DEBUG_MODE
-if (!internalQuery) {
-    NSLog(@"EXTERNAL QUERY: Preparing");
-}
+    if (!internalQuery) {
+        NSLog(@"EXTERNAL QUERY: Preparing");
+    }
 #endif
     
     /*
@@ -300,16 +295,16 @@ if (!internalQuery) {
         [PPOPaymentTrackingManager overrideTimeoutHandler:^{
             
 #if PPO_DEBUG_MODE
-if (weakTask) {
-    NSLog(@"Cancelling internal query network task");
-} else {
-    
-    /*!
-     * If this log prints then we have an unsuitable timeout handler!
-     * A suitable timeout handler should be set at each stage of the payment workflow.
-     */
-    NSLog(@"The internal query network task was completed before we had a chance to cancel it!");
-}
+            if (weakTask) {
+                NSLog(@"Cancelling internal query network task");
+            } else {
+                
+                /*!
+                 * If this log prints then we have an unsuitable timeout handler!
+                 * A suitable timeout handler should be set at each stage of the payment workflow.
+                 */
+                NSLog(@"The internal query network task was completed before we had a chance to cancel it!");
+            }
 #endif
             
             [weakTask cancel];
@@ -318,7 +313,7 @@ if (weakTask) {
     }
     
     [task resume];
-
+    
 }
 
 -(void(^)(NSData *, NSURLResponse *, NSError *))networkCompletionForQuery:(PPOPayment*)payment
@@ -352,15 +347,15 @@ if (weakTask) {
         }
         
         if (isInternal == NO) {
-
+            
 #if PPO_DEBUG_MODE
-NSLog(@"EXTERNAL QUERY: Established error with domain: %@ with code: %li", outcome.error.domain, (long)outcome.error.code);
+            NSLog(@"EXTERNAL QUERY: Established error with domain: %@ with code: %li", outcome.error.domain, (long)outcome.error.code);
 #endif
-    
+            
             outcome.error = [PPOErrorManager buildCustomerFacingErrorFromError:outcome.error];
             
 #if PPO_DEBUG_MODE
-NSLog(@"EXTERNAL QUERY: Converted error to customer friendly error with domain: %@ with code: %li", outcome.error.domain, (long)outcome.error.code);
+            NSLog(@"EXTERNAL QUERY: Converted error to customer friendly error with domain: %@ with code: %li", outcome.error.domain, (long)outcome.error.code);
 #endif
             
         }
@@ -369,7 +364,7 @@ NSLog(@"EXTERNAL QUERY: Converted error to customer friendly error with domain: 
             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
             completion(outcome);
         });
-
+        
     };
 }
 
@@ -400,7 +395,7 @@ NSLog(@"EXTERNAL QUERY: Converted error to customer friendly error with domain: 
                                               forPayment:payment];
             
         }
-                
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             
             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
@@ -451,10 +446,10 @@ NSLog(@"EXTERNAL QUERY: Converted error to customer friendly error with domain: 
                                                                 withSession:self.internalURLSession
                                                         withEndpointManager:self.endpointManager
                                                              withCompletion:^(PPOOutcome *outcome) {
-                                                               
+                                                                 
                                                                  [weakSelf handleOutcome:outcome
                                                                           withCompletion:completion];
-                                                               
+                                                                 
                                                              }];
         
         [self.redirectManager startRedirect];
@@ -478,7 +473,7 @@ NSLog(@"EXTERNAL QUERY: Converted error to customer friendly error with domain: 
     BOOL isNetworkingIssue = [outcome.error.domain isEqualToString:NSURLErrorDomain];
     
     BOOL sessionTimedOut =  (isNetworkingIssue && outcome.error.code == NSURLErrorCancelled) ||
-                            ([outcome.error.domain isEqualToString:PPOPaymentErrorDomain] && outcome.error.code == PPOPaymentErrorMasterSessionTimedOut);
+    ([outcome.error.domain isEqualToString:PPOPaymentErrorDomain] && outcome.error.code == PPOPaymentErrorMasterSessionTimedOut);
     
     BOOL isProcessingAtPaypoint = [outcome.error.domain isEqualToString:PPOPaymentErrorDomain] && outcome.error.code == PPOPaymentErrorPaymentProcessing;
     
@@ -489,14 +484,15 @@ NSLog(@"EXTERNAL QUERY: Converted error to customer friendly error with domain: 
         
     }
     else {
-    
-#if PPO_DEBUG_MODE
-NSLog(@"Got a conclusion.");
-#endif
         
         outcome.error = [PPOErrorManager buildCustomerFacingErrorFromError:outcome.error];
         
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+        
+#if PPO_DEBUG_MODE
+        NSLog(@"Got a conclusion.");
+#endif
+        
         [PPOPaymentTrackingManager removePayment:outcome.payment];
         completion(outcome);
         
@@ -514,8 +510,8 @@ NSLog(@"Got a conclusion.");
     
     
 #if PPO_DEBUG_MODE
-NSLog(@"The outcome is not satisfactory");
-NSLog(@"A query is being prepared for payment with op ref %@", payment.identifier);
+    NSLog(@"The outcome is not satisfactory");
+    NSLog(@"A query is being prepared for payment with op ref %@", payment.identifier);
 #endif
     
     NSUInteger attemptCount = [PPOPaymentTrackingManager totalQueryPaymentAttemptsForPayment:payment];
@@ -549,16 +545,16 @@ NSLog(@"A query is being prepared for payment with op ref %@", payment.identifie
     return ^ {
         
 #if PPO_DEBUG_MODE
-NSString *message = (interval == 1) ? @"second" : @"seconds";
-NSLog(@"The query will take a nap for %f %@ before heading to the server", interval, message);
+        NSString *message = (interval == 1) ? @"second" : @"seconds";
+        NSLog(@"The query will take a nap for %f %@ before heading to the server", interval, message);
 #endif
         
         sleep(interval);
         
         dispatch_async(dispatch_get_main_queue(), ^{
-
+            
 #if PPO_DEBUG_MODE
-NSLog(@"The query just woke up and jumped on the main queue");
+            NSLog(@"The query just woke up and jumped on the main queue");
 #endif
             
             if (![PPOPaymentTrackingManager paymentIsBeingTracked:payment] || [PPOPaymentTrackingManager masterSessionTimeoutHasExpiredForPayment:payment]) {
@@ -573,16 +569,16 @@ NSLog(@"The query just woke up and jumped on the main queue");
             } else {
                 
 #if PPO_DEBUG_MODE
-NSLog(@"Query is heading to the server now.");
+                NSLog(@"Query is heading to the server now.");
 #endif
                 
                 [weakSelf queryServerForPayment:payment
                                 isInternalQuery:YES
                                  withCompletion:^(PPOOutcome *queryOutcome) {
-                                 
+                                     
                                      [weakSelf handleOutcome:queryOutcome
                                               withCompletion:completion];
-                                 
+                                     
                                  }];
             }
             
