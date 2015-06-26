@@ -19,7 +19,7 @@
 
 /*!
 @discussion A convenience method for building an NSDictionary representation of the assigned values of each property listed in this class.
-@return A plist of assigned values. The NSDictionary instance will be valid for JSON serialisation using the NSJSONSerialization parser in Foundation.framework.
+@return An NSDictionary representation of assigned values. The NSDictionary instance will be valid for JSON serialisation using the NSJSONSerialization parser in Foundation.framework.
  */
 -(NSDictionary*)jsonObjectRepresentation;
 
