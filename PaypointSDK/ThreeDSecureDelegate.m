@@ -31,6 +31,7 @@
  * viewDidAppear: for the same request. Thus setting state flags here for peace of mind.
  */
 @implementation ThreeDSecureDelegate {
+    BOOL _isRespondingToUserAction;
     BOOL _preventShowWebView;
     BOOL _isDismissingWebView;
     BOOL _isPresentingWebView;
@@ -53,6 +54,12 @@
 
 -(void)threeDSecureController:(id<ThreeDSecureControllerProtocol>)controller
                 acquiredPaRes:(NSString *)paRes {
+    
+    if (_isRespondingToUserAction) {
+        return;
+    }
+    
+    _isRespondingToUserAction = YES;
     
 #if PPO_DEBUG_MODE
     NSLog(@"Building resume body for payment with op ref: %@", controller.redirect.payment.identifier);
