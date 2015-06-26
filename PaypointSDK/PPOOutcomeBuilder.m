@@ -78,8 +78,7 @@
         
         //Number on stub, string on mite. This will be raised as a change soon.
         if ([value isKindOfClass:[NSNumber class]] || [value isKindOfClass:[NSString class]]) {
-            NSInteger success = 0;
-            if (((NSNumber*)value).integerValue != success) {
+            if (((NSNumber*)value).integerValue > 0) {
                 outcome.error = [PPOErrorManager parsePaypointReasonCode:((NSNumber*)value).integerValue];
             }
         }
