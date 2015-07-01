@@ -337,8 +337,6 @@
     } else {
         return error;
     }
-    
-    return nil;
 }
 
 +(NSError*)buildCustomerFacingErrorFromNSURLError:(NSError*)error {
@@ -351,7 +349,7 @@
         return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut];
     }
     
-    return nil;
+    return error;
 }
 
 +(NSError*)buildCustomerFacingErrorFromPrivateError:(NSError*)error {
