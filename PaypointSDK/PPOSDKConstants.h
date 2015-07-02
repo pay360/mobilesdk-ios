@@ -11,7 +11,7 @@
 #define THREE_D_SECURE_PAREQ_KEY @"pareq"
 #define THREE_D_SECURE_PARES_KEY @"PaRes"
 #define THREE_D_SECURE_SESSION_TIMEOUT_TIME_KEY @"sessionTimeout"
-#define THREE_D_SECURE_DELAYSHOW_TIME_KEY @"redirectTimeout"
+#define THREE_D_SECURE_DELAYSHOW_TIME_KEY @"passiveTimeout"
 #define THREE_D_SECURE_ACS_URL_KEY @"acsUrl"
 #define THREE_D_SECURE_TERMINATION_URL_KEY @"termUrl"
 
