@@ -19,7 +19,7 @@ To integrate the Paypoint Payments iOS SDK into your project using CocoaPods, sp
     source 'https://github.com/CocoaPods/Specs.git'
     platform :ios, '7.0'
     
-    pod 'PayPointPayments',:git => 'https://github.com/paypoint/mobilesdk-ios.git', :tag => 1.0.0-rc2
+    pod 'PayPointPayments',:git => 'https://github.com/paypoint/mobilesdk-ios.git', :tag => '1.0.0-rc2'
 
 Then run the following command:
 
