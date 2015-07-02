@@ -9,7 +9,8 @@ Pod::Spec.new do |s|
 			DESC
   s.homepage         = "https://github.com/paypoint/PayPointIOSSDK"
   s.screenshots      = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
-  s.license          = 'MIT'
+  s.license = { :type => "Apache License, Version 2.0", :file => "LICENSE" }
+
   s.author           = { "PayPoint" => "product@paypoint.net"  }
   s.source           = { :git => "https://github.com/paypoint/PayPointIOSSDK.git", :tag => s.version.to_s }
 
