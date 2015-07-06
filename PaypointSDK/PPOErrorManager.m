@@ -273,7 +273,7 @@
             return [NSError errorWithDomain:PPOLocalValidationErrorDomain
                                        code:PPOLocalValidationErrorCardPanInvalid
                                    userInfo:@{ //Description as per BLU-15022
-                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Invalid card number. Must be numbers only.", @"Failure message for a card validation check")
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Invalid card number.", @"Failure message for a card validation check")
                                               }
                     ];
         } break;
