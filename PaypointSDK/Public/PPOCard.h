@@ -21,7 +21,7 @@
 @property (nonatomic, strong) NSString *cvv;
 
 /*!
- @discussion Must be expressed as 'MM YY'
+ @discussion Must be expressed as 'MMYY'
  */
 @property (nonatomic, strong) NSString *expiry;
 @property (nonatomic, strong) NSString *cardHolderName;
