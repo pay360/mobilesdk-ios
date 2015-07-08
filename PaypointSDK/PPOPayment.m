@@ -8,18 +8,7 @@
 
 #import "PPOPayment.h"
 
-@interface PPOPayment ()
-@property (nonatomic, readwrite, copy) NSString *identifier;
-@end
-
 @implementation PPOPayment
-
--(NSString *)identifier {
-    if (_identifier == nil) {
-        _identifier = [NSUUID UUID].UUIDString;
-    }
-    return _identifier;
-}
 
 -(BOOL)isEqual:(id)object {
     PPOPayment *payment;

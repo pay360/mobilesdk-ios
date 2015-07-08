@@ -141,6 +141,8 @@
         return;
     }
     
+    payment.identifier = [NSUUID UUID].UUIDString;
+    
     PPOPaymentTrackingChaperone *chapperone = [[PPOPaymentTrackingChaperone alloc] initWithPayment:payment
                                                                                          withTimeout:timeout
                                                                                       timeoutHandler:handler];
@@ -164,6 +166,7 @@
 +(void)removePayment:(PPOPayment*)payment {
     
     PPOPaymentTrackingChaperone *chapperoneToDiscard = [PPOPaymentTrackingManager chapperoneForPayment:payment];
+    payment.identifier = nil;
     
     [chapperoneToDiscard stopTimeoutTimer];
     
