@@ -374,6 +374,10 @@
             return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentValidationError];
             break;
             
+        case PPOPrivateErrorWebViewFailedToLoadThreeDSecure:
+            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorThreeDSecureTransactionProcessingFailedToInitiate];
+            break;
+            
         case PPOPrivateErrorPaymentSuspendedForThreeDSecure:
             return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorThreeDSecureTransactionProcessingFailed];
             break;
@@ -424,6 +428,7 @@
     }
     
     return [@[
+              @(PPOPaymentErrorThreeDSecureTransactionProcessingFailedToInitiate),
               @(PPOPaymentErrorUserCancelledThreeDSecure),
               @(PPOPaymentErrorClientTokenExpired),
               @(PPOPaymentErrorClientTokenInvalid),

@@ -185,7 +185,7 @@
     
     if (error) {
         outcome = [PPOOutcomeBuilder outcomeWithData:nil withError:error forPayment:payment];
-        [self handleOutcome:outcome withCompletion:completion];
+        [self handleOutcome:outcome forRedirect:nil withCompletion:completion];
         
         return;
     }
@@ -194,7 +194,7 @@
     
     if (error) {
         outcome = [PPOOutcomeBuilder outcomeWithData:nil withError:error forPayment:payment];
-        [self handleOutcome:outcome withCompletion:completion];
+        [self handleOutcome:outcome forRedirect:nil withCompletion:completion];
         
         return;
     }
@@ -217,21 +217,21 @@
         case PAYMENT_STATE_READY: {
             error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentProcessing];
             outcome = [PPOOutcomeBuilder outcomeWithData:nil withError:error forPayment:payment];
-            [self handleOutcome:outcome withCompletion:completion];
+            [self handleOutcome:outcome forRedirect:nil withCompletion:completion];
         }
             break;
             
         case PAYMENT_STATE_IN_PROGRESS: {
             error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentProcessing];
             outcome = [PPOOutcomeBuilder outcomeWithData:nil withError:error forPayment:payment];
-            [self handleOutcome:outcome withCompletion:completion];
+            [self handleOutcome:outcome forRedirect:nil withCompletion:completion];
         }
             break;
             
         case PAYMENT_STATE_SUSPENDED: {
             error = [PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorPaymentSuspendedForThreeDSecure];
             outcome = [PPOOutcomeBuilder outcomeWithData:nil withError:error forPayment:payment];
-            [self handleOutcome:outcome withCompletion:completion];
+            [self handleOutcome:outcome forRedirect:nil withCompletion:completion];
         }
             break;
     }
@@ -426,7 +426,7 @@
                                                       forPayment:payment];
                 }
                 
-                [weakSelf handleOutcome:outcome withCompletion:completion];
+                [weakSelf handleOutcome:outcome forRedirect:redirect withCompletion:completion];
             }
             
         });
@@ -448,6 +448,7 @@
                                                              withCompletion:^(PPOOutcome *outcome) {
                                                                  
                                                                  [weakSelf handleOutcome:outcome
+                                                                             forRedirect:redirect
                                                                           withCompletion:completion];
                                                                  
                                                              }];
@@ -461,16 +462,18 @@
                                                       forPayment:redirect.payment];
         
         [self handleOutcome:outcome
+                forRedirect:redirect
              withCompletion:completion];
         
     }
     
 }
 
--(void)handleOutcome:(PPOOutcome*)outcome
-      withCompletion:(void(^)(PPOOutcome *))completion {
+-(void)handleOutcome:(PPOOutcome*)outcome forRedirect:(PPORedirect *)redirect withCompletion:(void(^)(PPOOutcome *))completion {
     
     BOOL isNetworkingIssue = [outcome.error.domain isEqualToString:NSURLErrorDomain];
+    
+    BOOL confident3DSecureDidNotSubmit = redirect && redirect.threeDSecureResumeBody == nil;
     
     BOOL sessionTimedOut =  (isNetworkingIssue && outcome.error.code == NSURLErrorCancelled) ||
     ([outcome.error.domain isEqualToString:PPOPaymentErrorDomain] && outcome.error.code == PPOPaymentErrorMasterSessionTimedOut);
@@ -484,6 +487,10 @@
         
     }
     else {
+        
+        if (redirect && confident3DSecureDidNotSubmit) {
+            outcome.error = [PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorWebViewFailedToLoadThreeDSecure];
+        }
         
         outcome.error = [PPOErrorManager buildCustomerFacingErrorFromError:outcome.error];
         

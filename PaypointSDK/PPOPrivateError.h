@@ -20,6 +20,8 @@ typedef NS_ENUM(NSInteger, PPOPrivateError) {
     
     PPOPrivateErrorPaymentSuspendedForClientRedirect,
     
+    PPOPrivateErrorWebViewFailedToLoadThreeDSecure,
+    
     PPOPrivateErrorProcessingThreeDSecure,
     
     PPOPrivateErrorThreeDSecureTimedOut,

@@ -20,6 +20,7 @@ PPOSDK_EXTERN NSString *const PPOLocalValidationErrorDomain;
    @constant PPOPaymentErrorClientTokenExpired The supplied bearer token has expired.
    @constant PPOPaymentErrorClientTokenInvalid The supplied bearer token is invalid.
    @constant PPOPaymentErrorUnauthorisedRequest The supplied token does not have sufficient permissions to access the specified feature.
+   @constant PPOPaymentErrorThreeDSecureTransactionProcessingFailedToInitiate The transaction was successfully submitted but did not initiate three D secure validation.
    @constant PPOPaymentErrorThreeDSecureTransactionProcessingFailed The transaction was successfully submitted but did not complete three D secure validation.
    @constant PPOPaymentErrorServerFailure An internal server error occurred at paypoint.
    @constant PPOPaymentErrorMasterSessionTimedOut The payment session timed out. This is the timeout that is passed into the payment manager.
@@ -48,6 +49,9 @@ typedef enum {
     
     ///The supplied token does not have sufficient permissions to access the specified feature.
     PPOPaymentErrorUnauthorisedRequest,
+    
+    ///The transaction was successfully submitted but did not initiate three D secure validation.
+    PPOPaymentErrorThreeDSecureTransactionProcessingFailedToInitiate,
     
     ///The transaction was successfully submitted but did not complete three D secure validation.
     PPOPaymentErrorThreeDSecureTransactionProcessingFailed,
