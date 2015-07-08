@@ -424,6 +424,7 @@
     }
     
     return [@[
+              @(PPOPaymentErrorUserCancelledThreeDSecure),
               @(PPOPaymentErrorClientTokenExpired),
               @(PPOPaymentErrorClientTokenInvalid),
               @(PPOPaymentErrorUnauthorisedRequest),
