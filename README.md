@@ -28,15 +28,19 @@ Then run the following command:
 
 # Register
 
-You can sign up for a [PayPoint Explorer](https://developer.paypoint.com/payments/explore/#/register). This will give you access to a number of PayPoint products including the Mobile SDK in our MITE environment. MITE - Merchant Integration Test Environment - is a dedicated environment for merchants to explore our products and build their integration before go-live.  We'll send you an Installation ID for Cashier API once you have signed up which can be used with the Mobile SDK. Payments made through the Mobile SDK can be tracked in our MITE [Portal](https://portal.mite.paypoint.net:3443/portal-client/#/en_gb/log_in)
+You can sign up for a [PayPoint Explorer](https://developer.paypoint.com/payments/explore/#/register). This will give you access to a number of PayPoint products including the Mobile SDK in our MITE environment. 
 
-# Testing your application in the MITE environment
+MITE - Merchant Integration Test Environment - is a dedicated environment for merchants to explore our products and build their integration before go-live.  
+
+We'll send you an Installation ID for Cashier API once you have signed up which can be used with the Mobile SDK. 
+
+Payments made through the Mobile SDK can be tracked in our MITE [Portal](https://portal.mite.paypoint.net:3443/portal-client/#/en_gb/log_in)
+
+# Testing your application against MITE
 
 In order to make payments in MITE your server must obtain a client access token.  The client access token will be used by your app to submit payments. Instructions for doing this are available here:
 TBD: {TODO: placeholder for server-side authoriseClient call}
-For convenience we provide a mock REST api which supplies these tokens for your MITE installations which can be used for prototyping your app:
-
-For convenience we provide a mock REST api which supplies these tokens for your test installations which can be used for prototyping your app in our MITE environment: 
+For convenience we provide a mock REST api which supplies these tokens for your MITE installations which can be used for prototyping your app.
 
 ## Mock Authorise Client Call
 
@@ -60,15 +64,13 @@ Using this instance of PPOCredentials, you can now make a payment in our MITE te
 
 When making a payment, you should have an instance of **PPOCredentials** ready. If you do not, please see 'Mock Authorise Client Call' above. 
 
-If you choose to validate an instance of PPOCredentials at this stage, there is public API available, which looks like the following:
+If you choose to validate an instance of PPOCredentials at this stage, there is public API available for you to do so, which looks like the following:
 
 ```objective-c
-NSError *invalidCredentials = [PPOPaymentValidator validateCredentials:credentials];
+NSError *invalidCredentials = [PPOValidator validateCredentials:credentials];
 ```
 
-There are several validation methods available in **PPOValidator**, inline with your UI, such as the card pan for example.
-
-To proceed with making a payment, build a representation of your payment, by preparing an instance of **PPOPayment**.
+To proceed with making a payment, build a representation of your payment by preparing an instance of **PPOPayment**.
 
 
 ```objective-c
@@ -78,15 +80,12 @@ payment.credentials = credentials;
 
 Prepare an instance of your transaction and card details, by preparing an instance of **PPOTransaction** and **PPOCard**, like so: 
 
-When 'isDeferred' is set to 'YES' the payment will be processed as Authorisation.
-
 ```ojective-c
 PPOTransaction *transaction = [PPOTransaction new];
 transaction.currency = @"GBP";
 transaction.amount = @100;
 transaction.transactionDescription = @"description";
 transaction.merchantRef = @"dk93kl320";
-transaction.isDeferred = @NO;
 
 payment.transaction = transaction;
 
