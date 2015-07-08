@@ -124,6 +124,16 @@
                     ];
         } break;
             
+        case PPOPaymentValidationError: {
+            return [NSError errorWithDomain:PPOPaymentErrorDomain
+                                       code:PPOPaymentValidationError
+                                   userInfo:@{
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"An invalid parameter was supplied with your payment.", @"Failure message for payment validation")
+                                              }
+                    ];
+        }
+            break;
+            
         case PPOPaymentErrorTransactionDeclined: {
             return [NSError errorWithDomain:PPOPaymentErrorDomain
                                        code:PPOPaymentErrorTransactionDeclined
@@ -361,7 +371,7 @@
     switch (error.code) {
             
         case PPOPrivateErrorBadRequest:
-            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUnexpected];
+            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentValidationError];
             break;
             
         case PPOPrivateErrorPaymentSuspendedForThreeDSecure:

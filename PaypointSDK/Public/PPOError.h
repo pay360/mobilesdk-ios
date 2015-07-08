@@ -16,6 +16,7 @@ PPOSDK_EXTERN NSString *const PPOLocalValidationErrorDomain;
    @typedef PPOPaymentError
    @constant PPOPaymentErrorNotInitialised Error not yet initialised.
    @constant PPOPaymentErrorUnexpected Represents an unexpected error.
+   @constant PPOPaymentValidationError An invalid parameter was supplied in your payment.
    @constant PPOPaymentErrorClientTokenExpired The supplied bearer token has expired.
    @constant PPOPaymentErrorClientTokenInvalid The supplied bearer token is invalid.
    @constant PPOPaymentErrorUnauthorisedRequest The supplied token does not have sufficient permissions to access the specified feature.
@@ -35,6 +36,9 @@ typedef enum {
     
     ///Represents an unexpected error.
     PPOPaymentErrorUnexpected,
+    
+    ///An invalid parameter was supplied in your payment.
+    PPOPaymentValidationError,
     
     ///The supplied bearer token has expired.
     PPOPaymentErrorClientTokenExpired,
