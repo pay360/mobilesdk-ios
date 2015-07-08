@@ -571,6 +571,7 @@
                                                               forPayment:payment];
                 
                 [weakSelf handleOutcome:outcome
+                            forRedirect:nil
                          withCompletion:completion];
                 
             } else {
@@ -584,6 +585,7 @@
                                  withCompletion:^(PPOOutcome *queryOutcome) {
                                      
                                      [weakSelf handleOutcome:queryOutcome
+                                                 forRedirect:nil
                                               withCompletion:completion];
                                      
                                  }];
