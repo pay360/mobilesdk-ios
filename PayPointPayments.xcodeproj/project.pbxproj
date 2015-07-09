@@ -59,6 +59,8 @@
 		5092F35C1AFA1E9B004FFF62 /* PPOWebViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5027E5481AFA13ED00926C90 /* PPOWebViewController.xib */; };
 		509D61761B18A0D700F62BA7 /* PPOPaymentTrackingManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 509D61741B18A0D700F62BA7 /* PPOPaymentTrackingManager.h */; };
 		509D61771B18A0D700F62BA7 /* PPOPaymentTrackingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 509D61751B18A0D700F62BA7 /* PPOPaymentTrackingManager.m */; };
+		50B198A01B4E498600A3B95E /* PPOPaymentReference.h in Headers */ = {isa = PBXBuildFile; fileRef = 50B1989E1B4E498600A3B95E /* PPOPaymentReference.h */; };
+		50B198A11B4E498600A3B95E /* PPOPaymentReference.m in Sources */ = {isa = PBXBuildFile; fileRef = 50B1989F1B4E498600A3B95E /* PPOPaymentReference.m */; };
 		50CB92011B1CB83D00A8B39E /* PPORedirectManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 50CB91FF1B1CB83D00A8B39E /* PPORedirectManager.h */; };
 		50CB92021B1CB83D00A8B39E /* PPORedirectManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CB92001B1CB83D00A8B39E /* PPORedirectManager.m */; };
 		50D494FE1B021061004AD686 /* PaypointEnglish.strings in Resources */ = {isa = PBXBuildFile; fileRef = 50D494FD1B021061004AD686 /* PaypointEnglish.strings */; };
@@ -177,6 +179,8 @@
 		509B588A1ADD477A001236CD /* PPOTimeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOTimeManager.m; sourceTree = "<group>"; };
 		509D61741B18A0D700F62BA7 /* PPOPaymentTrackingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOPaymentTrackingManager.h; sourceTree = "<group>"; };
 		509D61751B18A0D700F62BA7 /* PPOPaymentTrackingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOPaymentTrackingManager.m; sourceTree = "<group>"; };
+		50B1989E1B4E498600A3B95E /* PPOPaymentReference.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOPaymentReference.h; sourceTree = "<group>"; };
+		50B1989F1B4E498600A3B95E /* PPOPaymentReference.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOPaymentReference.m; sourceTree = "<group>"; };
 		50CB91FF1B1CB83D00A8B39E /* PPORedirectManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPORedirectManager.h; sourceTree = "<group>"; };
 		50CB92001B1CB83D00A8B39E /* PPORedirectManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPORedirectManager.m; sourceTree = "<group>"; };
 		50CC9AF51AD41ED300B97F2E /* PPOPaymentManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PPOPaymentManager.h; path = Public/PPOPaymentManager.h; sourceTree = "<group>"; };
@@ -290,6 +294,7 @@
 				503D52BD1B0B31240074CB44 /* PPOFinancialService */,
 				503D52C21B0B32AC0074CB44 /* PPOCustomer */,
 				503D52C71B0B74270074CB44 /* PPOCustomField */,
+				50B198A21B4E498A00A3B95E /* PPOPaymentReference */,
 			);
 			name = Model;
 			path = ../PaypointSDK;
@@ -535,6 +540,15 @@
 			path = ../PaypointSDK;
 			sourceTree = "<group>";
 		};
+		50B198A21B4E498A00A3B95E /* PPOPaymentReference */ = {
+			isa = PBXGroup;
+			children = (
+				50B1989E1B4E498600A3B95E /* PPOPaymentReference.h */,
+				50B1989F1B4E498600A3B95E /* PPOPaymentReference.m */,
+			);
+			name = PPOPaymentReference;
+			sourceTree = "<group>";
+		};
 		50CB92031B1CB84000A8B39E /* PPORedirectManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -702,6 +716,7 @@
 				50475D751B26E2190005DB9D /* PPOPrivateError.h in Headers */,
 				506CBA2A1B2AEA23004D636E /* PPOOutcomeBuilder.h in Headers */,
 				505CEE7D1B0A36DE006FD47A /* PPODeviceInfo.h in Headers */,
+				50B198A01B4E498600A3B95E /* PPOPaymentReference.h in Headers */,
 				503D52C01B0B32A90074CB44 /* PPOCustomer.h in Headers */,
 				50DCC1D71AE7CBA300D0FE26 /* PPOCredentials.h in Headers */,
 			);
@@ -898,6 +913,7 @@
 				50DCC1E21AE7CBDD00D0FE26 /* PPOPayment.m in Sources */,
 				505AB2EE1B04B9A8001FAD15 /* PPORedirect.m in Sources */,
 				1A1E9BCA1B28B9B500659979 /* (null) in Sources */,
+				50B198A11B4E498600A3B95E /* PPOPaymentReference.m in Sources */,
 				50CB92021B1CB83D00A8B39E /* PPORedirectManager.m in Sources */,
 				50475D761B26E2190005DB9D /* PPOPrivateError.m in Sources */,
 				503D52C61B0B74230074CB44 /* PPOCustomField.m in Sources */,
