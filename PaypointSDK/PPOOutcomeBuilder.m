@@ -72,16 +72,18 @@
         return;
     }
     
-    id value;
+    id value1;
     if ([outcomeData isKindOfClass:[NSDictionary class]]) {
-        value = [outcomeData objectForKey:PAYMENT_RESPONSE_OUTCOME_REASON_KEY];
+        value1 = [outcomeData objectForKey:PAYMENT_RESPONSE_OUTCOME_REASON_CODE_KEY];
         
         //Number on stub, string on mite. This will be raised as a change soon.
-        if ([value isKindOfClass:[NSNumber class]] || [value isKindOfClass:[NSString class]]) {
-            if (((NSNumber*)value).integerValue > 0) {
-                outcome.error = [PPOErrorManager parsePaypointReasonCode:((NSNumber*)value).integerValue];
+        if ([value1 isKindOfClass:[NSNumber class]] || [value1 isKindOfClass:[NSString class]]) {
+            if (((NSNumber*)value1).integerValue > 0) {
+                id value2 = [outcomeData objectForKey:PAYMENT_RESPONSE_OUTCOME_REASON_KEY];
+                outcome.error = [PPOErrorManager parsePaypointReasonCode:((NSNumber*)value1).integerValue withMessage:([value2 isKindOfClass:[NSString class]]) ? value2 : nil];
             }
         }
+
     }
 }
 

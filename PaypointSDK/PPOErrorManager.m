@@ -10,28 +10,29 @@
 
 @implementation PPOErrorManager
 
-+(NSError*)parsePaypointReasonCode:(NSInteger)code {
++(NSError*)parsePaypointReasonCode:(NSInteger)code withMessage:(NSString*)message {
     
     NSError *error;
     
     switch (code) {
+            
         case 1: {
-            error = [PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorBadRequest];
+            error = [PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorBadRequest withMessage:message];
         } break;
         case 2: {
-            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorAuthenticationFailed];
+            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorAuthenticationFailed withMessage:message];
         } break;
         case 3: {
-            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorClientTokenExpired];
+            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorClientTokenExpired withMessage:message];
         } break;
         case 4: {
-            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUnauthorisedRequest];
+            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUnauthorisedRequest withMessage:message];
         } break;
         case 5: {
-            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorTransactionDeclined];
+            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorTransactionDeclined withMessage:message];
         } break;
         case 6: {
-            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorServerFailure];
+            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorServerFailure withMessage:message];
         } break;
         case 7: {
             error = [PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorPaymentSuspendedForThreeDSecure];
@@ -40,10 +41,10 @@
             error = [PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorPaymentSuspendedForClientRedirect];
         } break;
         case 9: {
-            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentProcessing];
+            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentProcessing withMessage:message];
         } break;
         case 10: {
-            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentNotFound];
+            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentNotFound withMessage:message];
         } break;
             
         default:
@@ -54,7 +55,7 @@
     
 }
 
-+(NSError*)buildErrorForPrivateErrorCode:(PPOPrivateError)code {
++(NSError*)buildErrorForPrivateErrorCode:(PPOPrivateError)code withMessage:(NSString*)message {
     
     switch (code) {
             
@@ -62,7 +63,7 @@
             return [NSError errorWithDomain:PPOPrivateErrorDomain
                                        code:PPOPrivateErrorBadRequest
                                    userInfo:@{
-                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The request was not well formed", @"Networking error")
+                                              NSLocalizedFailureReasonErrorKey: (message) ?: NSLocalizedString(@"The request was not well formed", @"Networking error")
                                               }
                     ];
         }
@@ -111,7 +112,7 @@
     
 }
 
-+(NSError*)buildErrorForPaymentErrorCode:(PPOPaymentError)code {
++(NSError*)buildErrorForPaymentErrorCode:(PPOPaymentError)code withMessage:(NSString*)message {
     
     switch (code) {
             
@@ -128,7 +129,7 @@
             return [NSError errorWithDomain:PPOPaymentErrorDomain
                                        code:PPOPaymentValidationError
                                    userInfo:@{
-                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"An invalid parameter was supplied with your payment.", @"Failure message for payment validation")
+                                              NSLocalizedFailureReasonErrorKey: (message) ?: NSLocalizedString(@"An invalid parameter was supplied with your payment.", @"Failure message for payment validation")
                                               }
                     ];
         }
@@ -356,7 +357,7 @@
     }
     
     if (error.code == NSURLErrorCancelled) {
-        return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut];
+        return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut withMessage:nil];
     }
     
     return error;
@@ -371,27 +372,27 @@
     switch (error.code) {
             
         case PPOPrivateErrorBadRequest:
-            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentValidationError];
+            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentValidationError withMessage:error.localizedDescription];
             break;
             
         case PPOPrivateErrorWebViewFailedToLoadThreeDSecure:
-            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorThreeDSecureTransactionProcessingFailedToInitiate];
+            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorThreeDSecureTransactionProcessingFailedToInitiate withMessage:nil];
             break;
             
         case PPOPrivateErrorPaymentSuspendedForThreeDSecure:
-            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorThreeDSecureTransactionProcessingFailed];
+            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorThreeDSecureTransactionProcessingFailed withMessage:nil];
             break;
             
         case PPOPrivateErrorPaymentSuspendedForClientRedirect:
-            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorThreeDSecureTransactionProcessingFailed];
+            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorThreeDSecureTransactionProcessingFailed withMessage:nil];
             break;
             
         case PPOPrivateErrorProcessingThreeDSecure:
-            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUnexpected];
+            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUnexpected withMessage:nil];
             break;
             
         case PPOPrivateErrorThreeDSecureTimedOut:
-            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut];
+            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut withMessage:nil];
             break;
             
         default:

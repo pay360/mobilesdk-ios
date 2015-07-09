@@ -95,7 +95,7 @@
     if (masterSessionTimedOut) {
         
         PPOOutcome *outcome = [PPOOutcomeBuilder outcomeWithData:nil
-                                                       withError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut]
+                                                       withError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut withMessage:nil]
                                                       forPayment:redirect.payment];
         
         [self completeRedirect:redirect
@@ -167,7 +167,7 @@ NSLog(@"Cancelling resume request");
                                               forPayment:redirect.payment];
         } else if (invalidJSON) {
             outcome = [PPOOutcomeBuilder outcomeWithData:nil
-                                               withError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorServerFailure]
+                                               withError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorServerFailure withMessage:nil]
                                               forPayment:redirect.payment];
         } else if (networkError) {
             outcome = [PPOOutcomeBuilder outcomeWithData:nil
@@ -175,7 +175,7 @@ NSLog(@"Cancelling resume request");
                                               forPayment:redirect.payment];
         } else {
             outcome = [PPOOutcomeBuilder outcomeWithData:nil
-                                               withError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUnexpected]
+                                               withError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUnexpected withMessage:nil]
                                               forPayment:redirect.payment];
         }
         
@@ -240,7 +240,7 @@ NSLog(@"Cancelling resume request");
 }
 
 -(void)threeDSecureControllerUserCancelled:(id<ThreeDSecureControllerProtocol>)controller {
-    [self handleError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUserCancelledThreeDSecure]
+    [self handleError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUserCancelledThreeDSecure withMessage:nil]
         forController:controller];
 }
 
@@ -254,7 +254,7 @@ NSLog(@"Cancelling resume request");
     NSError *e = error;
     
     if (!e) {
-        e = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUnexpected];
+        e = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUnexpected withMessage:nil];
     }
     
     PPOOutcome *outcome = [PPOOutcomeBuilder outcomeWithData:nil

@@ -98,7 +98,7 @@
     BOOL thisPaymentUnderway = [PPOPaymentTrackingManager stateForPayment:payment] != PAYMENT_STATE_NON_EXISTENT;
     
     if (thisPaymentUnderway) {
-        error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentManagerOccupied];
+        error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentManagerOccupied withMessage:nil];
         outcome = [PPOOutcomeBuilder outcomeWithData:nil
                                            withError:error
                                           forPayment:payment];
@@ -113,7 +113,7 @@
     BOOL anyPaymentUnderway = ![PPOPaymentTrackingManager allPaymentsComplete];
     
     if (anyPaymentUnderway) {
-        error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentManagerOccupied];
+        error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentManagerOccupied withMessage:nil];
         outcome = [PPOOutcomeBuilder outcomeWithData:nil
                                            withError:error
                                           forPayment:payment];
@@ -162,6 +162,11 @@
                               timeoutHandler:^{
                                   [weakTask cancel];
                               }];
+    
+#if PPO_DEBUG_MODE
+    NSLog(@"Making payment with op ref %@", payment.identifier);
+    NSLog(@"Making payment at URL: %@", url);
+#endif
     
     [task resume];
     
@@ -215,14 +220,14 @@
             break;
             
         case PAYMENT_STATE_READY: {
-            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentProcessing];
+            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentProcessing withMessage:nil];
             outcome = [PPOOutcomeBuilder outcomeWithData:nil withError:error forPayment:payment];
             [self handleOutcome:outcome forRedirect:nil withCompletion:completion];
         }
             break;
             
         case PAYMENT_STATE_IN_PROGRESS: {
-            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentProcessing];
+            error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentProcessing withMessage:nil];
             outcome = [PPOOutcomeBuilder outcomeWithData:nil withError:error forPayment:payment];
             [self handleOutcome:outcome forRedirect:nil withCompletion:completion];
         }
@@ -410,7 +415,7 @@
                 
                 if (invalidJSON) {
                     outcome = [PPOOutcomeBuilder outcomeWithData:nil
-                                                       withError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorServerFailure]
+                                                       withError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorServerFailure withMessage:nil]
                                                       forPayment:payment];
                 } else if (json) {
                     outcome = [PPOOutcomeBuilder outcomeWithData:json
@@ -422,7 +427,7 @@
                                                       forPayment:payment];
                 } else {
                     outcome = [PPOOutcomeBuilder outcomeWithData:nil
-                                                       withError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUnexpected]
+                                                       withError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorUnexpected withMessage:nil]
                                                       forPayment:payment];
                 }
                 
@@ -567,7 +572,7 @@
             if (![PPOPaymentTrackingManager paymentIsBeingTracked:payment] || [PPOPaymentTrackingManager masterSessionTimeoutHasExpiredForPayment:payment]) {
                 
                 PPOOutcome *outcome = [PPOOutcomeBuilder outcomeWithData:nil
-                                                               withError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut]
+                                                               withError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut withMessage:nil]
                                                               forPayment:payment];
                 
                 [weakSelf handleOutcome:outcome

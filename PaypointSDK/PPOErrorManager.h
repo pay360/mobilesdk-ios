@@ -12,11 +12,11 @@
 
 @interface PPOErrorManager : NSObject
 
-+(NSError*)parsePaypointReasonCode:(NSInteger)code;
++(NSError*)parsePaypointReasonCode:(NSInteger)code withMessage:(NSString*)message;
 
 +(NSError*)buildErrorForPrivateErrorCode:(PPOPrivateError)code;
 
-+(NSError*)buildErrorForPaymentErrorCode:(PPOPaymentError)code;
++(NSError*)buildErrorForPaymentErrorCode:(PPOPaymentError)code withMessage:(NSString*)message;
 
 +(NSError*)buildErrorForValidationErrorCode:(PPOLocalValidationError)code;
 

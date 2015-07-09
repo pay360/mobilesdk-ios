@@ -74,7 +74,7 @@
 #endif
         
         [weakSelf.delegate threeDSecureController:weakSelf
-                                  failedWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut]];
+                                  failedWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut withMessage:nil]];
         
         return;
         
@@ -101,7 +101,7 @@
                 [weakSelf cancelThreeDSecureRelatedTimers];
                 
                 [weakSelf.delegate threeDSecureController:self
-                                          failedWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut]];
+                                          failedWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut withMessage:nil]];
                 
             } else {
 
@@ -110,7 +110,7 @@
 #endif
                 
                 [weakSelf.delegate threeDSecureController:weakSelf
-                                          failedWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut]];
+                                          failedWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut withMessage:nil]];
             }
             
         } forPayment:self.redirect.payment];
@@ -217,7 +217,7 @@
                 [self presentViewController:controller animated:YES completion:nil];
             } else {
                 [self.delegate threeDSecureController:self
-                                      failedWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut]];
+                                      failedWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut withMessage:nil]];
             }
             
         }
@@ -250,7 +250,7 @@
             
         } else {
             [self.delegate threeDSecureController:self
-                                  failedWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut]];
+                                  failedWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut withMessage:nil]];
         }
         
     }
@@ -280,7 +280,7 @@
 #endif
         
         [weakSelf.delegate threeDSecureController:weakSelf
-                                  failedWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut]];
+                                  failedWithError:[PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorMasterSessionTimedOut withMessage:nil]];
         
     } forPayment:self.redirect.payment];
     
