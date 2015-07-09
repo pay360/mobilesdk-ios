@@ -75,6 +75,8 @@ NSLog(@"Building resume body for payment with op ref: %@", reference.identifier)
     
     controller.redirect.threeDSecureResumeBody = body;
     
+    [PPOPaymentTrackingManager resumeTimeoutForPayment:controller.redirect.payment];
+    
     [self performResumeForRedirect:controller.redirect
                      forController:controller];
     
