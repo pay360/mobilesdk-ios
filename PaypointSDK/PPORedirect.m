@@ -10,8 +10,6 @@
 #import "PPOSDKConstants.h"
 #import <objc/runtime.h>
 
-NSString *const kRedirectKey = @"keyRedirect";
-
 @implementation PPORedirect
 
 -(instancetype)initWithData:(NSDictionary *)data forPayment:(PPOPayment*)payment {
@@ -22,8 +20,6 @@ NSString *const kRedirectKey = @"keyRedirect";
         if (!data || ![data isKindOfClass:[NSDictionary class]]) {
             return self;
         }
-        
-        objc_setAssociatedObject(payment, &kRedirectKey, self, OBJC_ASSOCIATION_ASSIGN);
         
         _payment = payment;
         

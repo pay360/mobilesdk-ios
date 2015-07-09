@@ -69,16 +69,6 @@
         }
             break;
             
-        case PPOPrivateErrorWebViewFailedToLoadThreeDSecure: {
-            return [NSError errorWithDomain:PPOPrivateErrorDomain
-                                       code:PPOPrivateErrorWebViewFailedToLoadThreeDSecure
-                                   userInfo:@{
-                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The initial load of the web view for processing 3D Secure, was interuptted and failed to load.", @"Feedback message for three d secure processing error")
-                                              }
-                    ];
-        }
-            break;
-            
         case PPOPrivateErrorPaymentSuspendedForThreeDSecure: {
             return [NSError errorWithDomain:PPOPrivateErrorDomain
                                        code:PPOPrivateErrorPaymentSuspendedForThreeDSecure
@@ -159,16 +149,6 @@
                                        code:PPOPaymentErrorThreeDSecureTransactionProcessingFailed
                                    userInfo:@{
                                               NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Payment abandoned as failed to complete 3D Secure.", @"Feedback message for payment status")
-                                              }
-                    ];
-        }
-            break;
-            
-        case PPOPaymentErrorThreeDSecureTransactionProcessingFailedToInitiate: {
-            return [NSError errorWithDomain:PPOPaymentErrorDomain
-                                       code:PPOPaymentErrorThreeDSecureTransactionProcessingFailedToInitiate
-                                   userInfo:@{
-                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Payment abandoned as failed to initiate 3D Secure.", @"Feedback message for payment status")
                                               }
                     ];
         }
@@ -395,10 +375,6 @@
             return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentValidationError withMessage:error.localizedDescription];
             break;
             
-        case PPOPrivateErrorWebViewFailedToLoadThreeDSecure:
-            return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorThreeDSecureTransactionProcessingFailedToInitiate withMessage:nil];
-            break;
-            
         case PPOPrivateErrorPaymentSuspendedForThreeDSecure:
             return [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorThreeDSecureTransactionProcessingFailed withMessage:nil];
             break;
@@ -450,7 +426,6 @@
     
     return [@[
               @(PPOPaymentErrorThreeDSecureTransactionProcessingFailed),
-              @(PPOPaymentErrorThreeDSecureTransactionProcessingFailedToInitiate),
               @(PPOPaymentErrorUserCancelledThreeDSecure),
               @(PPOPaymentErrorClientTokenExpired),
               @(PPOPaymentErrorClientTokenInvalid),

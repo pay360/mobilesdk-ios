@@ -8,8 +8,6 @@
 
 #import "PPOPayment.h"
 
-extern NSString *const kRedirectKey;
-
 @interface PPORedirect : NSObject
 @property (nonatomic, strong) NSURLRequest *request;
 @property (nonatomic, strong) NSNumber *sessionTimeoutTimeInterval;

@@ -190,7 +190,7 @@
     if (!reference) {
         error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentNotFound withMessage:nil];
         outcome = [PPOOutcomeBuilder outcomeWithData:nil withError:error forPayment:payment];
-        [self handleOutcome:outcome forRedirect:nil withCompletion:completion];
+        [self handleOutcome:outcome withCompletion:completion];
         return;
     }
     
@@ -198,7 +198,7 @@
     
     if (error) {
         outcome = [PPOOutcomeBuilder outcomeWithData:nil withError:error forPayment:payment];
-        [self handleOutcome:outcome forRedirect:nil withCompletion:completion];
+        [self handleOutcome:outcome withCompletion:completion];
         
         return;
     }
@@ -207,7 +207,7 @@
     
     if (error) {
         outcome = [PPOOutcomeBuilder outcomeWithData:nil withError:error forPayment:payment];
-        [self handleOutcome:outcome forRedirect:nil withCompletion:completion];
+        [self handleOutcome:outcome withCompletion:completion];
         
         return;
     }
@@ -229,21 +229,21 @@
         case PAYMENT_STATE_READY: {
             error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentProcessing withMessage:nil];
             outcome = [PPOOutcomeBuilder outcomeWithData:nil withError:error forPayment:payment];
-            [self handleOutcome:outcome forRedirect:nil withCompletion:completion];
+            [self handleOutcome:outcome withCompletion:completion];
         }
             break;
             
         case PAYMENT_STATE_IN_PROGRESS: {
             error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentProcessing withMessage:nil];
             outcome = [PPOOutcomeBuilder outcomeWithData:nil withError:error forPayment:payment];
-            [self handleOutcome:outcome forRedirect:nil withCompletion:completion];
+            [self handleOutcome:outcome withCompletion:completion];
         }
             break;
             
         case PAYMENT_STATE_SUSPENDED: {
             error = [PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorPaymentSuspendedForThreeDSecure withMessage:nil];
             outcome = [PPOOutcomeBuilder outcomeWithData:nil withError:error forPayment:payment];
-            [self handleOutcome:outcome forRedirect:nil withCompletion:completion];
+            [self handleOutcome:outcome withCompletion:completion];
         }
             break;
     }
@@ -437,7 +437,7 @@
                                                       forPayment:payment];
                 }
                 
-                [weakSelf handleOutcome:outcome forRedirect:redirect withCompletion:completion];
+                [weakSelf handleOutcome:outcome withCompletion:completion];
             }
             
         });
@@ -459,7 +459,6 @@
                                                              withCompletion:^(PPOOutcome *outcome) {
                                                                  
                                                                  [weakSelf handleOutcome:outcome
-                                                                             forRedirect:redirect
                                                                           withCompletion:completion];
                                                                  
                                                              }];
@@ -473,21 +472,16 @@
                                                       forPayment:redirect.payment];
         
         [self handleOutcome:outcome
-                forRedirect:redirect
              withCompletion:completion];
         
     }
     
 }
 
--(void)handleOutcome:(PPOOutcome*)outcome forRedirect:(PPORedirect *)redirect
+-(void)handleOutcome:(PPOOutcome*)outcome
       withCompletion:(void(^)(PPOOutcome *))completion {
-    
-    PPORedirect *red = objc_getAssociatedObject(outcome.payment, &kRedirectKey);
-    
+        
     BOOL isNetworkingIssue = [outcome.error.domain isEqualToString:NSURLErrorDomain];
-    
-    BOOL confident3DSecureDidNotSubmit = red && red.threeDSecureResumeBody == nil;
     
     BOOL sessionTimedOut =  (isNetworkingIssue && outcome.error.code == NSURLErrorCancelled) ||
     ([outcome.error.domain isEqualToString:PPOPaymentErrorDomain] && outcome.error.code == PPOPaymentErrorMasterSessionTimedOut);
@@ -501,10 +495,6 @@
         
     }
     else {
-        
-        if (red && confident3DSecureDidNotSubmit) {
-            outcome.error = [PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorWebViewFailedToLoadThreeDSecure withMessage:nil];
-        }
         
         outcome.error = [PPOErrorManager buildCustomerFacingErrorFromError:outcome.error];
         
@@ -587,7 +577,6 @@
                                                               forPayment:payment];
                 
                 [weakSelf handleOutcome:outcome
-                            forRedirect:nil
                          withCompletion:completion];
                 
             } else {
@@ -601,7 +590,6 @@
                                  withCompletion:^(PPOOutcome *queryOutcome) {
                                      
                                      [weakSelf handleOutcome:queryOutcome
-                                                 forRedirect:nil
                                               withCompletion:completion];
                                      
                                  }];

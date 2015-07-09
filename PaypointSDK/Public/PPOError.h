@@ -50,9 +50,6 @@ typedef enum {
     ///The supplied token does not have sufficient permissions to access the specified feature.
     PPOPaymentErrorUnauthorisedRequest,
     
-    ///The transaction was successfully submitted but did not initiate three D secure validation.
-    PPOPaymentErrorThreeDSecureTransactionProcessingFailedToInitiate,
-    
     ///The transaction was successfully submitted but did not complete three D secure validation.
     PPOPaymentErrorThreeDSecureTransactionProcessingFailed,
     
