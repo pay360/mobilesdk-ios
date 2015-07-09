@@ -132,11 +132,6 @@
     
     NSURL *url = [self.endpointManager urlForSimplePayment:payment.credentials.installationID];
     
-#if PPO_DEBUG_MODE
-    NSLog(@"Making payment with op ref %@", payment.identifier);
-    NSLog(@"Making payment at URL: %@", url);
-#endif
-    
     NSData *body = [PPOURLRequestManager buildPostBodyWithPayment:payment
                                                    withDeviceInfo:self.deviceInfo];
     
