@@ -482,9 +482,11 @@
 
 -(void)handleOutcome:(PPOOutcome*)outcome forRedirect:(PPORedirect *)redirect withCompletion:(void(^)(PPOOutcome *))completion {
     
+    PPORedirect *red = objc_getAssociatedObject(outcome.payment, &kRedirectKey);
+    
     BOOL isNetworkingIssue = [outcome.error.domain isEqualToString:NSURLErrorDomain];
     
-    BOOL confident3DSecureDidNotSubmit = redirect && redirect.threeDSecureResumeBody == nil;
+    BOOL confident3DSecureDidNotSubmit = red && red.threeDSecureResumeBody == nil;
     
     BOOL sessionTimedOut =  (isNetworkingIssue && outcome.error.code == NSURLErrorCancelled) ||
     ([outcome.error.domain isEqualToString:PPOPaymentErrorDomain] && outcome.error.code == PPOPaymentErrorMasterSessionTimedOut);
@@ -499,7 +501,7 @@
     }
     else {
         
-        if (redirect && confident3DSecureDidNotSubmit) {
+        if (red && confident3DSecureDidNotSubmit) {
             outcome.error = [PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorWebViewFailedToLoadThreeDSecure withMessage:nil];
         }
         
