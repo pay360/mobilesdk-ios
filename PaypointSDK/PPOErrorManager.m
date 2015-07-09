@@ -449,6 +449,7 @@
     }
     
     return [@[
+              @(PPOPaymentErrorThreeDSecureTransactionProcessingFailed),
               @(PPOPaymentErrorThreeDSecureTransactionProcessingFailedToInitiate),
               @(PPOPaymentErrorUserCancelledThreeDSecure),
               @(PPOPaymentErrorClientTokenExpired),

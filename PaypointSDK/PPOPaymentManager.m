@@ -480,7 +480,8 @@
     
 }
 
--(void)handleOutcome:(PPOOutcome*)outcome forRedirect:(PPORedirect *)redirect withCompletion:(void(^)(PPOOutcome *))completion {
+-(void)handleOutcome:(PPOOutcome*)outcome forRedirect:(PPORedirect *)redirect
+      withCompletion:(void(^)(PPOOutcome *))completion {
     
     PPORedirect *red = objc_getAssociatedObject(outcome.payment, &kRedirectKey);
     
@@ -520,7 +521,8 @@
     
 }
 
--(void)attemptToEstablishAMoreConclusiveOutcome:(PPOOutcome*)outcome withCompletion:(void(^)(PPOOutcome *))completion {
+-(void)attemptToEstablishAMoreConclusiveOutcome:(PPOOutcome*)outcome
+                                 withCompletion:(void(^)(PPOOutcome *))completion {
     
     /*
      * Before we query the server, we back off for a while by sleeping the thread.

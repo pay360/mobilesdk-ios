@@ -75,8 +75,6 @@ NSLog(@"Building resume body for payment with op ref: %@", reference.identifier)
     
     controller.redirect.threeDSecureResumeBody = body;
     
-    [PPOPaymentTrackingManager resumeTimeoutForPayment:controller.redirect.payment];
-    
     [self performResumeForRedirect:controller.redirect
                      forController:controller];
     
@@ -242,6 +240,9 @@ NSLog(@"Showing web view for op ref: %@", reference.identifier);
 }
 
 -(void)threeDSecureController:(id<ThreeDSecureControllerProtocol>)controller failedWithError:(NSError *)error {
+    
+    [PPOPaymentTrackingManager resumeTimeoutForPayment:controller.redirect.payment];
+    
     [self handleError:error
         forController:controller];
 }
