@@ -341,7 +341,7 @@
     if (problemWithParesOrMD) {
         
         [self.delegate threeDSecureController:self
-                              failedWithError:[PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorProcessingThreeDSecure]];
+                              failedWithError:[PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorProcessingThreeDSecure withMessage:nil]];
         
     } else {
         

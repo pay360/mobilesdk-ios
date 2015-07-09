@@ -230,7 +230,7 @@ NSLog(@"Cancelling resume request");
 }
 
 -(void)threeDSecureControllerSessionTimeoutExpired:(id<ThreeDSecureControllerProtocol>)controller {
-    [self handleError:[PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorThreeDSecureTimedOut]
+    [self handleError:[PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorThreeDSecureTimedOut withMessage:nil]
         forController:controller];
 }
 

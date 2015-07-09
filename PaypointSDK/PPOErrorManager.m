@@ -35,10 +35,10 @@
             error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorServerFailure withMessage:message];
         } break;
         case 7: {
-            error = [PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorPaymentSuspendedForThreeDSecure];
+            error = [PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorPaymentSuspendedForThreeDSecure withMessage:message];
         } break;
         case 8: {
-            error = [PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorPaymentSuspendedForClientRedirect];
+            error = [PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorPaymentSuspendedForClientRedirect withMessage:message];
         } break;
         case 9: {
             error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentProcessing withMessage:message];

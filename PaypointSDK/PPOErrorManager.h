@@ -14,7 +14,7 @@
 
 +(NSError*)parsePaypointReasonCode:(NSInteger)code withMessage:(NSString*)message;
 
-+(NSError*)buildErrorForPrivateErrorCode:(PPOPrivateError)code;
++(NSError*)buildErrorForPrivateErrorCode:(PPOPrivateError)code withMessage:(NSString*)message;
 
 +(NSError*)buildErrorForPaymentErrorCode:(PPOPaymentError)code withMessage:(NSString*)message;
 

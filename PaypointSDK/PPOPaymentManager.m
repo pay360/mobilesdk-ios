@@ -229,7 +229,7 @@
             break;
             
         case PAYMENT_STATE_SUSPENDED: {
-            error = [PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorPaymentSuspendedForThreeDSecure];
+            error = [PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorPaymentSuspendedForThreeDSecure withMessage:nil];
             outcome = [PPOOutcomeBuilder outcomeWithData:nil withError:error forPayment:payment];
             [self handleOutcome:outcome forRedirect:nil withCompletion:completion];
         }
@@ -458,7 +458,7 @@
     } else {
         
         PPOOutcome *outcome = [PPOOutcomeBuilder outcomeWithData:nil
-                                                       withError:[PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorProcessingThreeDSecure]
+                                                       withError:[PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorProcessingThreeDSecure withMessage:nil]
                                                       forPayment:redirect.payment];
         
         [self handleOutcome:outcome
@@ -489,7 +489,7 @@
     else {
         
         if (redirect && confident3DSecureDidNotSubmit) {
-            outcome.error = [PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorWebViewFailedToLoadThreeDSecure];
+            outcome.error = [PPOErrorManager buildErrorForPrivateErrorCode:PPOPrivateErrorWebViewFailedToLoadThreeDSecure withMessage:nil];
         }
         
         outcome.error = [PPOErrorManager buildCustomerFacingErrorFromError:outcome.error];
