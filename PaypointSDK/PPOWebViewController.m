@@ -450,7 +450,8 @@
     
 #if PPO_DEBUG_MODE
     if (!self.redirect.sessionTimeoutTimeInterval && !self.sessionTimeoutTimer) {
-        NSLog(@"3DSecure session does not have a session timeout for payment with op ref: %@", self.redirect.payment.identifier);
+        PPOPaymentReference *reference = objc_getAssociatedObject(self.redirect.payment, &kPaymentIdentifierKey);
+        NSLog(@"3DSecure session does not have a session timeout for payment with op ref: %@", reference.identifier);
     }
 #endif
     

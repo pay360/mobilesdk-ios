@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PPOPaymentReference.h"
+#import <objc/runtime.h>
 
 typedef enum : NSUInteger {
     PAYMENT_STATE_NON_EXISTENT,

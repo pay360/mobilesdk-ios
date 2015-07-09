@@ -58,7 +58,8 @@
 -(void)startRedirectWithRedirect:(PPORedirect*)redirect {
     
 #if PPO_DEBUG_MODE
-NSLog(@"Loading redirect web view hidden for payment with op ref: %@", redirect.payment.identifier);
+PPOPaymentReference *reference = objc_getAssociatedObject(self.redirect.payment, &kPaymentIdentifierKey);
+NSLog(@"Loading redirect web view hidden for payment with op ref: %@", reference.identifier);
 #endif
     
     [PPOPaymentTrackingManager overrideTimeoutHandler:^{

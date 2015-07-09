@@ -135,12 +135,15 @@
     NSData *body = [PPOURLRequestManager buildPostBodyWithPayment:payment
                                                    withDeviceInfo:self.deviceInfo];
     
+    PPOPaymentReference *reference = [[PPOPaymentReference alloc] initWithIdentifier:[NSUUID UUID].UUIDString];
+    objc_setAssociatedObject(payment, &kPaymentIdentifierKey, reference, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
     NSURLRequest *request = [PPOURLRequestManager requestWithURL:url
                                                       withMethod:@"POST"
                                                      withTimeout:60.0f
                                                        withToken:payment.credentials.token
                                                         withBody:body
-                                                forPaymentWithID:payment.identifier];
+                                                forPaymentWithID:reference.identifier];
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     
@@ -159,7 +162,7 @@
                               }];
     
 #if PPO_DEBUG_MODE
-    NSLog(@"Making payment with op ref %@", payment.identifier);
+    NSLog(@"Making payment with op ref %@", reference.identifier);
     NSLog(@"Making payment at URL: %@", url);
 #endif
     
@@ -179,9 +182,19 @@
 -(void)queryPayment:(PPOPayment*)payment
      withCompletion:(void(^)(PPOOutcome *))completion {
     
+    PPOPaymentReference *reference = objc_getAssociatedObject(payment, &kPaymentIdentifierKey);
+    
+    NSError *error;
     PPOOutcome *outcome;
     
-    NSError *error = [PPOValidator validateBaseURL:self.endpointManager.baseURL];
+    if (!reference) {
+        error = [PPOErrorManager buildErrorForPaymentErrorCode:PPOPaymentErrorPaymentNotFound withMessage:nil];
+        outcome = [PPOOutcomeBuilder outcomeWithData:nil withError:error forPayment:payment];
+        [self handleOutcome:outcome forRedirect:nil withCompletion:completion];
+        return;
+    }
+    
+    error = [PPOValidator validateBaseURL:self.endpointManager.baseURL];
     
     if (error) {
         outcome = [PPOOutcomeBuilder outcomeWithData:nil withError:error forPayment:payment];
@@ -202,7 +215,6 @@
     switch ([PPOPaymentTrackingManager stateForPayment:payment]) {
             
         case PAYMENT_STATE_NON_EXISTENT: {
-            
             /*
              * There may be an empty chapperone in the tracker, because the chappereone holds the payment weakly, not strongly.
              * This may happen if the entire SDK is deallocated during a payment (tracker is singleton).
@@ -258,10 +270,9 @@
     }
 #endif
     
-    /*
-     * The payment identifier is passed as a component in the url;
-     */
-    NSURL *url = [self.endpointManager urlForPaymentWithID:payment.identifier
+    PPOPaymentReference *reference = objc_getAssociatedObject(payment, &kPaymentIdentifierKey);
+    
+    NSURL *url = [self.endpointManager urlForPaymentWithID:reference.identifier
                                                   withInst:payment.credentials.installationID];
     
     /*
@@ -518,7 +529,8 @@
     
 #if PPO_DEBUG_MODE
     NSLog(@"The outcome is not satisfactory");
-    NSLog(@"A query is being prepared for payment with op ref %@", payment.identifier);
+    PPOPaymentReference *reference = objc_getAssociatedObject(payment, &kPaymentIdentifierKey);
+    NSLog(@"A query is being prepared for payment with op ref %@", reference.identifier);
 #endif
     
     NSUInteger attemptCount = [PPOPaymentTrackingManager totalQueryPaymentAttemptsForPayment:payment];

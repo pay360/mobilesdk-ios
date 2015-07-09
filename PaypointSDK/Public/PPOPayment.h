@@ -13,6 +13,8 @@
 #import "PPOFinancialService.h"
 #import "PPOCustomer.h"
 
+extern const NSString *kPaymentIdentifierKey;
+
 /*!
 @class PPOPayment
 @discussion A PPOPayment object represents a payment.
@@ -25,9 +27,4 @@
 @property (nonatomic, strong) PPOCustomer *customer;
 @property (nonatomic, strong) PPOCredentials *credentials;
 @property (nonatomic, strong) NSSet *customFields;
-
-/*!
-@discussion A unique identifier for traceability.
- */
-@property (nonatomic, copy) NSString *identifier;
 @end

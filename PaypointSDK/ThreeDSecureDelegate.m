@@ -62,7 +62,8 @@
     _isRespondingToUserAction = YES;
     
 #if PPO_DEBUG_MODE
-    NSLog(@"Building resume body for payment with op ref: %@", controller.redirect.payment.identifier);
+PPOPaymentReference *reference = objc_getAssociatedObject(controller.redirect.payment, &kPaymentIdentifierKey);
+NSLog(@"Building resume body for payment with op ref: %@", reference.identifier);
 #endif
     
     id body;
@@ -85,10 +86,11 @@
     BOOL masterSessionTimedOut = ![PPOPaymentTrackingManager paymentIsBeingTracked:redirect.payment] || [PPOPaymentTrackingManager masterSessionTimeoutHasExpiredForPayment:redirect.payment];
     
 #if PPO_DEBUG_MODE
+    PPOPaymentReference *reference = objc_getAssociatedObject(redirect.payment, &kPaymentIdentifierKey);
     if (!masterSessionTimedOut) {
-        NSLog(@"Performing resume request for payment with op ref: %@", redirect.payment.identifier);
+        NSLog(@"Performing resume request for payment with op ref: %@", reference.identifier);
     } else {
-        NSLog(@"Not attempting resume request for payment with op ref: %@", redirect.payment.identifier);
+        NSLog(@"Not attempting resume request for payment with op ref: %@", reference.identifier);
     }
 #endif
     
@@ -107,12 +109,14 @@
         NSURL *url = [self.endpointManager urlForResumePaymentWithInstallationID:redirect.payment.credentials.installationID
                                                                    transactionID:redirect.transactionID];
         
+        PPOPaymentReference *reference = objc_getAssociatedObject(redirect.payment, &kPaymentIdentifierKey);
+        
         NSURLRequest *request = [PPOURLRequestManager requestWithURL:url
                                                           withMethod:@"POST"
                                                          withTimeout:30.0f
                                                            withToken:redirect.payment.credentials.token
                                                             withBody:redirect.threeDSecureResumeBody
-                                                    forPaymentWithID:redirect.payment.identifier];
+                                                    forPaymentWithID:reference.identifier];
         
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
         
@@ -216,7 +220,8 @@ NSLog(@"Cancelling resume request");
         UINavigationController *navCon = [[UINavigationController alloc] initWithRootViewController:(UIViewController*)controller];
         
 #if PPO_DEBUG_MODE
-    NSLog(@"Showing web view for op ref: %@", controller.redirect.payment.identifier);
+PPOPaymentReference *reference = objc_getAssociatedObject(controller.redirect.payment, &kPaymentIdentifierKey);
+NSLog(@"Showing web view for op ref: %@", reference.identifier);
 #endif
         
         _isPresentingWebView = YES;
@@ -335,7 +340,8 @@ NSLog(@"Cancelling resume request");
         if ([[UIApplication sharedApplication] keyWindow] == controller.rootView.superview) {
            
 #if PPO_DEBUG_MODE
-NSLog(@"Removing web view for payment with op ref: %@", weakSelf.redirect.payment.identifier);
+PPOPaymentReference *reference = objc_getAssociatedObject(weakSelf.redirect.payment, &kPaymentIdentifierKey);
+NSLog(@"Removing web view for payment with op ref: %@", reference.identifier);
 #endif
             
             [controller.rootView removeFromSuperview];

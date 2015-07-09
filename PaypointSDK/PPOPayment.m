@@ -7,6 +7,10 @@
 //
 
 #import "PPOPayment.h"
+#import "PPOPaymentReference.h"
+#import <objc/runtime.h>
+
+NSString *kPaymentIdentifierKey = @"keyPaymentIdentifier";
 
 @implementation PPOPayment
 
@@ -15,11 +19,18 @@
     if ([object isKindOfClass:[PPOPayment class]]) {
         payment = object;
     }
-    return (payment && [self.identifier isEqualToString:payment.identifier]);
+    
+    PPOPaymentReference *referenceA = objc_getAssociatedObject(self, &kPaymentIdentifierKey);
+    PPOPaymentReference *referenceB = objc_getAssociatedObject(payment, &kPaymentIdentifierKey);
+    
+    return (payment && [referenceA.identifier isEqualToString:referenceB.identifier]);
 }
 
 -(NSUInteger)hash {
-    return [self.identifier hash];
+    
+    PPOPaymentReference *reference = objc_getAssociatedObject(self, &kPaymentIdentifierKey);
+    
+    return [reference.identifier hash];
 }
 
 @end

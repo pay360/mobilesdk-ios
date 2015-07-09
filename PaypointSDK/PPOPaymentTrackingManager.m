@@ -77,8 +77,9 @@
     if (timer.isValid) {
         
 #if PPO_DEBUG_MODE
+        PPOPaymentReference *reference = objc_getAssociatedObject(self.payment, &kPaymentIdentifierKey);
         NSString *message = (self.sessionTimeout == 1) ? @"second" : @"seconds";
-        NSLog(@"Master session timeout is %f %@ for payment with op ref %@", self.sessionTimeout, message, self.payment.identifier);
+        NSLog(@"Master session timeout is %f %@ for payment with op ref %@", self.sessionTimeout, message, reference.identifier);
 #endif
         
         if (self.sessionTimeout <= 0) {
@@ -141,8 +142,6 @@
         return;
     }
     
-    payment.identifier = [NSUUID UUID].UUIDString;
-    
     PPOPaymentTrackingChaperone *chapperone = [[PPOPaymentTrackingChaperone alloc] initWithPayment:payment
                                                                                          withTimeout:timeout
                                                                                       timeoutHandler:handler];
@@ -166,8 +165,7 @@
 +(void)removePayment:(PPOPayment*)payment {
     
     PPOPaymentTrackingChaperone *chapperoneToDiscard = [PPOPaymentTrackingManager chapperoneForPayment:payment];
-    payment.identifier = nil;
-    
+
     [chapperoneToDiscard stopTimeoutTimer];
     
     [PPOPaymentTrackingManager removePaymentChapperone:chapperoneToDiscard];
@@ -231,7 +229,8 @@
 +(void)suspendTimeoutForPayment:(PPOPayment *)payment {
     
 #if PPO_DEBUG_MODE
-    NSLog(@"Suspending master session timeout for payment with op ref: %@", payment.identifier);
+    PPOPaymentReference *reference = objc_getAssociatedObject(payment, &kPaymentIdentifierKey);
+    NSLog(@"Suspending master session timeout for payment with op ref: %@", reference.identifier);
 #endif
     
     PPOPaymentTrackingChaperone *chapperone = [PPOPaymentTrackingManager chapperoneForPayment:payment];
