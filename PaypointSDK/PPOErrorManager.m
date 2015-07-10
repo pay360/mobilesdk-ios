@@ -221,7 +221,7 @@
             return [NSError errorWithDomain:PPOPaymentErrorDomain
                                        code:PPOPaymentErrorPaymentNotFound
                                    userInfo:@{
-                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"This payment did not complete or is not known.", @"Failure message for payment status")
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"This payment did not complete.", @"Failure message for payment status")
                                               }
                     ];
         } break;
