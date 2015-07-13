@@ -28,9 +28,9 @@ Then run the following command:
 
 # Register
 
-You can sign up for a [PayPoint Explorer](https://developer.paypoint.com/payments/explore/#/register). This will give you access to a number of PayPoint products including the Mobile SDK in our MITE environment. 
+You can sign up for a [PayPoint Explorer](https://developer.paypoint.com/payments/explore/#/register). This will give you access to a number of PayPoint products including the Mobile SDK in our Merchant Integration Test Environment (MITE). 
 
-MITE - Merchant Integration Test Environment - is a dedicated environment for merchants to explore our products and build their integration before go-live.  
+MITE - is a dedicated environment for merchants to explore our products and build their integration before go-live.  
 
 We'll send you an Installation ID for Cashier API once you have signed up which can be used with the Mobile SDK. 
 
