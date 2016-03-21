@@ -1,4 +1,4 @@
-# Pay360 Capita Advanced Payments iOS SDK
+# Pay360 Advanced Payments iOS SDK
 
 ## Requirements
 
