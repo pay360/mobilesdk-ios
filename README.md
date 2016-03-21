@@ -1,4 +1,4 @@
-# Pay360 by Capita Advanced Payments iOS SDK
+# Pay360 Capita Advanced Payments iOS SDK
 
 ## Requirements
 
@@ -14,7 +14,7 @@
 
 # Installation with CocoaPods
 
-To integrate the Pay360 by Capita Payments iOS SDK into your project using CocoaPods, specify it in your Podfile:
+To integrate the Pay360 Payments iOS SDK into your project using CocoaPods, specify it in your Podfile:
 
     source 'https://github.com/CocoaPods/Specs.git'
     platform :ios, '7.0'
@@ -28,7 +28,7 @@ Then run the following command:
 
 # Register
 
-You can sign up for a [Pay360 by Capita Explorer](https://developer.paypoint.com/payments/explore/#/register). This will give you access to a number of Pay360 by Capita products including the Mobile SDK in our MITE environment. 
+You can sign up for a [Pay360 Explorer](https://developer.paypoint.com/payments/explore/#/register). This will give you access to a number of Pay360 products including the Mobile SDK in our MITE environment. 
 
 MITE - Merchant Integration Test Environment - is a dedicated environment for merchants to explore our products and build their integration before go-live.  
 
