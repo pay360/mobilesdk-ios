@@ -28,7 +28,7 @@ Then run the following command:
 
 # Register
 
-You can sign up for a [Pay360 Explorer](https://developer.paypoint.com/payments/explore/#/register). This will give you access to a number of Pay360 products including the Mobile SDK in our MITE environment. 
+You can sign up for a [Pay360 Explorer](https://paymentdeveloperdocs.com/explorer-account/). This will give you access to a number of Pay360 products including the Mobile SDK in our MITE environment. 
 
 MITE - Merchant Integration Test Environment - is a dedicated environment for merchants to explore our products and build their integration before go-live.  
 
@@ -38,7 +38,7 @@ Payments made through the Mobile SDK can be tracked in our MITE [Portal](https:/
 
 # Testing your application against MITE
 
-In order to make payments in MITE your server must obtain a client access token.  The client access token will be used by your app to submit payments. Instructions for doing this are available [here](https://developer.paypoint.com/payments/docs/#getting_started/response_codes_and_messages)
+In order to make payments in MITE your server must obtain a client access token.  The client access token will be used by your app to submit payments. Instructions for doing this are available [here](https://paymentdeveloperdocs.com/response_codes_and_messages/)
 
 For convenience we provide a mock REST api which supplies these tokens for your MITE installations which can be used for prototyping your app.
 
@@ -207,8 +207,8 @@ if ([PPOPaymentManager isSafeToRetryPaymentWithOutcome:outcome]) {
 ## Test Cards
 
 A set of test cards for MITE are available here:
-[MITE test cards](https://developer.paypoint.com/payments/docs/#getting_started/test_cards)
+[MITE test cards](https://paymentdeveloperdocs.com/test_card_numbers)
 
 ## Documentation
 
-The in depth documentation can be found [here](https://developer.paypoint.com)
+The in depth documentation can be found [here](https://paymentdeveloperdocs.com)
