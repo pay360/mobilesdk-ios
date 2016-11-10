@@ -10,7 +10,7 @@
 #import <XCTest/XCTest.h>
 
 //SDK
-#import "Paypoint.h"
+#import "Pay360.h"
 
 #define VALID_BEARER_TOKEN @"VALID_TOKEN"
 #define EXPIRED_BEARER_TOKEN @"EXPIRED_TOKEN"
