@@ -1,9 +1,9 @@
 //
 //  PPODeviceInfo.m
-//  Paypoint
+//  Pay360
 //
 //  Created by Robert Nash on 18/05/2015.
-//  Copyright (c) 2015 Paypoint. All rights reserved.
+//  Copyright (c) 2016 Pay360 by Capita. All rights reserved.
 //
 
 #import "PPODeviceInfo.h"
