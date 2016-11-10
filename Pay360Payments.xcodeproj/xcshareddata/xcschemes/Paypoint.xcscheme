@@ -16,8 +16,8 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "50DCC1A91AE7CAAA00D0FE26"
                BuildableName = "libPayPointPayments.a"
-               BlueprintName = "PayPointPayments"
-               ReferencedContainer = "container:PayPointPayments.xcodeproj">
+               BlueprintName = "Pay360Payments"
+               ReferencedContainer = "container:Pay360Payments.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -30,8 +30,8 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "50DCC1B31AE7CAAA00D0FE26"
                BuildableName = "PayPointPaymentsTests.xctest"
-               BlueprintName = "PayPointPaymentsTests"
-               ReferencedContainer = "container:PayPointPayments.xcodeproj">
+               BlueprintName = "Pay360PaymentsTests"
+               ReferencedContainer = "container:Pay360Payments.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -48,8 +48,8 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "50DCC1B31AE7CAAA00D0FE26"
                BuildableName = "PayPointPaymentsTests.xctest"
-               BlueprintName = "PayPointPaymentsTests"
-               ReferencedContainer = "container:PayPointPayments.xcodeproj">
+               BlueprintName = "Pay360PaymentsTests"
+               ReferencedContainer = "container:Pay360Payments.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -58,8 +58,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "50DCC1A91AE7CAAA00D0FE26"
             BuildableName = "libPayPointPayments.a"
-            BlueprintName = "PayPointPayments"
-            ReferencedContainer = "container:PayPointPayments.xcodeproj">
+            BlueprintName = "Pay360Payments"
+            ReferencedContainer = "container:Pay360Payments.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -77,8 +77,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "50DCC1A91AE7CAAA00D0FE26"
             BuildableName = "libPayPointPayments.a"
-            BlueprintName = "PayPointPayments"
-            ReferencedContainer = "container:PayPointPayments.xcodeproj">
+            BlueprintName = "Pay360Payments"
+            ReferencedContainer = "container:Pay360Payments.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -95,8 +95,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "50DCC1A91AE7CAAA00D0FE26"
             BuildableName = "libPayPointPayments.a"
-            BlueprintName = "PayPointPayments"
-            ReferencedContainer = "container:PayPointPayments.xcodeproj">
+            BlueprintName = "Pay360Payments"
+            ReferencedContainer = "container:Pay360Payments.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>
