@@ -110,35 +110,35 @@
 			containerPortal = 5069F64A1ABC7DA30077FB10 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 50DCC1A91AE7CAAA00D0FE26;
-			remoteInfo = PaypointLibrary;
+			remoteInfo = Pay360Library;
 		};
 		50D495021B0215B6004AD686 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5069F64A1ABC7DA30077FB10 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 5092F3541AFA1E8F004FFF62;
-			remoteInfo = PaypointResources;
+			remoteInfo = Pay360Resources;
 		};
 		50D4950E1B022C7A004AD686 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5069F64A1ABC7DA30077FB10 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 50DCC1A91AE7CAAA00D0FE26;
-			remoteInfo = Paypoint;
+			remoteInfo = Pay360;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1AF1B2E61B2B10AA000404AF /* ThreeDSecureDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = ThreeDSecureDelegate.h; path = PaypointSDK/ThreeDSecureDelegate.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		1AF1B2E71B2B10AA000404AF /* ThreeDSecureDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = ThreeDSecureDelegate.m; path = PaypointSDK/ThreeDSecureDelegate.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		1AF1B2EA1B2B10C1000404AF /* ThreeDSecureControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = ThreeDSecureControllerProtocol.h; path = PaypointSDK/ThreeDSecureControllerProtocol.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		1AF1B2EB1B2B10C1000404AF /* ThreeDSecureProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = ThreeDSecureProtocol.h; path = PaypointSDK/ThreeDSecureProtocol.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		1AF1B2EE1B2B112A000404AF /* PPOSDKConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = PPOSDKConstants.h; path = PaypointSDK/PPOSDKConstants.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		1AF1B2E61B2B10AA000404AF /* ThreeDSecureDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = ThreeDSecureDelegate.h; path = Pay360SDK/ThreeDSecureDelegate.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		1AF1B2E71B2B10AA000404AF /* ThreeDSecureDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = ThreeDSecureDelegate.m; path = Pay360SDK/ThreeDSecureDelegate.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		1AF1B2EA1B2B10C1000404AF /* ThreeDSecureControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = ThreeDSecureControllerProtocol.h; path = Pay360SDK/ThreeDSecureControllerProtocol.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		1AF1B2EB1B2B10C1000404AF /* ThreeDSecureProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = ThreeDSecureProtocol.h; path = Pay360SDK/ThreeDSecureProtocol.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		1AF1B2EE1B2B112A000404AF /* PPOSDKConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = PPOSDKConstants.h; path = Pay360SDK/PPOSDKConstants.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		50046ACB1AC2FB0400F23D05 /* PPOLuhn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPOLuhn.h; sourceTree = "<group>"; };
 		50046ACC1AC2FB0400F23D05 /* PPOLuhn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPOLuhn.m; sourceTree = "<group>"; };
 		501B7CBC1AC40B3000F44193 /* PPOWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PPOWebViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		501B7CBD1AC40B3000F44193 /* PPOWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PPOWebViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		5027E5481AFA13ED00926C90 /* PPOWebViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PPOWebViewController.xib; path = ../PaypointLibrary/PPOWebViewController.xib; sourceTree = "<group>"; };
+		5027E5481AFA13ED00926C90 /* PPOWebViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PPOWebViewController.xib; path = ../Pay360Library/PPOWebViewController.xib; sourceTree = "<group>"; };
 		503D52B91B0B31200074CB44 /* PPOFinancialService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = PPOFinancialService.h; path = Public/PPOFinancialService.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		503D52BA1B0B31200074CB44 /* PPOFinancialService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PPOFinancialService.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		503D52BE1B0B32A90074CB44 /* PPOCustomer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = PPOCustomer.h; path = Public/PPOCustomer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -160,7 +160,7 @@
 		506CBA291B2AEA23004D636E /* PPOOutcomeBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PPOOutcomeBuilder.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		506D55B11AE5326700D71180 /* PPOPaymentEndpointManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PPOPaymentEndpointManager.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		506D55B21AE5326700D71180 /* PPOPaymentEndpointManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PPOPaymentEndpointManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		507090BD1B05EDFD009AECB8 /* Pay360Resources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Pay360Resources.bundle; path = ../build/Paypoint.framework/Pay360Resources.bundle; sourceTree = "<group>"; };
+		507090BD1B05EDFD009AECB8 /* Pay360Resources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Pay360Resources.bundle; path = ../build/Pay360.framework/Pay360Resources.bundle; sourceTree = "<group>"; };
 		507331EA1ADE72E700BBDFC2 /* PPOPayment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = PPOPayment.h; path = Public/PPOPayment.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		507331EB1ADE72E700BBDFC2 /* PPOPayment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PPOPayment.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		507924A01B2EE1D9004402B4 /* PPOCustomFieldBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PPOCustomFieldBuilder.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -172,7 +172,7 @@
 		5081F3BD1AE7E56300D41911 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		5081F3BF1AE7E58500D41911 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		5081F3C11AE7E58900D41911 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		5081F3C31AE7E5D800D41911 /* Pay360.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = Pay360.h; path = ../PaypointSDK/Public/Pay360.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		5081F3C31AE7E5D800D41911 /* Pay360.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = Pay360.h; path = ../Pay360SDK/Public/Pay360.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		5092F3551AFA1E8F004FFF62 /* Pay360PaymentsResources.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Pay360PaymentsResources.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		5092F36F1AFA4D9F004FFF62 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Framework/Info.plist; sourceTree = "<group>"; };
 		509B58891ADD477A001236CD /* PPOTimeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PPOTimeManager.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -206,7 +206,7 @@
 		50ED5D831B1EF7AE00D67F48 /* PPOURLRequestManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PPOURLRequestManager.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		50ED5D841B1EF7AE00D67F48 /* PPOURLRequestManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PPOURLRequestManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		50FC53AE1B32D3D70018A7FD /* PPOCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = PPOCard.h; path = Public/PPOCard.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		50FC53B01B32D3E70018A7FD /* PPOSDKMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = PPOSDKMacros.h; path = PaypointSDK/Public/PPOSDKMacros.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		50FC53B01B32D3E70018A7FD /* PPOSDKMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = PPOSDKMacros.h; path = Pay360SDK/Public/PPOSDKMacros.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -255,7 +255,7 @@
 				501B7CC21AC40B3300F44193 /* PPOWebViewController */,
 			);
 			name = ViewControllers;
-			path = ../PaypointSDK;
+			path = ../Pay360SDK;
 			sourceTree = "<group>";
 		};
 		501C8E671AC01D2700CBA25A /* Managers */ = {
@@ -275,7 +275,7 @@
 				507924A41B2EE20B004402B4 /* PPOCustomFieldBuilder */,
 			);
 			name = Managers;
-			path = ../PaypointSDK;
+			path = ../Pay360SDK;
 			sourceTree = "<group>";
 		};
 		501C8E681AC01D3400CBA25A /* Model */ = {
@@ -297,7 +297,7 @@
 				50B198A21B4E498A00A3B95E /* PPOPaymentReference */,
 			);
 			name = Model;
-			path = ../PaypointSDK;
+			path = ../Pay360SDK;
 			sourceTree = "<group>";
 		};
 		503D52BD1B0B31240074CB44 /* PPOFinancialService */ = {
@@ -343,7 +343,7 @@
 			children = (
 				50DCC1AB1AE7CAAA00D0FE26 /* Pay360 */,
 				50DCC1B81AE7CAAA00D0FE26 /* Pay360Tests */,
-				5092F3561AFA1E8F004FFF62 /* PaypointResources */,
+				5092F3561AFA1E8F004FFF62 /* Pay360Resources */,
 			);
 			name = Targets;
 			sourceTree = "<group>";
@@ -468,14 +468,14 @@
 			name = PPOOutcome;
 			sourceTree = "<group>";
 		};
-		5092F3561AFA1E8F004FFF62 /* PaypointResources */ = {
+		5092F3561AFA1E8F004FFF62 /* Pay360Resources */ = {
 			isa = PBXGroup;
 			children = (
 				50D494FD1B021061004AD686 /* Pay360English.strings */,
 				5027E5481AFA13ED00926C90 /* PPOWebViewController.xib */,
 				5092F36F1AFA4D9F004FFF62 /* Info.plist */,
 			);
-			path = PaypointResources;
+			path = Pay360Resources;
 			sourceTree = "<group>";
 		};
 		509B588D1ADD477D001236CD /* PPOTimeManager */ = {
@@ -537,7 +537,7 @@
 				50A03BCB1B259D6500AEAA31 /* PPOLuhn */,
 			);
 			name = ThirdParty;
-			path = ../PaypointSDK;
+			path = ../Pay360SDK;
 			sourceTree = "<group>";
 		};
 		50B198A21B4E498A00A3B95E /* PPOPaymentReference */ = {
@@ -634,7 +634,7 @@
 				503E19A51AE8EF0600CB4784 /* Supporting Files */,
 			);
 			name = Pay360;
-			path = PaypointLibrary;
+			path = Pay360Library;
 			sourceTree = "<group>";
 		};
 		50DCC1B81AE7CAAA00D0FE26 /* Pay360Tests */ = {
@@ -645,7 +645,7 @@
 				50DCC1B91AE7CAAA00D0FE26 /* Supporting Files */,
 			);
 			name = Pay360Tests;
-			path = PaypointLibraryTests;
+			path = Pay360LibraryTests;
 			sourceTree = "<group>";
 		};
 		50DCC1B91AE7CAAA00D0FE26 /* Supporting Files */ = {
@@ -738,7 +738,7 @@
 			dependencies = (
 			);
 			name = Pay360PaymentsResources;
-			productName = PaypointResources;
+			productName = Pay360Resources;
 			productReference = 5092F3551AFA1E8F004FFF62 /* Pay360PaymentsResources.bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
@@ -758,7 +758,7 @@
 				50D495031B0215B6004AD686 /* PBXTargetDependency */,
 			);
 			name = Pay360Payments;
-			productName = PaypointLibrary;
+			productName = Pay360Library;
 			productReference = 50DCC1AA1AE7CAAA00D0FE26 /* libPay360Payments.a */;
 			productType = "com.apple.product-type.library.static";
 		};
@@ -776,7 +776,7 @@
 				50D4950F1B022C7A004AD686 /* PBXTargetDependency */,
 			);
 			name = Pay360PaymentsTests;
-			productName = PaypointLibraryTests;
+			productName = Pay360LibraryTests;
 			productReference = 50DCC1B41AE7CAAA00D0FE26 /* Pay360PaymentsTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
@@ -865,7 +865,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "${PROJECT_DIR}/PaypointLibrary/Framework.sh";
+			shellScript = "${PROJECT_DIR}/Pay360Library/Framework.sh";
 		};
 		5081F3B61AE7D3A200D41911 /* MultiPlatform Build */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1038,7 +1038,7 @@
 		5081F3B21AE7D38300D41911 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				INFOPLIST_FILE = Paypoint/Framework/Info.plist;
+				INFOPLIST_FILE = Pay360/Framework/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1048,7 +1048,7 @@
 		5081F3B31AE7D38300D41911 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				INFOPLIST_FILE = Paypoint/Framework/Info.plist;
+				INFOPLIST_FILE = Pay360/Framework/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1159,7 +1159,7 @@
 					"$(inherited)",
 					"PPO_DEBUG_MODE=1",
 				);
-				INFOPLIST_FILE = PaypointLibraryTests/Info.plist;
+				INFOPLIST_FILE = Pay360LibraryTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = Pay360PaymentsTests;
@@ -1175,7 +1175,7 @@
 					"$(inherited)",
 				);
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = PaypointLibraryTests/Info.plist;
+				INFOPLIST_FILE = Pay360LibraryTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = Pay360PaymentsTests;

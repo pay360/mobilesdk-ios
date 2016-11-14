@@ -1,4 +1,4 @@
-# Paypoint Advanced Payments iOS SDK
+# Pay360 Advanced Payments iOS SDK
 
 ## Requirements
 
@@ -14,12 +14,12 @@
 
 # Installation with CocoaPods
 
-To integrate the Paypoint Payments iOS SDK into your project using CocoaPods, specify it in your Podfile:
+To integrate the Pay360 Payments iOS SDK into your project using CocoaPods, specify it in your Podfile:
 
     source 'https://github.com/CocoaPods/Specs.git'
     platform :ios, '7.0'
     
-    pod 'PayPointPayments',:git => 'https://github.com/paypoint/mobilesdk-ios.git', :tag => '1.0.0'
+    pod 'Pay360Payments',:git => 'https://github.com/pay360/mobilesdk-ios.git', :tag => '1.0.0'
 
 Then run the following command:
 
@@ -28,17 +28,17 @@ Then run the following command:
 
 # Register
 
-You can sign up for a [PayPoint Explorer](https://developer.paypoint.com/payments/explore/#/register). This will give you access to a number of PayPoint products including the Mobile SDK in our Merchant Integration Test Environment (MITE). 
+You can sign up for a [Pay360 Explorer](http://docs.pay360.com/explorer-account/). This will give you access to a number of Pay360 products including the Mobile SDK in our Merchant Integration Test Environment (MITE). 
 
 MITE - is a dedicated environment for merchants to explore our products and build their integration before go-live.  
 
 We'll send you an Installation ID for Cashier API once you have signed up which can be used with the Mobile SDK. 
 
-Payments made through the Mobile SDK can be tracked in our MITE [Portal](https://portal.mite.paypoint.net:3443/portal-client/#/en_gb/log_in)
+Payments made through the Mobile SDK can be tracked in our MITE [Portal](https://portal.mite.pay360.com/ngportal/#/login)
 
 # Testing your application against MITE
 
-In order to make payments in MITE your server must obtain a client access token.  The client access token will be used by your app to submit payments. Instructions for doing this are available [here](https://developer.paypoint.com/payments/docs/#getting_started/response_codes_and_messages)
+In order to make payments in MITE your server must obtain a client access token.  The client access token will be used by your app to submit payments. Instructions for doing this are available [here](https://paymentdeveloperdocs.com/response_codes_and_messages/)
 
 For convenience we provide a mock REST api which supplies these tokens for your MITE installations which can be used for prototyping your app.
 
@@ -47,10 +47,10 @@ For convenience we provide a mock REST api which supplies these tokens for your 
 Perform a a Get request using the following URL. At this point, you should have your InstallationID ready.
 
 ```objective-c
-NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://developer.paypoint.com/payments/explore/rest/mockmobilemerchant/getToken/%@", INSTALLATION_ID]];
+NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://dev.mite.pay360.com/explore/rest/mockmobilemerchant/getToken/%@", INSTALLATION_ID]];
 ```
 
-You should receive a HTTP Status code '200', indicating the call was successful. Parse the JSON data that is returned in the response payload. Extract the string value for key "accessToken" and build an intance of PPOCredentials, as follows.
+You should receive a HTTP Status code '200', indicating the call was successful. Parse the JSON data that is returned in the response payload. Extract the string value for key "accessToken" and build an instance of PPOCredentials, as follows.
 
 ```objective-c
 PPOCredentials *credentials = [PPOCredentials new];
@@ -207,8 +207,8 @@ if ([PPOPaymentManager isSafeToRetryPaymentWithOutcome:outcome]) {
 ## Test Cards
 
 A set of test cards for MITE are available here:
-[MITE test cards](https://developer.paypoint.com/payments/docs/#getting_started/test_cards)
+[MITE test cards](https://paymentdeveloperdocs.com/test_card_numbers/)
 
 ## Documentation
 
-The in depth documentation can be found [here](https://developer.paypoint.com)
+The in depth documentation can be found [here](https://paymentdeveloperdocs.com/)
