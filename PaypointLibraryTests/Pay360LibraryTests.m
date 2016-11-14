@@ -67,11 +67,11 @@
         switch (e) {
                 
             case PPOEnvironmentMerchantIntegrationTestingEnvironment:
-                NSAssert([baseURL.absoluteString isEqualToString:@"https://api.mite.paypoint.net:2443"], @"Base URL unexpected");
+                NSAssert([baseURL.absoluteString isEqualToString:@"https://mobileapi.mite.pay360.com"], @"Base URL unexpected");
                 break;
                 
             case PPOEnvironmentMerchantIntegrationProductionEnvironment:
-                NSAssert([baseURL.absoluteString isEqualToString:@"https://api.paypoint.net"], @"Base URL unexpected");
+                NSAssert([baseURL.absoluteString isEqualToString:@"https://mobileapi.pay360.com"], @"Base URL unexpected");
                 break;
                 
             default:
@@ -435,7 +435,7 @@
 
 -(PPOCustomer*)customer {
     PPOCustomer *customer = [PPOCustomer new];
-    customer.email = @"test@paypoint.com";
+    customer.email = @"test@example.com";
     customer.dateOfBirth = @"1900-01-01";
     customer.telephone = @"01225 123456";
     return customer;

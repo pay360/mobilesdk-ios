@@ -8,5 +8,5 @@
 
 #import "PPOError.h"
 
-NSString *const PPOPaymentErrorDomain = @"com.paypoint.sdk.payment.public.error.domain";
-NSString *const PPOLocalValidationErrorDomain = @"com.paypoint.sdk.local.validation.public.error.domain";
+NSString *const PPOPaymentErrorDomain = @"com.pay360.sdk.payment.public.error.domain";
+NSString *const PPOLocalValidationErrorDomain = @"com.pay360.sdk.local.validation.public.error.domain";

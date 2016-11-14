@@ -11,7 +11,7 @@
 @implementation PPOResourcesManager
 
 +(NSBundle*)resources {
-    NSString *resourceBundlePath = [[NSBundle mainBundle] pathForResource:@"PayPointPayments" ofType:@"bundle"];
+    NSString *resourceBundlePath = [[NSBundle mainBundle] pathForResource:@"Pay360Payments" ofType:@"bundle"];
     return [NSBundle bundleWithPath:resourceBundlePath];
 }
 

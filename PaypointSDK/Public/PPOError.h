@@ -22,7 +22,7 @@ PPOSDK_EXTERN NSString *const PPOLocalValidationErrorDomain;
    @constant PPOPaymentErrorUnauthorisedRequest The supplied token does not have sufficient permissions to access the specified feature.
    @constant PPOPaymentErrorThreeDSecureTransactionProcessingFailedToInitiate The transaction was successfully submitted but did not initiate three D secure validation.
    @constant PPOPaymentErrorThreeDSecureTransactionProcessingFailed The transaction was successfully submitted but did not complete three D secure validation.
-   @constant PPOPaymentErrorServerFailure An internal server error occurred at paypoint.
+   @constant PPOPaymentErrorServerFailure An internal server error occurred at pay360f.
    @constant PPOPaymentErrorMasterSessionTimedOut The payment session timed out. This is the timeout that is passed into the payment manager.
    @constant PPOPaymentErrorUserCancelledThreeDSecure User cancelled 3D Secure.
    @constant PPOPaymentErrorPaymentProcessing The payment is currently in flight.
@@ -53,7 +53,7 @@ typedef enum {
     ///The transaction was successfully submitted but did not complete three D secure validation.
     PPOPaymentErrorThreeDSecureTransactionProcessingFailed,
     
-    ///An internal server error occurred at paypoint.
+    ///An internal server error occurred at Pay360.
     PPOPaymentErrorServerFailure,
     
     ///The payment session timed out. This is the timeout that is passed into the payment manager.

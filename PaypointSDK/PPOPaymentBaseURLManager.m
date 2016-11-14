@@ -14,11 +14,11 @@
     
     switch (environment) {
         case PPOEnvironmentMerchantIntegrationTestingEnvironment:
-            return [NSURL URLWithString:@"https://api.mite.paypoint.net:2443"];
+            return [NSURL URLWithString:@"https://mobileapi.mite.pay360.com"];
             break;
             
         case PPOEnvironmentMerchantIntegrationProductionEnvironment:
-            return [NSURL URLWithString:@"https://api.paypoint.net"];
+            return [NSURL URLWithString:@"https://mobileapi.pay360.com"];
             break;
             
         default:

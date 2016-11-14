@@ -8,4 +8,4 @@
 
 #import "PPOPrivateError.h"
 
-NSString *const PPOPrivateErrorDomain = @"com.paypoint.sdk.payment.private.error.domain";
+NSString *const PPOPrivateErrorDomain = @"com.pay360.sdk.payment.private.error.domain";

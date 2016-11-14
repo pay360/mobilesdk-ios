@@ -50,7 +50,7 @@
 }
 
 /*
- * Paypoint provide use with a 'delay show webview' timeout, which should count down to zero, before we show
+ * Pay360 provide use with a 'delay show webview' timeout, which should count down to zero, before we show
  * the webview. The ACS may complete with a 'fast redirect'. The idea behind this is to avoid the ugly UI associated 
  * with an ACS page showing, when it doesn't necessarily have to.
  * The webview's delegate will still fire, even if the webview is not displayed on screen.

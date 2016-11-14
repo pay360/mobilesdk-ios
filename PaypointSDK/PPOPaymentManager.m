@@ -486,9 +486,9 @@
     BOOL sessionTimedOut =  (isNetworkingIssue && outcome.error.code == NSURLErrorCancelled) ||
     ([outcome.error.domain isEqualToString:PPOPaymentErrorDomain] && outcome.error.code == PPOPaymentErrorMasterSessionTimedOut);
     
-    BOOL isProcessingAtPaypoint = [outcome.error.domain isEqualToString:PPOPaymentErrorDomain] && outcome.error.code == PPOPaymentErrorPaymentProcessing;
+    BOOL isProcessingAtPay360 = [outcome.error.domain isEqualToString:PPOPaymentErrorDomain] && outcome.error.code == PPOPaymentErrorPaymentProcessing;
     
-    if ((isNetworkingIssue && !sessionTimedOut) || isProcessingAtPaypoint) {
+    if ((isNetworkingIssue && !sessionTimedOut) || isProcessingAtPay360) {
         
         [self attemptToEstablishAMoreConclusiveOutcome:outcome
                                         withCompletion:completion];

@@ -176,7 +176,7 @@
             return [NSError errorWithDomain:PPOPaymentErrorDomain
                                        code:PPOPaymentErrorServerFailure
                                    userInfo:@{
-                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"There was an error from the server at Paypoint", @"Generic paypoint server error failure message")
+                                              NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"There was an error from the server at Pay360", @"Generic Pay360 server error failure message")
                                               }
                     ];
         } break;
