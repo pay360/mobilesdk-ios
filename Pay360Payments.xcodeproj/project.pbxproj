@@ -160,7 +160,7 @@
 		506CBA291B2AEA23004D636E /* PPOOutcomeBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PPOOutcomeBuilder.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		506D55B11AE5326700D71180 /* PPOPaymentEndpointManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PPOPaymentEndpointManager.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		506D55B21AE5326700D71180 /* PPOPaymentEndpointManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PPOPaymentEndpointManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		507090BD1B05EDFD009AECB8 /* Pay360Resources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Pay360Resources.bundle; path = ../build/Pay360.framework/Pay360Resources.bundle; sourceTree = "<group>"; };
+		507090BD1B05EDFD009AECB8 /* .. */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ..; sourceTree = "<group>"; };
 		507331EA1ADE72E700BBDFC2 /* PPOPayment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = PPOPayment.h; path = Public/PPOPayment.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		507331EB1ADE72E700BBDFC2 /* PPOPayment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PPOPayment.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		507924A01B2EE1D9004402B4 /* PPOCustomFieldBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PPOCustomFieldBuilder.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -641,7 +641,7 @@
 			isa = PBXGroup;
 			children = (
 				503E19A11AE8E3D800CB4784 /* Pay360LibraryTests.m */,
-				507090BD1B05EDFD009AECB8 /* Pay360Resources.bundle */,
+				507090BD1B05EDFD009AECB8 /* .. */,
 				50DCC1B91AE7CAAA00D0FE26 /* Supporting Files */,
 			);
 			name = Pay360Tests;
