@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "50DCC1B31AE7CAAA00D0FE26"
-               BuildableName = "PayPointPaymentsTests.xctest"
+               BuildableName = "Pay360PaymentsTests.xctest"
                BlueprintName = "Pay360PaymentsTests"
                ReferencedContainer = "container:Pay360Payments.xcodeproj">
             </BuildableReference>
@@ -33,7 +33,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "50DCC1B31AE7CAAA00D0FE26"
-               BuildableName = "PayPointPaymentsTests.xctest"
+               BuildableName = "Pay360PaymentsTests.xctest"
                BlueprintName = "Pay360PaymentsTests"
                ReferencedContainer = "container:Pay360Payments.xcodeproj">
             </BuildableReference>
@@ -43,7 +43,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "50DCC1B31AE7CAAA00D0FE26"
-            BuildableName = "PayPointPaymentsTests.xctest"
+            BuildableName = "Pay360PaymentsTests.xctest"
             BlueprintName = "Pay360PaymentsTests"
             ReferencedContainer = "container:Pay360Payments.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "50DCC1B31AE7CAAA00D0FE26"
-            BuildableName = "PayPointPaymentsTests.xctest"
+            BuildableName = "Pay360PaymentsTests.xctest"
             BlueprintName = "Pay360PaymentsTests"
             ReferencedContainer = "container:Pay360Payments.xcodeproj">
          </BuildableReference>
@@ -80,7 +80,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "50DCC1B31AE7CAAA00D0FE26"
-            BuildableName = "PayPointPaymentsTests.xctest"
+            BuildableName = "Pay360PaymentsTests.xctest"
             BlueprintName = "Pay360PaymentsTests"
             ReferencedContainer = "container:Pay360Payments.xcodeproj">
          </BuildableReference>

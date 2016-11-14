@@ -21,13 +21,13 @@
 #define SERVER_ERROR_PAN @"9900000000010407"
 #define INSTALLATION_ID @"5300311"
 
-@interface PaypointLibraryTests : XCTestCase
+@interface Pay360LibraryTests : XCTestCase
 @property (nonatomic, strong) NSArray *pans;
 @property (nonatomic) PPOEnvironment currentEnvironment;
 @property (nonatomic, strong) NSURL *baseURL;
 @end
 
-@implementation PaypointLibraryTests
+@implementation Pay360LibraryTests
 
 - (void)setUp {
     [super setUp];

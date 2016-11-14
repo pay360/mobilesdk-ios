@@ -12,7 +12,7 @@
 
 @interface PPOErrorManager : NSObject
 
-+(NSError*)parsePaypointReasonCode:(NSInteger)code withMessage:(NSString*)message;
++(NSError*)parsePay360ReasonCode:(NSInteger)code withMessage:(NSString*)message;
 
 +(NSError*)buildErrorForPrivateErrorCode:(PPOPrivateError)code withMessage:(NSString*)message;
 

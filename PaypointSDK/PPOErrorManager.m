@@ -10,7 +10,7 @@
 
 @implementation PPOErrorManager
 
-+(NSError*)parsePaypointReasonCode:(NSInteger)code withMessage:(NSString*)message {
++(NSError*)parsePay360ReasonCode:(NSInteger)code withMessage:(NSString*)message {
     
     NSError *error;
     

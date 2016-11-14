@@ -80,7 +80,7 @@
         if ([value1 isKindOfClass:[NSNumber class]] || [value1 isKindOfClass:[NSString class]]) {
             if (((NSNumber*)value1).integerValue > 0) {
                 id value2 = [outcomeData objectForKey:PAYMENT_RESPONSE_OUTCOME_REASON_KEY];
-                outcome.error = [PPOErrorManager parsePaypointReasonCode:((NSNumber*)value1).integerValue withMessage:([value2 isKindOfClass:[NSString class]]) ? value2 : nil];
+                outcome.error = [PPOErrorManager parsePay360ReasonCode:((NSNumber*)value1).integerValue withMessage:([value2 isKindOfClass:[NSString class]]) ? value2 : nil];
             }
         }
 
