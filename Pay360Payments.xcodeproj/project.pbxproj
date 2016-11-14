@@ -145,7 +145,7 @@
 		503D52BF1B0B32A90074CB44 /* PPOCustomer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PPOCustomer.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		503D52C31B0B74230074CB44 /* PPOCustomField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = PPOCustomField.h; path = Public/PPOCustomField.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		503D52C41B0B74230074CB44 /* PPOCustomField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PPOCustomField.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		503E19A11AE8E3D800CB4784 /* Pay360LibraryTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = Pay360LibraryTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		503E19A11AE8E3D800CB4784 /* Pay360LibraryTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = Pay360LibraryTests.m; sourceTree = "<group>"; };
 		50475D731B26E2190005DB9D /* PPOPrivateError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PPOPrivateError.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		50475D741B26E2190005DB9D /* PPOPrivateError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PPOPrivateError.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		5056A1A71AD68B2B00AB1276 /* PPOError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = PPOError.h; path = Public/PPOError.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -342,7 +342,7 @@
 			isa = PBXGroup;
 			children = (
 				50DCC1AB1AE7CAAA00D0FE26 /* Pay360 */,
-				50DCC1B81AE7CAAA00D0FE26 /* Pay360Tests */,
+				50DCC1B81AE7CAAA00D0FE26 /* Pay360PaymentsTests */,
 				5092F3561AFA1E8F004FFF62 /* Pay360Resources */,
 			);
 			name = Targets;
@@ -637,14 +637,14 @@
 			path = Pay360Library;
 			sourceTree = "<group>";
 		};
-		50DCC1B81AE7CAAA00D0FE26 /* Pay360Tests */ = {
+		50DCC1B81AE7CAAA00D0FE26 /* Pay360PaymentsTests */ = {
 			isa = PBXGroup;
 			children = (
 				503E19A11AE8E3D800CB4784 /* Pay360LibraryTests.m */,
 				507090BD1B05EDFD009AECB8 /* .. */,
 				50DCC1B91AE7CAAA00D0FE26 /* Supporting Files */,
 			);
-			name = Pay360Tests;
+			name = Pay360PaymentsTests;
 			path = Pay360LibraryTests;
 			sourceTree = "<group>";
 		};
