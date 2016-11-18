@@ -1,0 +1,43 @@
+//
+//  PPOSDKConstants.h
+//  Pay360
+//
+//  Created by Robert Nash on 14/05/2015.
+//  Copyright (c) 2016 Capita Plc. All rights reserved.
+//
+
+#define THREE_D_SECURE_KEY @"threeDSRedirect"
+#define THREE_D_SECURE_MD_KEY @"md"
+#define THREE_D_SECURE_PAREQ_KEY @"pareq"
+#define THREE_D_SECURE_PARES_KEY @"PaRes"
+#define THREE_D_SECURE_SESSION_TIMEOUT_TIME_KEY @"sessionTimeout"
+#define THREE_D_SECURE_DELAYSHOW_TIME_KEY @"passiveTimeout"
+#define THREE_D_SECURE_ACS_URL_KEY @"acsUrl"
+#define THREE_D_SECURE_TERMINATION_URL_KEY @"termUrl"
+
+#define PAYMENT_RESPONSE_CUSTOM_FIELDS @"customFields"
+#define PAYMENT_RESPONSE_CUSTOM_FIELDS_STATE @"fieldState"
+#define PAYMENT_RESPONSE_OUTCOME_KEY @"outcome"
+#define PAYMENT_RESPONSE_OUTCOME_REASON_CODE_KEY @"reasonCode"
+#define PAYMENT_RESPONSE_OUTCOME_REASON_KEY @"reasonMessage"
+
+#define TRANSACTION_RESPONSE_TRANSACTION_KEY @"transaction"
+#define TRANSACTION_RESPONSE_TRANSACTION_AMOUNT_KEY @"amount"
+#define TRANSACTION_RESPONSE_TRANSACTION_CURRENCY_KEY @"currency"
+#define TRANSACTION_RESPONSE_TRANSACTION_TIME_KEY @"transactionTime"
+#define TRANSACTION_RESPONSE_TRANSACTION_MERCH_REF_KEY @"merchantRef"
+#define TRANSACTION_RESPONSE_TRANSACTION_TYPE_KEY @"type"
+#define TRANSACTION_RESPONSE_TRANSACTION_ID_KEY @"transactionId"
+
+#define TRANSACTION_RESPONSE_METHOD_KEY @"paymentMethod"
+#define TRANSACTION_RESPONSE_METHOD_CARD_KEY @"card"
+#define TRANSACTION_RESPONSE_METHOD_CARD_LAST_FOUR_KEY @"lastFour"
+#define TRANSACTION_RESPONSE_METHOD_CARD_USER_TYPE_KEY @"cardUsageType"
+#define TRANSACTION_RESPONSE_METHOD_CARD_SCHEME_KEY @"cardScheme"
+#define TRANSACTION_RESPONSE_METHOD_CARD_MASKED_PAN_KEY @"maskedPan"
+
+#define PPO_UNIQUE_IDENTIFIER @"unique_identifier_ppo"
+
+#define CUSTOM_FIELD_NAME @"name"
+#define CUSTOM_FIELD_VALUE @"value"
+#define CUSTOM_FIELD_TRANSIENT @"transient"
