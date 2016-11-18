@@ -34,11 +34,11 @@ MITE - is a dedicated environment for merchants to explore our products and buil
 
 We'll send you an Installation ID for Cashier API once you have signed up which can be used with the Mobile SDK. 
 
-Payments made through the Mobile SDK can be tracked in our MITE [Portal](https://portal.mite.pay360.com/ngportal/#/login)
+Payments made through the Mobile SDK can be tracked in our MITE [Portal](https://portal.mite.pay360.com/)
 
 # Testing your application against MITE
 
-In order to make payments in MITE your server must obtain a client access token.  The client access token will be used by your app to submit payments. Instructions for doing this are available [here](https://paymentdeveloperdocs.com/response_codes_and_messages/)
+In order to make payments in MITE your server must obtain a client access token.  The client access token will be used by your app to submit payments. Instructions for doing this are available [here](http://docs.pay360.com/response_codes_and_messages/)
 
 For convenience we provide a mock REST api which supplies these tokens for your MITE installations which can be used for prototyping your app.
 
@@ -207,8 +207,8 @@ if ([PPOPaymentManager isSafeToRetryPaymentWithOutcome:outcome]) {
 ## Test Cards
 
 A set of test cards for MITE are available here:
-[MITE test cards](https://paymentdeveloperdocs.com/test_card_numbers/)
+[MITE test cards](http://docs.pay360.com/test_card_numbers/)
 
 ## Documentation
 
-The in depth documentation can be found [here](https://paymentdeveloperdocs.com/)
+The in depth documentation can be found [here](http://docs.pay360.com/)
