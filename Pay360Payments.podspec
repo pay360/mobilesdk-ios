@@ -7,12 +7,12 @@ Pod::Spec.new do |s|
                         # Pay360 IOS SDK
 			Payments SDK For the Pay360 Payment service for use with IOS apps
 			DESC
-  s.homepage         = "https://github.com/pay360/Pay360IOSSDK"
+  s.homepage         = "https://github.com/pay360/mobilesdk-ios"
   s.screenshots      = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
   s.license = { :type => "Apache License, Version 2.0", :file => "LICENSE" }
 
   s.author           = { "Pay360" => "pay360completesupport@capita.co.uk"  }
-  s.source           = { :git => "https://github.com/pay360/Pay360IOSSDK.git", :tag => s.version.to_s }
+  s.source           = { :git => "https://github.com/pay360/mobilesdk-ios.git", :tag => s.version.to_s }
 
   s.platform     = :ios, '7.0'
   s.requires_arc = true
