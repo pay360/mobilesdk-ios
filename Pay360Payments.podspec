@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.screenshots      = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
   s.license = { :type => "Apache License, Version 2.0", :file => "LICENSE" }
 
-  s.author           = { "Pay360" => "product@paypoint.net"  }
+  s.author           = { "Pay360" => "pay360completesupport@capita.co.uk"  }
   s.source           = { :git => "https://github.com/pay360/Pay360IOSSDK.git", :tag => s.version.to_s }
 
   s.platform     = :ios, '7.0'
