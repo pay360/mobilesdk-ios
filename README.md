@@ -19,7 +19,7 @@ To integrate the Pay360 Payments iOS SDK into your project using CocoaPods, spec
     source 'https://github.com/CocoaPods/Specs.git'
     platform :ios, '7.0'
     
-    pod 'Pay360Payments',:git => 'https://github.com/pay360/mobilesdk-ios.git', :tag => '1.0.0'
+    pod 'Pay360Payments',:git => 'https://github.com/pay360/mobilesdk-ios.git', :tag => '2.0.0'
 
 Then run the following command:
 
