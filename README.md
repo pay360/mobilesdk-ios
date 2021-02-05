@@ -1,3 +1,5 @@
+## *Please note that this mobile SDK is no longer maintained or supported*
+
 # Pay360 Advanced Payments iOS SDK
 
 ## Requirements
